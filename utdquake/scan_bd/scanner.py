@@ -7,6 +7,7 @@
 #  */
 import scan.utils as ut
 from scan.stats import get_rolling_stats
+
 from matplotlib.ticker import MaxNLocator
 import logging
 import matplotlib.dates as mdates
@@ -279,7 +280,6 @@ class WaveformRestrictions:
                    f"\n\t{self.network}.{self.station}.{self.location}.{self.channel}|"
                    f"{self.starttime.strftime(timefmt)}-{self.endtime.strftime(timefmt)}")
         return msg
-    
 
 class Scanner(object):
     """

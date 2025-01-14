@@ -1,13 +1,11 @@
 import numpy as np
 import pandas as pd
 import os
-# import matplotlib
 import numpy as np
 import concurrent.futures as cf
 from tqdm import tqdm
 from obspy import UTCDateTime
-from eqpy.core.database import save_dataframe_to_sqlite
-import eqpy.tools.utils as ut
+from utdquake.core.database import save_dataframe_to_sqlite
 
 class StatValues:
     def __init__(self,

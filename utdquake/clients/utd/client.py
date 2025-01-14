@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 from .utils import get_event_ids, get_custom_info, save_info
-from eqpy.tools.stats import get_rolling_stats
+from utdquake.tools.stats import get_rolling_stats
 from obspy.clients.fdsn import Client as FDSNClient
 
 class Client(FDSNClient):
@@ -30,16 +30,17 @@ class Client(FDSNClient):
         """
         super().__init__(*args, **kwargs)
 
-    def get_custom_events(self, *args, max_events_in_ram=1e6, 
-                          output_folder=None, drop_level=True,
-                          **kwargs):
+    def get_custom_events(self, starttime, endtime, max_events_in_ram=1e6,
+                      output_folder=None, drop_level=True, **kwargs):
         """
-        Retrieves custom seismic event data including origins, picks, 
-        and magnitudes.
+        Retrieves custom seismic event data, including origins, picks, and magnitudes.
 
         Parameters:
-        *args : variable length argument list
-            Positional arguments passed to the get_events method.
+        ----------
+        starttime : obspy.core.utcdatetime.UTCDateTime
+            Limit results to time series samples on or after the specified start time.
+        endtime : obspy.core.utcdatetime.UTCDateTime
+            Limit results to time series samples on or before the specified end time.
         max_events_in_ram : int, optional, default=1e6
             Maximum number of events to hold in memory (RAM) before stopping or 
             prompting to save the data to disk.
@@ -47,19 +48,21 @@ class Client(FDSNClient):
             Folder path where the event data will be saved if provided. If not 
             specified, data will only be stored in memory.
         drop_level : bool, optional, default=True
-            True if you want to have only one level in your origin dataframe.
+            If True, the origin DataFrame will have only one hierarchical level.
         **kwargs : variable length keyword arguments
-            Keyword arguments passed to the get_events method.
+            Additional arguments passed to the `get_events` method.
 
         Returns:
+        -------
         tuple
             A tuple containing:
-            - DataFrame of origins for all events.
-            - DataFrame of picks for all events.
-            - DataFrame of magnitudes for all events.
+            - pd.DataFrame: Origins for all events.
+            - pd.DataFrame: Picks for all events.
+            - pd.DataFrame: Magnitudes for all events.
         """
         # Retrieve the catalog of events using the get_events method
-        catalog = self.get_events(*args, **kwargs)
+        catalog = self.get_events(starttime, endtime,
+                                  **kwargs)
 
         # Extract event IDs from the catalog
         ev_ids = get_event_ids(catalog)
@@ -118,29 +121,58 @@ class Client(FDSNClient):
 
         return all_origins, all_picks, all_mags
 
-    def get_stats(self, output, step, starttime, endtime, **kwargs):
+    def get_stats(self, step, network, station, location, channel, starttime, endtime, output=None, **kwargs):
         """
         Retrieve waveforms and compute rolling statistics for the specified time interval.
 
-        Args:
-            output (str): Path to the SQLite database file for saving results.
-            step (int): Step size for the rolling window in seconds.
-            starttime (UTCDateTime): Start time of the data.
-            endtime (UTCDateTime): End time of the data.
-            **kwargs: Keyword arguments for retrieving waveforms, including:
-                - Additional arguments required by `self.get_waveforms`.
+        Parameters:
+        ----------
+        step : int
+            Step size for the rolling window in seconds.
+        network : str
+            Select one or more network codes. These can be SEED network
+            codes or data center-defined codes. Multiple codes can be
+            comma-separated (e.g., "IU,TA"). Wildcards are allowed.
+        station : str
+            Select one or more SEED station codes. Multiple codes
+            can be comma-separated (e.g., "ANMO,PFO"). Wildcards are allowed.
+        location : str
+            Select one or more SEED location identifiers. Multiple
+            identifiers can be comma-separated (e.g., "00,01"). Wildcards are allowed.
+        channel : str
+            Select one or more SEED channel codes. Multiple codes
+            can be comma-separated (e.g., "BHZ,HHZ").
+        starttime : obspy.core.utcdatetime.UTCDateTime
+            Limit results to time series samples on or after the
+            specified start time.
+        endtime : obspy.core.utcdatetime.UTCDateTime
+            Limit results to time series samples on or before the
+            specified end time.
+        output : str, optional
+            Path to the SQLite database file for saving results. Defaults to None.
+        **kwargs : dict
+            Additional keyword arguments passed to the `self.get_waveforms` method.
 
         Returns:
-            pd.DataFrame: A DataFrame containing rolling statistics for each interval, with columns including:
+        -------
+        pd.DataFrame
+            A DataFrame containing rolling statistics for each interval, including:
             - Availability percentage
             - Gaps duration
             - Overlaps duration
             - Gaps count
             - Overlaps count
         """
-        # Extract start and end times from keyword arguments
-        # Retrieve waveforms using base class method
-        st = self.get_waveforms(**kwargs)
+        # Retrieve waveforms using the get_waveforms method
+        st = self.get_waveforms(
+            network=network,
+            station=station,
+            location=location,
+            channel=channel,
+            starttime=starttime,
+            endtime=endtime,
+            **kwargs
+        )
 
         # Compute rolling statistics for the retrieved waveforms
         stats = get_rolling_stats(

@@ -6,19 +6,10 @@
 #  * @desc [description]
 #  */
 
-
-
-
-# import objects
 import os 
 import glob
-import sqlite3
-import pandas as pd
-from obspy import UTCDateTime
 from datetime import timedelta
 from obspy.core.util.misc import BAND_CODE
-from scan.stats import get_rolling_stats
-from obspy.clients.fdsn import Client as FDSNClient
 from obspy.clients.filesystem.sds import Client
 
 class LocalClient(Client):
