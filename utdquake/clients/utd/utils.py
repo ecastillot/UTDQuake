@@ -78,7 +78,7 @@ def get_custom_arrivals(event):
         A tuple containing origin quality information and a DataFrame of 
         arrival contributions with associated picks.
     """
-    ev_id = event.resource_id.id.split("/")[-1]
+    ev_id = event.resource_id.id.split("/")[-1].split("=")[-1]
     origin = event.preferred_origin()
     
     # Get origin quality information
@@ -138,7 +138,7 @@ def get_custom_arrivals(event):
     # Convert contributions to a DataFrame and drop duplicates
     arr_contributions = pd.DataFrame(list(arr_contributions.values()))
     arr_contributions = arr_contributions.drop_duplicates(ignore_index=True)
-    arr_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1])
+    arr_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1].split("=")[-1])
     
     return info, arr_contributions
 
@@ -155,7 +155,7 @@ def get_custom_pref_mag(event):
         A tuple containing preferred magnitude information and a DataFrame of 
         station magnitude contributions.
     """
-    ev_id = event.resource_id.id.split("/")[-1]
+    ev_id = event.resource_id.id.split("/")[-1].split("=")[-1]
     magnitude = event.preferred_magnitude()
     
     # Get preferred magnitude information
@@ -200,7 +200,7 @@ def get_custom_pref_mag(event):
     # Convert contributions to a DataFrame and drop duplicates
     mag_contributions = pd.DataFrame(list(mag_contributions.values()))
     mag_contributions = mag_contributions.drop_duplicates(ignore_index=True)
-    mag_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1])
+    mag_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1].split("=")[-1])
     # mag_contributions.insert(0, "magnitude_id", magnitude.resource_id.id)
     
     return info, mag_contributions
@@ -223,7 +223,7 @@ def get_custom_origin(event):
     
     # Prepare event information
     ev_info = {
-        ("event", "ev_id"): event.resource_id.id.split("/")[-1] if event.resource_id is not None else None,
+        ("event", "ev_id"): event.resource_id.id.split("/")[-1].split("=")[-1] if event.resource_id is not None else None,
         ("event", "ev_type"): event.event_type,
         ("event", "qc_ev_type_certainty"): event.event_type_certainty,
     }
@@ -349,6 +349,7 @@ def get_event_ids(catalog):
     for event in catalog:
         # Retrieve the preferred origin of the event
         pref_origin = event.preferred_origin()
+        
         
         # Extract the event ID from the preferred origin
         eventid = pref_origin.extra.dataid.value

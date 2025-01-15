@@ -3,7 +3,8 @@ from utdquake.clients.utd.client import Client
 
 provider = "USGS"
 client =  Client(provider)
-region = [-104.84329,-103.79942,31.39610,31.91505]
+# region = [-104.84329,-103.79942,31.39610,31.91505] 
+region = [-120.947,-112.740,31.721,37.353]
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00:00"),
                         endtime=UTCDateTime("2024-04-19T23:00:00"),
@@ -16,6 +17,9 @@ cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00
                         )
 print(cat.info())
 print(picks.info())
+print(picks.describe())
+print(cat)
+print(picks)
 
 # out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/stats"
 # provider = "TEXNET"
