@@ -5,23 +5,24 @@
 #  * @modify date 2024-08-17 11:16:32
 #  * @desc [description]
 #  */
-import scan.utils as ut
-from scan.stats import get_rolling_stats
+import utdquake.scan.utils as ut
+from utdquake.tools.stats import get_rolling_stats
+from utdquake.core.database import load_dataframe_from_sqlite
 
-from matplotlib.ticker import MaxNLocator
 import logging
-import matplotlib.dates as mdates
 import pandas as pd
 import os
-import glob
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import host_subplot
 import concurrent.futures as cf
-from core.database import save_dataframe_to_sqlite,load_dataframe_from_sqlite
 
-logger = logging.getLogger("delaware.scan.scanner")
+import glob
+from matplotlib.ticker import MaxNLocator
+import matplotlib.dates as mdates
+
+logger = logging.getLogger("utdquake.scan.scanner")
 
 class Provider:
     """
