@@ -1,4 +1,5 @@
 import os 
+import re
 import pandas as pd
 from utdquake.core.database import save_dataframe_to_sqlite
 
@@ -16,7 +17,6 @@ def get_custom_picks(event):
         phase details.
     """
     picks = {}
-    
     # Loop through each pick in the event
     for pick in event.picks:
         picks[pick.resource_id.id] = {
@@ -65,11 +65,13 @@ def get_custom_station_magnitudes(event):
     
     return sta_mags
 
-def get_custom_arrivals(event):
+def get_custom_arrivals(ev_id, event):
     """
     Extract custom arrival information from an event and associate it with picks.
 
     Parameters:
+    ev_id: str
+        Event identificator.
     event : Event object
         Seismic event from which to extract arrival and pick data.
 
@@ -78,7 +80,7 @@ def get_custom_arrivals(event):
         A tuple containing origin quality information and a DataFrame of 
         arrival contributions with associated picks.
     """
-    ev_id = event.resource_id.id.split("/")[-1].split("=")[-1]
+    
     origin = event.preferred_origin()
     
     # Get origin quality information
@@ -138,15 +140,17 @@ def get_custom_arrivals(event):
     # Convert contributions to a DataFrame and drop duplicates
     arr_contributions = pd.DataFrame(list(arr_contributions.values()))
     arr_contributions = arr_contributions.drop_duplicates(ignore_index=True)
-    arr_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1].split("=")[-1])
+    arr_contributions.insert(0, "ev_id", ev_id)
     
     return info, arr_contributions
 
-def get_custom_pref_mag(event):
+def get_custom_pref_mag(ev_id, event):
     """
     Extract custom preferred magnitude information from an event.
 
     Parameters:
+    ev_id: str
+        Event identificator.
     event : Event object
         Seismic event from which to extract preferred magnitude data.
 
@@ -155,7 +159,6 @@ def get_custom_pref_mag(event):
         A tuple containing preferred magnitude information and a DataFrame of 
         station magnitude contributions.
     """
-    ev_id = event.resource_id.id.split("/")[-1].split("=")[-1]
     magnitude = event.preferred_magnitude()
     
     # Get preferred magnitude information
@@ -200,16 +203,18 @@ def get_custom_pref_mag(event):
     # Convert contributions to a DataFrame and drop duplicates
     mag_contributions = pd.DataFrame(list(mag_contributions.values()))
     mag_contributions = mag_contributions.drop_duplicates(ignore_index=True)
-    mag_contributions.insert(0, "ev_id", event.resource_id.id.split("/")[-1].split("=")[-1])
+    mag_contributions.insert(0, "ev_id", ev_id)
     # mag_contributions.insert(0, "magnitude_id", magnitude.resource_id.id)
     
     return info, mag_contributions
     
-def get_custom_origin(event):
+def get_custom_origin(ev_id,event):
     """
     Extract custom origin information from a seismic event.
 
     Parameters:
+    ev_id: str
+        Event identificator.
     event : Event object
         The seismic event from which to extract origin data.
 
@@ -223,7 +228,7 @@ def get_custom_origin(event):
     
     # Prepare event information
     ev_info = {
-        ("event", "ev_id"): event.resource_id.id.split("/")[-1].split("=")[-1] if event.resource_id is not None else None,
+        ("event", "ev_id"): ev_id,
         ("event", "ev_type"): event.event_type,
         ("event", "qc_ev_type_certainty"): event.event_type_certainty,
     }
@@ -264,12 +269,14 @@ def get_custom_origin(event):
     
     return info
     
-def get_custom_info(event, drop_level=True):
+def get_custom_info(ev_id, event, drop_level=True):
     """
     Extracts custom information from a seismic event, including origin, picks, 
     and magnitude information.
 
     Parameters:
+    ev_id: str
+        Event identificator.
     event : Event object
         The seismic event from which to extract information.
     drop_level : bool, optional, default=True
@@ -284,14 +291,14 @@ def get_custom_info(event, drop_level=True):
     """
     
     # Retrieve custom origin information from the event
-    origin_info = get_custom_origin(event)
+    origin_info = get_custom_origin(ev_id,event)
     
     
     # Retrieve picks information and contributions from the event
-    picks_info, picks_contributions = get_custom_arrivals(event)
+    picks_info, picks_contributions = get_custom_arrivals(ev_id,event)
     
     # Retrieve magnitude information and contributions from the event
-    mag_info, mag_contributions = get_custom_pref_mag(event)
+    mag_info, mag_contributions = get_custom_pref_mag(ev_id,event)
     
     # Prepare picks information with a multilevel column structure
     picks_info = {("picks", x): y for x, y in picks_info.items()}
@@ -347,15 +354,12 @@ def get_event_ids(catalog):
     
     # Iterate through each event in the catalog
     for event in catalog:
-        # Retrieve the preferred origin of the event
-        pref_origin = event.preferred_origin()
-        
         
         # Extract the event ID from the preferred origin
-        eventid = pref_origin.extra.dataid.value
+        ev_id = match_event_id(event)
         
         # Append the event ID to the list
-        ev_ids.append(eventid)
+        ev_ids.append(ev_id)
     
     return ev_ids
         

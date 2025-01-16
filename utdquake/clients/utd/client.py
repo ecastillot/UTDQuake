@@ -30,8 +30,64 @@ class Client(FDSNClient):
         """
         super().__init__(*args, **kwargs)
 
+    def __get_custom_event_ids(self, starttime, endtime, ev_kwargs):
+        """
+        Retrieve custom event IDs from a catalog of seismic events.
+
+        Parameters:
+            starttime (UTCDateTime): Start time for the event search.
+            endtime (UTCDateTime): End time for the event search.
+            ev_kwargs (dict): Additional keyword arguments for event filtering.
+
+        Returns:
+            list: A list of custom event IDs.
+        """
+
+        # Retrieve the catalog of events using the get_events method
+        catalog = self.get_events(starttime, endtime, **ev_kwargs)
+
+        # Initialize an empty list to store event IDs
+        ev_ids = []
+
+        # Mode to determine the format of the event ID, initialized as None
+        mode = None
+
+        # Iterate through each event in the catalog
+        for event in catalog:
+            # Extract additional data from the event
+            extra_data_src = event.extra.datasource.value
+            extra_ev_id = event.extra.eventid.value
+
+            # Define potential event ID formats
+            potential_ev_ids = {
+                "1": extra_data_src + extra_ev_id,
+                "2": extra_ev_id
+            }
+
+            # Determine the mode (event ID format) if not already set
+            if mode is None:
+                for p_mode, p_ev_id in potential_ev_ids.items():
+                    try:
+                        # Test if the event ID exists in the catalog
+                        self.get_events(starttime, endtime, eventid=p_ev_id)
+                        mode = p_mode
+                        break  # Exit the loop once a valid mode is found
+                    except Exception:
+                        pass
+
+            # Raise an exception if no valid event ID format is found
+            if mode is None:
+                raise Exception(f"No event found using any of: {potential_ev_ids}")
+
+            # Use the determined mode to select the correct event ID
+            ev_id = potential_ev_ids[mode]
+            ev_ids.append(ev_id)
+
+        # Return the list of event IDs
+        return ev_ids
+
     def get_custom_events(self, starttime, endtime, max_events_in_ram=1e6,
-                      output_folder=None, drop_level=True, **kwargs):
+                      output_folder=None, drop_level=True, debug=False,**ev_kwargs):
         """
         Retrieves custom seismic event data, including origins, picks, and magnitudes.
 
@@ -49,7 +105,9 @@ class Client(FDSNClient):
             specified, data will only be stored in memory.
         drop_level : bool, optional, default=True
             If True, the origin DataFrame will have only one hierarchical level.
-        **kwargs : variable length keyword arguments
+        debug: bool, optional, default = False
+            Print the events it is trying to get.
+        **ev_kwargs : variable length keyword arguments
             Additional arguments passed to the `get_events` method.
 
         Returns:
@@ -60,27 +118,31 @@ class Client(FDSNClient):
             - pd.DataFrame: Picks for all events.
             - pd.DataFrame: Magnitudes for all events.
         """
-        # Retrieve the catalog of events using the get_events method
-        catalog = self.get_events(starttime, endtime,
-                                  **kwargs)
-
-        # Extract event IDs from the catalog
-        ev_ids = get_event_ids(catalog)
-
+        # stations = self.get_stations(starttime, endtime,
+        #                           **ev_kwargs)
+        
+        # # Retrieve the catalog of events using the get_events method
+        ev_ids = self.__get_custom_event_ids(starttime, endtime,ev_kwargs)
+        
         # Initialize lists to store origins, picks, and magnitudes
         all_origins, all_picks, all_mags = [], [], []
 
         # Loop through each event ID to gather detailed event information
-        for ev_id in ev_ids[::-1]:
+        for k,ev_id in enumerate(ev_ids[::-1],1):
+            
+            # Print debug
+            if debug:
+                print(f"Event id {k}/{len(ev_ids[::-1])}: {ev_id}")
+            
             # Catalog with arrivals. This is a workaround to retrieve 
             # arrivals by specifying the event ID.
-            cat = self.get_events(eventid=ev_id)
+            cat = self.get_events(eventid=ev_id,**ev_kwargs)
 
             # Get the first event from the catalog
             event = cat[0]
 
             # Extract custom information for the event
-            origin, picks, mags = get_custom_info(event, drop_level)
+            origin, picks, mags = get_custom_info(ev_id, event, drop_level)
 
             info = {
                 "origin": origin,
