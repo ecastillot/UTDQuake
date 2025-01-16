@@ -54,6 +54,7 @@ class Client(FDSNClient):
 
         # Iterate through each event in the catalog
         for event in catalog:
+            
             # Extract additional data from the event
             extra_data_src = event.extra.datasource.value
             extra_ev_id = event.extra.eventid.value
@@ -118,8 +119,6 @@ class Client(FDSNClient):
             - pd.DataFrame: Picks for all events.
             - pd.DataFrame: Magnitudes for all events.
         """
-        # stations = self.get_stations(starttime, endtime,
-        #                           **ev_kwargs)
         
         # # Retrieve the catalog of events using the get_events method
         ev_ids = self.__get_custom_event_ids(starttime, endtime,ev_kwargs)

@@ -1,17 +1,20 @@
 from obspy import UTCDateTime
 from utdquake.clients.utd.client import Client
 
-# region = [-103.0,-94.5,33.5,37.5]
-# provider = "USGS"
+
+region = [-103.0,-94.5,33.5,37.5]
+provider = "USGS"
 
 # region = [-120.947,-112.740,31.721,37.353]
 # provider = "https://service.scedc.caltech.edu/"
+# provider = "USGS"
 
-region = [-104.84329,-103.79942,31.39610,31.91505] 
-provider = "USGS"
+# region = [-104.84329,-103.79942,31.39610,31.91505] 
+# provider = "USGS"
 
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 
+# provider = "IRIS"
 client =  Client(provider)
 # cat = client.get_events(starttime=UTCDateTime("2024-04-18T23:00:00"),
 #                         endtime=UTCDateTime("2024-04-19T23:00:00"),
@@ -20,11 +23,11 @@ client =  Client(provider)
 #                         # includearrivals=True,
 #                         # eventid="tx2024hrey"
 #                         )
-# print(cat[0].__dict__)
-# print(cat[0].eventid,cat[0].dataid)
-# exit()
+# print(cat[0].preferred_origin())
+# # print(cat[0].eventid,cat[0].dataid)
 # print(cat[0].picks)
 # print(cat[0].preferred_origin().arrivals)
+# exit()
 cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00:00"),
                         endtime=UTCDateTime("2024-04-19T23:00:00"),
                         minlatitude=region[2], maxlatitude=region[3], 
