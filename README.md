@@ -20,13 +20,13 @@ University of Texas at Dallas Earthquake Dataset
     - core:
         - database: Load and read dataframs from sql
     - scan:
-        -scan: 
+        - scan: 
             - scanner:
                 - scan: Scan the waveform data for each provider and save results to the database.
                 - get_stats: Retrieve statistical data from database files based on the provided criteria.
             - plot_rolling_stats: Plots rolling statistics data as a heatmap with optional color bar and time axis customization.
     - tools:
-        -stats:
+        - stats:
             - get_stats_by_instrument: Calculate statistics for seismic data from specified channels and time range.
             - get_stats: Calculate statistics for seismic data grouped by instrument.
             - get_rolling_stats: Calculate rolling statistics for seismic data over specified time intervals.
