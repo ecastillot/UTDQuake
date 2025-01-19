@@ -4,6 +4,8 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.5:
+    Requirement: python >= 3.10
 - 0.0.4: 
     - clients:
         - utd: (from FDSN): 

@@ -6,7 +6,7 @@ import setuptools
 import codecs
 import os
 
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 DESCRIPTION = 'University of Texas at Dallas Earthquake Dataset'
 
 req_path = os.path.join(os.path.dirname(__file__),"requirements.txt")
@@ -43,7 +43,7 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: Unix",
     ],
-    python_requires='==3.10'
+    python_requires='>=3.10'
 )
 
 # python setup.py sdist bdist_wheel
