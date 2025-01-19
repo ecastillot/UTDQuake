@@ -1,7 +1,7 @@
 
 import os
 import pandas as pd
-from .utils import get_event_ids, get_custom_info, save_info
+from .utils import get_stations_info, get_custom_info, save_info
 from utdquake.tools.stats import get_rolling_stats
 from obspy.clients.fdsn import Client as FDSNClient
 
@@ -87,8 +87,54 @@ class Client(FDSNClient):
         # Return the list of event IDs
         return ev_ids
 
-    def get_custom_events(self, starttime, endtime, max_events_in_ram=1e6,
-                      output_folder=None, drop_level=True, debug=False,**ev_kwargs):
+    def get_custom_stations(self, output_folder=None, **sta_kwargs):
+        """
+        Retrieve custom station information and optionally save it to a CSV file.
+
+        Args:
+            output_folder (str, optional): Path to the folder where the station 
+                information will be saved. If None, the information will not be saved.
+            **sta_kwargs: Additional keyword arguments to filter stations 
+                when calling `self.get_stations`.
+
+        Returns:
+            pandas.DataFrame: A DataFrame containing the station information, including:
+                - "network": Network code to which the station belongs.
+                - "station": Station code.
+                - "latitude": Latitude of the station.
+                - "longitude": Longitude of the station.
+                - "elevation": Elevation of the station.
+                - "starttime": Start date and time of the station's operation.
+                - "endtime": End date and time of the station's operation.
+                - "site_name": Name of the site.
+        """
+        # Retrieve the inventory using the provided keyword arguments
+        inv = self.get_stations(**sta_kwargs)
+
+        # Extract station information into a DataFrame
+        sta_info = get_stations_info(inv)
+
+        # If an output folder is specified, save the DataFrame as a CSV file
+        if output_folder is not None:
+            # Create the output folder if it doesn't exist
+            if not os.path.isdir(output_folder):
+                os.makedirs(output_folder)
+
+            # Define the full path for the CSV file
+            path = os.path.join(output_folder, "stations.csv")
+
+            # Save the station information to the CSV file
+            sta_info.to_csv(
+                path,
+                mode='a',  # Append mode
+                header=not pd.io.common.file_exists(path),  # Add header only if the file doesn't exist
+                index=False  # Do not write row numbers
+            )
+
+        return sta_info
+
+    def get_custom_events(self, starttime, endtime,  max_events_in_ram=1e6,
+                      output_folder=None, drop_level=True, debug=False, **ev_kwargs):
         """
         Retrieves custom seismic event data, including origins, picks, and magnitudes.
 

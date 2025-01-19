@@ -1,6 +1,14 @@
 from obspy import UTCDateTime
 from utdquake.clients.utd.client import Client
 
+provider = "IRIS"
+client =  Client(provider)
+
+out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
+sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
+print(sta)
+exit()
+
 
 region = [-103.0,-94.5,33.5,37.5]
 provider = "USGS"
@@ -16,6 +24,10 @@ out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 
 # provider = "IRIS"
 client =  Client(provider)
+
+
+
+
 # cat = client.get_events(starttime=UTCDateTime("2024-04-18T23:00:00"),
 #                         endtime=UTCDateTime("2024-04-19T23:00:00"),
 #                         minlatitude=region[2], maxlatitude=region[3], 
@@ -39,11 +51,14 @@ cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00
                         #eventid="tx2024hstr",
                         #includeallmagnitudes=True,
                         )
-print(cat.info())
+# print(cat.info())
 print(picks.info())
+print(picks.describe())
 # print(picks.describe())
 # print(cat)
 # print(picks)
+# print(picks["polarity"].any())
+# print(picks[picks[["polarity"]].notna().all(axis=1)]["polarity"])
 
 # out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/stats"
 # provider = "TEXNET"

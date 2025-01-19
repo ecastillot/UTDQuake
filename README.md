@@ -4,7 +4,10 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
-
+- 0.0.4: 
+    - clients:
+        - utd: (from FDSN): 
+            - get_custom_stations: Retrieve custom station information and optionally save it to a CSV file.
 - 0.0.3: 
     - clients: 
         - local: (from SDS) : Allow to upload local data from obspy easily 

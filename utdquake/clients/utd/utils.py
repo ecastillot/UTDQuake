@@ -1,6 +1,7 @@
 import os 
 import re
 import pandas as pd
+from obspy import read_inventory
 from utdquake.core.database import save_dataframe_to_sqlite
 
 def get_custom_picks(event):
@@ -31,7 +32,7 @@ def get_custom_picks(event):
             "author": pick.creation_info.author if pick.creation_info is not None else None,
             "filter_id": pick.filter_id.id if pick.filter_id is not None else None ,
             "method_id": pick.method_id.id if pick.method_id is not None else None,
-            "polarity": pick.polarity,
+            "polarity": pick.polarity[0] if pick.polarity is not None else None,
             "evaluation_mode": pick.evaluation_mode,
             "evaluation_status": pick.evaluation_status
         }
@@ -425,4 +426,180 @@ def save_info(path, info):
                 #         df_by_evid.to_csv(os.path.join(path,f"{key}.csv"))
                 #         df_by_evid.to_sql(ev_id, conn, if_exists='append', index=False)
                 #     # exit()
-                        
+
+def get_channel_info(station):
+    """
+    Extracts channel information from an Station Object  and sorts the channels by start date.
+
+    Args:
+        station (Obspy Station Object): Station to extract the information
+
+    Returns:
+        DataFrame: A dataframe containing channel information sorted by start date.
+    """
+    channel_info = {
+        "network": [],
+        "station": [],
+        "station_latitude": [],
+        "station_longitude": [],
+        "station_elevation": [],
+        "station_starttime": [],
+        "station_endtime": [],
+        "channel": [],
+        "location_code": [],
+        "latitude": [],
+        "longitude": [],
+        "elevation": [],
+        "depth": [],
+        "site": [],
+        "epoch": [],
+        "starttime": [],
+        "endtime": [],
+        "equipment": [],
+        "sampling_rate": [],
+        "sensitivity": [],
+        "frequency": [],
+        "azimuth": [],
+        "dip": [],
+        "horizontal_components_exchange": [],
+    }
+
+    def get_start_date(channel):
+        return channel.start_date
+
+    # Sort the channels based on their start dates
+    sorted_channels = sorted(station, key=get_start_date)
+
+    epochs = {
+        "HHE": 0,
+        "HHN": 0,
+        "HHZ": 0,
+        "HNE": 0,
+        "HNN": 0,
+        "HNZ": 0,
+    }
+
+    for channel in sorted_channels:
+        epochs[channel.code] += 1
+        channel_info["station"].append(station.code)
+        channel_info["station_latitude"].append(station.latitude)
+        channel_info["station_longitude"].append(station.longitude)
+        channel_info["station_elevation"].append(station.elevation)
+        channel_info["station_starttime"].append(station.start_date)
+        channel_info["station_endtime"].append(station.end_date)
+        channel_info["channel"].append(channel.code)
+        channel_info["location_code"].append(channel.location_code)
+        channel_info["latitude"].append(channel.latitude)
+        channel_info["longitude"].append(channel.longitude)
+        channel_info["elevation"].append(channel.elevation)
+        channel_info["depth"].append(channel.depth)
+        channel_info["site"].append(station.site.name)
+        channel_info["epoch"].append(epochs[channel.code])
+        channel_info["starttime"].append(channel.start_date)
+        channel_info["endtime"].append(channel.end_date)
+        channel_info["equipment"].append(channel.sensor.type)
+        channel_info["sampling_rate"].append(channel.sample_rate)
+        
+        instrument_type = channel.code[:2]
+        if instrument_type == "HN":
+            output_freq_gain = "ACC"
+        else:
+            output_freq_gain = "VEL"
+        
+        channel.response.recalculate_overall_sensitivity()
+        freq,gain = channel.response._get_overall_sensitivity_and_gain(frequency=1.0,output = output_freq_gain)
+        channel_info["sensitivity"].append(gain)
+        channel_info["frequency"].append(freq)
+        
+        channel_info["azimuth"].append(channel.azimuth)
+        channel_info["dip"].append(channel.dip)
+
+        component = channel.code[-1]
+        if component == "E":
+            if channel.azimuth == 90:
+                channel_info["horizontal_components_exchange"].append(False)
+            elif channel.azimuth == 0:
+                channel_info["horizontal_components_exchange"].append(True)
+        elif component == "N":
+            if channel.azimuth == 90:
+                channel_info["horizontal_components_exchange"].append(True)
+            elif channel.azimuth == 0:
+                channel_info["horizontal_components_exchange"].append(False)
+        else:
+            channel_info["horizontal_components_exchange"].append(None)
+
+    channel_info = pd.DataFrame.from_dict(channel_info)
+    return channel_info
+
+def get_station_info(station):
+    """
+    Extract station information from an ObsPy Station object.
+
+    Args:
+        station (obspy.core.inventory.station.Station): Station object to extract information from.
+
+    Returns:
+        dict: Dictionary containing station information, including:
+            - "station": Station code.
+            - "latitude": Latitude of the station.
+            - "longitude": Longitude of the station.
+            - "elevation": Elevation of the station.
+            - "starttime": Start date and time of the station's operation.
+            - "endtime": End date and time of the station's operation (or None if not defined).
+            - "site_name": Name of the site (or None if not defined).
+    """
+    # Initialize a dictionary to store station information
+    sta_info = {
+        "station": station.code,
+        "latitude": station.latitude,
+        "longitude": station.longitude,
+        "elevation": station.elevation,
+        "starttime": station.start_date.datetime,
+        "endtime": station.end_date.datetime if station.end_date is not None else None,
+        "site_name": station.site.name if station.site is not None else None,
+    }
+
+    return sta_info
+
+
+def get_stations_info(inv):
+    """
+    Extract station and network information from an ObsPy Inventory object.
+
+    Args:
+        inv (obspy.core.inventory.inventory.Inventory): Inventory object containing network and station data.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing station and network information with columns:
+            - "network": Network code to which the station belongs.
+            - "station": Station code.
+            - "latitude": Latitude of the station.
+            - "longitude": Longitude of the station.
+            - "elevation": Elevation of the station.
+            - "starttime": Start date and time of the station's operation.
+            - "endtime": End date and time of the station's operation.
+            - "site_name": Name of the site.
+    """
+    # Initialize a list to store station information from all networks
+    station_info_list = []
+
+    # Iterate over each network in the inventory
+    for net in inv:
+        # Iterate over each station in the network
+        for sta in net:
+            # Extract information for the current station and append to the list
+            info = get_station_info(sta)
+            info["network"] = net.code
+            station_info_list.append(info)
+
+    # Convert the list of station information dictionaries into a pandas DataFrame
+    station_info_df = pd.DataFrame(station_info_list)
+    
+    station_info_df = station_info_df[['network'] + \
+                    [col for col in station_info_df.columns if col != 'network']]
+
+    # Remove duplicate stations, keeping the last occurrence
+    station_info_df = station_info_df.drop_duplicates(subset=["station"], keep="last")
+
+    return station_info_df  
+        
