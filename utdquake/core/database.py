@@ -81,7 +81,7 @@ def load_dataframe_from_sqlite(db_path, tables=None, starttime=None, endtime=Non
 
             # Execute the query and load data into a DataFrame
             df = pd.read_sql_query(query, conn, params=params)
-
+            
             # Convert 'starttime' and 'endtime' to datetime if they exist
             if 'starttime' in df.columns:
                 df['starttime'] = pd.to_datetime(df['starttime'])

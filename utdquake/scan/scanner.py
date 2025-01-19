@@ -498,18 +498,26 @@ class Scanner(object):
             
             dfs_stats = []
             
+            # TODO: I can improve this, I am loading table by table
+            # and I can actually do all in one
+             
             # Load statistics for each specified metric
             for stat in stats:
                 starttime_str = starttime.strftime(format)
                 endtime_str = endtime.strftime(format)
                 
                 try:
-                    df = load_dataframe_from_sqlite(db_name=db_path,
-                                                    table_name=stat,
+                    df = load_dataframe_from_sqlite(db_path=db_path,
+                                                    tables=[stat],
                                                     starttime=starttime_str,
-                                                    endtime=endtime_str)
+                                                    endtime=endtime_str
+                                                    )
                 except Exception as e:
                     logger.error(f"Error loading data from {db_path}: {e}")
+                    continue
+                
+                if df.empty:
+                    logger.warning(f"No dataframe found for {stat} in {db_path}")
                     continue
                 
                 # Set the DataFrame index and create a MultiIndex for columns
