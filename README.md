@@ -1,9 +1,10 @@
+![Twitter Follow](https://img.shields.io/twitter/follow/manuavid?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)![GitHub stars](https://img.shields.io/github/stars/ecastillot/EQviewer?style=social)![GitHub forks](https://img.shields.io/github/forks/ecastillot/EQviewer?style=social)
 # UTDQuake
 University of Texas at Dallas Earthquake Dataset
 
 # Examples
 
-
+| Examples | Notebook  |
 |---|---|
 | UTDClient| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/master/examples/utd_client.ipynb) |
 
