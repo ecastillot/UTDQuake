@@ -1,9 +1,18 @@
 # UTDQuake
 University of Texas at Dallas Earthquake Dataset
 
+# Examples
+
+
+|---|---|
+| 1_shape| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/master/examples/utd_client.ipynb) |
+
 # Versions
 
 ## Development
+- 0.0.6:
+    - tools:
+        Bug Fixed: missing __init__ file
 - 0.0.5:
     Requirement: python >= 3.10
 - 0.0.4: 
