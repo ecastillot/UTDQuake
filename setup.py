@@ -6,7 +6,7 @@ import setuptools
 import codecs
 import os
 
-VERSION = '0.0.6'
+VERSION = '0.0.7'
 DESCRIPTION = 'University of Texas at Dallas Earthquake Dataset'
 
 req_path = os.path.join(os.path.dirname(__file__),"requirements.txt")

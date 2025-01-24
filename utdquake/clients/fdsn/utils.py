@@ -21,10 +21,10 @@ def get_custom_picks(event):
     # Loop through each pick in the event
     for pick in event.picks:
         picks[pick.resource_id.id] = {
-            "network_code": pick.waveform_id.network_code if pick.waveform_id is not None else None,
-            "station_code": pick.waveform_id.station_code if pick.waveform_id is not None else None,
-            "location_code": pick.waveform_id.location_code if pick.waveform_id is not None else None,
-            "channel_code": pick.waveform_id.channel_code if pick.waveform_id is not None else None,
+            "network": pick.waveform_id.network_code if pick.waveform_id is not None else None,
+            "station": pick.waveform_id.station_code if pick.waveform_id is not None else None,
+            "location": pick.waveform_id.location_code if pick.waveform_id is not None else None,
+            "channel": pick.waveform_id.channel_code if pick.waveform_id is not None else None,
             "phase_hint": pick.phase_hint,
             "time": pick.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"),
             "time_lower_error": pick.time_errors.lower_uncertainty if pick.time_errors is not None else None,

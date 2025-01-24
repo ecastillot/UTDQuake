@@ -1,13 +1,13 @@
 from obspy import UTCDateTime
-from utdquake.clients.utd.client import Client
+from utdquake.clients.fdsn.client import Client
 
 provider = "IRIS"
 client =  Client(provider)
 
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
-print(sta)
-exit()
+# print(sta)
+# exit()
 
 
 region = [-103.0,-94.5,33.5,37.5]
@@ -45,9 +45,9 @@ cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00
                         minlatitude=region[2], maxlatitude=region[3], 
                         minlongitude=region[0], maxlongitude=region[1],
                         # includearrivals=True,
-                        debug=True
+                        debug=True,
                         # includepicks=True,
-                        # output_folder=out,
+                        output_folder=out,
                         #eventid="tx2024hstr",
                         #includeallmagnitudes=True,
                         )
