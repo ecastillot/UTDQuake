@@ -11,7 +11,7 @@ from ..database.database import load_dataframe_from_sqlite
 from pandas.api.types import is_datetime64_any_dtype
 import pandas as pd
 
-def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True):
+def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True,chunksize=None):
     """
     Load earthquake picks from an SQLite database and return a Picks object.
 
@@ -44,13 +44,13 @@ def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=Tr
         tables=ev_ids,          # Event IDs (table names) to load picks from
         custom_params=custom_params,  # Optional custom filtering parameters
         drop_duplicates=drop_duplicates,
+        chunksize=chunksize,
         sortby="time"           # Sort the data by the "time" column
     )
 
     # Return a Picks object with the loaded data and author information
     return Picks(picks, author)
     
-
 class Picks(DataFrameHelper):
     """
     A class to manage and process earthquake picks data.
