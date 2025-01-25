@@ -7,7 +7,6 @@ client =  Client(provider)
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
 # print(sta)
-# exit()
 
 
 region = [-103.0,-94.5,33.5,37.5]

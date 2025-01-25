@@ -590,13 +590,15 @@ def get_stations_info(inv):
             # Extract information for the current station and append to the list
             info = get_station_info(sta)
             info["network"] = net.code
+            info["sta_id"] = ".".join((net.code,info["station"]))
             station_info_list.append(info)
 
     # Convert the list of station information dictionaries into a pandas DataFrame
     station_info_df = pd.DataFrame(station_info_list)
     
-    station_info_df = station_info_df[['network'] + \
-                    [col for col in station_info_df.columns if col != 'network']]
+    first_cols = ['sta_id','network']
+    station_info_df = station_info_df[ first_cols + \
+                    [col for col in station_info_df.columns if (col not in first_cols)]]
 
     # Remove duplicate stations, keeping the last occurrence
     station_info_df = station_info_df.drop_duplicates(subset=["station"], keep="last")

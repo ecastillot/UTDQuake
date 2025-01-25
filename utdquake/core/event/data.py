@@ -45,10 +45,9 @@ def proc_data(data, required_columns, date_columns=None):
     if date_columns is not None:
         if not isinstance(date_columns, list):
             raise Exception("The 'date_columns' parameter must be a list.")
-        
         for col_date in date_columns:
             if col_date in data.columns:
-                data['origin_time'] = pd.to_datetime(
+                data[col_date] = pd.to_datetime(
                     data[col_date], errors="coerce"
                 ).dt.tz_localize(None)
 
@@ -65,7 +64,7 @@ class DataFrameHelper:
         date_columns (list, optional): List of columns to parse as datetime.
     """
 
-    def __init__(self, data, required_columns, date_columns=None):
+    def __init__(self, data, required_columns, date_columns=None, author=None):
         """
         Initialize the DataFrameHelper instance.
 
@@ -73,6 +72,8 @@ class DataFrameHelper:
             data (pd.DataFrame): Input DataFrame containing earthquake data.
             required_columns (list): List of mandatory columns in the DataFrame.
             date_columns (list, optional): List of columns to parse as datetime. Defaults to None.
+            author (str, optional): The author or source of the picks data.
+                
         """
         self.data = proc_data(
             data=data, 
@@ -81,6 +82,7 @@ class DataFrameHelper:
         )
 
         # Store custom attributes
+        self.author = author
         self.required_columns = required_columns
         self.date_columns = date_columns
 
@@ -266,6 +268,15 @@ class MulDataFrameHelper:
             A list of DataFrameHelper objects to initialize the collection (default is an empty list).
         """
         self.datahelpers = datahelpers
+        self.name = "MulDataFrameHelper"
+
+    @property
+    def single_name(self):
+        return self.name.replace("Mul", "")
+    
+    @property
+    def required_columns(self):
+        return self[0].required_columns
 
     def __iter__(self):
         """
@@ -300,21 +311,27 @@ class MulDataFrameHelper:
         """
         return len(self.datahelpers)
 
-    def __str__(self, extended=False) -> str:
+    def _get_str(self, extended=False, object_name=None) -> str:
         """
-        String representation of the MulDataFrameHelper class.
+        Get string representation of the mulobject class.
 
         Parameters:
         -----------
         extended : bool, optional
-            Whether to include extended details for each DataFrameHelper (default is False).
-
+            Whether to include extended details for each object in the mulobject (default is False).
+        object_name: str, optional
+            Name of the mulobject (default is None)
+        
         Returns:
         --------
         str
             A formatted string summarizing the collection and optionally detailed descriptions.
         """
-        msg = f"MulDataFrameHelper ({len(self)} DataFrameHelper objects)\n"
+        if object_name is None:
+            object_name = self.name
+        
+        
+        msg = f"{object_name} ({len(self)} {self.single_name} objects)\n"
         msg += "-" * len(msg)
 
         submsgs = []
@@ -330,9 +347,25 @@ class MulDataFrameHelper:
             first_three = submsgs[:3]
             last_two = submsgs[-2:]
             remaining = len(self.datahelpers) - len(first_three) - len(last_two)
-            submsgs = "\n".join(first_three + [f"...{remaining} other DataFrameHelpers..."] + last_two)
+            submsgs = "\n".join(first_three + [f"...{remaining} other {self.single_name} objects..."] + last_two)
 
         return msg + "\n" + submsgs
+
+    def __str__(self, extended=False) -> str:
+        """
+        String representation of the MulDataFrameHelper class.
+
+        Parameters:
+        -----------
+        extended : bool, optional
+            Whether to include extended details for each DataFrameHelper (default is False).
+        Returns:
+        --------
+        str
+            A formatted string summarizing the collection and optionally detailed descriptions.
+        """
+
+        return self._get_str(extended=extended)
 
     def __setitem__(self, index, trace):
         """
@@ -349,20 +382,26 @@ class MulDataFrameHelper:
 
     def __getitem__(self, index):
         """
-        Get an item or slice from the datahelpers list.
+        Retrieve an item or slice from the `datahelpers` list.
 
         Parameters:
         -----------
-        index : int or slice
-            The index or slice to retrieve.
+        index : int, slice, or str
+            - If an int, retrieves a single DataFrameHelper at the specified index.
+            - If a slice, returns a new MulDataFrameHelper with the sliced data.
+            - If a str, filters and returns all DataFrameHelpers with the specified author.
 
         Returns:
         --------
-        DataFrameHelper or MulDataFrameHelper
-            The requested DataFrameHelper or a new MulDataFrameHelper for a slice.
+        DataFrameHelper or MulDataFrameHelper or list[DataFrameHelper]
+            - A single DataFrameHelper if `index` is an int.
+            - A new MulDataFrameHelper containing the slice if `index` is a slice.
+            - A list of DataFrameHelpers matching the specified author if `index` is a str.
         """
         if isinstance(index, slice):
             return self.__class__(datahelpers=self.datahelpers[index])
+        elif isinstance(index, str):
+            return [dfh for dfh in self.datahelpers if dfh.author == index]
         else:
             return self.datahelpers[index]
 
