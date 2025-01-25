@@ -1,7 +1,5 @@
 import pandas as pd
-from utdquake.core.event.data import DataFrameHelper,MulDataFrameHelper
-from utdquake.core.database.database import load_dataframe_from_sqlite
-from utdquake.core.event.picks import Picks, MulPicks, read_picks
+from utdquake.core.event.picks import Picks, MulPicks, read_picks,read_picks_in_chunks
 import datetime as dt
 # data_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/stations.csv"
 # data = pd.read_csv(data_path)
@@ -25,8 +23,18 @@ picks = read_picks(picks_path,author="manual",
                                   "station":{"condition":"LIKE","value":"OKAS%"}
                                   })
 
-print(picks["station"])
+# print(picks["station"])
 print(picks)
+
+picks = read_picks_in_chunks(picks_path,author="manual",
+                             chunksize=5,
+                   custom_params={"distance":{"condition":"<","value":0.5},
+                                  "station":{"condition":"LIKE","value":"OKAS%"}
+                                  })
+
+for pick in picks:
+    print(pick)
+    print(pick.data)
 
 exit()
 

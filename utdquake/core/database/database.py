@@ -168,6 +168,9 @@ def load_table(
         # Execute the query and load the data into a DataFrame
         df = pd.read_sql_query(query, conn, params=sql_params, parse_dates=parse_dates)
 
+        if df.empty:
+            continue
+
         # Remove duplicates if required
         if drop_duplicates:
             drop_subset = list(custom_params.keys()) if custom_params else None
