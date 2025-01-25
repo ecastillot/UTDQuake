@@ -99,6 +99,7 @@ class Client(FDSNClient):
 
         Returns:
             pandas.DataFrame: A DataFrame containing the station information, including:
+                - "sta_id": Network.Station.
                 - "network": Network code to which the station belongs.
                 - "station": Station code.
                 - "latitude": Latitude of the station.

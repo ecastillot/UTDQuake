@@ -7,8 +7,49 @@
 #  */
 
 from .data import DataFrameHelper, MulDataFrameHelper
+from ..database.database import load_dataframe_from_sqlite
 from pandas.api.types import is_datetime64_any_dtype
 import pandas as pd
+
+def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True):
+    """
+    Load earthquake picks from an SQLite database and return a Picks object.
+
+    Args:
+        path (str): The path to the SQLite database file containing pick data.
+        author (str): The name or identifier of the author associated with the picks.
+        ev_ids (list of str, optional): List of event IDs (table names) to load picks from.
+            If None, picks from all available tables are loaded. Defaults to None.
+        custom_params (dict, optional): Custom filtering parameters for querying the database using mysql format. 
+            Expected format: {column_name: {'value': value, 'condition': condition}}. 
+            For example: To limit the search to 0.5 degrees of distance and stations started with OKAS.
+                custom_params={"distance":{"condition":"<","value":0.5},
+                                "station":{"condition":"LIKE","value":"OKAS%"}
+                                  }.
+            Defaults to None.
+        drop_duplicates (bool, optional): Whether to drop duplicate rows from the data.
+            Defaults to True.
+
+    Returns:
+        Picks: A `Picks` object containing the loaded pick data and associated author information.
+
+    Notes:
+        - The data is sorted by the "time" column by default.
+        - If `ev_ids` is None, all tables in the database are considered.
+        - The `Picks` class must be defined elsewhere in your code to handle the loaded data.
+    """
+    # Load pick data from the SQLite database using the helper function
+    picks = load_dataframe_from_sqlite(
+        db_path=path,           # Path to the SQLite database
+        tables=ev_ids,          # Event IDs (table names) to load picks from
+        custom_params=custom_params,  # Optional custom filtering parameters
+        drop_duplicates=drop_duplicates,
+        sortby="time"           # Sort the data by the "time" column
+    )
+
+    # Return a Picks object with the loaded data and author information
+    return Picks(picks, author)
+    
 
 class Picks(DataFrameHelper):
     """

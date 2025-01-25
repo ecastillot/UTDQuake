@@ -7,6 +7,7 @@
 #  */
 
 from .spatial  import Points
+from .picks import read_picks
 
 class Events(Points):
     """
@@ -139,4 +140,15 @@ class Events(Points):
             self.filter_by_r_az(latitude=lat, longitude=lon, r=r_max, az=az_max)
 
         return self
+    
+    def get_picks(self,picks_path,author,stations=None,**kwargs):
+        
+        self.query(**kwargs)
+        ev_ids = self.data["ev_id"].to_list()
+        picks = read_picks(picks_path,author,ev_ids=ev_ids)
+        
+        # if stations is not None:
+            
+        
+        return picks
     

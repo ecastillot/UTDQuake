@@ -1,8 +1,8 @@
 import pandas as pd
 from utdquake.core.event.data import DataFrameHelper,MulDataFrameHelper
-from utdquake.core.database import load_dataframe_from_sqlite
-from utdquake.core.event.picks import Picks, MulPicks
-
+from utdquake.core.database.database import load_dataframe_from_sqlite
+from utdquake.core.event.picks import Picks, MulPicks, read_picks
+import datetime as dt
 # data_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/stations.csv"
 # data = pd.read_csv(data_path)
 # # print(data)
@@ -19,7 +19,17 @@ from utdquake.core.event.picks import Picks, MulPicks
 
 picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
 
-df = load_dataframe_from_sqlite(picks_path)
+# df = load_dataframe_from_sqlite(picks_path)
+picks = read_picks(picks_path,author="manual",
+                   custom_params={"distance":{"condition":"<","value":0.5},
+                                  "station":{"condition":"LIKE","value":"OKAS%"}
+                                  })
+
+print(picks["station"])
+print(picks)
+
+exit()
+
 # print(df.columns)
 picks = Picks(data=df,author="manual")
 picks2 = Picks(data=df,author="manual2")

@@ -2,7 +2,7 @@ import os
 import re
 import pandas as pd
 from obspy import read_inventory
-from utdquake.core.database import save_dataframe_to_sqlite
+from utdquake.core.database.database import save_dataframe_to_sqlite
 
 def get_custom_picks(event):
     """
