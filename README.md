@@ -12,11 +12,15 @@ University of Texas at Dallas Earthquake Dataset
 
 ## Development
 - 0.0.7:
-    - utd:
-        UTD module is only used to read custom earthquake dataset
-        (stations.db,catalog.csv,pics.db,mag.db)
-    - fdsn:
-        Custom FDSN client now is part of fdsn module
+    - clients
+        - utd:
+            UTD module is only used to write custom earthquake dataset
+            (stations.db,catalog.csv,pics.db,mag.db)
+        - fdsn:
+            Custom FDSN client now is part of fdsn module
+    - core
+        - database: Load and read dataframes from sql (chunk is included)
+        - event: Different classes to manage different type of dataframes      (events,stations,picks)
     
 - 0.0.6:
     - tools:
