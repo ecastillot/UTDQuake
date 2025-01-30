@@ -104,7 +104,7 @@ class Events(Points):
             Each tuple is consider a point (lon,lat).
             The first point must be equal to the last point in the polygon.
         region_from_src : tuple, optional
-            Source-based region definition (latitude, longitude, max_radius, max_azimuth) (default is None).
+            Source-based region definition (latitude, longitude, max_radius_in_km, max_azimuth) (default is None).
 
         Returns:
         --------
@@ -141,14 +141,14 @@ class Events(Points):
 
         return self
     
-    def get_picks(self,picks_path,author,stations=None,**kwargs):
+    # def get_picks(self,picks_path,author,stations=None,**kwargs):
         
-        self.query(**kwargs)
-        ev_ids = self.data["ev_id"].to_list()
-        picks = read_picks(picks_path,author,ev_ids=ev_ids)
+    #     self.query(**kwargs)
+    #     ev_ids = self.data["ev_id"].to_list()
+    #     picks = read_picks(picks_path,author,ev_ids=ev_ids)
         
-        # if stations is not None:
+    #     # if stations is not None:
             
         
-        return picks
+    #     return picks
     
