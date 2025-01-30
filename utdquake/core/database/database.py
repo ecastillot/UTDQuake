@@ -156,15 +156,17 @@ def load_table(
 
                 # Add conditions for columns that exist in the table
                 if key in columns:
+                    
                     query += f" AND {key} {info['condition']} :{key}"
+                    
                     value = info["value"]
-
-                    # Format datetime values as strings
                     if isinstance(value, dt.datetime):
-                        value = value.strftime('%Y-%m-%d %H:%M:%S')
+                        value = value.strftime("%Y-%m-%d %H:%M:%S")
+                        
 
+                
                     sql_params[key] = value
-
+                    
         # Execute the query and load the data into a DataFrame
         df = pd.read_sql_query(query, conn, params=sql_params, parse_dates=parse_dates)
 

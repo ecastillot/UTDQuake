@@ -2,7 +2,7 @@ import os
 import re
 import pandas as pd
 from obspy import read_inventory
-from utdquake.core.database.database import save_dataframe_to_sqlite
+from utdquake.core.database.database import save_to_sqlite
 
 def get_custom_picks(event):
     """
@@ -396,7 +396,7 @@ def save_info(path, info):
             
             # Group the DataFrame by 'ev_id' and iterate over each group
             for ev_id, df_by_evid in value.groupby("ev_id").__iter__():
-                save_dataframe_to_sqlite(df_by_evid,
+                save_to_sqlite(df_by_evid,
                                          info_path,ev_id)
                 # with sqlite3.connect(info_path) as conn:
                 #     # Save each group to a SQLite table, appending to the table if it exists

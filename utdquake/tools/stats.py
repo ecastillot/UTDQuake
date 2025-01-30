@@ -5,7 +5,7 @@ import numpy as np
 import concurrent.futures as cf
 from tqdm import tqdm
 from obspy import UTCDateTime
-from utdquake.core.database import save_dataframe_to_sqlite
+from utdquake.core.database.database import save_to_sqlite
 
 class StatValues:
     def __init__(self,
@@ -403,7 +403,7 @@ def get_rolling_stats(st, step=3600, starttime=None, endtime=None,
             for key in stats_keys:
                 stats = stats_per_channel[stats_per_channel["stats"] == key]
                 stats = stats.drop("stats", axis=1)
-                save_dataframe_to_sqlite(stats, db_path, key)
+                save_to_sqlite(stats, db_path, key)
 
     return all_stats
 

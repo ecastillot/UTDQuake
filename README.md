@@ -11,7 +11,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
-- 0.0.8:
+- 0.0.8 & 0.0.9:
     Fixing init bugs
 - 0.0.7:
     - clients

@@ -7,7 +7,7 @@
 #  */
 import utdquake.scan.utils as ut
 from utdquake.tools.stats import get_rolling_stats
-from utdquake.core.database import load_dataframe_from_sqlite
+from utdquake.core.database.database import load_from_sqlite
 
 import logging
 import pandas as pd
@@ -17,10 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import host_subplot
 import concurrent.futures as cf
-
-import glob
-from matplotlib.ticker import MaxNLocator
-import matplotlib.dates as mdates
+from obspy import UTCDateTime
 
 logger = logging.getLogger("utdquake.scan.scanner")
 
@@ -475,6 +472,11 @@ class Scanner(object):
         Returns:
             pd.DataFrame: DataFrame containing concatenated statistical data, or None if no data is found.
         """
+        if isinstance(starttime, UTCDateTime):
+            starttime = starttime.datetime
+        if isinstance(endtime, UTCDateTime):
+            endtime = endtime.datetime
+        
         # Get the database paths matching the criteria
         db_paths = ut.get_db_paths(providers=self.providers,
                                 db_folder_path=self.db_folder_path,
@@ -486,7 +488,6 @@ class Scanner(object):
         
         logger.info(f"Loading: {len(db_paths)} paths")
         
-        format = "%Y-%m-%d %H:%M:%S"
         all_dfs = {}
         
         # Process each database path
@@ -503,14 +504,14 @@ class Scanner(object):
              
             # Load statistics for each specified metric
             for stat in stats:
-                starttime_str = starttime.strftime(format)
-                endtime_str = endtime.strftime(format)
                 
                 try:
-                    df = load_dataframe_from_sqlite(db_path=db_path,
+                    custom_params = {"starttime":{"condition":">=","value":starttime},
+                                     "endtime":{"condition":"<","value":endtime}}
+                    df = load_from_sqlite(db_path=db_path,
                                                     tables=[stat],
-                                                    starttime=starttime_str,
-                                                    endtime=endtime_str
+                                                    custom_params=custom_params,
+                                                    parse_dates=["starttime","endtime"]
                                                     )
                 except Exception as e:
                     logger.error(f"Error loading data from {db_path}: {e}")
