@@ -25,10 +25,10 @@ x = eqdata.select_data({"station":["PB02"]},inplace=True)
 
 # x = eqdata.filter("elevation",900,1000,inplace=False)
 # x = eqdata.filter("elevation",900,1000,inplace=True)
-print(x)
-print(type(x))
-print(eqdata)
-print(type(eqdata))
+# print(x)
+# print(type(x))
+# print(eqdata)
+# print(type(eqdata))
 
 
 # print(eqdata)
@@ -53,30 +53,30 @@ print(type(eqdata))
 # # print(mul_eqdata)
 # # print(mul_eqdata.__str__(True))
 # # print(type(mul_eqdata))
-exit()
+# exit()
 
-picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
+# picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
 
-# df = load_dataframe_from_sqlite(picks_path)
-picks = read_picks(picks_path,author="manual",
-                   custom_params={"distance":{"condition":"<","value":0.5},
-                                  "station":{"condition":"LIKE","value":"OKAS%"}
-                                  })
+# # df = load_dataframe_from_sqlite(picks_path)
+# picks = read_picks(picks_path,author="manual",
+#                    custom_params={"distance":{"condition":"<","value":0.5},
+#                                   "station":{"condition":"LIKE","value":"OKAS%"}
+#                                   })
 
-# print(picks["station"])
-print(picks)
+# # print(picks["station"])
+# print(picks)
 
-picks = read_picks_in_chunks(picks_path,author="manual",
-                             chunksize=5,
-                   custom_params={"distance":{"condition":"<","value":0.5},
-                                  "station":{"condition":"LIKE","value":"OKAS%"}
-                                  })
+# picks = read_picks_in_chunks(picks_path,author="manual",
+#                              chunksize=5,
+#                    custom_params={"distance":{"condition":"<","value":0.5},
+#                                   "station":{"condition":"LIKE","value":"OKAS%"}
+#                                   })
 
-for pick in picks:
-    print(pick)
-    print(pick.data)
+# for pick in picks:
+#     print(pick)
+#     print(pick.data)
 
-exit()
+# exit()
 
 # print(df.columns)
 picks = Picks(data=df,author="manual")

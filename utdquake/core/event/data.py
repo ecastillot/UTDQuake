@@ -7,7 +7,9 @@
 #  */
 import pandas as pd
 import copy
-import ast
+import warnings
+
+
 
 def proc_data(data, required_columns, date_columns=None):
     """
@@ -65,7 +67,6 @@ class DataFrameHelper(pd.DataFrame):
     """
     _preprocessed = False  # Class-level flag to track preprocessing
     
-    
     def __init__(self, *args,required_columns=None, date_columns=None, author=None,**kwargs):
         """
         Initialize the DataFrameHelper instance.
@@ -88,16 +89,14 @@ class DataFrameHelper(pd.DataFrame):
             DataFrameHelper._preprocessed = True
             
         super().__init__(*args,**kwargs)
-        # # print(args)
-        # # print(type(args))
-        # exit()
-        # super().__init__(*args,**kwargs)
         
-        self.required_columns = required_columns
-        self.date_columns = date_columns
-        self.author = author
+        warnings.simplefilter("ignore", category=UserWarning)
+        self._custom_info = {"required_columns":required_columns,
+                             "date_columns": date_columns,
+                             "author": author
+                             }
         self._instanced = True
-        
+            
         
     @property
     def _constructor(self):
@@ -396,6 +395,9 @@ class MulDataFrameHelper:
         if isinstance(index, slice):
             return self.__class__(datahelpers=self.datahelpers[index])
         elif isinstance(index, str):
+            print(self.datahelpers[0].author)
+            x= [dfh for dfh in self.datahelpers if dfh.author == index]
+            print(index)
             return [dfh for dfh in self.datahelpers if dfh.author == index]
         else:
             return self.datahelpers[index]

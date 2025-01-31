@@ -119,10 +119,9 @@ class Picks(DataFrameHelper):
             The author or source of the picks data.
         """
         mandatory_columns = ['ev_id', 'network', 'station', 'time', 'phase_hint']
-        super().__init__(data=data, required_columns=mandatory_columns,
+        super().__init__(data, required_columns=mandatory_columns,
                         date_columns=["time"],
                          author=author)
-        self._mandatory_columns = mandatory_columns
 
     @property
     def events(self):
@@ -134,7 +133,8 @@ class Picks(DataFrameHelper):
         list
             A list of unique event IDs.
         """
-        return list(set(self.data["ev_id"]))
+        data = self["ev_id"]
+        return list(set(data))
 
     def __str__(self) -> str:
         """
@@ -158,8 +158,8 @@ class Picks(DataFrameHelper):
         pd.Series
             The row corresponding to the earliest pick.
         """
-        min_idx = self.data['time'].idxmin()  # Get the index of the earliest pick time.
-        row = self.data.loc[min_idx, :]  # Retrieve the row at that index.
+        min_idx = self['time'].idxmin()  # Get the index of the earliest pick time.
+        row = self.loc[min_idx, :]  # Retrieve the row at that index.
         return row
 
     @property
@@ -172,12 +172,12 @@ class Picks(DataFrameHelper):
         list
             A list of unique station IDs in the format 'network.station'.
         """
-        data = self.data.copy()
+        data = self.copy()
         data = data.drop_duplicates(subset=["network", "station"], ignore_index=True)
         data["station_ids"] = data.apply(lambda x: ".".join((x.network, x.station)), axis=1)
         return data["station_ids"].to_list()
 
-    def drop_picks_with_single_phase(self):
+    def drop_picks_with_single_phase(self,inplace=False):
         """
         Drop picks that have only one phase (e.g., only P or only S) for each event-station pair.
 
@@ -186,10 +186,10 @@ class Picks(DataFrameHelper):
         Picks
             The updated Picks instance with only picks having both P and S phases.
         """
-        if self.data.empty:
+        if self.empty:
             return self
 
-        data = self.data.copy()
+        data = self.copy()
         picks = []
         
         # Group data by event ID and station, and filter for stations with both P and S phases
@@ -198,13 +198,25 @@ class Picks(DataFrameHelper):
             if len(df) == 2:  # Keep only groups with both P and S phases
                 picks.append(df)
         
-        if not picks:  # If no valid picks are found, set an empty DataFrame
-            picks = pd.DataFrame()
-        else:
-            picks = pd.concat(picks, axis=0)  # Combine all valid picks
-            picks.reset_index(inplace=True, drop=True)
+        if inplace:
         
-        self.data = picks
+            if not picks:  # If no valid picks are found, set an empty DataFrame
+                self.__init__(pd.DataFrame(columns=self.required_columns),
+                                      author=self.author)
+                return None
+            else:
+                picks = pd.concat(picks, axis=0)  # Combine all valid picks
+                self.__init__(picks,
+                              author=self.author)
+                return None
+        else:
+            if not picks:
+                self.__init__(pd.DataFrame(columns=self.required_columns),
+                                      author=self.author)
+            else:
+                picks = pd.concat(picks, axis=0)  # Combine all valid picks
+                return self.__class__(picks,author=self.author)
+            
         return self
             
 class MulPicks(MulDataFrameHelper):
@@ -334,7 +346,7 @@ class MulPicks(MulDataFrameHelper):
 
         # Iterate through each Picks object in the picks_list
         for picks in self.picks_list:
-            picks.drop_picks_with_single_phase()
+            picks = picks.drop_picks_with_single_phase()
             all_picks.append(picks) 
         
         return self.__class__(picks_list=all_picks)
@@ -361,6 +373,7 @@ class MulPicks(MulDataFrameHelper):
             If more than one Picks object exists for the same author.
             If the time column is not of datetime type.
         """
+        print( self[author1])
         # Retrieve Picks objects for the given authors
         dfh1_list = self[author1]
         dfh2_list = self[author2]
@@ -374,8 +387,10 @@ class MulPicks(MulDataFrameHelper):
                 raise Exception(f"More than 1 {self.single_name} with the same author {dfh_list[0].author}")
 
             # Retrieve the data and check the time column type
-            dfh = dfh_list[0]
-            data = dfh.data
+            # dfh = dfh_list[0]
+            data = dfh_list[0]
+            print(data)
+            exit()
             time_type = data[key].dtype
 
             if not is_datetime64_any_dtype(data[key]):
