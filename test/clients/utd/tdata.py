@@ -1,5 +1,5 @@
 import pandas as pd
-from utdquake.core.event.picks import Picks, MulPicks, read_picks,read_picks_in_chunks
+from utdquake.core.event.picks import Picks,  read_picks,read_picks_in_chunks
 import datetime as dt
 from utdquake.core.event.data import DataFrameHelper
 data_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/stations.csv"
@@ -55,14 +55,15 @@ x = eqdata.select_data({"station":["PB02"]},inplace=True)
 # # print(type(mul_eqdata))
 # exit()
 
-# picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
+picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
 
-# # df = load_dataframe_from_sqlite(picks_path)
-# picks = read_picks(picks_path,author="manual",
-#                    custom_params={"distance":{"condition":"<","value":0.5},
-#                                   "station":{"condition":"LIKE","value":"OKAS%"}
-#                                   })
-
+# df = load_dataframe_from_sqlite(picks_path)
+picks = read_picks(picks_path,author="manual",
+                   custom_params={"distance":{"condition":"<","value":0.5},
+                                  "station":{"condition":"LIKE","value":"OKAS%"}
+                                  })
+print(picks)
+exit()
 # # print(picks["station"])
 # print(picks)
 

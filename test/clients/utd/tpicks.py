@@ -1,5 +1,5 @@
 import pandas as pd
-from utdquake.core.event.picks import Picks, MulPicks, read_picks,read_picks_in_chunks
+from utdquake.core.event.picks import Picks,  read_picks,read_picks_in_chunks
 import datetime as dt
 from utdquake.core.database.database import load_from_sqlite
 
@@ -44,7 +44,8 @@ df = load_from_sqlite(picks_path)
 
 # print(df.columns)
 picks = Picks(data=df,author="manual")
-print(picks)
+# print(picks.__str__("utdquake"))
+print(picks.__str__("pandas"))
 exit()
 
 picks2 = Picks(data=df,author="manual2")

@@ -6,12 +6,12 @@
 #  * @desc [description]
 #  */
 
-from .data import DataFrameHelper, MulDataFrameHelper
+from .data import DataFrameHelper
 from ..database.database import load_from_sqlite,load_chunks_from_sqlite
-from pandas.api.types import is_datetime64_any_dtype
 import pandas as pd
 
-def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True):
+def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True,
+               format="utdquake"):
     """
     Load earthquake picks from an SQLite database and return a Picks object.
 
@@ -47,8 +47,10 @@ def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=Tr
         sortby="time"           # Sort the data by the "time" column
     )
 
-    # Return a Picks object with the loaded data and author information
-    return Picks(picks, author)
+    if format =="utdqake":
+        return Picks(picks, author)
+    else:
+        return picks
   
 def read_picks_in_chunks(path, author, chunksize=100, custom_params=None, drop_duplicates=True):
     """
@@ -136,7 +138,7 @@ class Picks(DataFrameHelper):
         data = self["ev_id"]
         return list(set(data))
 
-    def __str__(self) -> str:
+    def __str__(self, mode="pandas") -> str:
         """
         String representation of the Picks class.
 
@@ -145,7 +147,12 @@ class Picks(DataFrameHelper):
         str
             A summary of the number of events and picks in the data.
         """
-        msg = f"Picks | {len(self.events)} events, {self.__len__()} picks"
+        if mode == "pandas":
+            msg = super().__str__(mode=mode)
+        elif mode == "utdquake":
+            msg = f"Picks | {len(self.events)} events, {self.__len__()} picks"
+        else:
+            raise Exception(f"__str__ mode: {mode} is not supported")
         return msg
 
     @property
@@ -219,249 +226,3 @@ class Picks(DataFrameHelper):
             
         return self
             
-class MulPicks(MulDataFrameHelper):
-    def __init__(self, picks_list=[]):
-        """
-        Initialize a MulPicks object, which is a collection of Picks objects.
-
-        Parameters:
-        -----------
-        picks_list : list, optional
-            A list of Picks objects to initialize the collection (default is an empty list).
-
-        Raises:
-        -------
-        Exception
-            If any item in picks_list is not an instance of Picks.
-        """
-        for picks in picks_list:
-            if not isinstance(picks, Picks):
-                raise Exception(f"{picks} must be a Picks object")
-
-        # Call the parent class initializer with the provided picks_list
-        super().__init__(datahelpers=picks_list)
-        self.name = "MulPicks"
-        self.picks_list = picks_list
-
-    def __str__(self, extended=False) -> str:
-        """
-        String representation of the MulPicks class.
-
-        Parameters:
-        -----------
-        extended : bool, optional
-            Whether to include extended details for each Picks object (default is False).
-
-        Returns:
-        --------
-        str
-            A formatted string summarizing the collection and optionally detailed descriptions.
-        """
-        # Use the helper method from the parent class to generate the string
-        return self._get_str(extended=extended, object_name=self.name)
-
-    def get_stations(self, preferred_author=None):
-        """
-        Retrieve a list of unique station IDs from the Picks objects in the picks_list.
-
-        Parameters:
-        -----------
-        preferred_author : str, optional
-            Filter the Picks objects by the specified author (default is None, meaning no filtering).
-
-        Returns:
-        --------
-        list
-            A list of unique station IDs.
-
-        Raises:
-        -------
-        Exception
-            If no station IDs are found, either because the picks_list is empty or the preferred_author filter excludes all entries.
-        """
-        station_ids = []
-
-        # Iterate through each Picks object in the picks_list
-        for picks in self.picks_list:
-            # If a preferred author is specified, skip Picks objects from other authors
-            if preferred_author is not None:
-                if picks.author != preferred_author:
-                    continue
-            # Add the stations from the current Picks object to the station_ids list
-            station_ids += picks.stations
-
-        # Raise an exception if no station IDs are found
-        if not station_ids:
-            raise Exception("Empty station IDs. Review your preferred author in case you are using it.")
-
-        # Remove duplicates from the station_ids list
-        station_ids = list(set(station_ids))
-        return station_ids
-
-    def get_lead_pick(self, preferred_author=None):
-        """
-        Retrieve the station and time of the lead pick (earliest pick time) from the Picks objects.
-
-        Parameters:
-        -----------
-        preferred_author : str, optional
-            Filter the Picks objects by the specified author (default is None, meaning no filtering).
-
-        Returns:
-        --------
-        tuple
-            A tuple containing the station ID (str) and the time (datetime) of the lead pick.
-
-        Raises:
-        -------
-        Exception
-            If the picks_list is empty or no picks match the preferred_author.
-        """
-        lead_pick = []
-
-        # Iterate through each Picks object in the picks_list
-        for picks in self.picks_list:
-            # If a preferred author is specified, skip Picks objects from other authors
-            if preferred_author is not None:
-                if picks.author != preferred_author:
-                    continue
-            # Append the lead pick (station and time) from the current Picks object
-            lead_pick.append(picks.lead_pick)
-
-        # Convert the list of lead picks to a DataFrame for easy processing
-        lead_pick = pd.DataFrame(lead_pick, columns=["station", "time"])
-
-        # Get the index of the minimum arrival time (earliest pick)
-        min_idx = lead_pick['time'].idxmin()
-
-        # Retrieve the row corresponding to the earliest pick
-        row = lead_pick.loc[min_idx, ['time', 'station']]
-
-        # Return the station and time of the lead pick as a tuple
-        return row.station, row.time
-    
-    def drop_picks_with_single_phase(self):
-
-        all_picks = []
-
-        # Iterate through each Picks object in the picks_list
-        for picks in self.picks_list:
-            picks = picks.drop_picks_with_single_phase()
-            all_picks.append(picks) 
-        
-        return self.__class__(picks_list=all_picks)
-    
-    def compare_times(self, author1, author2):
-        """
-        Compare the time column between Picks objects from two different authors.
-
-        Parameters:
-        -----------
-        author1 : str
-            The name of the first author to compare.
-        author2 : str
-            The name of the second author to compare.
-
-        Returns:
-        --------
-        pd.DataFrame
-            A DataFrame with merged data, including the time difference between the two authors.
-
-        Raises:
-        -------
-        Exception
-            If more than one Picks object exists for the same author.
-            If the time column is not of datetime type.
-        """
-        print( self[author1])
-        # Retrieve Picks objects for the given authors
-        dfh1_list = self[author1]
-        dfh2_list = self[author2]
-        key = "time"
-
-        # Initialize a list to store data from both authors
-        all_data = []
-        for dfh_list in [dfh1_list, dfh2_list]:
-            # Ensure only one Picks object exists for the author
-            if len(dfh_list) > 1:
-                raise Exception(f"More than 1 {self.single_name} with the same author {dfh_list[0].author}")
-
-            # Retrieve the data and check the time column type
-            # dfh = dfh_list[0]
-            data = dfh_list[0]
-            print(data)
-            exit()
-            time_type = data[key].dtype
-
-            if not is_datetime64_any_dtype(data[key]):
-                raise Exception(f"Error: {key} column in {self.single_name}[{dfh.author}] is a {time_type}. It must be a datetime object")
-
-            # Append the data for merging
-            all_data.append(data)
-
-        # Define columns to merge on, excluding the time key
-        cols2merge = self.required_columns
-        suffixes = list(map(lambda x: "_" + x, [author1, author2]))
-        cols2merge.remove(key)
-
-        # Merge the data from the two authors
-        data = pd.merge(
-            left=all_data[0],
-            right=all_data[1],
-            on=cols2merge,
-            suffixes=suffixes
-        )
-
-        # Calculate the time difference in seconds
-        data.loc[:, f"delta_{key}"] = data[key + suffixes[0]] - data[key + suffixes[1]]
-        data[f"delta_{key}"] = data[f"delta_{key}"].dt.total_seconds()
-
-        # Select final columns for the output DataFrame
-        final_cols = cols2merge + [key + suffixes[0]] + [key + suffixes[1]] + [f"delta_{key}"]
-        data = data[final_cols]
-
-        return data
-
-        
-        
-        
-        # list2compare = [author1,author2]
-        
-        # if sr_columns is None:
-        #     sr_columns = ["time"]
-        
-        # data2compare = []
-        # for pick in self.__iter__():
-        #     if pick.author in list2compare:
-        #         data = pick.data.copy()
-        #         _mandatory_columns = pick.required_columns
-                
-        #         _optional_columns = [v for v in sr_columns\
-        #                     if v in data.columns.to_list()]
-                
-        #         if _optional_columns:
-        #             cols = _mandatory_columns + _optional_columns
-        #         else:
-        #             cols = _mandatory_columns
-                
-        #         data = data[cols]
-        #         data2compare.append(data)
-                
-        # key = "time"
-        # cols2merge =  _mandatory_columns.copy() 
-        # cols2merge.remove(key)
-        # suffixes = list(map(lambda x: "_"+x,list2compare))
-        
-        # # print(data2compare[0],data2compare[1],cols2merge,suffixes)
-        # data = pd.merge(left=data2compare[0], 
-        #                 right=data2compare[1],
-        #                 on=cols2merge,
-        #                 suffixes=suffixes )
-        # print(data2compare[0].info())
-        # exit()
-        # data.loc[:,"delta_time"] = data[key+suffixes[0]] - data[key+suffixes[1]]
-        # print(data)
-        # data['delta_time'] = data['delta_time'].dt.total_seconds()
-        
-        # return data
-    
