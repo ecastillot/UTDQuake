@@ -8,7 +8,7 @@
 
 from ..database.database import load_from_sqlite,load_chunks_from_sqlite
 
-def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
+def read_db(path, ev_ids=None, custom_params=None, drop_duplicates=True):
     """
     Load earthquake picks from an SQLite database and return a Picks object.
 
@@ -45,7 +45,7 @@ def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
 
     return picks
   
-def read_picks_in_chunks(path, chunksize=100, custom_params=None, drop_duplicates=True):
+def read_db_in_chunks(path, chunksize=100, custom_params=None, drop_duplicates=True):
     """
     Load earthquake picks from an SQLite database in chunks and yield a Picks object for each chunk.
 
