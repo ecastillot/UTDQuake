@@ -6,18 +6,14 @@
 #  * @desc [description]
 #  */
 
-from .data import DataFrameHelper
 from ..database.database import load_from_sqlite,load_chunks_from_sqlite
-import pandas as pd
 
-def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=True,
-               format="utdquake"):
+def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
     """
     Load earthquake picks from an SQLite database and return a Picks object.
 
     Args:
         path (str): The path to the SQLite database file containing pick data.
-        author (str): The name or identifier of the author associated with the picks.
         ev_ids (list of str, optional): List of event IDs (table names) to load picks from.
             If None, picks from all available tables are loaded. Defaults to None.
         custom_params (dict, optional): Custom filtering parameters for querying the database using mysql format. 
@@ -47,18 +43,14 @@ def read_picks(path, author, ev_ids=None, custom_params=None, drop_duplicates=Tr
         sortby="time"           # Sort the data by the "time" column
     )
 
-    if format =="utdqake":
-        return Picks(picks, author)
-    else:
-        return picks
+    return picks
   
-def read_picks_in_chunks(path, author, chunksize=100, custom_params=None, drop_duplicates=True):
+def read_picks_in_chunks(path, chunksize=100, custom_params=None, drop_duplicates=True):
     """
     Load earthquake picks from an SQLite database in chunks and yield a Picks object for each chunk.
 
     Args:
         path (str): The path to the SQLite database file containing pick data.
-        author (str): The name or identifier of the author associated with the picks.
         chunksize (int, optional): The number of rows per chunk to load from the database. Defaults to 100,
             meaning the entire dataset will be loaded in one go. If specified, data will be loaded in chunks of the specified size.
         custom_params (dict, optional): Custom filtering parameters for querying the database using SQL format. 
@@ -93,136 +85,5 @@ def read_picks_in_chunks(path, author, chunksize=100, custom_params=None, drop_d
     for picks in picks_in_chunks:
         # Yield a Picks object with the current chunk of picks and associated author information
         # This allows the caller to process each chunk one by one, without loading all the data into memory at once
-        yield Picks(picks, author)
+        yield picks
     
-class Picks(DataFrameHelper):
-    """
-    A class to manage and process earthquake picks data.
-
-    Attributes:
-    -----------
-    data : pd.DataFrame
-        The main DataFrame containing pick information. 
-        Required columns: 'ev_id', 'network', 'station', 'time', 'phase_hint'.
-    author : str, optional
-        The author or source of the picks data.
-    """
-    
-    def __init__(self, data, author) -> None:
-        """
-        Initialize the Picks class with mandatory columns.
-
-        Parameters:
-        -----------
-        data : pd.DataFrame
-            A DataFrame containing picks data. 
-            Required columns: 'ev_id', 'network', 'station', 'time', 'phase_hint'.
-        author : str, optional
-            The author or source of the picks data.
-        """
-        mandatory_columns = ['ev_id', 'network', 'station', 'time', 'phase_hint']
-        super().__init__(data, required_columns=mandatory_columns,
-                        date_columns=["time"],
-                         author=author)
-
-    @property
-    def events(self):
-        """
-        Retrieve the unique event IDs present in the data.
-
-        Returns:
-        --------
-        list
-            A list of unique event IDs.
-        """
-        data = self["ev_id"]
-        return list(set(data))
-
-    def __str__(self, mode="pandas") -> str:
-        """
-        String representation of the Picks class.
-
-        Returns:
-        --------
-        str
-            A summary of the number of events and picks in the data.
-        """
-        if mode == "pandas":
-            msg = super().__str__(mode=mode)
-        elif mode == "utdquake":
-            msg = f"Picks | {len(self.events)} events, {self.__len__()} picks"
-        else:
-            raise Exception(f"__str__ mode: {mode} is not supported")
-        return msg
-
-    @property
-    def lead_pick(self):
-        """
-        Get the pick with the earliest arrival time.
-
-        Returns:
-        --------
-        pd.Series
-            The row corresponding to the earliest pick.
-        """
-        min_idx = self['time'].idxmin()  # Get the index of the earliest pick time.
-        row = self.loc[min_idx, :]  # Retrieve the row at that index.
-        return row
-
-    @property
-    def stations(self):
-        """
-        Retrieve unique station IDs from the data.
-
-        Returns:
-        --------
-        list
-            A list of unique station IDs in the format 'network.station'.
-        """
-        data = self.copy()
-        data = data.drop_duplicates(subset=["network", "station"], ignore_index=True)
-        data["station_ids"] = data.apply(lambda x: ".".join((x.network, x.station)), axis=1)
-        return data["station_ids"].to_list()
-
-    def drop_picks_with_single_phase(self,inplace=False):
-        """
-        Drop picks that have only one phase (e.g., only P or only S) for each event-station pair.
-
-        Returns:
-        --------
-        Picks
-            The updated Picks instance with only picks having both P and S phases.
-        """
-        if self.empty:
-            return self
-
-        data = self.copy()
-        picks = []
-        
-        # Group data by event ID and station, and filter for stations with both P and S phases
-        for _, df in data.groupby(["ev_id", "station"]):
-            df = df.drop_duplicates(["phase_hint"])  # Remove duplicate phases
-            if len(df) == 2:  # Keep only groups with both P and S phases
-                picks.append(df)
-        
-        if inplace:
-        
-            if not picks:  # If no valid picks are found, set an empty DataFrame
-                self.__init__(pd.DataFrame(columns=self.required_columns),
-                                      author=self.author)
-                return None
-            else:
-                picks = pd.concat(picks, axis=0)  # Combine all valid picks
-                self.__init__(picks,
-                              author=self.author)
-                return None
-        else:
-            if not picks:
-                self.__init__(pd.DataFrame(columns=self.required_columns),
-                                      author=self.author)
-            else:
-                picks = pd.concat(picks, axis=0)  # Combine all valid picks
-                return self.__class__(picks,author=self.author)
-            
-        return self
-            

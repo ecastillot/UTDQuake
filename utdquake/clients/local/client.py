@@ -12,6 +12,8 @@ from datetime import timedelta
 from obspy.core.util.misc import BAND_CODE
 from obspy.clients.filesystem.sds import Client
 
+
+# Only for waveforms!
 class LocalClient(Client):
 
     def __init__(self,root,fmt,**kwargs):
