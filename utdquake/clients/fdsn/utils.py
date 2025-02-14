@@ -236,7 +236,7 @@ def get_custom_origin(ev_id,event):
     
     # Prepare location information
     loc_info = {
-        ("origin_loc", "agency"): origin.creation_info.agency_id,
+        ("origin_loc", "agency"): origin.creation_info.agency_id if origin.creation_info is not None else None,
         ("origin_loc", "qc_evaluation_mode"): origin.evaluation_mode,
         ("origin_loc", "qc_evaluation_status"): origin.evaluation_status,
         ("origin_loc", "origin_time"): origin.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f") if origin.time is not None else None,

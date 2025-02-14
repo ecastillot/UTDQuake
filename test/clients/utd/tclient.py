@@ -4,12 +4,12 @@ from utdquake.clients.fdsn.client import Client
 provider = "IRIS"
 client =  Client(provider)
 
-out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
-sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
+# out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
+# sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
 # print(sta)
 
 
-region = [-103.0,-94.5,33.5,37.5]
+region = [-170,-129,51,73]
 provider = "USGS"
 
 # region = [-120.947,-112.740,31.721,37.353]
@@ -39,8 +39,8 @@ client =  Client(provider)
 # print(cat[0].picks)
 # print(cat[0].preferred_origin().arrivals)
 # exit()
-cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-04-18T23:00:00"),
-                        endtime=UTCDateTime("2024-04-19T23:00:00"),
+cat,picks,mag = client.get_custom_events(starttime=UTCDateTime("2024-12-01T08:00:00"),
+                        endtime=UTCDateTime("2024-12-01T10:00:00"),
                         minlatitude=region[2], maxlatitude=region[3], 
                         minlongitude=region[0], maxlongitude=region[1],
                         # includearrivals=True,
