@@ -1,5 +1,6 @@
 import pandas as pd
-from utdquake.core.event.picks import Picks,  read_picks,read_picks_in_chunks
+from utdquake.core.event.picks import Picks
+from utdquake.core.event.stations import Stations
 import datetime as dt
 from utdquake.core.database.database import load_from_sqlite
 
@@ -18,7 +19,9 @@ from utdquake.core.database.database import load_from_sqlite
 # exit()
 
 picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
+stations_path = "/home/emmanuel/ecastillo/dev/utdquake/examples/custom_events/stations.csv"
 
+sta = pd.read_csv(stations_path)
 df = load_from_sqlite(picks_path)
 # print(df)
 # exit()
@@ -44,8 +47,12 @@ df = load_from_sqlite(picks_path)
 
 # print(df.columns)
 picks = Picks(data=df,author="manual")
+# stations= Stations(sta,xy_epsg="EPSG:3116",author="X")
 # print(picks.__str__("utdquake"))
-print(picks.__str__("pandas"))
+print(picks.data.info())
+picks.join_stations_info(sta)
+print(picks.data.info())
+# print(stations)
 exit()
 
 picks2 = Picks(data=df,author="manual2")

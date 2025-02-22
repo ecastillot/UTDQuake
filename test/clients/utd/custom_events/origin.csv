@@ -1,17 +1,2 @@
 ev_id,ev_type,agency,origin_time,longitude,latitude,depth,loc_method_id,earth_model_id,magnitude,magnitude_type,magnitude_method_id,qc_ev_type_certainty,qc_evaluation_mode,qc_evaluation_status,qc_longitude_error,qc_latitude_error,qc_depth_error,qc_magnitude_uncertainty,qc_magnitude_station_count,qc_magnitude_evaluation_status,qc_associated_phase_count,qc_used_phase_count,qc_associated_station_count,qc_used_station_count,qc_arrivals_rms,qc_azimuthal_gap,qc_minimum_station_distance,qc_maximum_station_distance,qc_median_station_distance
-ak024fftepvw,earthquake,,2024-12-01 08:12:32.418000,-150.8377,61.7204,60600.0,D,,1.6,ml,L,,manual,,,,300.0,,,,,44,,,0.55,,,,
-ak024fftepvw,earthquake,,2024-12-01 08:12:32.418000,-150.8377,61.7204,60600.0,D,,1.6,ml,L,,manual,,,,300.0,,,,,44,,,0.55,,,,
-ak024fftflij,earthquake,,2024-12-01 08:16:42.999000,-150.9896,60.1565,60900.0,D,,1.8,ml,L,,manual,,,,400.0,,,,,68,,,0.52,,,,
-av93385758,earthquake,AV,2024-12-01 08:34:17.830000,-152.29,61.319,750.0,HYP2000,SP ,-0.47,Ml,RichterMl2,,manual,final,,,3290.0,0.191728882751449,5,reviewed,8,8,5,5,0.03,159.0,0.07204,0.2833,0.1319
-ak024fftjtg2,earthquake,,2024-12-01 08:36:08.475000,-150.9938,62.9843,108400.0,D,,1.4,ml,L,,manual,,,,500.0,,,,,34,,,0.39,,,,
-ak024fftk94n,earthquake,,2024-12-01 08:38:12.264000,-153.8061,58.815,6000.0,D,,1.6,ml,L,,manual,,,,300.0,,,,,30,,,0.66,,,,
-ak024fftxlpp,earthquake,,2024-12-01 09:00:26.610000,-150.6922,63.152,133400.0,D,,1.4,ml,L,,manual,,,,300.0,,,,,21,,,0.36,,,,
-av93385768,earthquake,AV,2024-12-01 09:00:56.300000,-152.263,61.1906666666667,3790.0,HYP2000,SP ,-0.33,Ml,RichterMl2,,manual,final,,,290.0,0.168011417551523,6,reviewed,9,8,6,5,0.05,183.0,0.03757,0.1656,0.09355
-av93385773,earthquake,AV,2024-12-01 09:04:32.860000,-152.974333333333,60.5363333333333,6940.0,HYP2000,RD ,-0.68,Ml,RichterMl2,,manual,final,,,820.0,0.216195940847919,6,reviewed,11,11,6,6,0.09,261.0,0.03411,0.1534,0.12
-av93385783,earthquake,AV,2024-12-01 09:10:24.560000,-152.333166666667,61.3613333333333,2470.0,HYP2000,SP ,0.39,Ml,RichterMl2,,manual,final,,,840.0,0.143714641378268,13,reviewed,22,21,13,13,0.22,119.0,0.1043,0.8532,0.1774
-ak024fftzwn1,earthquake,,2024-12-01 09:11:17.846000,-152.3654,61.3591,4600.0,D,,1.5,ml,L,,manual,,,,200.0,,,,,47,,,0.57,,,,
-ak024ffu174f,earthquake,,2024-12-01 09:17:21.027000,-151.8829,61.0475,90000.0,D,,1.7,ml,L,,manual,,,,300.0,,,,,68,,,0.5,,,,
-ak024ffu22rs,earthquake,,2024-12-01 09:21:30.640000,-147.5208,60.6222,4000.0,D,,1.3,ml,L,,manual,,,,500.0,,,,,26,,,0.71,,,,
-ak024ffu2aqy,earthquake,,2024-12-01 09:22:34.027000,-153.0435,60.1845,116700.0,D,,1.7,ml,L,,manual,,,,400.0,,,,,32,,,0.43,,,,
-ak024ffu47hm,earthquake,,2024-12-01 09:31:25.163000,-150.4711,62.9616,98800.0,D,,2.7,ml,L,,manual,,,,300.0,,,,,140,,,0.61,,,,
-ak024ffu5xeb,earthquake,,2024-12-01 09:39:27.233000,-153.8901,59.2564,129500.0,D,,1.9,ml,L,,manual,,,,800.0,,,,,33,,,0.48,,,,
+tx2024xoub,earthquake,TX,2024-12-01 09:20:36.934154,-104.37,31.664,6715.1,NonLinLoc,PB1D-20170918-topoLV,2.0,ML,trimmed_mean,known,manual,final,0.337505804543396,0.4905585484858524,796.8213883344946,0.2,12,confirmed,32,25,,16,0.2,69.0,0.1,0.3,0.2

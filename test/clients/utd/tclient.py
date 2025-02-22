@@ -4,20 +4,20 @@ from utdquake.clients.fdsn.client import Client
 provider = "IRIS"
 client =  Client(provider)
 
-# out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
-# sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
-# print(sta)
+out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
+sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
+print(sta)
 
 
-region = [-170,-129,51,73]
-provider = "USGS"
+# region = [-170,-129,51,73]
+# provider = "USGS"
 
 # region = [-120.947,-112.740,31.721,37.353]
 # provider = "https://service.scedc.caltech.edu/"
 # provider = "USGS"
 
-# region = [-104.84329,-103.79942,31.39610,31.91505] 
-# provider = "USGS"
+region = [-104.84329,-103.79942,31.39610,31.91505] 
+provider = "USGS"
 
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
 

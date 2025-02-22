@@ -137,12 +137,10 @@ def load_table(
 
         # Extract column names from the table
         columns = [col[1] for col in cursor.fetchall()]
-
         # Build query for the table
         query = f"SELECT * FROM {table_name} WHERE 1=1"
         sql_params = {}
         req_keys = ["value", "condition"]
-
         # Add custom filtering parameters to the query
         if custom_params:
             for key, info in custom_params.items():

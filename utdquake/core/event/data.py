@@ -1,14 +1,5 @@
-# /**
-#  * @author Emmanuel Castillo
-#  * @email [castillo.280997@gmail.com]
-#  * @create date 2025-01-23 10:54:27
-#  * @modify date 2025-01-23 10:54:27
-#  * @desc [description]
-#  */
 import pandas as pd
 import copy
-import warnings
-
 
 
 def proc_data(data, required_columns, date_columns=None):
@@ -56,7 +47,7 @@ def proc_data(data, required_columns, date_columns=None):
     return data
 
 
-class DataFrameHelper(pd.DataFrame):
+class DataFrameHelper:
     """
     A subclass of pandas DataFrame to handle data with additional functionalities.
 
@@ -65,9 +56,8 @@ class DataFrameHelper(pd.DataFrame):
         required_columns (list): List of mandatory columns in the DataFrame.
         date_columns (list, optional): List of columns to parse as datetime.
     """
-    _preprocessed = False  # Class-level flag to track preprocessing
-    
-    def __init__(self, *args,required_columns=None, date_columns=None, author=None,**kwargs):
+
+    def __init__(self, data, required_columns, date_columns=None, author=None):
         """
         Initialize the DataFrameHelper instance.
 
@@ -78,34 +68,33 @@ class DataFrameHelper(pd.DataFrame):
             author (str, optional): The author or source of the picks data.
                 
         """
-        if not DataFrameHelper._preprocessed:
-            if required_columns is not None:
-                args = list(args)
-                arg_0 = proc_data(args[0],required_columns=required_columns,
-                          date_columns=date_columns)
-                args = [arg_0]+[x for x in args[1:]]
-                args = tuple(args)
-                
-            DataFrameHelper._preprocessed = True
-            
-        super().__init__(*args,**kwargs)
-        
-        warnings.simplefilter("ignore", category=UserWarning)
-        self._custom_info = {"required_columns":required_columns,
-                             "date_columns": date_columns,
-                             "author": author
-                             }
-        self._instanced = True
-            
-        
+        self.data = proc_data(
+            data=data, 
+            required_columns=required_columns,
+            date_columns=date_columns, 
+        )
+
+        # Store custom attributes
+        self.author = author
+        self.required_columns = required_columns
+        self.date_columns = date_columns
+
     @property
-    def _constructor(self):
-        """
-        Ensures that operations on this class return instances of DataFrameHelper.
-        """
-        return DataFrameHelper
+    def empty(self):
+        """Check if the DataFrame is empty."""
+        return self.data.empty
+
+    def __len__(self):
+        """Return the number of rows in the DataFrame."""
+        return len(self.data)
+
+    def __getitem__(self, key):
+        return self.data[key]
     
-    def __str__(self, mode="pandas"):
+    def __setitem__(self, key, value):
+        self.data[key] = value
+
+    def __str__(self, extended=False):
         """
         Return a string representation of the DataFrameHelper instance.
 
@@ -115,49 +104,14 @@ class DataFrameHelper(pd.DataFrame):
         Returns:
             str: String representation of the DataFrameHelper.
         """
-        if mode == "pandas":
-            msg = super().__str__()
-        elif mode == "utdquake":
-            msg = f"DataFrameHelper ({self.__len__()} rows)" 
+        if extended:
+            msg = self.data.__str__()
         else:
-            raise Exception(f"__str__ mode: {mode} is not supported")
-            
+            msg = f"DataFrameHelper ({self.__len__()} rows)"
+            # msg += "\n-" * len(msg)
         return msg
-    
-    def select_data(self, rowval,inplace=False):
-        """
-        Select rows in the data based on specified criteria.
 
-        Parameters:
-        -----------
-        rowval : dict
-            A dictionary specifying the columns and the values to select.
-            Keys represent column names, and values are lists of values to filter by.
-
-        Returns:
-        --------
-        self : DataFrameHelper
-            The updated DataFrameHelper with only the selected rows.
-        """
-        
-        if not isinstance(rowval, dict):
-            raise Exception("rowval must be a dictionary")
-
-        if self.empty:
-            return self
-
-        data = self
-        # Create a mask based on the specified selection criteria
-        mask = data.isin(rowval).any(axis="columns")
-        if inplace:
-            # Modify the current instance
-            self.__init__(data[mask])
-            return None
-        else:
-            # Return a new instance
-            return self.__class__(data[mask])
-            
-    def append(self, data,inplace=False):
+    def append(self, data):
         """
         Append new data to the DataFrameHelper.
 
@@ -170,17 +124,19 @@ class DataFrameHelper(pd.DataFrame):
         Raises:
             TypeError: If the input data is not a DataFrame.
         """
-        data = pd.concat([self, data])
-        
-        if inplace:
-            # Modify the current instance
-            self.__init__(data)
-            return None
+        if isinstance(data, pd.DataFrame):
+            data = proc_data(
+                data, 
+                required_columns=self.required_columns,
+                date_columns=self.date_columns,
+            )
+            self.data = pd.concat([self.data, data])
         else:
-            # Return a new instance
-            return self.__class__(data)
-        
-    def remove_data(self, rowval,inplace=False):
+            msg = 'Append only supports a single DataFrame object as an argument.'
+            raise TypeError(msg)
+        return self
+
+    def remove_data(self, rowval):
         """
         Remove rows from the data based on specified conditions.
 
@@ -196,19 +152,69 @@ class DataFrameHelper(pd.DataFrame):
         if not isinstance(rowval, dict):
             raise Exception("rowval must be a dictionary")
         
-        mask = self.isin(rowval)
+        mask = self.data.isin(rowval)
         mask = mask.any(axis='columns')
-        data = self[~mask]
-        
-        if inplace:
-            # Modify the current instance
-            self.__init__(data)
-            return None
-        else:
-            # Return a new instance
-            return self.__class__(data)
+        self.data = self.data[~mask]
+        self.data.reset_index(drop=True, inplace=True)
+        return self
     
-    def filter(self, key, start=None, end=None,inplace=False):
+    def select_data(self, rowval):
+        """
+        Select rows in the data based on specified criteria.
+
+        Parameters:
+        -----------
+        rowval : dict
+            A dictionary specifying the columns and the values to select.
+            Keys represent column names, and values are lists of values to filter by.
+
+        Returns:
+        --------
+        self : DataFrameHelper
+            The updated DataFrameHelper with only the selected rows.
+        """
+        if not isinstance(rowval, dict):
+            raise Exception("rowval must be a dictionary")
+
+        if self.empty:
+            return self
+
+        # Create a mask based on the specified selection criteria
+        mask = self.data.isin(rowval).any(axis="columns")
+        self.data = self.data[mask]
+        self.data.reset_index(drop=True, inplace=True)
+        return self
+
+    def copy(self):
+        """
+        Create a deep copy of the DataFrameHelper instance.
+
+        Returns:
+        --------
+        DataFrameHelper
+            A deep copy of the current instance.
+        """
+        return copy.deepcopy(self)
+    
+    def sort_values(self, **args):
+        """
+        Sort the DataFrame by the specified columns.
+
+        Parameters:
+        -----------
+        args : dict
+            Arguments passed to `pd.DataFrame.sort_values`.
+
+        Returns:
+        --------
+        self : DataFrameHelper
+            The updated DataFrameHelper instance with sorted data.
+        """
+        self.data = self.data.sort_values(**args)
+        self.data.reset_index(drop=True, inplace=True)
+        return self
+
+    def filter(self, key, start=None, end=None):
         """
         Filter data in the catalog based on a range of values for a specified column.
 
@@ -226,19 +232,11 @@ class DataFrameHelper(pd.DataFrame):
         self : DataFrameHelper
             The updated DataFrameHelper instance with filtered rows.
         """
-        data = self
+        if (start is not None) and (len(self) != 0):
+            self.data = self.data[self.data[key] >= start]
         
-        if (start is not None) and (len(data) != 0):
-            data = data[data[key] >= start]
+        if (end is not None) and (len(self) != 0):
+            self.data = self.data[self.data[key] <= end]
         
-        if (end is not None) and (len(data) != 0):
-            data = data[data[key] <= end]
-        
-        if inplace:
-            # Modify the current instance
-            self.__init__(data)
-            return None
-        else:
-            # Return a new instance
-            return self.__class__(data)
-    
+        self.data.reset_index(drop=True, inplace=True)
+        return self

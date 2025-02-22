@@ -6,6 +6,7 @@ ev = pd.read_csv(ev_path)
 events = Events(ev,xy_epsg="EPSG:3116",author="X")
 picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
 picks = events.get_picks(picks_path=picks_path,author="manual")
+print(picks)
 print(picks.data)
 # events.filter_by_r_az(latitude=35,longitude=-96,r=150)
 # print(events.data)
