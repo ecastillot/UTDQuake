@@ -93,96 +93,104 @@ class Events(Points):
             self.filter_by_r_az(latitude=lat, longitude=lon, r=r_max, az=az_max)
         return self
 
-    def get_picks(self, picks_path,  stations=None, author="UTDQuake"):
+    def get_picks(self, picks_path, stations=None, author="UTDQuake",debug=False):
         """
         Load and return picks data associated with events.
 
         Parameters:
-        - picks_path (str): Path to the picks data file.
-        - author (str): Author/source of the picks data.
+        ----------
+        picks_path : str
+            Path to the picks data file.
+        stations : Stations, optional
+            An instance of the Stations class containing station information. 
+            If provided, the function merges station data with pick data.
+        author : str, default="UTDQuake"
+            Author/source of the picks data.
 
         Returns:
-        - Picks: An instance of the Picks class containing the loaded data.
+        -------
+        Picks
+            An instance of the Picks class containing the loaded picks data.
         """
+        
+        # Return empty Picks instance if no event data is available
         if self.data.empty:
             return Picks(data=pd.DataFrame(), author=author)
-        
+
+        # Read picks data from the provided file path
         picks = read_picks(picks_path)
         
+        # Store the original columns for later use
         out_columns = picks.columns.to_list()
-        
-        
+
+        # If station data is provided, merge it with pick data
         if stations is not None:
-            if isinstance(stations,Stations):
-                
-                src_columns = ["ev_id", "latitude", "longitude","depth","origin_time"]
+            if isinstance(stations, Stations):
+                # Define columns from the event data that need to be merged
+                src_columns = ["ev_id", "latitude", "longitude", "depth", "origin_time"]
                 picks = pd.merge(picks, self.data[src_columns], on="ev_id")
+                
+                # Rename event source columns to avoid conflicts
                 picks = picks.rename(columns={col: f"src_{col}" for col in src_columns if col != "ev_id"})
-                
-                
+
+                # Copy station data to avoid modifying the original dataset
                 stations_data = stations.data.copy()
-                picks = pd.merge(picks, stations_data, 
-                                on=["network", "station"], 
-                                how="left",
-                                suffixes=("", "_station"))
-                
+
+                # Merge station data with picks
+                picks = pd.merge(
+                    picks, stations_data,
+                    on=["network", "station"],
+                    how="left",
+                    suffixes=("", "_station")
+                )
+
+                # Rename station columns for clarity
                 sta_columns = ["latitude", "longitude", "elevation"]
                 picks = picks.rename(columns={col: f"sta_{col}" for col in sta_columns})
+
+                # Check for missing station coordinates and issue a warning
                 if picks["sta_latitude"].isnull().sum() > 0:
-                    # raise Exception("Some stations do not have coordinates")
                     nan_stations = picks[picks["sta_latitude"].isnull()]
-                    nan_stations = nan_stations[["network","station"]].drop_duplicates()
-                    nan_stations.reset_index(drop=True,inplace=True)
-                    warnings.warn(f"Some stations do not have coordinates")
-                    # Warning("Some stations do not have coordinates")
-                    print(nan_stations)
-                    # exit()
-            
-                picks = get_distance_in_dataframe(data=picks,
-                                                   lat1_name="src_latitude",
-                                          lon1_name="src_longitude",
-                                          lat2_name="sta_latitude",
-                                          lon2_name="sta_longitude",
-                                          columns=["utdq_distance",
-                                                   "utdq_azimuth",
-                                                    "utdq_bazimuth"])
-                
-                # pick_time = picks["time"].apply(lambda x: dt.timedelta(seconds=float(x)))
+                    nan_stations = nan_stations[["network", "station"]].drop_duplicates()
+                    nan_stations.reset_index(drop=True, inplace=True)
+                    
+                    
+                    warnings.warn("Some stations do not have coordinates. Activate debug mode in Events.get_picks to display them.")
+                    if debug:
+                        print("Stations with missing coordinates:")
+                        print(nan_stations)
+
+                # Compute distances, azimuths, and back-azimuths between event and station locations
+                picks = get_distance_in_dataframe(
+                    data=picks,
+                    lat1_name="src_latitude",
+                    lon1_name="src_longitude",
+                    lat2_name="sta_latitude",
+                    lon2_name="sta_longitude",
+                    columns=["utdq_distance", "utdq_azimuth", "utdq_bazimuth"]
+                )
+
+                # Compute travel time by subtracting event origin time from pick time
                 picks["utdq_time"] = picks["time"] - picks["src_origin_time"]
                 picks["utdq_time"] = picks["utdq_time"].apply(lambda x: x.total_seconds())
-                        
+
             else:
                 raise Exception("stations must be an instance of Stations")
-            
-        print(picks[['ev_id','src_latitude','src_longitude','src_depth','src_origin_time','network','station','sta_latitude','sta_longitude','sta_elevation','utdq_distance','utdq_azimuth','utdq_bazimuth','utdq_time']])
-        print(picks.info())
-        exit()
+
+        # print(picks[['ev_id','src_latitude','src_longitude','src_depth',
+        #              'src_origin_time','network','station','sta_latitude',
+        #              'sta_longitude','sta_elevation','utdq_distance',
+        #              'utdq_azimuth','utdq_bazimuth','utdq_time']])
+        # print(picks.info())
         
-        # picks = picks[out_columns]
+        picks["utdq_real"] = True
+
+        # Define additional columns to keep in the final DataFrame
+        add_columns = ["utdq_real","utdq_distance", "utdq_azimuth", "utdq_bazimuth", "utdq_time"]
         
+        # Select relevant columns for the final output
+        picks = picks[out_columns + add_columns]
+
         return Picks(data=picks, author=author)
+
     
-# def join_stations_info(self, stations_info):
-#         """
-#         Join station information to the picks data based on the station ID.
-
-#         Parameters:
-#         -----------
-#         stations_info : pd.DataFrame
-#             A DataFrame containing station information, including columns 
-#             'network', 'station', 'latitude', 'longitude'.
-
-#         Returns:
-#         --------
-#         Picks
-#             The updated Picks instance with station information joined to the data.
-#         """
-#         if self.data.empty or stations_info.empty:
-#             return self
-
-#         # Merge station information with the picks data based on the 'network' and 'station' columns
-#         self.data = pd.merge(self.data, stations_info, 
-#                              on=["network", "station"], 
-#                              how="left",
-#                              suffixes=("", "_station"))
-#         return self

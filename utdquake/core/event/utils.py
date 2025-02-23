@@ -26,7 +26,11 @@ def get_distance_in_dataframe(data: pd.DataFrame, lat1_name: str, lon1_name: str
     
     data = data.reset_index(drop=True)
     computing_r = lambda x: gps2dist_azimuth(x[lat1_name], x[lon1_name],
-                                             x[lat2_name], x[lon2_name])
+                                             x[lat2_name], x[lon2_name]) if\
+                                            (not np.isnan(x[lat1_name])) and\
+                                            (not np.isnan(x[lon1_name])) and\
+                                            (not np.isnan(x[lat2_name])) and\
+                                            (not np.isnan(x[lon2_name])) else (np.nan,np.nan,np.nan)
     r = data.apply(computing_r, axis=1)
     
     if columns is None:

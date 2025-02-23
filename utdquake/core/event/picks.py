@@ -141,7 +141,7 @@ class Picks(DataFrameHelper):
         str
             A summary of the number of events and picks in the data.
         """
-        msg = f"Picks | {len(self.events)} events, {self.__len__()} picks"
+        msg = f"Picks | {self.__len__()} picks, ({len(self.events)} events-{len(self.stations)} stations)"
         return msg
 
     @property

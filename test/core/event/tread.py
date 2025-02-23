@@ -13,5 +13,7 @@ stations_path = "/home/emmanuel/ecastillo/dev/utdquake/examples/custom_events/st
 events_path = "/home/emmanuel/ecastillo/dev/utdquake/examples/custom_events/origin.csv"
 xy_epsg = "EPSG:3116"
 
-catalog = read_catalog(events_path,stations_path,picks_path,xy_epsg)
+catalog = read_catalog(events_path,xy_epsg,stations_path=stations_path)
 print(catalog)
+picks = catalog.get_picks(picks_path=picks_path,author="manual")
+print(picks)

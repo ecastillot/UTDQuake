@@ -9,58 +9,107 @@ import pandas as pd
 from .stations import Stations
 from .events import Events
 
-def read_catalog(events_path,stations_path,picks_path,
-                 xy_epsg,author="UTDQuake") -> dict:
+def read_catalog(events_path, xy_epsg, stations_path=None, author="UTDQuake") -> dict:
     """
-    Load earthquake data from SQLite databases and return a dictionary of objects.
+    Load earthquake data from CSV files and return a Catalog object.
 
-    Args:
-        events_path (str): The path to the SQLite database file containing event data.
-        stations_path (str): The path to the SQLite database file containing station data.
-        picks_path (str): The path to the SQLite database file containing pick data.
+    Parameters:
+    ----------
+    events_path : str
+        Path to the CSV file containing event data.
+    xy_epsg : int
+        EPSG code for coordinate transformation.
+    stations_path : str, optional
+        Path to the CSV file containing station data. Default is None.
+    author : str, default="UTDQuake"
+        Author/source of the data.
 
     Returns:
-        dict: A dictionary containing the loaded event, station, and pick data.
+    -------
+    Catalog
+        A Catalog object containing the loaded event and station data.
 
     Notes:
-        - The `Events`, `Stations`, and `Picks` classes must be defined elsewhere in your code to handle the loaded data.
+    ------
+    - The `Events` and `Stations` classes must be defined elsewhere in your code 
+      to properly handle the loaded data.
+    - If `stations_path` is not provided, the station data will not be loaded.
     """
-    # Load event, station, and pick data from the SQLite databases
-    events = pd.read_csv(events_path)
-    events = Events(events,xy_epsg=xy_epsg,author=author)
-    
-    stations = pd.read_csv(stations_path)
-    stations = Stations(stations,xy_epsg=xy_epsg,author=author)
-    
-    picks = events.get_picks(picks_path,stations=stations,author=author)
 
-    stations.select_data(rowval={"sta_id":picks.stations})
-    catalog = Catalog(events,stations,picks)
+    # Load event data from CSV and create an Events instance
+    events = pd.read_csv(events_path)
+    events = Events(events, xy_epsg=xy_epsg, author=author)
+
+    # Load station data if a path is provided, otherwise set stations to None
+    if stations_path is None:
+        stations = None
+    else:
+        stations = pd.read_csv(stations_path)
+        stations = Stations(stations, xy_epsg=xy_epsg, author=author)
+
+    # Create and return a Catalog instance
+    catalog = Catalog(events, stations)
     return catalog
 
-class Catalog():
+
+class Catalog:
     """
-    A class representing a catalog of earthquake events with associated stations and picks.
+    A class representing a catalog of earthquake events with associated stations.
+
+    Attributes:
+    -----------
+    events : Events
+        An instance of the Events class containing earthquake event data.
+    stations : Stations, optional
+        An instance of the Stations class containing station data (default is None).
     """
 
-    def __init__(self, events, stations) -> None:
+    def __init__(self, events, stations=None) -> None:
         """
-        Initialize the Catalog instance.
+        Initialize a Catalog instance.
 
         Parameters:
-        - events (Events): An Events object containing event data.
-        - stations (Stations): A Stations object containing station data.
-        - picks (Picks): A Picks object containing pick data.
+        ----------
+        events : Events
+            An Events object containing event data.
+        stations : Stations, optional
+            A Stations object containing station data. Default is None.
         """
         self.events = events
-        
-        
         self.stations = stations
 
     def __str__(self) -> str:
-        """Return a string representation of the Catalog instance."""
-        msg = f"Catalog | {self.events.__len__()} events, {self.stations.__len__()} stations, {self.picks.__len__()} picks"
-        return msg
+        """
+        Return a string representation of the Catalog instance.
+
+        Returns:
+        -------
+        str
+            A formatted string summarizing the number of events and the presence of stations.
+        """
+        return f"Catalog | {len(self.events)} events, stations: {self.stations is not None}"
+
+    def get_picks(self, picks_path, author="UTDQuake"):
+        """
+        Retrieve pick data associated with the events.
+
+        Parameters:
+        ----------
+        picks_path : str
+            Path to the file containing pick data.
+        author : str, default="UTDQuake"
+            Author/source of the pick data.
+
+        Returns:
+        -------
+        Picks
+            An instance of the Picks class containing the loaded pick data.
+        """
+        return self.events.get_picks(picks_path=picks_path, stations=self.stations, author=author)
+        # self.stations.select_data(rowval={"sta_id":picks.stations})
+        
+    
+    
     
     
 # events = pd.read_csv(events_path)
