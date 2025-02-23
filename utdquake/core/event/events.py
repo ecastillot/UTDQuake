@@ -5,10 +5,13 @@
 #  * @modify date 2025-01-24 18:56:41
 #  * @desc [description]
 #  */
+import warnings
 import pandas as pd
+import datetime as dt
 from .spatial  import Points
 from .picks import read_picks, Picks
 from .stations import Stations
+from .utils import get_distance_in_dataframe
 
 class Events(Points):
     """
@@ -112,7 +115,7 @@ class Events(Points):
         if stations is not None:
             if isinstance(stations,Stations):
                 
-                src_columns = ["ev_id", "latitude", "longitude", "depth"]
+                src_columns = ["ev_id", "latitude", "longitude","depth","origin_time"]
                 picks = pd.merge(picks, self.data[src_columns], on="ev_id")
                 picks = picks.rename(columns={col: f"src_{col}" for col in src_columns if col != "ev_id"})
                 
@@ -125,18 +128,33 @@ class Events(Points):
                 
                 sta_columns = ["latitude", "longitude", "elevation"]
                 picks = picks.rename(columns={col: f"sta_{col}" for col in sta_columns})
+                if picks["sta_latitude"].isnull().sum() > 0:
+                    # raise Exception("Some stations do not have coordinates")
+                    nan_stations = picks[picks["sta_latitude"].isnull()]
+                    nan_stations = nan_stations[["network","station"]].drop_duplicates()
+                    nan_stations.reset_index(drop=True,inplace=True)
+                    warnings.warn(f"Some stations do not have coordinates")
+                    # Warning("Some stations do not have coordinates")
+                    print(nan_stations)
+                    # exit()
             
-                # picks_data = get_distance_in_dataframe(data=picks_data,
-                #                                    lat1_name="src_latitude",
-                #                           lon1_name="src_longitude",
-                #                           lat2_name="station_latitude",
-                #                           lon2_name="station_longitude",
-                #                           columns=["sr_r [km]",
-                #                                    "sr_az","sr_baz"])
+                picks = get_distance_in_dataframe(data=picks,
+                                                   lat1_name="src_latitude",
+                                          lon1_name="src_longitude",
+                                          lat2_name="sta_latitude",
+                                          lon2_name="sta_longitude",
+                                          columns=["utdq_distance",
+                                                   "utdq_azimuth",
+                                                    "utdq_bazimuth"])
+                
+                # pick_time = picks["time"].apply(lambda x: dt.timedelta(seconds=float(x)))
+                picks["utdq_time"] = picks["time"] - picks["src_origin_time"]
+                picks["utdq_time"] = picks["utdq_time"].apply(lambda x: x.total_seconds())
                         
             else:
                 raise Exception("stations must be an instance of Stations")
             
+        print(picks[['ev_id','src_latitude','src_longitude','src_depth','src_origin_time','network','station','sta_latitude','sta_longitude','sta_elevation','utdq_distance','utdq_azimuth','utdq_bazimuth','utdq_time']])
         print(picks.info())
         exit()
         

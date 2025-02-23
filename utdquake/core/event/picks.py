@@ -41,6 +41,7 @@ def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
         db_path=path,           # Path to the SQLite database
         tables=ev_ids,          # Event IDs (table names) to load picks from
         custom_params=custom_params,  # Optional custom filtering parameters
+        parse_dates=["time"],   # Parse the "time" column as datetime
         drop_duplicates=drop_duplicates,
         sortby="time"           # Sort the data by the "time" column
     )
