@@ -5,9 +5,9 @@ provider = "IRIS"
 client =  Client(provider)
 
 out = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events"
-sta = client.get_custom_stations(output_folder=out,network="TX",station="PB*")
+sta = client.get_custom_stations(output_folder=out,network="TX,4O",station="*")
 print(sta)
-
+exit()
 
 # region = [-170,-129,51,73]
 # provider = "USGS"

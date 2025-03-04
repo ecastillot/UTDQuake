@@ -11,6 +11,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.13 Picks - add_artificial_picks, plot
 - 0.0.11
     Fixing error: No agency
 - 0.0.8 & 0.0.9:

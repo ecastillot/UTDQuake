@@ -158,6 +158,20 @@ class DataFrameHelper:
         self.data.reset_index(drop=True, inplace=True)
         return self
     
+    def dropna(self, subset=None):
+        """
+        Remove rows with missing values from the DataFrame.
+
+        Parameters:
+            subset (list, optional): List of columns to consider when dropping rows. Defaults to None.
+
+        Returns:
+            DataFrameHelper: Updated DataFrameHelper instance.
+        """
+        self.data = self.data.dropna(subset=subset)
+        self.data.reset_index(drop=True, inplace=True)
+        return self
+    
     def select_data(self, rowval):
         """
         Select rows in the data based on specified criteria.

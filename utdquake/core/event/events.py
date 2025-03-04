@@ -185,11 +185,18 @@ class Events(Points):
         
         picks["utdq_real"] = True
 
+        picks.drop_duplicates(subset=["ev_id", "network", "station", "phase_hint","time"],
+                              ignore_index=True, inplace=True)
+
         # Define additional columns to keep in the final DataFrame
         add_columns = ["utdq_real","utdq_distance", "utdq_azimuth", "utdq_bazimuth", "utdq_time"]
         
-        # Select relevant columns for the final output
-        picks = picks[out_columns + add_columns]
+        if stations is not None:
+            # Select relevant columns for the final output
+            picks = picks[out_columns + add_columns]
+        else:
+            picks = picks[out_columns]
+            
 
         return Picks(data=picks, author=author)
 

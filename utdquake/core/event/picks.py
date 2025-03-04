@@ -9,6 +9,10 @@ from .data import DataFrameHelper
 from ..database.database import load_from_sqlite,load_chunks_from_sqlite
 from pandas.api.types import is_datetime64_any_dtype
 import pandas as pd
+import numpy as np
+from typing import Optional
+import matplotlib.pyplot as plt
+from scipy.stats import linregress
 
 def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
     """
@@ -145,6 +149,42 @@ class Picks(DataFrameHelper):
         return msg
 
     @property
+    def phase_hints(self):
+        """
+        Retrieve unique phase hints from the data.
+
+        Returns:
+        --------
+        list
+            A list of unique phase hints.
+        """
+        return list(set(self.data["phase_hint"]))
+    
+    @property
+    def P_counts(self):
+        """
+        Count the number of P-phase picks in the data.
+
+        Returns:
+        --------
+        int
+            The number of P-phase picks.
+        """
+        return len(self.data[self.data["phase_hint"].str.contains("P", case=False)])
+    
+    @property
+    def S_counts(self):
+        """
+        Count the number of S-phase picks in the data.
+
+        Returns:
+        --------
+        int
+            The number of S-phase picks.
+        """
+        return len(self.data[self.data["phase_hint"].str.contains("S", case=False)])
+
+    @property
     def lead_pick(self):
         """
         Get the pick with the earliest arrival time.
@@ -202,4 +242,268 @@ class Picks(DataFrameHelper):
         
         self.data = picks
         return self
+    
+    def split_by_event(self):
+        """
+        Split the pick data into separate Picks objects for each event.
+        
+        Returns:
+        --------
+        list
+            A list of Picks objects, each containing picks for a single event.
+        """
+        return [self.__class__(df,author=self.author) for _, df in self.data.groupby("ev_id")]
+        
+    def add_artificial_picks(self, events, distances, phase_type=None, distance_label=None):
+        """
+        Add artificial picks to the seismic dataset by performing linear regression on existing picks.
+        
+        Parameters:
+        -----------
+        events : Events class
+            A class containing seismic event data with origin times.
+        distances : list
+            A list of distances at which artificial picks should be added.
+        phase_type : str or list, optional
+            The phase types to consider (e.g., "P" or "S"). If None, defaults to ["P", "S"].
+        distance_label : str, optional
+            The column name for distance values. Defaults to "utdq_distance".
+        """
+        if distance_label is None:
+            distance_label = "utdq_distance"
+        
+        if phase_type is None:
+            phase_type = ["P", "S"]
+        elif isinstance(phase_type, str):
+            phase_type = [phase_type]
+        elif not isinstance(phase_type, list):
+            raise ValueError("phase_type must be a string or list of strings")
+
+        # Iterate through each group of events based on event ID and phase type
+        for (ev_id, phase), group in self.data.groupby(["ev_id", "phase_hint"]):
+            if phase not in phase_type:
+                continue
+            
+            group.dropna(subset=[distance_label], inplace=True)  # Remove NaN distances
+            if len(group) > 1:  # Linear regression requires at least two points
+                group = group.sort_values("time")
+                
+                # Retrieve the origin time for the event
+                origin_time = events.data[events.data["ev_id"] == ev_id]["origin_time"].values[0]
+                
+                # Compute travel times
+                group["travel_time"] = group["time"].apply(lambda x: (x - origin_time).total_seconds())
+                
+                # Perform linear regression between distance and travel time
+                length = len(group)
+                slope, intercept, r_value, _, _ = linregress(group[distance_label], group["travel_time"])
+                
+                # Generate artificial picks based on regression results
+                for distance in distances:
+                    if distance < 0:
+                        continue  # Ignore negative distances
+                    
+                    travel_time = pd.Timedelta(seconds=distance * slope) + pd.Timedelta(seconds=intercept)
+                    time = origin_time + travel_time
+                    
+                    artificial_pick = {
+                        "ev_id": ev_id,
+                        "network":"UTDQ",
+                        "station":"UTDQ",
+                        "time": time,
+                        "phase_hint": phase,
+                        "author": "artificial",
+                        "utdq_time": travel_time.total_seconds(),
+                        "utdq_real": True,
+                        f"{distance_label}": distance,
+                        "r2": r_value,
+                        "r2_length": length
+                    }
+                    self.data["r2"] = 1
+                    self.data["r2_length"] = length
+                    artificial_pick = pd.DataFrame([artificial_pick])
+                    self.data = pd.concat([self.data, artificial_pick], ignore_index=True)
+
+    def remove_phases_randomly(
+        self, 
+        keep_ratio: float = 0.5, 
+        min_p: int = 4, 
+        min_s: int = 2, 
+        distance_label: Optional[str] = None
+    ) -> None:
+        """
+        Randomly removes seismic phases for each event, while ensuring that 
+        at least a minimum number of 'P' and 'S' phases are kept.
+
+        Parameters:
+        - keep_ratio (float): The proportion of phases to keep based on their probability (0 < keep_ratio <= 1).
+        - min_p (int): The minimum number of 'P' phases to keep for each event (must be >= 0).
+        - min_s (int): The minimum number of 'S' phases to keep for each event (must be >= 0).
+        - distance_label (str, optional): The column name for distance values. Defaults to "utdq_distance".
+
+        Modifies:
+        - self.data (pd.DataFrame): The DataFrame containing seismic phase data is updated with the
+        selected phases for each event.
+        """
+        
+        def phase_removal(event_df: pd.DataFrame) -> pd.DataFrame:
+            """
+            Removes seismic phases for a specific event, keeping at least a minimum 
+            number of 'P' and 'S' phases.
+
+            Parameters:
+            - event_df (pd.DataFrame): A DataFrame containing the phases for a specific event.
+
+            Returns:
+            - pd.DataFrame: A DataFrame containing the phases that have been kept after removal.
+            """
+            
+            # Separate phases by type ('P' for Primary and 'S' for Secondary)
+            p_phases = event_df[event_df['phase_hint'] == 'P']
+            s_phases = event_df[event_df['phase_hint'] == 'S']
+            
+            def calculate_weights(df: pd.DataFrame) -> tuple:
+                """
+                Calculates the probability weights for each phase based on its distance.
+                Closer phases have higher probabilities of being kept.
+
+                Parameters:
+                - df (pd.DataFrame): DataFrame containing the phases to be processed.
+
+                Returns:
+                - tuple: A tuple containing:
+                    1. pd.DataFrame: Sorted DataFrame by distance
+                    2. pd.Series: Normalized probability weights for each phase
+                """
+                # Sort by distance and assign higher probabilities to closer phases
+                sorted_df = df.sort_values(distance_label)
+                weights = 1 / (sorted_df[distance_label] + 1e-6)  # Add small constant to avoid division by zero
+                weights = weights / weights.sum()  # Normalize weights to sum to 1
+                return sorted_df, weights
+            
+            # Calculate weights for both 'P' and 'S' phases
+            p_phases, p_weights = calculate_weights(p_phases)
+            s_phases, s_weights = calculate_weights(s_phases)
+
+            # Randomly select phases to keep based on their weights
+            p_keep = np.random.choice(p_phases.index, size=int(len(p_phases) * keep_ratio), p=p_weights)
+            s_keep = np.random.choice(s_phases.index, size=int(len(s_phases) * keep_ratio), p=s_weights)
+
+            # Track all selected indices to ensure no duplicates
+            selected_indices = set(p_keep).union(set(s_keep))
+
+            # Ensure that at least min_p 'P' phases and min_s 'S' phases are kept
+            if len(p_keep) < min_p:
+                # Add remaining 'P' phases to meet the min_p requirement
+                missing_p = min_p - len(p_keep)
+                # Get available 'P' phases that were not initially selected
+                available_p = p_phases.index.difference(selected_indices)
+                # If we have enough available phases, select them randomly
+                if len(available_p) >= missing_p:
+                    additional_p = np.random.choice(available_p, size=missing_p, replace=False, p=p_weights[available_p])
+                    p_keep = np.concatenate([p_keep, additional_p])
+                    selected_indices.update(additional_p)  # Update selected indices
+                else:
+                    # If not enough available phases, take all available phases
+                    p_keep = np.concatenate([p_keep, available_p])
+                    selected_indices.update(available_p)
+
+            if len(s_keep) < min_s:
+                # Add remaining 'S' phases to meet the min_s requirement
+                missing_s = min_s - len(s_keep)
+                # Get available 'S' phases that were not initially selected
+                available_s = s_phases.index.difference(selected_indices)
+                # If we have enough available phases, select them randomly
+                if len(available_s) >= missing_s:
+                    additional_s = np.random.choice(available_s, size=missing_s, replace=False, p=s_weights[available_s])
+                    s_keep = np.concatenate([s_keep, additional_s])
+                    selected_indices.update(additional_s)  # Update selected indices
+                else:
+                    # If not enough available phases, take all available phases
+                    s_keep = np.concatenate([s_keep, available_s])
+                    selected_indices.update(available_s)
+
+            # Combine the selected 'P' and 'S' phases into a single DataFrame
+            keep_phases = pd.concat([event_df.loc[p_keep], event_df.loc[s_keep]])
+
+            # Return the modified DataFrame with the selected phases
+            return keep_phases
+
+        # Default distance label if none provided
+        if distance_label is None:
+            distance_label = "utdq_distance"
+
+        # Make a copy of the data to avoid modifying the original DataFrame directly
+        data: pd.DataFrame = self.data.copy()
+
+        # Apply the phase_removal function to each event in the DataFrame
+        self.data = data.groupby('ev_id').apply(phase_removal).reset_index(drop=True)
+
+    def plot(self, y=None, phase_type=None, ax=None, show=True, **kwargs):
+        """
+        Plot the pick data with real and artificial picks.
+        
+        Parameters:
+        -----------
+        y : str, optional
+            The column to be plotted on the y-axis. Defaults to "utdq_distance".
+        phase_type : str or list, optional
+            The phase types to plot (e.g., "P" or "S"). If None, defaults to ["P", "S"].
+        ax : matplotlib.axes.Axes, optional
+            The axes object to plot on. If None, a new figure is created.
+        show : bool, optional
+            Whether to display the plot immediately. Defaults to True.
+        **kwargs
+            Additional keyword arguments for the scatter plot.
+        
+        Returns:
+        --------
+        ax : matplotlib.axes.Axes
+            The axes object with the plotted data.
+        """
+        if y is None:
+            y = "utdq_distance"
+        
+        if phase_type is None:
+            phase_type = ["P", "S"]
+        elif isinstance(phase_type, str):
+            phase_type = [phase_type]
+        elif not isinstance(phase_type, list):
+            raise ValueError("phase_type must be a string or list of strings")
+        
+        if ax is None:
+            fig, ax = plt.subplots()
+        
+        colors = {'P': 'blue', 'S': 'red'}  # Define colors for P and S phases
+        
+        for phase in self.data['phase_hint'].unique():
+            if phase not in phase_type:
+                continue
+            
+            subset = self.data[self.data['phase_hint'] == phase]
+            
+            # Normalize phase name
+            if "p" in phase.lower():
+                phase = "P"
+            elif "s" in phase.lower():
+                phase = "S"
+            else:
+                raise ValueError(f"Invalid phase: {phase}")
+            
+            artificial = subset[subset["author"] == "artificial"]
+            real = subset[subset["author"] != "artificial"]
+            
+            # Scatter plot for real and artificial picks
+            ax.scatter(real["time"], real[y], color=colors[phase], label=phase, **kwargs)
+            if not artificial.empty:
+                ax.scatter(artificial["time"], artificial[y], color=colors[phase], label=f"artificial {phase}", marker="x", **kwargs)
+        
+        ax.set_xlabel("Time")
+        ax.set_ylabel(y)
+        ax.legend()
+        
+        if show:
+            plt.show()
+        
+        return ax
     

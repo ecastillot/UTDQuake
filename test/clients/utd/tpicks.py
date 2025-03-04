@@ -19,7 +19,7 @@ from utdquake.core.database.database import load_from_sqlite
 # exit()
 
 picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
-stations_path = "/home/emmanuel/ecastillo/dev/utdquake/examples/custom_events/stations.csv"
+stations_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/stations.csv"
 
 sta = pd.read_csv(stations_path)
 df = load_from_sqlite(picks_path)
@@ -47,11 +47,32 @@ df = load_from_sqlite(picks_path)
 
 # print(df.columns)
 picks = Picks(data=df,author="manual")
+print(picks)
+print(picks.P_counts)
+print(picks.S_counts)
+print(picks.data.info())
+phase_interp = picks.get_phase_interpolations()
+print(picks.data)
+# print(phase_interp)
+
+# distance = 1.023955
+distance = 0.111257
+# start,slope,intercept,r_value = phase_interp[("tx2024xoub","P")]
+start,slope,intercept,r_value = phase_interp[("tx2024xoub","S")]
+time = start + dt.timedelta(seconds=distance*slope)  +dt.timedelta(seconds=intercept) 
+print(distance,time)
+
+
+
+# new_picks = picks.split_by_event()
+# print(new_picks[0])
+picks.plot()
+# print(picks.data)
 # stations= Stations(sta,xy_epsg="EPSG:3116",author="X")
 # print(picks.__str__("utdquake"))
-print(picks.data.info())
-picks.join_stations_info(sta)
-print(picks.data.info())
+# print(picks.data.info())
+# picks.join_stations_info(sta)
+# print(picks.data.info())
 # print(stations)
 exit()
 
