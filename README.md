@@ -13,6 +13,8 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.15 pytable requirement
+- 0.0.14 Window
 - 0.0.13 Picks - add_artificial_picks, plot
 - 0.0.11
     Fixing error: No agency
