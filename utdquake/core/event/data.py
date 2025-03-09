@@ -28,7 +28,8 @@ def proc_data(data, required_columns, date_columns=None):
         raise Exception(msg["required_columns"])
 
     # Remove duplicate rows based on the required columns
-    data.drop_duplicates(subset=required_columns, ignore_index=True, inplace=True)
+    # data.drop_duplicates(subset=required_columns, ignore_index=True, inplace=True)
+    data.drop_duplicates(subset=required_columns, ignore_index=False, inplace=True)
 
     # Check if the DataFrame is empty after removing duplicates
     if data.empty:
@@ -111,6 +112,19 @@ class DataFrameHelper:
             # msg += "\n-" * len(msg)
         return msg
 
+    def sample(self, n=1):
+        """
+        Return a random sample of rows from the DataFrame.
+
+        Parameters:
+            n (int, optional): Number of rows to sample. Defaults to 10.
+
+        Returns:
+            pd.DataFrame: Sampled DataFrame.
+        """
+        self.data = self.data.sample(n)
+        return self
+
     def append(self, data):
         """
         Append new data to the DataFrameHelper.
@@ -155,7 +169,7 @@ class DataFrameHelper:
         mask = self.data.isin(rowval)
         mask = mask.any(axis='columns')
         self.data = self.data[~mask]
-        self.data.reset_index(drop=True, inplace=True)
+        # self.data.reset_index(drop=True, inplace=True)
         return self
     
     def dropna(self, subset=None):
@@ -169,7 +183,7 @@ class DataFrameHelper:
             DataFrameHelper: Updated DataFrameHelper instance.
         """
         self.data = self.data.dropna(subset=subset)
-        self.data.reset_index(drop=True, inplace=True)
+        # self.data.reset_index(drop=True, inplace=True)
         return self
     
     def select_data(self, rowval):
@@ -196,7 +210,7 @@ class DataFrameHelper:
         # Create a mask based on the specified selection criteria
         mask = self.data.isin(rowval).any(axis="columns")
         self.data = self.data[mask]
-        self.data.reset_index(drop=True, inplace=True)
+        # self.data.reset_index(drop=True, inplace=True)
         return self
 
     def copy(self):
@@ -225,7 +239,7 @@ class DataFrameHelper:
             The updated DataFrameHelper instance with sorted data.
         """
         self.data = self.data.sort_values(**args)
-        self.data.reset_index(drop=True, inplace=True)
+        # self.data.reset_index(drop=True, inplace=True)
         return self
 
     def filter(self, key, start=None, end=None):
@@ -252,5 +266,5 @@ class DataFrameHelper:
         if (end is not None) and (len(self) != 0):
             self.data = self.data[self.data[key] <= end]
         
-        self.data.reset_index(drop=True, inplace=True)
+        # self.data.reset_index(drop=True, inplace=True)
         return self

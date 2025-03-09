@@ -24,7 +24,7 @@ def get_distance_in_dataframe(data: pd.DataFrame, lat1_name: str, lon1_name: str
     if data.empty:
         return data
     
-    data = data.reset_index(drop=True)
+    # data = data.reset_index(drop=True)
     computing_r = lambda x: gps2dist_azimuth(x[lat1_name], x[lon1_name],
                                              x[lat2_name], x[lon2_name]) if\
                                             (not np.isnan(x[lat1_name])) and\

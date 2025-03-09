@@ -203,7 +203,7 @@ class Points(DataFrameHelper):
             latitude, longitude, x.latitude, x.longitude
         )
         data = self.data.copy()
-        data.reset_index(drop=True,inplace=True)
+        # data.reset_index(drop=True,inplace=True)
         
         # Apply the 'is_in_polygon' function to each row in the DataFrame.
         # This results in a Series of tuples (r, az, baz) for each data point.
@@ -226,7 +226,7 @@ class Points(DataFrameHelper):
         
         self.data = data
         # print(len(data))
-        self.data.reset_index(drop=True,inplace=True)
+        # self.data.reset_index(drop=True,inplace=True)
         
         # Return the updated object to allow method chaining.
         return self

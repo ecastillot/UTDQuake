@@ -13,6 +13,7 @@ import numpy as np
 from typing import Optional
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
+import random
 
 def read_picks(path, ev_ids=None, custom_params=None, drop_duplicates=True):
     """
@@ -238,7 +239,7 @@ class Picks(DataFrameHelper):
             picks = pd.DataFrame()
         else:
             picks = pd.concat(picks, axis=0)  # Combine all valid picks
-            picks.reset_index(inplace=True, drop=True)
+            # picks.reset_index(inplace=True, drop=True)
         
         self.data = picks
         return self
@@ -299,34 +300,42 @@ class Picks(DataFrameHelper):
                 slope, intercept, r_value, _, _ = linregress(group[distance_label], group["travel_time"])
                 
                 # Generate artificial picks based on regression results
-                for distance in distances:
+                for i,distance in enumerate(distances):
                     if distance < 0:
                         continue  # Ignore negative distances
                     
                     travel_time = pd.Timedelta(seconds=distance * slope) + pd.Timedelta(seconds=intercept)
                     time = origin_time + travel_time
                     
+                    random_az = random.uniform(0, 360) 
+                    random_baz = (random_az + 180) % 360
+                    
+                    
                     artificial_pick = {
                         "ev_id": ev_id,
                         "network":"UTDQ",
-                        "station":"UTDQ",
+                        "station":f"UTDQ_{i}",
                         "time": time,
                         "phase_hint": phase,
-                        "author": "artificial",
+                        "author": "utdquake",
                         "utdq_time": travel_time.total_seconds(),
                         "utdq_real": True,
                         f"{distance_label}": distance,
-                        "r2": r_value,
-                        "r2_length": length
+                        "utdq_azimuth": random_az,
+                        "utdq_bazimuth": random_baz,
+                        "utdq_r2": r_value,
+                        "utdq_r2_length": length
                     }
-                    self.data["r2"] = 1
-                    self.data["r2_length"] = length
+                    self.data["utdq_r2"] = 1
+                    self.data["utdq_r2_length"] = length
                     artificial_pick = pd.DataFrame([artificial_pick])
-                    self.data = pd.concat([self.data, artificial_pick], ignore_index=True)
+                    # self.data = pd.concat([self.data, artificial_pick], ignore_index=True)
+                    self.data = pd.concat([self.data, artificial_pick], ignore_index=False)
 
     def remove_phases_randomly(
         self, 
-        keep_ratio: float = 0.5, 
+        keep_ratio_p: float = 0.5, 
+        keep_ratio_s: float = 0.3, 
         min_p: int = 4, 
         min_s: int = 2, 
         distance_label: Optional[str] = None
@@ -336,7 +345,8 @@ class Picks(DataFrameHelper):
         at least a minimum number of 'P' and 'S' phases are kept.
 
         Parameters:
-        - keep_ratio (float): The proportion of phases to keep based on their probability (0 < keep_ratio <= 1).
+        - keep_ratio_p (float): The proportion of P phases to keep based on their probability (0 < keep_ratio <= 1).
+        - keep_ratio_s (float): The proportion of S phases to keep based on their probability (0 < keep_ratio <= 1).
         - min_p (int): The minimum number of 'P' phases to keep for each event (must be >= 0).
         - min_s (int): The minimum number of 'S' phases to keep for each event (must be >= 0).
         - distance_label (str, optional): The column name for distance values. Defaults to "utdq_distance".
@@ -386,9 +396,15 @@ class Picks(DataFrameHelper):
             s_phases, s_weights = calculate_weights(s_phases)
 
             # Randomly select phases to keep based on their weights
-            p_keep = np.random.choice(p_phases.index, size=int(len(p_phases) * keep_ratio), p=p_weights)
-            s_keep = np.random.choice(s_phases.index, size=int(len(s_phases) * keep_ratio), p=s_weights)
-
+            p_keep = np.random.choice(p_phases.index, 
+                                      size=int(len(p_phases) * keep_ratio_p),
+                                      p=p_weights,replace=False)
+            s_keep = np.random.choice(s_phases.index, 
+                                      size=int(len(s_phases) * keep_ratio_s), 
+                                      p=s_weights,replace=False)
+            # print(p_keep)
+            # exit()
+            
             # Track all selected indices to ensure no duplicates
             selected_indices = set(p_keep).union(set(s_keep))
 
@@ -437,7 +453,8 @@ class Picks(DataFrameHelper):
         data: pd.DataFrame = self.data.copy()
 
         # Apply the phase_removal function to each event in the DataFrame
-        self.data = data.groupby('ev_id').apply(phase_removal).reset_index(drop=True)
+        self.data = data.groupby('ev_id').apply(phase_removal).reset_index(level="ev_id",drop=True)
+        # self.data = data.groupby('ev_id').apply(phase_removal)
 
     def plot(self, y=None, phase_type=None, ax=None, show=True, **kwargs):
         """

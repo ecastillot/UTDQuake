@@ -61,10 +61,10 @@ class Catalog:
     events : Events
         An instance of the Events class containing earthquake event data.
     stations : Stations, optional
-        An instance of the Stations class containing station data (default is None).
+        An instance of the Stations class containing station data.
     """
 
-    def __init__(self, events, stations=None) -> None:
+    def __init__(self, events, stations) -> None:
         """
         Initialize a Catalog instance.
 
@@ -73,7 +73,7 @@ class Catalog:
         events : Events
             An Events object containing event data.
         stations : Stations, optional
-            A Stations object containing station data. Default is None.
+            A Stations object containing station data. 
         """
         self.events = events
         self.stations = stations
@@ -88,6 +88,22 @@ class Catalog:
             A formatted string summarizing the number of events and the presence of stations.
         """
         return f"Catalog | {len(self.events)} events, stations: {self.stations is not None}"
+
+    def sample(self, n=1):
+        """
+        Return a random sample of events from the catalog.
+
+        Parameters:
+        ----------
+        n : int, default=10
+            Number of events to sample.
+
+        Returns:
+        -------
+        pd.DataFrame
+            A DataFrame containing the sampled events.
+        """
+        self.events.sample(n)
 
     def get_picks(self, picks_path, author="UTDQuake"):
         """
@@ -105,7 +121,9 @@ class Catalog:
         Picks
             An instance of the Picks class containing the loaded pick data.
         """
-        return self.events.get_picks(picks_path=picks_path, stations=self.stations, author=author)
+        return self.events.get_picks(picks_path=picks_path, 
+                                     stations=self.stations, 
+                                     author=author)
         # self.stations.select_data(rowval={"sta_id":picks.stations})
         
     

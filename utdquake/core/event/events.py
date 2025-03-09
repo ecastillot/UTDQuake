@@ -152,7 +152,7 @@ class Events(Points):
                 if picks["sta_latitude"].isnull().sum() > 0:
                     nan_stations = picks[picks["sta_latitude"].isnull()]
                     nan_stations = nan_stations[["network", "station"]].drop_duplicates()
-                    nan_stations.reset_index(drop=True, inplace=True)
+                    # nan_stations.reset_index(drop=True, inplace=True)
                     
                     
                     warnings.warn("Some stations do not have coordinates. Activate debug mode in Events.get_picks to display them.")
@@ -186,7 +186,8 @@ class Events(Points):
         picks["utdq_real"] = True
 
         picks.drop_duplicates(subset=["ev_id", "network", "station", "phase_hint","time"],
-                              ignore_index=True, inplace=True)
+                              ignore_index=False, inplace=True)
+                            #   ignore_index=True, inplace=True)
 
         # Define additional columns to keep in the final DataFrame
         add_columns = ["utdq_real","utdq_distance", "utdq_azimuth", "utdq_bazimuth", "utdq_time"]

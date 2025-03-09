@@ -9,9 +9,14 @@ stations = pd.read_csv(stations_path)
 stations = Stations(stations,xy_epsg="EPSG:3116",author="TexNet")
 
 
-ev_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/origin.csv"
+ev_path = "/home/emmanuel/ecastillo/dev/utdquake/examples/custom_events/origin.csv"
 ev = pd.read_csv(ev_path)
 events = Events(ev,xy_epsg="EPSG:3116",author="X")
+print(events)
+events.sample(3)
+print(events)
+exit()
+
 picks_path = "/home/emmanuel/ecastillo/dev/utdquake/test/clients/utd/custom_events/picks.db"
 picks = events.get_picks(picks_path=picks_path,author="manual",
                          stations=stations)
@@ -19,15 +24,16 @@ picks.dropna(subset=["utdq_distance"])
 
 print(picks)
 print(picks.data)
-
-picks.remove_phases_randomly()
+# picks.plot()
+picks.remove_phases_randomly(keep_ratio_p=0.8,keep_ratio_s=0.5)
 print(picks)
 print(picks.data)
+# print(picks.data.info())
 # print(picks.data)
-distances = np.arange(0,60,2)
-picks.add_artificial_picks(events=events,
-                           distances=distances,
-                           phase_type=["P"])
+# distances = np.arange(0,60,2)
+# picks.add_artificial_picks(events=events,
+#                            distances=distances,
+#                            phase_type=["P"])
 # print(picks.data)
 picks.plot()
 # interp = picks._get_phase_interpolations(events)
