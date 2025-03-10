@@ -1,6 +1,11 @@
 ![Twitter Follow](https://img.shields.io/twitter/follow/manuavid?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)![GitHub stars](https://img.shields.io/github/stars/ecastillot/EQviewer?style=social)![GitHub forks](https://img.shields.io/github/forks/ecastillot/EQviewer?style=social)
+
 # UTDQuake
 University of Texas at Dallas Earthquake Dataset
+
+# Authors
+- Emmanuel Castillo (edc240000@utdallas.edu)
+- Riven White (Riven.White@utdallas.edu)
 
 # Examples
 
@@ -13,6 +18,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.16 eda functions (riven)
 - 0.0.15 pytable requirement
 - 0.0.14 Window
 - 0.0.13 Picks - add_artificial_picks, plot
