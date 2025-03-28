@@ -18,6 +18,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.17 Fixing bug detected by Riven (add_artificial_picks and remove_phases_randomly)
 - 0.0.16 eda functions (riven)
 - 0.0.15 pytable requirement
 - 0.0.14 Window

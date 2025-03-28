@@ -280,6 +280,12 @@ class Picks(DataFrameHelper):
         elif not isinstance(phase_type, list):
             raise ValueError("phase_type must be a string or list of strings")
 
+        max_index = self.data.index.max()
+        if max_index is None:
+            max_index = 0
+        else:
+            max_index += 1
+
         # Iterate through each group of events based on event ID and phase type
         for (ev_id, phase), group in self.data.groupby(["ev_id", "phase_hint"]):
             if phase not in phase_type:
@@ -328,7 +334,9 @@ class Picks(DataFrameHelper):
                     }
                     self.data["utdq_r2"] = 1
                     self.data["utdq_r2_length"] = length
-                    artificial_pick = pd.DataFrame([artificial_pick])
+                    artificial_pick = pd.DataFrame([artificial_pick],index=[max_index])
+                    max_index += 1
+                    
                     # self.data = pd.concat([self.data, artificial_pick], ignore_index=True)
                     self.data = pd.concat([self.data, artificial_pick], ignore_index=False)
 
@@ -395,6 +403,7 @@ class Picks(DataFrameHelper):
             p_phases, p_weights = calculate_weights(p_phases)
             s_phases, s_weights = calculate_weights(s_phases)
 
+
             # Randomly select phases to keep based on their weights
             p_keep = np.random.choice(p_phases.index, 
                                       size=int(len(p_phases) * keep_ratio_p),
@@ -402,8 +411,6 @@ class Picks(DataFrameHelper):
             s_keep = np.random.choice(s_phases.index, 
                                       size=int(len(s_phases) * keep_ratio_s), 
                                       p=s_weights,replace=False)
-            # print(p_keep)
-            # exit()
             
             # Track all selected indices to ensure no duplicates
             selected_indices = set(p_keep).union(set(s_keep))
@@ -441,6 +448,12 @@ class Picks(DataFrameHelper):
 
             # Combine the selected 'P' and 'S' phases into a single DataFrame
             keep_phases = pd.concat([event_df.loc[p_keep], event_df.loc[s_keep]])
+
+            # print(len(p_keep))
+            # print(len(s_keep))
+            # print(event_df,len(event_df))
+            # print(keep_phases,len(keep_phases))
+            # exit()
 
             # Return the modified DataFrame with the selected phases
             return keep_phases
