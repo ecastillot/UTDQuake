@@ -58,6 +58,10 @@ class Events(Points):
             msg = f"Events | {self.__len__()} events "
         return msg
 
+    @property
+    def ev_ids(self):
+        return self.data.ev_id.unique()
+
     def query(self, starttime=None, endtime=None, ev_ids=None, agencies=None,
               mag_lims=None, region_lims=None, general_region=None,
               region_from_src=None):
@@ -118,7 +122,8 @@ class Events(Points):
             return Picks(data=pd.DataFrame(), author=author)
 
         # Read picks data from the provided file path
-        picks = read_picks(picks_path)
+        # picks = read_picks(picks_path)
+        picks = read_picks(picks_path,ev_ids=self.ev_ids)
         
         # Store the original columns for later use
         out_columns = picks.columns.to_list()

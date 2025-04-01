@@ -104,7 +104,27 @@ class Catalog:
             A DataFrame containing the sampled events.
         """
         self.events.sample(n)
+        
+    def query(self,**kwargs):
+        """
+        Query and filter events based on various criteria.
 
+        Parameters:
+        - starttime (datetime, optional): Start time for filtering events.
+        - endtime (datetime, optional): End time for filtering events.
+        - ev_ids (list, optional): List of event IDs to include.
+        - agencies (list, optional): List of agencies to include.
+        - mag_lims (tuple, optional): Magnitude range as (min, max).
+        - region_lims (list, optional): Rectangular region limits [lon_min, lon_max, lat_min, lat_max].
+        - general_region (list of tuples, optional): Polygon defining a general region [(lon, lat), ...].
+        - region_from_src (tuple, optional): Source-based region definition (latitude, longitude, max_radius, max_azimuth).
+
+        Returns:
+        - Catalog: The filtered Catalog object.
+        """
+        self.events = self.events.query(**kwargs)
+        return self
+        
     def get_picks(self, picks_path, author="UTDQuake"):
         """
         Retrieve pick data associated with the events.

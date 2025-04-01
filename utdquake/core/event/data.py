@@ -262,7 +262,6 @@ class DataFrameHelper:
         """
         if (start is not None) and (len(self) != 0):
             self.data = self.data[self.data[key] >= start]
-        
         if (end is not None) and (len(self) != 0):
             self.data = self.data[self.data[key] <= end]
         
