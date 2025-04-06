@@ -8,16 +8,22 @@
 import random
 import numpy as np
 import pandas as pd
+import datetime as dt
 import matplotlib.pyplot as plt
 
 
 class EQWindow(object):
-    def __init__(self, length=500) -> None:
+    def __init__(self, length=500, keep_order=False) -> None:
         """
         Initialize the EQWindow class with mandatory and optional attributes.
+        
+        Parameters:
+        - length (int, optional): Length of the window in seconds. Default is 500.
+        - keep_order (bool, optional): If True, ensures that the order of events in your picks is preserved. Default is False.
 
         """
         self.length = length
+        self.keep_order = keep_order
         self.window = pd.DataFrame()
         
     def add_picks(self, picks):
@@ -28,13 +34,36 @@ class EQWindow(object):
         - picks (Picks): A Picks instance containing seismic phase picks.
         """
         wdata = []
-        for pick_by_ev in picks.split_by_event():
-            # print(pick_by_ev)
+        origin_time = 0
+        delta = self.length/(len(picks.split_by_event()))
+        for i,pick_by_ev in enumerate(picks.split_by_event(),1):
+            # print(pick_by_ev.events)
+            event_id = pick_by_ev.events[0]
             data = pick_by_ev.data
+            # I was trying to keep time distance buut it is challenging 
+            # (there are some tricky things to keep in mind)
+            # if self.keep_order:
+            # data.sort_values(by=["time"],inplace=True)
+            # first_pick = (data["time"].iloc[-1] + dt.timedelta(data["utdq_time"].iloc[-1])) - \
+            #             (data["time"].iloc[0] + dt.timedelta(data["utdq_time"].iloc[0]))
+            # first_pick = first_pick.total_seconds()
+            # print(first_pick)
+                # origin_time
             
-            max_time = self.length - data["utdq_time"].max() - data["utdq_time"].max()/100
-            # # print(pick_by_ev)
-            origin_time = np.random.uniform(0,max_time)
+            if self.keep_order:
+                starttime = origin_time
+                endtime = origin_time + (delta*i - origin_time)
+            else:
+                starttime = 0
+                endtime = self.length - data["utdq_time"].max() - data["utdq_time"].max()/100
+            
+            
+            if starttime > endtime:
+                print(f"Error: starttime > endtime... skipping event {event_id}")
+                continue
+            
+            origin_time = np.random.uniform(starttime,endtime)
+            
             data["utdq_wtime"] = data["utdq_time"] + origin_time
             # print(data)
             wdata.append(data)

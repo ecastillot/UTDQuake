@@ -18,6 +18,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.19 EQWindow class argument: Keep_order: This ensures that the order of events in your picks is preserved. 
 - 0.0.18 Adding query function to catalog, and filtering picks of the events in get_picks function.
 - 0.0.17 Fixing bug detected by Riven (add_artificial_picks and remove_phases_randomly)
 - 0.0.16 eda functions (riven)

@@ -403,7 +403,15 @@ class Picks(DataFrameHelper):
             p_phases, p_weights = calculate_weights(p_phases)
             s_phases, s_weights = calculate_weights(s_phases)
 
-
+            if p_phases["utdq_distance"].isna().any():
+                bad = p_phases[p_phases["utdq_distance"].isna()]
+                print(bad)
+                raise ValueError(f"P phases have NaN utdq_distances. Check your stations file and confirm the stations {set(bad["station"].to_list())} are there.")
+            if s_phases["utdq_distance"].isna().any():
+                bad =  s_phases[s_phases["utdq_distance"].isna()]
+                print(bad)
+                raise ValueError(f"S phases have NaN utdq_distances. Check your stations file and confirm the stations {set(bad["station"].to_list())} are there.")
+            
             # Randomly select phases to keep based on their weights
             p_keep = np.random.choice(p_phases.index, 
                                       size=int(len(p_phases) * keep_ratio_p),
@@ -464,7 +472,6 @@ class Picks(DataFrameHelper):
 
         # Make a copy of the data to avoid modifying the original DataFrame directly
         data: pd.DataFrame = self.data.copy()
-
         # Apply the phase_removal function to each event in the DataFrame
         self.data = data.groupby('ev_id').apply(phase_removal).reset_index(level="ev_id",drop=True)
         # self.data = data.groupby('ev_id').apply(phase_removal)
