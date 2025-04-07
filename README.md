@@ -14,6 +14,8 @@ University of Texas at Dallas Earthquake Dataset
 | UTDClient| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_client.ipynb) |
 |---|---|
 | UTDWindow| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_window.ipynb) |
+|---|---|
+| UTDPlot| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_plots.ipynb) |
 
 # Versions
 
