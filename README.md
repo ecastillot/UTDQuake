@@ -20,6 +20,12 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.21 EQWindow Parameter:  
+    - length-> maximum length (We want to define a maximum length, but a window with variable length)
+    - get_stats -> stats of the picks in the window
+    - pick_type and pick_id columns for Pick object
+    - get_events_wtime -> To get the time of the events in the window.
+    - eqw.ev_ids to get the ids of the events.
 - 0.0.20 Trace plot. Adding trace plot. see examples (utd_plots)
 - 0.0.19 EQWindow class argument: Keep_order: This ensures that the order of events in your picks is preserved. 
 - 0.0.18 Adding query function to catalog, and filtering picks of the events in get_picks function.

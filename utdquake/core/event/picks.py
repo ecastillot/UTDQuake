@@ -120,6 +120,8 @@ class Picks(DataFrameHelper):
             The author or source of the picks data.
         """
         mandatory_columns = ['ev_id', 'network', 'station', 'time', 'phase_hint']
+        pick_id =lambda x: f"{x['phase_hint']}_{x['network']}_{x['station']}_{x['time'].strftime('%Y%m%dT%H%M%S.%f')}" if is_datetime64_any_dtype(x['time']) else f"{x['phase_hint']}_{x['network']}_{x['station']}_{x['time']}"
+        data["pick_id"] = data.apply(pick_id, axis=1)
         super().__init__(data=data, required_columns=mandatory_columns,
                         date_columns=["time"],
                          author=author)
@@ -319,6 +321,8 @@ class Picks(DataFrameHelper):
                     
                     artificial_pick = {
                         "ev_id": ev_id,
+                        "pick_id": f"{phase}_UTDQ_utdq_{i}_{time.strftime('%Y%m%dT%H%M%S.%f')}",  # Unique pick ID
+                        # "pick_id": x['phase_hint']}_{x['network']}_{x['station']}_{x['time']}
                         "network":"UTDQ",
                         "station":f"UTDQ_{i}",
                         "time": time,
