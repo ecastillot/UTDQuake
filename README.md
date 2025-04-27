@@ -20,6 +20,7 @@ University of Texas at Dallas Earthquake Dataset
 # Versions
 
 ## Development
+- 0.0.22 Picks.remove_phases_randomly() -> phase_removal function: control nan dataframes
 - 0.0.21 EQWindow Parameter:  
     - length-> maximum length (We want to define a maximum length, but a window with variable length)
     - get_stats -> stats of the picks in the window

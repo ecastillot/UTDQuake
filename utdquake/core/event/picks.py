@@ -371,103 +371,101 @@ class Picks(DataFrameHelper):
         def phase_removal(event_df: pd.DataFrame) -> pd.DataFrame:
             """
             Removes seismic phases for a specific event, keeping at least a minimum 
-            number of 'P' and 'S' phases.
+            number of 'P' and 'S' phases based on weighted random selection favoring 
+            closer stations.
 
             Parameters:
-            - event_df (pd.DataFrame): A DataFrame containing the phases for a specific event.
+            ----------
+            event_df : pd.DataFrame
+                DataFrame containing the seismic phases for a specific event. 
+                Must include 'phase_hint' and distance columns.
 
             Returns:
-            - pd.DataFrame: A DataFrame containing the phases that have been kept after removal.
+            -------
+            pd.DataFrame
+                A DataFrame containing the selected phases after applying the removal criteria.
             """
-            
-            # Separate phases by type ('P' for Primary and 'S' for Secondary)
-            p_phases = event_df[event_df['phase_hint'] == 'P']
-            s_phases = event_df[event_df['phase_hint'] == 'S']
-            
+            # Separate phases by type: 'P' for Primary, 'S' for Secondary
+            p_phases = event_df[event_df['phase_hint'] == 'P'].copy()
+            s_phases = event_df[event_df['phase_hint'] == 'S'].copy()
+
             def calculate_weights(df: pd.DataFrame) -> tuple:
                 """
-                Calculates the probability weights for each phase based on its distance.
-                Closer phases have higher probabilities of being kept.
+                Calculate normalized probability weights based on distance.
+                Closer phases get higher weights.
 
                 Parameters:
-                - df (pd.DataFrame): DataFrame containing the phases to be processed.
+                ----------
+                df : pd.DataFrame
+                    DataFrame containing phases.
 
                 Returns:
-                - tuple: A tuple containing:
-                    1. pd.DataFrame: Sorted DataFrame by distance
-                    2. pd.Series: Normalized probability weights for each phase
+                -------
+                tuple
+                    - Sorted DataFrame by distance.
+                    - Normalized probability weights as a Series.
                 """
-                # Sort by distance and assign higher probabilities to closer phases
+                if df.empty:
+                    return df, pd.Series(dtype=float)
+
                 sorted_df = df.sort_values(distance_label)
-                weights = 1 / (sorted_df[distance_label] + 1e-6)  # Add small constant to avoid division by zero
-                weights = weights / weights.sum()  # Normalize weights to sum to 1
+                weights = 1 / (sorted_df[distance_label] + 1e-6)  # Avoid division by zero
+                weights = weights / weights.sum()  # Normalize weights
                 return sorted_df, weights
-            
-            # Calculate weights for both 'P' and 'S' phases
+
+            # Calculate weights for P and S phases
             p_phases, p_weights = calculate_weights(p_phases)
             s_phases, s_weights = calculate_weights(s_phases)
 
-            if p_phases["utdq_distance"].isna().any():
+            # Validate distance values (no NaNs allowed)
+            if not p_phases.empty and p_phases["utdq_distance"].isna().any():
                 bad = p_phases[p_phases["utdq_distance"].isna()]
                 print(bad)
-                raise ValueError(f"P phases have NaN utdq_distances. Check your stations file and confirm the stations {set(bad["station"].to_list())} are there.")
-            if s_phases["utdq_distance"].isna().any():
-                bad =  s_phases[s_phases["utdq_distance"].isna()]
+                raise ValueError(
+                    f"P phases have NaN utdq_distances. Check your stations file and "
+                    f"confirm the stations {set(bad['station'].to_list())} are there."
+                )
+
+            if not s_phases.empty and s_phases["utdq_distance"].isna().any():
+                bad = s_phases[s_phases["utdq_distance"].isna()]
                 print(bad)
-                raise ValueError(f"S phases have NaN utdq_distances. Check your stations file and confirm the stations {set(bad["station"].to_list())} are there.")
-            
-            # Randomly select phases to keep based on their weights
-            p_keep = np.random.choice(p_phases.index, 
-                                      size=int(len(p_phases) * keep_ratio_p),
-                                      p=p_weights,replace=False)
-            s_keep = np.random.choice(s_phases.index, 
-                                      size=int(len(s_phases) * keep_ratio_s), 
-                                      p=s_weights,replace=False)
-            
-            # Track all selected indices to ensure no duplicates
-            selected_indices = set(p_keep).union(set(s_keep))
+                raise ValueError(
+                    f"S phases have NaN utdq_distances. Check your stations file and "
+                    f"confirm the stations {set(bad['station'].to_list())} are there."
+                )
 
-            # Ensure that at least min_p 'P' phases and min_s 'S' phases are kept
-            if len(p_keep) < min_p:
-                # Add remaining 'P' phases to meet the min_p requirement
-                missing_p = min_p - len(p_keep)
-                # Get available 'P' phases that were not initially selected
-                available_p = p_phases.index.difference(selected_indices)
-                # If we have enough available phases, select them randomly
-                if len(available_p) >= missing_p:
-                    additional_p = np.random.choice(available_p, size=missing_p, replace=False, p=p_weights[available_p])
-                    p_keep = np.concatenate([p_keep, additional_p])
-                    selected_indices.update(additional_p)  # Update selected indices
-                else:
-                    # If not enough available phases, take all available phases
-                    p_keep = np.concatenate([p_keep, available_p])
-                    selected_indices.update(available_p)
+            # Initialize selected indices
+            selected_indices = set()
 
-            if len(s_keep) < min_s:
-                # Add remaining 'S' phases to meet the min_s requirement
-                missing_s = min_s - len(s_keep)
-                # Get available 'S' phases that were not initially selected
-                available_s = s_phases.index.difference(selected_indices)
-                # If we have enough available phases, select them randomly
-                if len(available_s) >= missing_s:
-                    additional_s = np.random.choice(available_s, size=missing_s, replace=False, p=s_weights[available_s])
-                    s_keep = np.concatenate([s_keep, additional_s])
-                    selected_indices.update(additional_s)  # Update selected indices
-                else:
-                    # If not enough available phases, take all available phases
-                    s_keep = np.concatenate([s_keep, available_s])
-                    selected_indices.update(available_s)
+            # Randomly select P phases
+            p_keep = np.array([], dtype=int)
+            if not p_phases.empty:
+                n_p = max(int(len(p_phases) * keep_ratio_p), min_p)
+                n_p = min(n_p, len(p_phases))  # Cannot select more than available
+                p_keep = np.random.choice(
+                    p_phases.index,
+                    size=n_p,
+                    p=p_weights if not p_weights.empty else None,
+                    replace=False
+                )
+                selected_indices.update(p_keep)
 
-            # Combine the selected 'P' and 'S' phases into a single DataFrame
-            keep_phases = pd.concat([event_df.loc[p_keep], event_df.loc[s_keep]])
+            # Randomly select S phases
+            s_keep = np.array([], dtype=int)
+            if not s_phases.empty:
+                n_s = max(int(len(s_phases) * keep_ratio_s), min_s)
+                n_s = min(n_s, len(s_phases))
+                s_keep = np.random.choice(
+                    s_phases.index,
+                    size=n_s,
+                    p=s_weights if not s_weights.empty else None,
+                    replace=False
+                )
+                selected_indices.update(s_keep)
 
-            # print(len(p_keep))
-            # print(len(s_keep))
-            # print(event_df,len(event_df))
-            # print(keep_phases,len(keep_phases))
-            # exit()
+            # Combine the selected phases
+            keep_phases = event_df.loc[list(selected_indices)].copy()
 
-            # Return the modified DataFrame with the selected phases
             return keep_phases
 
         # Default distance label if none provided
@@ -478,7 +476,6 @@ class Picks(DataFrameHelper):
         data: pd.DataFrame = self.data.copy()
         # Apply the phase_removal function to each event in the DataFrame
         self.data = data.groupby('ev_id').apply(phase_removal).reset_index(level="ev_id",drop=True)
-        # self.data = data.groupby('ev_id').apply(phase_removal)
 
     def plot(self, y=None, phase_type=None, ax=None, show=True, **kwargs):
         """
