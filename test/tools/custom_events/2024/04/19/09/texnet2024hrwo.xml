@@ -1,0 +1,1586 @@
+<?xml version='1.0' encoding='utf-8'?>
+<q:quakeml xmlns="http://quakeml.org/xmlns/bed/1.2" xmlns:q="http://quakeml.org/xmlns/quakeml/1.2" xmlns:ns0="http://anss.org/xmlns/catalog/0.1">
+  <eventParameters publicID="smi:local/e45d4afe-34b3-4b1f-bc33-d4b3d2aba5b9">
+    <event publicID="smi:org.gfz-potsdam.de/geofon/texnet2024hrwo" ns0:datasource="tx" ns0:eventsource="tx" ns0:eventid="2024hrwo" ns0:dataid="tx2024hrwo">
+      <preferredOriginID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</preferredOriginID>
+      <preferredMagnitudeID>smi:org.gfz-potsdam.de/geofon/Magnitude/20240419201504.252311.117242</preferredMagnitudeID>
+      <type>earthquake</type>
+      <typeCertainty>known</typeCertainty>
+      <description>
+        <text>Western Texas</text>
+        <type>region name</type>
+      </description>
+      <creationInfo>
+        <agencyID>TX</agencyID>
+        <author>scevent@scdb.beg.utexas.edu</author>
+        <creationTime>2024-04-19T09:27:44.890709Z</creationTime>
+      </creationInfo>
+      <origin publicID="smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204" ns0:datasource="tx" ns0:eventsource="tx" ns0:eventid="2024hrwo" ns0:dataid="tx2024hrwo">
+        <time>
+          <value>2024-04-19T09:27:37.173812Z</value>
+        </time>
+        <latitude>
+          <value>31.672</value>
+          <uncertainty>0.7041035664488012</uncertainty>
+        </latitude>
+        <longitude>
+          <value>-104.417</value>
+          <uncertainty>0.8189656751382957</uncertainty>
+        </longitude>
+        <depth>
+          <value>6945.8</value>
+          <uncertainty>1361.4729836242082</uncertainty>
+        </depth>
+        <methodID>smi:org.gfz-potsdam.de/geofon/NonLinLoc</methodID>
+        <earthModelID>smi:org.gfz-potsdam.de/geofon/PB1D-20170918-topoLV</earthModelID>
+        <quality>
+          <associatedPhaseCount>24</associatedPhaseCount>
+          <usedPhaseCount>24</usedPhaseCount>
+          <usedStationCount>20</usedStationCount>
+          <standardError>0.2</standardError>
+          <azimuthalGap>66.0</azimuthalGap>
+          <secondaryAzimuthalGap>77.0</secondaryAzimuthalGap>
+          <groundTruthLevel>-</groundTruthLevel>
+          <minimumDistance>0.0</minimumDistance>
+          <maximumDistance>1.0</maximumDistance>
+          <medianDistance>0.3</medianDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>final</evaluationStatus>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:14:49.778891Z</creationTime>
+        </creationInfo>
+        <originUncertainty>
+          <horizontalUncertainty>1373.8903886644275</horizontalUncertainty>
+          <minHorizontalUncertainty>891.7950445135883</minHorizontalUncertainty>
+          <maxHorizontalUncertainty>1373.8903886644275</maxHorizontalUncertainty>
+          <azimuthMaxHorizontalUncertainty>55.80775812815298</azimuthMaxHorizontalUncertainty>
+          <confidenceEllipsoid>
+            <semiMajorAxisLength>2885405.07018334</semiMajorAxisLength>
+            <semiMinorAxisLength>904611.4203272053</semiMinorAxisLength>
+            <semiIntermediateAxisLength>1231658.0486018087</semiIntermediateAxisLength>
+            <majorAxisPlunge>150.30422654865592</majorAxisPlunge>
+            <majorAxisAzimuth>24.08819980209285</majorAxisAzimuth>
+            <majorAxisRotation>66.46604643073354</majorAxisRotation>
+          </confidenceEllipsoid>
+        </originUncertainty>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863099.116632_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863099.116632</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>219.35440658222467</azimuth>
+          <distance>0.02045962125226486</distance>
+          <takeoffAngle>
+            <value>160.8</value>
+          </takeoffAngle>
+          <timeResidual>0.16228528997442648</timeResidual>
+          <timeWeight>1.0520168345430596</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863296.116633_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863296.116633</pickID>
+          <phase>S</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>219.35440658222467</azimuth>
+          <distance>0.02045962125226486</distance>
+          <takeoffAngle>
+            <value>160.8</value>
+          </takeoffAngle>
+          <timeResidual>-0.1161081011173506</timeResidual>
+          <timeWeight>1.1293475947998555</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863338.116634_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863338.116634</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>352.3148318619864</azimuth>
+          <distance>0.05824860680095405</distance>
+          <takeoffAngle>
+            <value>135.1</value>
+          </takeoffAngle>
+          <timeResidual>0.2379261249135496</timeResidual>
+          <timeWeight>0.9107266380168256</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863361.116635_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863361.116635</pickID>
+          <phase>S</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>352.3148318619864</azimuth>
+          <distance>0.05824860680095405</distance>
+          <takeoffAngle>
+            <value>135.1</value>
+          </takeoffAngle>
+          <timeResidual>-0.1321400667873065</timeResidual>
+          <timeWeight>1.110261115148641</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863392.116636_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863392.116636</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>267.65699999712035</azimuth>
+          <distance>0.0715030674846557</distance>
+          <takeoffAngle>
+            <value>125.9</value>
+          </takeoffAngle>
+          <timeResidual>0.2440251661826087</timeResidual>
+          <timeWeight>0.8979819269531354</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863413.116637_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863413.116637</pickID>
+          <phase>S</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>267.65699999712035</azimuth>
+          <distance>0.0715030674846557</distance>
+          <takeoffAngle>
+            <value>125.9</value>
+          </takeoffAngle>
+          <timeResidual>-0.1382570237497358</timeResidual>
+          <timeWeight>1.1024130670163674</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863441.116638_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863441.116638</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>296.5443265056453</azimuth>
+          <distance>0.10570190899943266</distance>
+          <takeoffAngle>
+            <value>111.8</value>
+          </takeoffAngle>
+          <timeResidual>0.17956271970099946</timeResidual>
+          <timeWeight>1.0229399910212431</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863466.116639_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863466.116639</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>314.75881830723023</azimuth>
+          <distance>0.11599012448206068</distance>
+          <takeoffAngle>
+            <value>108.6</value>
+          </takeoffAngle>
+          <timeResidual>0.17509728546818026</timeResidual>
+          <timeWeight>1.030660819228436</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.86349.116640_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.86349.116640</pickID>
+          <phase>S</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>314.75881830723023</azimuth>
+          <distance>0.11599012448206068</distance>
+          <takeoffAngle>
+            <value>108.6</value>
+          </takeoffAngle>
+          <timeResidual>-0.1626375149383943</timeResidual>
+          <timeWeight>1.067067071620809</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863513.116641_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863513.116641</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>90.63017295012865</azimuth>
+          <distance>0.12955281791041592</distance>
+          <takeoffAngle>
+            <value>104.8</value>
+          </takeoffAngle>
+          <timeResidual>0.04518194463761072</timeResidual>
+          <timeWeight>1.181166772965996</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863538.116642_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863538.116642</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>44.34665311420056</azimuth>
+          <distance>0.14178588660250704</distance>
+          <takeoffAngle>
+            <value>102.3</value>
+          </takeoffAngle>
+          <timeResidual>0.077747837107915</timeResidual>
+          <timeWeight>1.158459254752995</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863565.116643_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863565.116643</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>13.326012418487293</azimuth>
+          <distance>0.19893305075690587</distance>
+          <takeoffAngle>
+            <value>96.4</value>
+          </takeoffAngle>
+          <timeResidual>0.010850383233124816</timeResidual>
+          <timeWeight>1.1930190285296878</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863593.116644_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863593.116644</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>69.89966169532353</azimuth>
+          <distance>0.24294668768932065</distance>
+          <takeoffAngle>
+            <value>94.6</value>
+          </takeoffAngle>
+          <timeResidual>-0.008720909418965306</timeResidual>
+          <timeWeight>1.1922211191313188</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863616.116645_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863616.116645</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>111.11593189267263</azimuth>
+          <distance>0.2654072550168765</distance>
+          <takeoffAngle>
+            <value>94.0</value>
+          </takeoffAngle>
+          <timeResidual>0.04143599887648719</timeResidual>
+          <timeWeight>1.179060502303264</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863645.116646_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863645.116646</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>91.9416798614154</azimuth>
+          <distance>0.2933841827751422</distance>
+          <takeoffAngle>
+            <value>93.5</value>
+          </takeoffAngle>
+          <timeResidual>0.17645683874398177</timeResidual>
+          <timeWeight>1.0241786623066231</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863676.116647_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863676.116647</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>45.47149021621094</azimuth>
+          <distance>0.3273114201167509</distance>
+          <takeoffAngle>
+            <value>93.0</value>
+          </takeoffAngle>
+          <timeResidual>-0.0333879563004853</timeResidual>
+          <timeWeight>1.179164418399805</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863711.116648_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863711.116648</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>14.62641958472157</azimuth>
+          <distance>0.3384175821886761</distance>
+          <takeoffAngle>
+            <value>92.9</value>
+          </takeoffAngle>
+          <timeResidual>-0.18950252798362044</timeResidual>
+          <timeWeight>1.0196394391100836</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863763.116649_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863763.116649</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>55.77950006966271</azimuth>
+          <distance>0.4442505862628654</distance>
+          <takeoffAngle>
+            <value>92.0</value>
+          </takeoffAngle>
+          <timeResidual>0.04785684951735547</timeResidual>
+          <timeWeight>1.154137896933807</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863797.116650_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863797.116650</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>51.2650756722058</azimuth>
+          <distance>0.5316426679403062</distance>
+          <takeoffAngle>
+            <value>91.6</value>
+          </takeoffAngle>
+          <timeResidual>-0.06378199876957069</timeResidual>
+          <timeWeight>1.137911245265882</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863823.116651_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863823.116651</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>5.322135467930258</azimuth>
+          <distance>0.5312335894739181</distance>
+          <takeoffAngle>
+            <value>91.6</value>
+          </takeoffAngle>
+          <timeResidual>-0.2912128117090429</timeResidual>
+          <timeWeight>0.830134519862416</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201407.482361.116853_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201407.482361.116853</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>209.3435982120879</azimuth>
+          <distance>1.011199691465374</distance>
+          <takeoffAngle>
+            <value>77.5</value>
+          </takeoffAngle>
+          <timeResidual>-0.7227427976124972</timeResidual>
+          <timeWeight>0.2334103623395104</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442699.117098_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442699.117098</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>123.05722920666815</azimuth>
+          <distance>0.5580861279621665</distance>
+          <takeoffAngle>
+            <value>91.5</value>
+          </takeoffAngle>
+          <timeResidual>-0.15397675378632414</timeResidual>
+          <timeWeight>1.0512056878423763</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442891.117099_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442891.117099</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>139.83004772981855</azimuth>
+          <distance>0.6040176158020583</distance>
+          <takeoffAngle>
+            <value>91.4</value>
+          </takeoffAngle>
+          <timeResidual>-0.1698695337924505</timeResidual>
+          <timeWeight>1.025088615430223</timeWeight>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201444.440439.117181_NLL.20240419201449.371544.117204">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201444.440439.117181</pickID>
+          <phase>P</phase>
+          <timeCorrection>0.0</timeCorrection>
+          <azimuth>143.5650859024289</azimuth>
+          <distance>0.9096917138258869</distance>
+          <takeoffAngle>
+            <value>77.5</value>
+          </takeoffAngle>
+          <timeResidual>-0.8787263204426559</timeResidual>
+          <timeWeight>0.11778741647763818</timeWeight>
+        </arrival>
+      </origin>
+      <magnitude publicID="smi:org.gfz-potsdam.de/geofon/Magnitude/20240419201504.252311.117242">
+        <mag>
+          <value>2.1</value>
+          <uncertainty>0.1</uncertainty>
+        </mag>
+        <type>ML</type>
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <methodID>smi:org.gfz-potsdam.de/geofon/trimmed_mean</methodID>
+        <stationCount>16</stationCount>
+        <evaluationStatus>confirmed</evaluationStatus>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506223.117295</stationMagnitudeID>
+          <weight>0.0</weight>
+          <residual>-0.5564144675713136</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506351.117296</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.09497605404013543</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506419.117297</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.18273313095678523</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506483.117298</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.05875391443754863</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506544.117299</stationMagnitudeID>
+          <weight>0.5</weight>
+          <residual>0.23704853742947574</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506604.117300</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.17896830088405302</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506665.117301</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.04469553828831074</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506728.117302</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.06655304675971685</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506796.117303</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.03889095236240081</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506861.117304</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.17401407451872664</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50693.117305</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.16985119272851</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50699.117306</stationMagnitudeID>
+          <weight>0.0</weight>
+          <residual>0.24871769281049616</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507054.117307</stationMagnitudeID>
+          <weight>0.5</weight>
+          <residual>-0.22472901897846453</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50712.117308</stationMagnitudeID>
+          <weight>0.0</weight>
+          <residual>0.5500655402540278</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507174.117309</stationMagnitudeID>
+          <weight>0.0</weight>
+          <residual>-0.3904930369392361</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507235.117310</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.16748663297007438</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507291.117311</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.10410728814156789</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507364.117312</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.16468848284670656</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507439.117313</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>0.08878109569235626</residual>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507501.117314</stationMagnitudeID>
+          <weight>1.0</weight>
+          <residual>-0.11475724602336346</residual>
+        </stationMagnitudeContribution>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.505935Z</creationTime>
+        </creationInfo>
+      </magnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506223.117295">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.5356930469795709</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.880886.117272</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB35" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506255Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506351.117296">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.997131460510749</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.883677.117273</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB38" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506356Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506419.117297">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.2748406455076697</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.886188.117274</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB28" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506422Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506483.117298">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.033353600113336</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.888674.117275</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB37" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506487Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506544.117299">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.32915605198036</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.891057.117276</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB29" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506547Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506604.117300">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.2710758154349375</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.893496.117277</amplitudeID>
+        <waveformID networkCode="4O" stationCode="SA02" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506606Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506665.117301">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.0474119762625738</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.894738.117278</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB09" locationCode="00" channelCode="BH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506668Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506728.117302">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.0255544677911677</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.897086.117279</amplitudeID>
+        <waveformID networkCode="4O" stationCode="SA07" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506730Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506796.117303">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.1309984669132853</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.899633.117280</amplitudeID>
+        <waveformID networkCode="4O" stationCode="SA06" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506798Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.506861.117304">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.9180934400321579</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.902341.117281</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB26" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506864Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50693.117305">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.9222563218223745</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.904652.117282</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB23" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506933Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50699.117306">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.3408252073613807</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.909224.117283</amplitudeID>
+        <waveformID networkCode="4O" stationCode="CT01" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.506993Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507054.117307">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.86737849557242</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.912084.117284</amplitudeID>
+        <waveformID networkCode="4O" stationCode="SA09" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507057Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.50712.117308">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.6421730548049123</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.916526.117285</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB44" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507123Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507174.117309">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.7016144776116484</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.919516.117286</amplitudeID>
+        <waveformID networkCode="SC" stationCode="GDL2" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507177Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507235.117310">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.259594147520959</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.924001.117287</amplitudeID>
+        <waveformID networkCode="GM" stationCode="NMP11" locationCode="01" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507238Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507291.117311">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.9880002264093166</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.929231.117288</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PECS" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507294Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507364.117312">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.256795997397591</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.934538.117289</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB12" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507371Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507439.117313">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>2.1808886102432408</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.937686.117290</amplitudeID>
+        <waveformID networkCode="TX" stationCode="PB01" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507442Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <stationMagnitude publicID="smi:org.gfz-potsdam.de/geofon/StationMagnitude/20240419201509.507501.117314">
+        <originID>smi:org.gfz-potsdam.de/geofon/NLL.20240419201449.371544.117204</originID>
+        <mag>
+          <value>1.977350268527521</value>
+        </mag>
+        <type>ML</type>
+        <amplitudeID>smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.942359.117291</amplitudeID>
+        <waveformID networkCode="TX" stationCode="VHRN" locationCode="00" channelCode="HH"></waveformID>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:09.507504Z</creationTime>
+        </creationInfo>
+      </stationMagnitude>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863099.116632">
+        <time>
+          <value>2024-04-19T09:27:39.098638Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB35" locationCode="00" channelCode="HH1"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863238Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863338.116634">
+        <time>
+          <value>2024-04-19T09:27:39.558765Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB38" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863349Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863392.116636">
+        <time>
+          <value>2024-04-19T09:27:39.745685Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB28" locationCode="00" channelCode="HH1"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863403Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863441.116638">
+        <time>
+          <value>2024-04-19T09:27:40.261840Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB37" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863452Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863466.116639">
+        <time>
+          <value>2024-04-19T09:27:40.434477Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB29" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863479Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863513.116641">
+        <time>
+          <value>2024-04-19T09:27:40.522794Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="4O" stationCode="SA02" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863523Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863538.116642">
+        <time>
+          <value>2024-04-19T09:27:40.782351Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB09" locationCode="00" channelCode="BHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863547Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863565.116643">
+        <time>
+          <value>2024-04-19T09:27:41.770315Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="4O" stationCode="SA07" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863577Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863593.116644">
+        <time>
+          <value>2024-04-19T09:27:42.562359Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="4O" stationCode="SA06" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863603Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863616.116645">
+        <time>
+          <value>2024-04-19T09:27:43.037580Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB26" locationCode="00" channelCode="HHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863626Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863645.116646">
+        <time>
+          <value>2024-04-19T09:27:43.683626Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB23" locationCode="00" channelCode="HHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863655Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863676.116647">
+        <time>
+          <value>2024-04-19T09:27:44.108033Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="4O" stationCode="CT01" channelCode="HHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863689Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863711.116648">
+        <time>
+          <value>2024-04-19T09:27:44.177608Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="4O" stationCode="SA09" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863721Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863763.116649">
+        <time>
+          <value>2024-04-19T09:27:46.362261Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB44" locationCode="00" channelCode="HHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863773Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863823.116651">
+        <time>
+          <value>2024-04-19T09:27:47.729743Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="SC" stationCode="GDL2" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863836Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863797.116650">
+        <time>
+          <value>2024-04-19T09:27:47.889765Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="GM" stationCode="NMP11" locationCode="01" channelCode="HHN"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863807Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442699.117098">
+        <time>
+          <value>2024-04-19T09:27:48.303402Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PECS" locationCode="00" channelCode="HH1"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:14:32.442834Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442891.117099">
+        <time>
+          <value>2024-04-19T09:27:49.173089Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB12" locationCode="00" channelCode="HHE"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:14:32.442903Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201444.440439.117181">
+        <time>
+          <value>2024-04-19T09:27:54.111840Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB01" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:14:44.440576Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201407.482361.116853">
+        <time>
+          <value>2024-04-19T09:27:56.207114Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="VHRN" locationCode="00" channelCode="HH1"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:14:07.482496Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863296.116633">
+        <time>
+          <value>2024-04-19T09:27:40.142262Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB35" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863309Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863361.116635">
+        <time>
+          <value>2024-04-19T09:27:40.799016Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB38" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863375Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863413.116637">
+        <time>
+          <value>2024-04-19T09:27:41.109353Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB28" locationCode="00" channelCode="HH1"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863422Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.86349.116640">
+        <time>
+          <value>2024-04-19T09:27:42.411058Z</value>
+          <lowerUncertainty>0.2</lowerUncertainty>
+          <upperUncertainty>0.2</upperUncertainty>
+        </time>
+        <waveformID networkCode="TX" stationCode="PB29" locationCode="00" channelCode="HH2"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:13:53.863499Z</creationTime>
+        </creationInfo>
+      </pick>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.880886.117272">
+        <genericAmplitude>
+          <value>0.0030627845729286635</value>
+          <lowerUncertainty>0.0005287257681028263</lowerUncertainty>
+          <upperUncertainty>0.0005287257681028267</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>331.97956528944064</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:40.245000Z</reference>
+          <begin>-6.144999</begin>
+          <end>29.615</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863099.116632</pickID>
+        <waveformID networkCode="TX" stationCode="PB35" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.881004Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.883677.117273">
+        <genericAmplitude>
+          <value>0.005151687829548836</value>
+          <lowerUncertainty>0.0009746300021131518</lowerUncertainty>
+          <upperUncertainty>0.0009746300021131518</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>581.3616260783866</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:40.950000Z</reference>
+          <begin>-6.389999</begin>
+          <end>30.76</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863338.116634</pickID>
+        <waveformID networkCode="TX" stationCode="PB38" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.883721Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.886188.117274">
+        <genericAmplitude>
+          <value>0.007844286811161722</value>
+          <lowerUncertainty>0.0003791607668901298</lowerUncertainty>
+          <upperUncertainty>0.0003791607668901298</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>770.2129941065115</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:41.325000Z</reference>
+          <begin>-6.574999</begin>
+          <end>31.075</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863392.116636</pickID>
+        <waveformID networkCode="TX" stationCode="PB28" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.886228Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.888674.117275">
+        <genericAmplitude>
+          <value>0.002639892605344923</value>
+          <lowerUncertainty>0.0010360299499382255</lowerUncertainty>
+          <upperUncertainty>0.001036029949938225</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>302.03949345284235</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:42.195000Z</reference>
+          <begin>-6.934999</begin>
+          <end>31.985</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863441.116638</pickID>
+        <waveformID networkCode="TX" stationCode="PB37" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.888702Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.891057.117276">
+        <genericAmplitude>
+          <value>0.004506345535363108</value>
+          <lowerUncertainty>0.0024638357550695045</lowerUncertainty>
+          <upperUncertainty>0.0024638357550695036</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>475.6519165241331</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:42.465000Z</reference>
+          <begin>-7.034999</begin>
+          <end>32.265</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863466.116639</pickID>
+        <waveformID networkCode="TX" stationCode="PB29" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.891072Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.893496.117277">
+        <genericAmplitude>
+          <value>0.003285360187290596</value>
+          <lowerUncertainty>0.0003691396378163563</lowerUncertainty>
+          <upperUncertainty>0.0003691396378163558</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>481.2773454934234</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:43.056000Z</reference>
+          <begin>-7.534999</begin>
+          <end>32.275</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863513.116641</pickID>
+        <waveformID networkCode="4O" stationCode="SA02" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.893521Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.894738.117278">
+        <genericAmplitude>
+          <value>0.0017405559830295486</value>
+          <lowerUncertainty>0.0001933764774932909</lowerUncertainty>
+          <upperUncertainty>0.0001933764774932907</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>215.49217948456646</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:43.175000Z</reference>
+          <begin>-7.399999</begin>
+          <end>32.85</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863538.116642</pickID>
+        <waveformID networkCode="TX" stationCode="PB09" locationCode="00" channelCode="BH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.894758Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.897086.117279">
+        <genericAmplitude>
+          <value>0.0010453381673102247</value>
+          <lowerUncertainty>0.0005087042544875889</lowerUncertainty>
+          <upperUncertainty>0.0005087042544875888</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>107.76639881371426</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:44.765000Z</reference>
+          <begin>-7.989999</begin>
+          <end>34.35</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863565.116643</pickID>
+        <waveformID networkCode="4O" stationCode="SA07" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.897113Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.899633.117280">
+        <genericAmplitude>
+          <value>0.0010002516940388064</value>
+          <lowerUncertainty>3.69308766836034e-05</lowerUncertainty>
+          <upperUncertainty>3.6930876683603175e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>18.66662681224882</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:46.286000Z</reference>
+          <begin>-8.724999</begin>
+          <end>35.285</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863593.116644</pickID>
+        <waveformID networkCode="4O" stationCode="SA06" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.899655Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.902341.117281">
+        <genericAmplitude>
+          <value>0.0005381585987614112</value>
+          <lowerUncertainty>2.5517904531691342e-05</lowerUncertainty>
+          <upperUncertainty>2.5517904531691342e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>40.50266123117926</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:50.322000Z</reference>
+          <begin>-12.284999</begin>
+          <end>32.555</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863616.116645</pickID>
+        <waveformID networkCode="TX" stationCode="PB26" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.902358Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.904652.117282">
+        <genericAmplitude>
+          <value>0.0004684513823435579</value>
+          <lowerUncertainty>0.00013236661044439875</lowerUncertainty>
+          <upperUncertainty>0.00013236661044439875</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>38.97583916211555</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:50.681000Z</reference>
+          <begin>-12.0</begin>
+          <end>33.88</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863645.116646</pickID>
+        <waveformID networkCode="TX" stationCode="PB23" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.904664Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.909224.117283">
+        <genericAmplitude>
+          <value>0.001042946341486704</value>
+          <lowerUncertainty>0.00010620712338502126</lowerUncertainty>
+          <upperUncertainty>0.00010620712338502126</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>83.25227147249208</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:48.972500Z</reference>
+          <begin>-9.862499</begin>
+          <end>37.2475</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863676.116647</pickID>
+        <waveformID networkCode="4O" stationCode="CT01" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.909244Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.912084.117284">
+        <genericAmplitude>
+          <value>0.0003333844279937851</value>
+          <lowerUncertainty>6.694402319483955e-05</lowerUncertainty>
+          <upperUncertainty>6.69440231948395e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>24.86869298225107</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:49.416000Z</reference>
+          <begin>-10.234999</begin>
+          <end>37.255</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863711.116648</pickID>
+        <waveformID networkCode="4O" stationCode="SA09" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.912109Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.916526.117285">
+        <genericAmplitude>
+          <value>0.0013125701127144423</value>
+          <lowerUncertainty>0.0004053752880449864</lowerUncertainty>
+          <upperUncertainty>0.0004053752880449866</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>69.04608801132014</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:52.936500Z</reference>
+          <begin>-11.574999</begin>
+          <end>39.875</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863763.116649</pickID>
+        <waveformID networkCode="TX" stationCode="PB44" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.916544Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.919516.117286">
+        <genericAmplitude>
+          <value>0.00011428352533920628</value>
+          <lowerUncertainty>2.454956177979857e-05</lowerUncertainty>
+          <upperUncertainty>2.4549561779798585e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>50.41684412267331</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:59.735000Z</reference>
+          <begin>-17.009999</begin>
+          <end>37.6</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863823.116651</pickID>
+        <waveformID networkCode="SC" stationCode="GDL2" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.919536Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.924001.117287">
+        <genericAmplitude>
+          <value>0.00041253788304863013</value>
+          <lowerUncertainty>8.740757171034013e-05</lowerUncertainty>
+          <upperUncertainty>8.740757171034013e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>19.524220495565068</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:56.755000Z</reference>
+          <begin>-13.864999</begin>
+          <end>40.815</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201353.863797.116650</pickID>
+        <waveformID networkCode="GM" stationCode="NMP11" locationCode="01" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.924023Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.929231.117288">
+        <genericAmplitude>
+          <value>0.00020472758733332274</value>
+          <lowerUncertainty>7.599936781373662e-06</lowerUncertainty>
+          <upperUncertainty>7.599936781373634e-06</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>17.033644980158183</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:56.100000Z</reference>
+          <begin>-12.794999</begin>
+          <end>42.875</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442699.117098</pickID>
+        <waveformID networkCode="TX" stationCode="PECS" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.929268Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.934538.117289">
+        <genericAmplitude>
+          <value>0.0003362826367704988</value>
+          <lowerUncertainty>3.550057381650784e-05</lowerUncertainty>
+          <upperUncertainty>3.550057381650779e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>20.804940319757165</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:27:58.875000Z</reference>
+          <begin>-14.699999</begin>
+          <end>42.64</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201432.442891.117099</pickID>
+        <waveformID networkCode="TX" stationCode="PB12" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.934585Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.937686.117290">
+        <genericAmplitude>
+          <value>0.00014863527347809376</value>
+          <lowerUncertainty>1.0775968603064318e-05</lowerUncertainty>
+          <upperUncertainty>1.0775968603064345e-05</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>16.178250005281484</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:28:06.965000Z</reference>
+          <begin>-17.854999</begin>
+          <end>50.785</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201444.440439.117181</pickID>
+        <waveformID networkCode="TX" stationCode="PB01" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.937704Z</creationTime>
+        </creationInfo>
+      </amplitude>
+      <amplitude publicID="smi:org.gfz-potsdam.de/geofon/Amplitude/20240419201508.942359.117291">
+        <genericAmplitude>
+          <value>6.918265255552375e-05</value>
+          <lowerUncertainty>6.612721338445524e-06</lowerUncertainty>
+          <upperUncertainty>6.612721338445537e-06</upperUncertainty>
+        </genericAmplitude>
+        <type>ML</type>
+        <unit>m</unit>
+        <snr>7.883592584452298</snr>
+        <timeWindow>
+          <reference>2024-04-19T09:28:17.615000Z</reference>
+          <begin>-26.409999</begin>
+          <end>45.95</end>
+        </timeWindow>
+        <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20240419201407.482361.116853</pickID>
+        <waveformID networkCode="TX" stationCode="VHRN" locationCode="00" channelCode="HH"></waveformID>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>TX</agencyID>
+          <author>Victor</author>
+          <creationTime>2024-04-19T20:15:08.942402Z</creationTime>
+        </creationInfo>
+      </amplitude>
+    </event>
+  </eventParameters>
+</q:quakeml>

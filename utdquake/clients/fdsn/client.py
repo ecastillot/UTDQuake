@@ -4,6 +4,20 @@ import pandas as pd
 from .utils import get_stations_info, get_custom_info, save_info
 from utdquake.tools.stats import get_rolling_stats
 from obspy.clients.fdsn import Client as FDSNClient
+from obspy.core.event.event import Event
+from obspy.core.event import Catalog
+import concurrent.futures as cf
+import time
+from tqdm import tqdm
+import obsplus
+
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    message="'smi:org.gfz-potsdam.de/geofon/.*' is not a valid QuakeML URI.*",
+    category=UserWarning,
+    module="obspy.io.quakeml.core"
+)
 
 class Client(FDSNClient):
     """
@@ -43,6 +57,12 @@ class Client(FDSNClient):
             list: A list of custom event IDs.
         """
 
+        keys = ["includearrivals", "includeallorigins", "includeallmagnitudes"]
+        for key in keys:
+            if key in ev_kwargs.keys():
+                # Remove the key from ev_kwargs if it exists
+                ev_kwargs[key] = False
+                
         # Retrieve the catalog of events using the get_events method
         catalog = self.get_events(starttime, endtime, **ev_kwargs)
 
@@ -56,7 +76,7 @@ class Client(FDSNClient):
         for event in catalog:
             
             # Extract additional data from the event
-            extra_data_src = event.extra.datasource.value
+            extra_data_src = event.extra.datasource.value 
             extra_ev_id = event.extra.eventid.value
 
             # Define potential event ID formats
@@ -87,148 +107,86 @@ class Client(FDSNClient):
         # Return the list of event IDs
         return ev_ids
 
-    def get_custom_stations(self, output_folder=None, **sta_kwargs):
+    def save_chunked_events(self, starttime, endtime,  
+                       base_path,
+                       path_structure='{year}/{month}/{day}/{hour}',
+                       name_structure='{event_id_end}',
+                       chunks=100,
+                       format='quakeml', 
+                       debug=False,
+                       workers=1,
+                       **ev_kwargs):
         """
-        Retrieve custom station information and optionally save it to a CSV file.
+        Saves seismic event data in chunks for a specified time range.
 
-        Args:
-            output_folder (str, optional): Path to the folder where the station 
-                information will be saved. If None, the information will not be saved.
-            **sta_kwargs: Additional keyword arguments to filter stations 
-                when calling `self.get_stations`.
-
-        Returns:
-            pandas.DataFrame: A DataFrame containing the station information, including:
-                - "sta_id": Network.Station.
-                - "network": Network code to which the station belongs.
-                - "station": Station code.
-                - "latitude": Latitude of the station.
-                - "longitude": Longitude of the station.
-                - "elevation": Elevation of the station.
-                - "starttime": Start date and time of the station's operation.
-                - "endtime": End date and time of the station's operation.
-                - "site_name": Name of the site.
-        """
-        # Retrieve the inventory using the provided keyword arguments
-        inv = self.get_stations(**sta_kwargs)
-
-        # Extract station information into a DataFrame
-        sta_info = get_stations_info(inv)
-
-        # If an output folder is specified, save the DataFrame as a CSV file
-        if output_folder is not None:
-            # Create the output folder if it doesn't exist
-            if not os.path.isdir(output_folder):
-                os.makedirs(output_folder)
-
-            # Define the full path for the CSV file
-            path = os.path.join(output_folder, "stations.csv")
-
-            # Save the station information to the CSV file
-            sta_info.to_csv(
-                path,
-                mode='a',  # Append mode
-                header=not pd.io.common.file_exists(path),  # Add header only if the file doesn't exist
-                index=False  # Do not write row numbers
-            )
-
-        return sta_info
-
-    def get_custom_events(self, starttime, endtime,  max_events_in_ram=1e6,
-                      output_folder=None, drop_level=True, debug=False, **ev_kwargs):
-        """
-        Retrieves custom seismic event data, including origins, picks, and magnitudes.
-
-        Parameters:
+        Parameters
         ----------
         starttime : obspy.core.utcdatetime.UTCDateTime
-            Limit results to time series samples on or after the specified start time.
+            Start time for querying events.
         endtime : obspy.core.utcdatetime.UTCDateTime
-            Limit results to time series samples on or before the specified end time.
-        max_events_in_ram : int, optional, default=1e6
-            Maximum number of events to hold in memory (RAM) before stopping or 
-            prompting to save the data to disk.
-        output_folder : str, optional, default=None
-            Folder path where the event data will be saved if provided. If not 
-            specified, data will only be stored in memory.
-        drop_level : bool, optional, default=True
-            If True, the origin DataFrame will have only one hierarchical level.
-        debug: bool, optional, default = False
-            Print the events it is trying to get.
-        **ev_kwargs : variable length keyword arguments
-            Additional arguments passed to the `get_events` method.
-
-        Returns:
-        -------
-        tuple
-            A tuple containing:
-            - pd.DataFrame: Origins for all events.
-            - pd.DataFrame: Picks for all events.
-            - pd.DataFrame: Magnitudes for all events.
+            End time for querying events.
+        base_path : str
+            Base directory where event files will be saved.
+        path_structure : str, optional
+            Subdirectory format for saving events. Defaults to '{year}/{month}/{day}/{hour}'.
+        name_structure : str, optional
+            File naming format for each event. Defaults to '{event_id_end}'.
+        chunks : int, optional
+            Number of events to process per batch. Defaults to 100.
+        format : str, optional
+            Format used to store events. Defaults to 'quakeml'.
+        debug : bool, optional
+            Whether to print debug information during processing. Defaults to False.
+        workers : int, optional
+            Number of threads to use for saving events concurrently. Defaults to 1.
+        **ev_kwargs : dict
+            Additional keyword arguments passed to the `get_events` method.
         """
+        # Ensure the base directory exists
+        os.makedirs(base_path, exist_ok=True)
         
-        # # Retrieve the catalog of events using the get_events method
-        ev_ids = self.__get_custom_event_ids(starttime, endtime,ev_kwargs)
+        # Initialize the event bank for storing events to disk
+        ebank = obsplus.EventBank(
+            base_path=base_path,
+            path_structure=path_structure,
+            name_structure=name_structure,
+            format=format
+        )
         
-        # Initialize lists to store origins, picks, and magnitudes
-        all_origins, all_picks, all_mags = [], [], []
-
-        # Loop through each event ID to gather detailed event information
-        for k,ev_id in enumerate(ev_ids[::-1],1):
+        # Retrieve event IDs for the specified time range
+        ev_ids = self.__get_custom_event_ids(starttime, endtime, ev_kwargs)
+        
+        # Process events in chunks
+        for chunk in tqdm(range(0, len(ev_ids), chunks)):
+            # Get the current chunk of event IDs
+            ev_ids_chunk = ev_ids[chunk:chunk + chunks]
             
-            # Print debug
+            # Print debug information if enabled
             if debug:
-                print(f"Event id {k}/{len(ev_ids[::-1])}: {ev_id}")
+                print(f"Processing events: {ev_ids_chunk}")
             
-            # Catalog with arrivals. This is a workaround to retrieve 
-            # arrivals by specifying the event ID.
-            cat = self.get_events(eventid=ev_id,**ev_kwargs)
+            def save_single_event(ev_id):
+                """Fetch and save a single event to the event bank."""
+                catalog = self.get_events(eventid=ev_id, **ev_kwargs)
+                ebank.put_events(catalog)
+            
+            # Save chunk of events in parallel using threads
+            tic = time.time()
+            with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+                executor.map(save_single_event, ev_ids_chunk)
+            toc = time.time()
 
-            # Get the first event from the catalog
-            event = cat[0]
-
-            # Extract custom information for the event
-            origin, picks, mags = get_custom_info(ev_id, event, drop_level)
-
-            info = {
-                "origin": origin,
-                "picks": picks,
-                "mags": mags
-            }
-
-            # Save information to the output folder, if specified
-            if output_folder is not None:
-                if not os.path.isdir(output_folder):
-                    os.makedirs(output_folder)
-                save_info(output_folder, info=info)
-
-            # Append information to the lists or break if memory limit is reached
-            if len(all_origins) < max_events_in_ram:
-                all_origins.append(origin)
-                all_picks.append(picks)
-                all_mags.append(mags)
-            else:
-                if output_folder is not None:
-                    print(f"max_events_in_ram: {max_events_in_ram} is reached. "
-                        "But it is still saving on disk.")
-                else:
-                    print(f"max_events_in_ram: {max_events_in_ram} is reached. "
-                        "It is recommended to save the data on disk using the 'output_folder' parameter.")
-                    break
-
-        # Concatenate data from all events, if multiple events are found
-        if len(ev_ids) > 1:
-            all_origins = pd.concat(all_origins, axis=0)
-            all_picks = pd.concat(all_picks, axis=0)
-            all_mags = pd.concat(all_mags, axis=0)
-        else:
-            # If only one event is found, retain the single DataFrame
-            all_origins = all_origins[0]
-            all_picks = all_picks[0]
-            all_mags = all_mags[0]
-
-        return all_origins, all_picks, all_mags
-
+            # Print timing information if debug is enabled
+            if debug:
+                print(f"Saving events took: {toc - tic:.2f} seconds")
+            
+            # tic = time.time()
+            # for ev_id in ev_ids_chunk:
+            #     save_single_event(ev_id)
+            # toc = time.time()
+            # if debug:
+            #     print(f"Time taken to retrieve events: {toc - tic:.2f} seconds")
+            
     def get_stats(self, step, network, station, location, channel, starttime, endtime, output=None, **kwargs):
         """
         Retrieve waveforms and compute rolling statistics for the specified time interval.

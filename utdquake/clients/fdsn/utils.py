@@ -21,20 +21,20 @@ def get_custom_picks(event):
     # Loop through each pick in the event
     for pick in event.picks:
         picks[pick.resource_id.id] = {
-            "network": pick.waveform_id.network_code if pick.waveform_id is not None else None,
-            "station": pick.waveform_id.station_code if pick.waveform_id is not None else None,
-            "location": pick.waveform_id.location_code if pick.waveform_id is not None else None,
-            "channel": pick.waveform_id.channel_code if pick.waveform_id is not None else None,
-            "phase_hint": pick.phase_hint,
-            "time": pick.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"),
-            "time_lower_error": pick.time_errors.lower_uncertainty if pick.time_errors is not None else None,
-            "time_upper_error": pick.time_errors.upper_uncertainty if pick.time_errors is not None else None,
-            "author": pick.creation_info.author if pick.creation_info is not None else None,
-            "filter_id": pick.filter_id.id if pick.filter_id is not None else None ,
-            "method_id": pick.method_id.id if pick.method_id is not None else None,
-            "polarity": pick.polarity[0] if pick.polarity is not None else None,
-            "evaluation_mode": pick.evaluation_mode,
-            "evaluation_status": pick.evaluation_status
+            ("event","pick","network_code"): pick.waveform_id.network_code if pick.waveform_id is not None else None,
+            ("event","pick","station_code"): pick.waveform_id.station_code if pick.waveform_id is not None else None,
+            ("event","pick","location_code"): pick.waveform_id.location_code if pick.waveform_id is not None else None,
+            ("event","pick","channel_code"): pick.waveform_id.channel_code if pick.waveform_id is not None else None,
+            ("event","pick","phase_hint"): pick.phase_hint,
+            ("event","pick","time"): pick.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"),
+            ("event","pick","time_errors_lower_uncertainty"): pick.time_errors.lower_uncertainty if pick.time_errors is not None else None,
+            ("event","pick","time_errors_upper_uncertainty"): pick.time_errors.upper_uncertainty if pick.time_errors is not None else None,
+            ("event","pick","creation_info_author"): pick.creation_info.author if pick.creation_info is not None else None,
+            ("event","pick","filter_id"): pick.filter_id.id if pick.filter_id is not None else None ,
+            ("event","pick","method_id"): pick.method_id.id if pick.method_id is not None else None,
+            ("event","pick","polarity"): pick.polarity[0] if pick.polarity is not None else None,
+            ("event","pick","evaluation_mode"): pick.evaluation_mode,
+            ("event","pick","evaluation_status"): pick.evaluation_status
         }
     
     return picks
@@ -56,12 +56,12 @@ def get_custom_station_magnitudes(event):
     # Loop through each station magnitude in the event
     for sta_mag in event.station_magnitudes:
         sta_mags[sta_mag.resource_id.id] = {
-            "network_code": sta_mag.waveform_id.network_code if sta_mag.waveform_id is not None else None,
-            "station_code": sta_mag.waveform_id.station_code if sta_mag.waveform_id is not None else None,
-            "location_code": sta_mag.waveform_id.location_code if sta_mag.waveform_id is not None else None,
-            "channel_code": sta_mag.waveform_id.channel_code if sta_mag.waveform_id is not None else None,
-            "mag": sta_mag.mag,
-            "mag_type": sta_mag.station_magnitude_type
+            ("event","station_magnitude","network_code"): sta_mag.waveform_id.network_code if sta_mag.waveform_id is not None else None,
+            ("event","station_magnitude","station_code"): sta_mag.waveform_id.station_code if sta_mag.waveform_id is not None else None,
+            ("event","station_magnitude","location_code"): sta_mag.waveform_id.location_code if sta_mag.waveform_id is not None else None,
+            ("event","station_magnitude","channel_code"): sta_mag.waveform_id.channel_code if sta_mag.waveform_id is not None else None,
+            ("event","station_magnitude","magnitude"): sta_mag.mag,
+            ("event","station_magnitude","magnitude_type"): sta_mag.station_magnitude_type
         }
     
     return sta_mags
@@ -88,15 +88,15 @@ def get_custom_arrivals(ev_id, event):
     # info = dict(origin.quality)
     
     info = {
-            "qc_associated_phase_count":origin.quality.associated_phase_count if origin.quality is not None else None,
-            "qc_used_phase_count":origin.quality.used_phase_count if origin.quality is not None else None,
-            "qc_associated_station_count":origin.quality.associated_station_count if origin.quality is not None else None,
-            "qc_used_station_count":origin.quality.used_station_count if origin.quality is not None else None,
-            "qc_arrivals_rms":origin.quality.standard_error if origin.quality is not None else None,
-            "qc_azimuthal_gap":origin.quality.azimuthal_gap if origin.quality is not None else None,
-            "qc_minimum_station_distance":origin.quality.minimum_distance if origin.quality is not None else None,
-            "qc_maximum_station_distance":origin.quality.maximum_distance if origin.quality is not None else None,
-            "qc_median_station_distance":origin.quality.median_distance if origin.quality is not None else None,
+            ("event","origin","quality_associated_phase_count"):origin.quality.associated_phase_count if origin.quality is not None else None,
+            ("event","origin","quality_used_phase_count"):origin.quality.used_phase_count if origin.quality is not None else None,
+            ("event","origin","quality_associated_station_count"):origin.quality.associated_station_count if origin.quality is not None else None,
+            ("event","origin","quality_used_station_count"):origin.quality.used_station_count if origin.quality is not None else None,
+            ("event","origin","quality_standard_error"):origin.quality.standard_error if origin.quality is not None else None,
+            ("event","origin","quality_azimuthal_gap"):origin.quality.azimuthal_gap if origin.quality is not None else None,
+            ("event","origin","quality_minimum_distance"):origin.quality.minimum_distance if origin.quality is not None else None,
+            ("event","origin","quality_maximum_distance"):origin.quality.maximum_distance if origin.quality is not None else None,
+            ("event","origin","quality_median_distance"):origin.quality.median_distance if origin.quality is not None else None,
             }
     
     # Retrieve custom picks
@@ -114,13 +114,13 @@ def get_custom_arrivals(ev_id, event):
             continue
         
         
-        pick_info["time_correction"] = arrival.time_correction
-        pick_info["azimuth"] = arrival.azimuth
-        pick_info["distance"] = arrival.distance
-        pick_info["takeoff_angle"] = arrival.takeoff_angle
-        pick_info["time_residual"] = arrival.time_residual
-        pick_info["time_weight"] = arrival.time_weight
-        pick_info["used"] = True
+        pick_info[("event","origin","arrival","time_correction")] = arrival.time_correction
+        pick_info[("event","origin","arrival","azimuth")] = arrival.azimuth
+        pick_info[("event","origin","arrival","distance")] = arrival.distance
+        pick_info[("event","origin","arrival","takeoff_angle")] = arrival.takeoff_angle
+        pick_info[("event","origin","arrival","time_residual")] = arrival.time_residual
+        pick_info[("event","origin","arrival","time_weight")] = arrival.time_weight
+        pick_info[("event","origin","arrival","used")] = True
         
         arr_contributions[arrival.pick_id.id] = pick_info
     
@@ -129,19 +129,19 @@ def get_custom_arrivals(ev_id, event):
     
     for not_used_id in not_used_ids:
         pick_info = picks[not_used_id]
-        pick_info["time_correction"] = None
-        pick_info["azimuth"] = None
-        pick_info["distance"] = None
-        pick_info["takeoff_angle"] = None
-        pick_info["time_residual"] = None
-        pick_info["time_weight"] = None
-        pick_info["used"] = False
+        pick_info[("event","origin","arrival","time_correction")] = None
+        pick_info[("event","origin","arrival","azimuth")] = None
+        pick_info[("event","origin","arrival","distance")] = None
+        pick_info[("event","origin","arrival","takeoff_angle")] = None
+        pick_info[("event","origin","arrival","time_residual")] = None
+        pick_info[("event","origin","arrival","time_weight")] = None
+        pick_info[("event","origin","arrival","used")] = False
         arr_contributions[not_used_id] = pick_info
     
     # Convert contributions to a DataFrame and drop duplicates
     arr_contributions = pd.DataFrame(list(arr_contributions.values()))
     arr_contributions = arr_contributions.drop_duplicates(ignore_index=True)
-    arr_contributions.insert(0, "ev_id", ev_id)
+    arr_contributions.insert(0, ("event","event_id"), ev_id)
     
     return info, arr_contributions
 
@@ -164,12 +164,12 @@ def get_custom_pref_mag(ev_id, event):
     
     # Get preferred magnitude information
     info = {
-        "magnitude": magnitude.mag,
-        "qc_magnitude_uncertainty": magnitude.mag_errors.uncertainty if magnitude.mag_errors is not None else None,
-        "magnitude_type": magnitude.magnitude_type,
-        "magnitude_method_id": magnitude.method_id.id.split("/")[-1] if magnitude.method_id is not None else None,
-        "qc_magnitude_station_count": magnitude.station_count,
-        "qc_magnitude_evaluation_status": magnitude.evaluation_status,
+        ("event","magnitude","magnitude"): magnitude.mag,
+        ("event","magnitude","magnitude_uncertainty"): magnitude.mag_errors.uncertainty if magnitude.mag_errors is not None else None,
+        ("event","magnitude","magnitude_type"): magnitude.magnitude_type,
+        ("event","magnitude","magnitude_method_id"): magnitude.method_id.id.split("/")[-1] if magnitude.method_id is not None else None,
+        ("event","magnitude","magnitude_station_count"): magnitude.station_count,
+        ("event","magnitude","magnitude_evaluation_status"): magnitude.evaluation_status,
     }
     
     # Retrieve station magnitudes
@@ -186,25 +186,25 @@ def get_custom_pref_mag(ev_id, event):
             print(f"Event: {ev_id} | StationMagnitude not found:",e)
             continue
             
-        sta_info["residual"] = used_sta_mag.residual
-        sta_info["weight"] = used_sta_mag.weight
-        sta_info["used"] = True
-        mag_contributions[used_sta_mag.station_magnitude_id.id] = sta_info
+        mag_contributions[("event","magnitude","station_magnitude_contribution","residual")] = used_sta_mag.residual
+        mag_contributions[("event","magnitude","station_magnitude_contribution","weight")] = used_sta_mag.weight
+        mag_contributions[("event","magnitude","station_magnitude_contribution","used")] = True
+        # mag_contributions[used_sta_mag.station_magnitude_id.id] = sta_info
     
-    # Identify station magnitudes not used in contributions
-    not_used_ids = list(set(sta_mags.keys()) - set(mag_contributions.keys()))
+    # # Identify station magnitudes not used in contributions
+    # not_used_ids = list(set(sta_mags.keys()) - set(mag_contributions.keys()))
     
-    for not_used_id in not_used_ids:
-        sta_info = sta_mags[not_used_id]
-        sta_info["residual"] = None
-        sta_info["weight"] = None
-        sta_info["used"] = False
-        mag_contributions[not_used_id] = sta_info
+    # for not_used_id in not_used_ids:
+    #     sta_info = sta_mags[not_used_id]
+    #     sta_info["residual"] = None
+    #     sta_info["weight"] = None
+    #     sta_info["used"] = False
+    #     mag_contributions[not_used_id] = sta_info
     
     # Convert contributions to a DataFrame and drop duplicates
     mag_contributions = pd.DataFrame(list(mag_contributions.values()))
     mag_contributions = mag_contributions.drop_duplicates(ignore_index=True)
-    mag_contributions.insert(0, "ev_id", ev_id)
+    mag_contributions.insert(0, ("event","event_id"), ev_id)
     # mag_contributions.insert(0, "magnitude_id", magnitude.resource_id.id)
     
     return info, mag_contributions
@@ -224,41 +224,59 @@ def get_custom_origin(ev_id,event):
         A dictionary containing event and origin information with 
         multilevel column structure.
     """
+    # from obsplus.events.utils import event_to_dataframe
+    import obsplus
+    from obsplus.events.pd import events_to_df
+    
     # Get the preferred origin of the event
-    origin = event.preferred_origin()
+    try:
+        origin = event.preferred_origin()
+    except: 
+        raise Exception(f"Event: {ev_id} | Origin not found")
     
     # Prepare event information
     ev_info = {
-        ("event", "ev_id"): ev_id,
-        ("event", "ev_type"): event.event_type,
-        ("event", "qc_ev_type_certainty"): event.event_type_certainty,
+         "event_id": ev_id,
+         "event_type": event.event_type,
+         "event_type_certainty": event.event_type_certainty,
     }
+    # print(event.__dict__)
+    # print(origin.__dict__)
+    # df = events_to_df(event)
+    df = events_to_df(event)
+    df.to_csv("/home/edc240000/UTDQuake/test/tools/test.csv")
+    # print(df)
+    print(df.info())
+    # while True:
+        
+        
     
+    exit()
     # Prepare location information
     loc_info = {
-        ("origin_loc", "agency"): origin.creation_info.agency_id if origin.creation_info is not None else None,
-        ("origin_loc", "qc_evaluation_mode"): origin.evaluation_mode,
-        ("origin_loc", "qc_evaluation_status"): origin.evaluation_status,
-        ("origin_loc", "origin_time"): origin.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f") if origin.time is not None else None,
-        ("origin_loc", "longitude"): origin.longitude,
-        ("origin_loc", "qc_longitude_error"): origin.longitude_errors.uncertainty,
-        ("origin_loc", "latitude"): origin.latitude,
-        ("origin_loc", "qc_latitude_error"): origin.latitude_errors.uncertainty,
-        ("origin_loc", "depth"): origin.depth,
-        ("origin_loc", "qc_depth_error"): origin.depth_errors.uncertainty if origin.depth_errors is not None else None,
+        ("origin", "agency"): origin.creation_info.agency_id if origin.creation_info is not None else None,
+        ("origin", "evaluation_mode"): origin.evaluation_mode,
+        ("origin", "evaluation_status"): origin.evaluation_status,
+        ("origin", "time"): origin.time.datetime.strftime("%Y-%m-%d %H:%M:%S.%f") if origin.time is not None else None,
+        ("origin", "longitude"): origin.longitude,
+        ("origin", "longitude_error"): origin.longitude_errors.uncertainty,
+        ("origin", "latitude"): origin.latitude,
+        ("origin", "latitude_error"): origin.latitude_errors.uncertainty,
+        ("origin", "depth"): origin.depth,
+        ("origin", "depth_error"): origin.depth_errors.uncertainty if origin.depth_errors is not None else None,
         }
         
     method_id = origin.method_id
     if method_id is not None:
-        loc_info[("origin_loc", "loc_method_id")] =  method_id.id.split("/")[-1] if method_id.id is not None else None
+        loc_info[("event","origin", "location_method_id")] =  method_id.id.split("/")[-1] if method_id.id is not None else None
     else:
-        loc_info[("origin_loc", "loc_method_id")] =  None
+        loc_info[("event","origin", "location_method_id")] =  None
         
     earth_model_id = origin.earth_model_id
     if earth_model_id is not None:
-        loc_info[("origin_loc", "earth_model_id")] =  earth_model_id.id.split("/")[-1] if earth_model_id.id is not None else None
+        loc_info[("event","origin", "earth_model_id")] =  earth_model_id.id.split("/")[-1] if earth_model_id.id is not None else None
     else:
-        loc_info[("origin_loc", "earth_model_id")] =  None
+        loc_info[("event","origin", "earth_model_id")] =  None
     
     
     # Combine all information into a single dictionary
@@ -267,6 +285,8 @@ def get_custom_origin(ev_id,event):
     
     # for x, y in info.items():
     #     print(x, y)
+    info = pd.DataFrame([info])
+    info.columns = pd.MultiIndex.from_tuples(info.keys())
     
     return info
     
@@ -293,10 +313,12 @@ def get_custom_info(ev_id, event, drop_level=True):
     
     # Retrieve custom origin information from the event
     origin_info = get_custom_origin(ev_id,event)
-    
-    
+    print(origin_info)
+    print(origin_info.info())
+    exit()    
     # Retrieve picks information and contributions from the event
     picks_info, picks_contributions = get_custom_arrivals(ev_id,event)
+    # print(picks_info, picks_contributions)
     
     # Retrieve magnitude information and contributions from the event
     mag_info, mag_contributions = get_custom_pref_mag(ev_id,event)
@@ -314,8 +336,6 @@ def get_custom_info(ev_id, event, drop_level=True):
     # Update the origin information with picks information
     origin_info.update(picks_info)
     
-    # for x, y in origin_info.items():
-    #     print(x, y)
     
     # Convert the combined origin information into a Pandas DataFrame
     origin_info = pd.DataFrame([origin_info])
@@ -395,7 +415,7 @@ def save_info(path, info):
             info_path = os.path.join(path, f"{key}.db")
             
             # Group the DataFrame by 'ev_id' and iterate over each group
-            for ev_id, df_by_evid in value.groupby("ev_id").__iter__():
+            for ev_id, df_by_evid in value.groupby("event_id").__iter__():
                 save_to_sqlite(df_by_evid,
                                          info_path,ev_id)
                 # with sqlite3.connect(info_path) as conn:

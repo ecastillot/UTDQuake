@@ -1,0 +1,2 @@
+resource_id,mag,seed_id,magnitude_type,origin_id,method_id,station_count,azimuthal_gap,evaluation_mode,evaluation_status,creation_time,author,agency_id,event_id,event_time,uncertainty,lower_uncertainty,upper_uncertainty,confidence_level
+smi:org.gfz-potsdam.de/geofon/Magnitude/20240419092634.258337.124448,1.8,,ML,smi:org.gfz-potsdam.de/geofon/NLL.20240419092622.349947.124336,smi:org.gfz-potsdam.de/geofon/trimmed_mean,14.0,,,confirmed,2024-04-19 09:29:00.438099,Anestis,TX,smi:org.gfz-potsdam.de/geofon/texnet2024hrey,2024-04-19 00:33:29.083274,0.1,,,
