@@ -1,17 +1,27 @@
-
+# /**
+#  * @author Emmanuel Castillo
+#  * @email [castillo.280997@gmail.com]
+#  * @create date 2025-05-24 14:31:48
+#  * @modify date 2025-05-24 14:31:48
+#  * @desc [description]
+#  */
+from http.client import RemoteDisconnected
+import queue
+import traceback
+import threading
+import gc
 import os
-import pandas as pd
-from .utils import get_stations_info, get_custom_info, save_info
-from utdquake.tools.stats import get_rolling_stats
-from obspy.clients.fdsn import Client as FDSNClient
-from obspy.core.event.event import Event
-from obspy.core.event import Catalog
-import concurrent.futures as cf
+import sqlite3
 import time
-from tqdm import tqdm
+import glob
 import obsplus
-
 import warnings
+import pandas as pd
+from tqdm import tqdm
+import concurrent.futures as cf
+from obspy.clients.fdsn import Client 
+
+
 warnings.filterwarnings(
     "ignore",
     message="'smi:org.gfz-potsdam.de/geofon/.*' is not a valid QuakeML URI.*",
@@ -19,12 +29,12 @@ warnings.filterwarnings(
     module="obspy.io.quakeml.core"
 )
 
-class Client(FDSNClient):
+class Bank(Client):
     """
-    A client class for retrieving and calculating rolling statistics on seismic data.
+    A bank class for retrieving and calculating rolling statistics on seismic data.
 
     Inherits from:
-        FDSNClient: Base class for FDSN web service clients.
+        Client: Base class for FDSN web service clients.
 
     Attributes:
         output (str): Path to the SQLite database file for saving results.
@@ -107,8 +117,130 @@ class Client(FDSNClient):
         # Return the list of event IDs
         return ev_ids
 
-    def save_chunked_events(self, starttime, endtime,  
-                       base_path,
+    def load_stations(self, base_path, network=None):
+        
+        if network is None:
+            # Load all station files from the base path
+            files = glob.glob(os.path.join(base_path, "*.csv"))
+        else:
+            # Load station files for a specific network
+            files = glob.glob(os.path.join(base_path, f"{network}.csv"))
+        if not files:
+            raise FileNotFoundError(f"No station files found in {base_path} for network {network}")
+        
+        
+        
+        
+
+    def save_stations(self, base_path, workers=None, **sta_kwargs):
+        """
+        Saves station data to a specified base path using parallel threads.
+
+        Parameters
+        ----------
+        base_path : str
+            Base directory where station files will be saved.
+        workers : int or None, optional
+            Number of worker threads to use. If None, the default from ThreadPoolExecutor is used.
+        **sta_kwargs : dict
+            Additional keyword arguments passed to the `get_stations` method.
+        """
+        # Ensure the base directory exists
+        os.makedirs(base_path, exist_ok=True)
+        
+        if workers is None:
+            cpu_cores = os.cpu_count() or 1  # fallback to 1 if cpu_count() returns None
+            workers = min(4, cpu_cores)  # max 4 workers or number of cores, whichever is smaller
+
+        # Default to response level if not specified
+        if "level" not in sta_kwargs:
+            sta_kwargs["level"] = "channel"
+        
+        # Fetch network-level metadata
+        kwargs = sta_kwargs.copy()
+        kwargs["level"] = "network"
+        net_inv = self.get_stations(**kwargs)
+        networks = sorted(set(net.code for net in net_inv))
+        
+        del net_inv, kwargs
+
+        # SQLite DB path
+        db_path = os.path.join(base_path, ".stations.db")
+
+        # Queue for thread-safe database writing
+        write_queue = queue.Queue()
+
+        total_networks = len(networks)
+        completed = 0
+        lock = threading.Lock()  # to safely update the counter
+
+        def db_writer():
+            """Dedicated DB writer thread to avoid SQLite locking issues."""
+            with sqlite3.connect(db_path) as conn:
+                while True:
+                    item = write_queue.get()
+                    if item is None:
+                        break
+                    df = item
+                    try:
+                        df.to_sql("/stations/index", conn, if_exists="append", index=False)
+                    except Exception as e:
+                        print(f"DB write error: {e}")
+                        traceback.print_exc()
+                    write_queue.task_done()
+
+        writer_thread = threading.Thread(target=db_writer)
+        writer_thread.start()
+
+        def process_network(network_code):
+            nonlocal completed
+            net_inv, df = None, None
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    local_kwargs = sta_kwargs.copy()
+                    local_kwargs["network"] = network_code
+
+                    net_inv = self.get_stations(**local_kwargs)
+
+                    if not net_inv[0].stations:
+                        msg = f"No stations found for network {network_code}."
+                        break
+
+                    # Save StationXML
+                    xml_path = os.path.join(base_path, f"{network_code}.xml")
+                    net_inv.write(xml_path, format="STATIONXML")
+
+                    # Convert to DataFrame and queue for DB write
+                    df = net_inv.to_df()
+                    write_queue.put(df)
+                    msg = f"Saved station data for network {network_code} to {xml_path}"
+                    break  # success, exit retry loop
+
+                except RemoteDisconnected:
+                    time.sleep(2)  # wait before retry
+                    msg = f"RemoteDisconnected on {network_code}, attempt {attempt+1}."
+                except Exception as e:
+                    msg = f"Error processing network {network_code}: {e}"
+                    traceback.print_exc()
+                    break  # unexpected error, stop retrying
+
+            with lock:
+                completed += 1
+                print(f"Progress: {completed}/{total_networks}, {msg}")
+            del df
+            del net_inv
+            gc.collect()
+
+        # Run threads
+        with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+            executor.map(process_network, networks)
+
+        # Stop DB writer thread
+        write_queue.put(None)
+        writer_thread.join()
+        
+    def save_events(self, base_path,starttime, endtime,  
                        path_structure='{year}/{month}/{day}/{hour}',
                        name_structure='{event_id_end}',
                        chunks=100,
@@ -187,66 +319,3 @@ class Client(FDSNClient):
             # if debug:
             #     print(f"Time taken to retrieve events: {toc - tic:.2f} seconds")
             
-    def get_stats(self, step, network, station, location, channel, starttime, endtime, output=None, **kwargs):
-        """
-        Retrieve waveforms and compute rolling statistics for the specified time interval.
-
-        Parameters:
-        ----------
-        step : int
-            Step size for the rolling window in seconds.
-        network : str
-            Select one or more network codes. These can be SEED network
-            codes or data center-defined codes. Multiple codes can be
-            comma-separated (e.g., "IU,TA"). Wildcards are allowed.
-        station : str
-            Select one or more SEED station codes. Multiple codes
-            can be comma-separated (e.g., "ANMO,PFO"). Wildcards are allowed.
-        location : str
-            Select one or more SEED location identifiers. Multiple
-            identifiers can be comma-separated (e.g., "00,01"). Wildcards are allowed.
-        channel : str
-            Select one or more SEED channel codes. Multiple codes
-            can be comma-separated (e.g., "BHZ,HHZ").
-        starttime : obspy.core.utcdatetime.UTCDateTime
-            Limit results to time series samples on or after the
-            specified start time.
-        endtime : obspy.core.utcdatetime.UTCDateTime
-            Limit results to time series samples on or before the
-            specified end time.
-        output : str, optional
-            Path to the SQLite database file for saving results. Defaults to None.
-        **kwargs : dict
-            Additional keyword arguments passed to the `self.get_waveforms` method.
-
-        Returns:
-        -------
-        pd.DataFrame
-            A DataFrame containing rolling statistics for each interval, including:
-            - Availability percentage
-            - Gaps duration
-            - Overlaps duration
-            - Gaps count
-            - Overlaps count
-        """
-        # Retrieve waveforms using the get_waveforms method
-        st = self.get_waveforms(
-            network=network,
-            station=station,
-            location=location,
-            channel=channel,
-            starttime=starttime,
-            endtime=endtime,
-            **kwargs
-        )
-
-        # Compute rolling statistics for the retrieved waveforms
-        stats = get_rolling_stats(
-            st=st,
-            step=step,
-            starttime=starttime.datetime,
-            endtime=endtime.datetime,
-            sqlite_output=output
-        )
-
-        return stats
