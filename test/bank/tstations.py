@@ -5,21 +5,53 @@ if lib not in sys.path:
 
 import os
 from obspy import UTCDateTime
-from utdquake.bank.fdsn import Bank
+from obspy.clients.fdsn.header import URL_MAPPINGS
+from utdquake.bank.fdsn import Client,EventIDTester
 
 region = [-104.84329,-103.79942,31.39610,31.91505]
 provider = "IRIS"
+# provider = "http://eida.ethz.ch"
 # provider = "USGS"
-bank_folder = "/groups/igonin/utdquake/bank"
+bank_folder = "/groups/igonin/utdquake/bank2"
 stations_folder = os.path.join(bank_folder, "stations")
-bank =  Bank(provider)
-bank.save_stations(
-    base_path=stations_folder,
-    # workers= None,
-    # level="channel",
-    # minlatitude=region[2], maxlatitude=region[3],
-    # minlongitude=region[0], maxlongitude=region[1],
-)
+client =  Client(provider)
+# print(client._picks_availability())
+# print(client._picks_in_eventid_mode())
+
+# tests = {"f1":lambda x: x["resource_id"]["id"]}
+# # tests = {"f1":lambda x: x.resource_id.id}
+
+# eit = EventIDTester({"resource_id":{"id":"hola"}},tests=tests)
+# id = eit.get_event_id("f1")
+# print(id)
+# print("natural mode",client._picks_in_natural_mode())
+# print("eventid mode",client._picks_in_eventid_mode())
+services = client.get_available_services()
+print(services)
+# services = client.services
+# for key,val in services["event"].items():
+#     print(f"{key}: {val}")
+
+# print(services["event"]["include_arrivals"])
+# print(list(services.keys()))
+# print(list(services.values()))
+# for provider in URL_MAPPINGS:
+#     print(provider, ":", URL_MAPPINGS[provider])
+# services = get_available_fdsn_services(provider)
+# print(services)
+
+# services = get_available_services(bank)
+# print(services)
+
+
+
+# bank.save_stations(
+#     base_path=stations_folder,
+#     # workers= None,
+#     # level="channel",
+#     # minlatitude=region[2], maxlatitude=region[3],
+#     # minlongitude=region[0], maxlongitude=region[1],
+# )
 
 
 # client.save_events(
