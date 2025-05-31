@@ -7,31 +7,34 @@ import os
 import pandas as pd
 import obsplus
 from obspy import UTCDateTime
-from utdquake.bank.fdsn import Bank
+from utdquake.bank.fdsn import Client
 
 provider = "USGS"
+# provider = "http://eida.ethz.ch"
 bank_folder = "/groups/igonin/utdquake/bank"
 events_folder = os.path.join(bank_folder, "events")
-bank =  Bank(provider)
+bank =  Client(provider)
 starttime = UTCDateTime("2024-01-01T00:00:00")
-endtime = UTCDateTime("2024-01-01T00:00:00")
-# bank.save_events(
-#     base_path=events_folder,
-#     starttime=starttime,
-#     endtime=endtime,
-#     # minlatitude=region[2], maxlatitude=region[3],
-#     # minlongitude=region[0], maxlongitude=region[1],
-# )
+endtime = UTCDateTime("2024-01-03T00:00:00")
+bank.save_events_to_bank(
+    base_path=events_folder,
+    starttime=starttime,
+    endtime=endtime,
+    max_n_events=254,
+    contributor="ak"
+    # minlatitude=region[2], maxlatitude=region[3],
+    # minlongitude=region[0], maxlongitude=region[1],
+)
 
 
-ebank = obsplus.EventBank(base_path=events_folder)
-print(ebank)
-print(ebank.path_structure)
-print(ebank.name_structure)
-print(ebank.get_event_summary())
+# ebank = obsplus.EventBank(base_path=events_folder)
+# print(ebank)
+# print(ebank.path_structure)
+# print(ebank.name_structure)
+# print(ebank.get_event_summary())
 
-event_sumary = ebank.get_event_summary()
-event_sumary.to_csv("/groups/igonin/ecastillo/UTDQuake/test/bank/test_event_summary.csv", index=False)
+# event_sumary = ebank.get_event_summary()
+# event_sumary.to_csv("/groups/igonin/ecastillo/UTDQuake/test/bank/test_event_summary.csv", index=False)
 # df_index = ebank.read_index()
 # _df_index = df_index[(df_index.time >= pd.Timestamp('2024-01-28T00:00:00')) & (df_index.time <= pd.Timestamp('2024-01-29T00:00:00'))]
 # cat_pre = ebank.get_events(event_id=_df_index.event_id.values)
