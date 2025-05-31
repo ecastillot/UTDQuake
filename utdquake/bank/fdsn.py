@@ -420,10 +420,11 @@ class Client(FDSNClient):
         write_queue.put(None)
         writer_thread.join()
         
-    
     def save_events_to_bank(self, base_path,
                        path_structure='{year}/{month}/{day}/{hour}',
                        name_structure='{event_id_end}',
+                        chunks=100,
+                        max_n_events=None,
                         eventid_tests=None,
                         starttime=None, endtime=None, minlatitude=None,
                         maxlatitude=None, minlongitude=None, maxlongitude=None,
@@ -431,46 +432,108 @@ class Client(FDSNClient):
                         maxradius=None, mindepth=None, maxdepth=None,
                         minmagnitude=None, maxmagnitude=None, magnitudetype=None,
                         eventtype=None,includeallorigins=None,
-                        includeallmagnitudes=None,chunks=100,
-                        max_n_events=1000,
+                        includeallmagnitudes=None,
                         catalog=None, contributor=None, updatedafter=None,
                        format='quakeml', 
                        workers=1):
         """
-        Saves seismic event data in chunks for a specified time range. Picks are mandatory.
+        Save seismic events from a data source to an EventBank on disk.
+
+        This method downloads events in chunks and stores them in a structured 
+        directory layout. If event IDs are known, it will fetch each event individually.
+        Picks must be available from the source.
 
         Parameters
         ----------
         base_path : str
-            Base directory where event files will be saved.
+            Root directory to store the event files.
+
         path_structure : str, optional
-            Subdirectory format for saving events. Defaults to '{year}/{month}/{day}/{hour}'.
+            Template for subdirectory structure under `base_path`.
+            Supports format keys like {year}, {month}, {day}, and {hour}.
+
         name_structure : str, optional
-            File naming format for each event. Defaults to '{event_id_end}'.
+            Template for naming individual event files.
+            Supports format keys like {event_id_end}.
+
         chunks : int, optional
-            Number of events to process per batch. Defaults to 100.
-        eventid_tests : dict or None
-            Optional test cases for event ID mode. example: {"f2": lambda event: event.extra.eventid.value}.
-            Check EventIDTester._get_default_tests() to see the default cases.
+            Number of events to fetch per iteration. Default is 100.
+
+        max_n_events : int or None, optional
+            Maximum number of events to download and save. If None, fetch all.
+
+        eventid_tests : dict or None, optional
+            Dictionary of test functions used to extract custom event IDs
+            from each event object. If provided, switches fetch mode to 
+            "eventid" based retrieval.
+
+        starttime, endtime : UTCDateTime or str, optional
+            Time window to filter events.
+
+        minlatitude, maxlatitude : float, optional
+            Minimum and maximum latitudes for event filtering.
+
+        minlongitude, maxlongitude : float, optional
+            Minimum and maximum longitudes for event filtering.
+
+        latitude, longitude : float, optional
+            Central coordinates for radial filtering (used with radius).
+
+        minradius, maxradius : float, optional
+            Minimum and maximum radii (in degrees) for radial filtering
+            from the specified latitude/longitude.
+
+        mindepth, maxdepth : float, optional
+            Minimum and maximum depth filters in kilometers.
+
+        minmagnitude, maxmagnitude : float, optional
+            Minimum and maximum magnitude filters.
+
+        magnitudetype : str, optional
+            Type of magnitude to filter by, e.g., 'ml', 'mb', 'mw'.
+
+        eventtype : str or list of str, optional
+            Filter events by type, e.g., 'earthquake', 'quarry blast'.
+
+        includeallorigins : bool, optional
+            Whether to include all origins in event download. Defaults
+            depend on picks availability mode.
+
+        includeallmagnitudes : bool, optional
+            Whether to include all magnitudes in event download.
+
+        catalog : str, optional
+            Limit to specific event catalog name (if supported by service).
+
+        contributor : str, optional
+            Limit to events from a specific contributing agency.
+
+        updatedafter : UTCDateTime or str, optional
+            Only include events updated after this time.
+
         format : str, optional
-            Format used to store events. Defaults to 'quakeml'.
-        debug : bool, optional
-            Whether to print debug information during processing. Defaults to False.
+            File format to save events in. Default is 'quakeml'.
+
         workers : int, optional
-            Number of threads to use for saving events concurrently. Defaults to 1.
-        **ev_kwargs : dict
-            Additional keyword arguments passed to the `get_events` method.
-            includearrivals will be always True.
+            Number of threads to use when saving events in parallel
+            (used only in eventid mode).
+
+        Raises
+        ------
+        Exception
+            If no picks service is available or pick extraction method is undefined.
         """
-        
+
+        # Check for available picks and determine how to fetch them
         picks_avail = self._picks_availability(eventid_tests)
         
-        
+        # Collect event filtering arguments
         ev_kwargs = {
                     k: v for k, v in locals().items()
                     if k in available_events_keys and v is not None
                         }
         
+        # Raise error if picks are unavailable
         if not picks_avail["picks"]:
             raise Exception(f"No available picks service in the Client.")
         
@@ -486,6 +549,8 @@ class Client(FDSNClient):
             ev_kwargs["includeallorigins"] = False
             ev_kwargs["includeallmagnitudes"] = False
         
+        # # Print timing information if debug is enabled
+        # print(f"Event kwargs: {ev_kwargs}")
         
         # Ensure the base directory exists
         os.makedirs(base_path, exist_ok=True)
@@ -502,6 +567,8 @@ class Client(FDSNClient):
         iteration = 1
         total_events = 0
         while True:
+            
+            # Stop if maximum number of events has been reached
             if max_n_events is not None:
                 remaining = max_n_events - total_events
                 if remaining <= 0:
@@ -510,18 +577,20 @@ class Client(FDSNClient):
             else:
                 current_chunk = chunks
                 
-            
+            # Download event catalog
             catalog = self.get_events(orderby="time-asc", limit=current_chunk, 
                                      offset=offset_iter, **ev_kwargs)
             n_events = len(catalog)
             total_events += n_events
             
+            # Prepare time window information for logging
             if n_events > 0:
                 starttime = catalog[0].preferred_origin().time.strftime("%Y-%m-%d %H:%M:%S")
                 endtime = catalog[-1].preferred_origin().time.strftime("%Y-%m-%d %H:%M:%S")
                 
                 
             tic = time.time()
+            # Save events using selected mode
             if picks_avail["name"] == "natural":
                 ebank.put_events(catalog)
             elif picks_avail["name"] == "eventid":
@@ -535,12 +604,16 @@ class Client(FDSNClient):
                 # Save chunk of events in parallel using threads
                 with cf.ThreadPoolExecutor(max_workers=workers) as executor:
                     executor.map(save_single_event, ev_ids)
+                    
+                # for ev_id in ev_ids:
+                    # save_single_event(ev_id)
                 
             else:
                 raise Exception("No way to extract the picks")
             
             toc = time.time()
 
+            # Log progress
             print(
                     f"Iter {iteration:<3} | "
                     f"{n_events:>4} events | "
@@ -548,124 +621,11 @@ class Client(FDSNClient):
                     f"Total: {total_events:>4} | Seconds: {toc - tic:.2f}"
                 )
 
+            # Break loop if last page of results has fewer than requested
             if not catalog or len(catalog)<current_chunk:  # If no more events, break the loop
                 break
             
             offset_iter += current_chunk
             iteration += 1
             
-        
-        # t = self.get_events(orderby="time-asc",**ev_kwargs)
-        # print(t)
-        
-        # # Retrieve event IDs for the specified time range
-        # ev_ids = self.__get_custom_event_ids(ev_kwargs)
-        
-        # # Process events in chunks
-        # for chunk in tqdm(range(0, len(ev_ids), chunks)):
-        #     # Get the current chunk of event IDs
-        #     ev_ids_chunk = ev_ids[chunk:chunk + chunks]
-            
-        #     # Print debug information if enabled
-        #     if debug:
-        #         print(f"Processing events: {ev_ids_chunk}")
-            
-        #     def save_single_event(ev_id):
-        #         """Fetch and save a single event to the event bank."""
-        #         catalog = self.get_events(eventid=ev_id, **ev_kwargs)
-        #         ebank.put_events(catalog)
-            
-        #     # Save chunk of events in parallel using threads
-        #     tic = time.time()
-        #     with cf.ThreadPoolExecutor(max_workers=workers) as executor:
-        #         executor.map(save_single_event, ev_ids_chunk)
-        #     toc = time.time()
-
-        #     # Print timing information if debug is enabled
-        #     if debug:
-        #         print(f"Saving events took: {toc - tic:.2f} seconds")
-            
-        #     # tic = time.time()
-        #     # for ev_id in ev_ids_chunk:
-        #     #     save_single_event(ev_id)
-        #     # toc = time.time()
-        #     # if debug:
-        #     #     print(f"Time taken to retrieve events: {toc - tic:.2f} seconds")
     
-    # def save_events_using_eventid(self)
-    
-    def __save_events_using_eventid(self, base_path,
-                       path_structure='{year}/{month}/{day}/{hour}',
-                       name_structure='{event_id_end}',
-                       chunks=100,
-                       format='quakeml', 
-                       debug=False,
-                       workers=1,
-                       **ev_kwargs):
-        """
-        Saves seismic event data in chunks for a specified time range.
-
-        Parameters
-        ----------
-        base_path : str
-            Base directory where event files will be saved.
-        path_structure : str, optional
-            Subdirectory format for saving events. Defaults to '{year}/{month}/{day}/{hour}'.
-        name_structure : str, optional
-            File naming format for each event. Defaults to '{event_id_end}'.
-        chunks : int, optional
-            Number of events to process per batch. Defaults to 100.
-        format : str, optional
-            Format used to store events. Defaults to 'quakeml'.
-        debug : bool, optional
-            Whether to print debug information during processing. Defaults to False.
-        workers : int, optional
-            Number of threads to use for saving events concurrently. Defaults to 1.
-        **ev_kwargs : dict
-            Additional keyword arguments passed to the `get_events` method.
-        """
-        # Ensure the base directory exists
-        os.makedirs(base_path, exist_ok=True)
-        
-        # Initialize the event bank for storing events to disk
-        ebank = obsplus.EventBank(
-            base_path=base_path,
-            path_structure=path_structure,
-            name_structure=name_structure,
-            format=format
-        )
-        
-        # Retrieve event IDs for the specified time range
-        ev_ids = self.__get_custom_event_ids(ev_kwargs)
-        
-        # Process events in chunks
-        for chunk in tqdm(range(0, len(ev_ids), chunks)):
-            # Get the current chunk of event IDs
-            ev_ids_chunk = ev_ids[chunk:chunk + chunks]
-            
-            # Print debug information if enabled
-            if debug:
-                print(f"Processing events: {ev_ids_chunk}")
-            
-            def save_single_event(ev_id):
-                """Fetch and save a single event to the event bank."""
-                catalog = self.get_events(eventid=ev_id, **ev_kwargs)
-                ebank.put_events(catalog)
-            
-            # Save chunk of events in parallel using threads
-            tic = time.time()
-            with cf.ThreadPoolExecutor(max_workers=workers) as executor:
-                executor.map(save_single_event, ev_ids_chunk)
-            toc = time.time()
-
-            # Print timing information if debug is enabled
-            if debug:
-                print(f"Saving events took: {toc - tic:.2f} seconds")
-            
-            # tic = time.time()
-            # for ev_id in ev_ids_chunk:
-            #     save_single_event(ev_id)
-            # toc = time.time()
-            # if debug:
-            #     print(f"Time taken to retrieve events: {toc - tic:.2f} seconds")
-            
