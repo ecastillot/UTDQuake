@@ -9,9 +9,12 @@ import obsplus
 from obspy import UTCDateTime
 from utdquake.bank.fdsn import Client
 
-provider = "USGS"
-# provider = "http://eida.ethz.ch"
-bank_folder = "/groups/igonin/utdquake/bank"
+
+# provider = "USGS"
+# provider = "BGR"
+# provider = "http://sismo.sgc.gov.co:8080"
+provider = "http://eida"
+bank_folder = "/groups/igonin/utdquake/bank2"
 events_folder = os.path.join(bank_folder, "events")
 bank =  Client(provider)
 starttime = UTCDateTime("2024-01-01T00:00:00")
@@ -21,7 +24,7 @@ bank.save_events_to_bank(
     starttime=starttime,
     endtime=endtime,
     max_n_events=254,
-    contributor="ak"
+    # contributor="ak"
     # minlatitude=region[2], maxlatitude=region[3],
     # minlongitude=region[0], maxlongitude=region[1],
 )

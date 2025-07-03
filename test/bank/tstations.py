@@ -10,6 +10,7 @@ from utdquake.bank.fdsn import Client,EventIDTester
 
 region = [-104.84329,-103.79942,31.39610,31.91505]
 # provider = "IRIS"
+# provider = "http://eida.ethz.ch"
 provider = "http://eida.ethz.ch"
 # provider = "USGS"
 bank_folder = "/groups/igonin/utdquake/bank2"
@@ -21,6 +22,12 @@ client =  Client(provider)
 # print(client._picks_availability())
 # print(client._picks_in_eventid_mode())
 
+# print(list(client.services.keys()))
+# print(cli)
+# print(client.help(service="event"))
+
+# print(client.available_event_contributors)
+# exit()
 services = client.get_available_services()
 print(services)
 

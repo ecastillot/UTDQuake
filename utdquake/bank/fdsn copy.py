@@ -24,13 +24,7 @@ from obspy.clients.fdsn import Client as FDSNClient
 import datetime
 from obspy import UTCDateTime
 from obsplus.events.get_events import _get_ids
-from obspy import UTCDateTime, Catalog
 from obspy.clients.fdsn.header import DEFAULT_PARAMETERS
-from typing import Generator, Optional
-from obspy.clients.fdsn.header import URL_MAPPINGS
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
 
 warnings.filterwarnings(
     "ignore",
@@ -47,353 +41,6 @@ available_events_keys = [
     "minmagnitude", "maxmagnitude",
     "magnitudetype", "eventtype", 
     "catalog", "contributor", "updatedafter"]
-
-OTHER_MAPPINGS = {
-        "IRIS": "https://service.iris.edu", #USA
-        "NIED": "http://www.fnet.bosai.go.jp",
-        "EIDA2": "https://eida.orfeus-eu.org",
-        "SED": "https://eida.ethz.ch",
-        "GEOFON": "https://geofon.gfz-potsdam.de",
-        "INGV": "https://webservices.ingv.it",
-        "NRCan": "https://earthquakes.canada.ca",
-        "CSN": "https://csn.uchile.cl",
-        "GeoNet": "https://service.geonet.org.nz",
-        "RESIF": "https://ws.resif.fr",
-        "IIEES": "http://ws.iiees.ac.ir",
-        "SSN": "https://ssn.unam.mx",
-        "ISC": "http://isc-mirror.iris.washington.edu"
-    }
-
-
-def extend_fdsn_url_mappings(additional_mappings: Optional[dict] = None) -> dict:
-    """
-    Extend the global URL_MAPPINGS dictionary with new entries from additional_mappings.
-
-    If no additional mappings are provided, the function uses OTHER_MAPPINGS by default.
-    It adds only those entries whose keys (case-insensitive) do not already exist in 
-    URL_MAPPINGS.
-
-    Parameters
-    ----------
-    additional_mappings : dict, optional
-        Dictionary of new FDSN provider name to URL mappings to be added. If None,
-        OTHER_MAPPINGS will be used.
-
-    Returns
-    -------
-    dict
-        The updated URL_MAPPINGS dictionary including any new entries.
-    """
-    # Use OTHER_MAPPINGS by default if no input is provided
-    if additional_mappings is None:
-        additional_mappings = OTHER_MAPPINGS.copy()
-    else:
-        # Merge OTHER_MAPPINGS and additional_mappings, giving priority to the latter
-        additional_mappings = OTHER_MAPPINGS | additional_mappings
-
-    # Normalize the existing keys in URL_MAPPINGS for case-insensitive comparison
-    url_mappings_keys = [k.lower() for k in URL_MAPPINGS.keys()]
-
-    # Iterate through the provided additional mappings
-    for key, url in additional_mappings.items():
-        # Add the new mapping if the key (case-insensitive) does not already exist
-        if key.lower() not in url_mappings_keys:
-            URL_MAPPINGS[key] = url
-
-    return URL_MAPPINGS
-
-def generate_agency_availability_report(
-    starttime: UTCDateTime,
-    endtime: UTCDateTime,
-    chunk_seconds: int = 3600,
-    patience: int = 10,
-    debug: bool = False,
-    output: Optional[str] = None,
-    additional_mappings: Optional[dict] = None,
-    ):
-    """
-    Generate a report of FDSN agency capabilities, including picks and arrivals.
-
-    Parameters
-    ----------
-    starttime : UTCDateTime
-        Start time of the query window.
-    endtime : UTCDateTime
-        End time of the query window.
-    chunk_seconds : int, optional
-        Duration of each time chunk (in seconds). Default is 3600.
-    patience : int, optional
-        Number of chunks to try before giving up. Default is 10.
-    debug : bool, optional
-        If True, print progress and debug messages. Default is False.
-    output : str or None, optional
-        Path to output CSV file. If None, result is returned but not saved.
-    additional_mappings : dict or None, optional
-        Additional FDSN URL mappings to use.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame containing agency capabilities and pick information.
-    """
-    agency_info_template = {
-        "agency": None,
-        "starttime": starttime,
-        "endtime": endtime,
-        "url": None,
-        "dataselect": False,
-        "station": False,
-        "event": False,
-        "picks": False,
-        "arrivals": False,
-        "picks_method_name": None,
-        "picks_method_mode": None,
-    }
-
-    # Merge additional mappings if provided
-    url_mappings = extend_fdsn_url_mappings(additional_mappings or {}).copy()
-
-    info = []
-
-    for key in sorted(url_mappings.keys()):
-        agency_info = agency_info_template.copy()
-        agency_info["agency"] = key
-        agency_info["url"] = url_mappings[key]
-
-        if debug:
-            print(f"{key:<11} {agency_info['url']}")
-
-        try:
-            client = Client(key)
-        except Exception as e:
-            if debug:
-                print(f"\tError creating client for {key}: {e}")
-            continue
-
-        # Check which FDSN services are supported
-        services = list(client.services.keys())
-        for service in services:
-            if service in agency_info:
-                agency_info[service] = True
-
-        # Try to retrieve picks and arrivals
-        try:
-            picks_service = client.picks_service(
-                starttime=starttime,
-                endtime=endtime,
-                chunk_seconds=chunk_seconds,
-                patience=patience,
-            )
-
-            agency_info["picks"] = picks_service["picks"]
-            agency_info["arrivals"] = picks_service["arrivals"]
-            agency_info["picks_method_name"] = picks_service["name"]
-            agency_info["picks_method_mode"] = picks_service["mode"]
-
-        except Exception as e:
-            if debug:
-                print(f"\tError getting picks service for {key}: {e}")
-
-        if debug:
-            print("\t", agency_info)
-
-        info.append(agency_info)
-
-    df = pd.DataFrame(info)
-
-    if output:
-        df.to_csv(output, index=False)
-        if debug:
-            print(f"\nSaved output to {output}")
-
-    return df
-
-def plot_agencies_stations(df, output_path=None, debug=False):
-    """
-    Create and optionally save a global map figure plotting stations for agencies
-    where events, picks, and arrivals are all True, colored by agency.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing agency info with columns 'agency', 'station', 'event',
-        'picks', 'arrivals'.
-    output_path : str or None, optional
-        File path to save the PNG figure. If None, figure is not saved.
-    debug : bool, optional
-        If True, print debug messages. Default is False.
-
-    Returns
-    -------
-    matplotlib.figure.Figure
-        The created matplotlib figure with plotted stations.
-    """
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-
-    # Filter agencies meeting criteria
-    filtered = df[
-        (df["event"] == True) &
-        (df["picks"] == True) &
-        (df["arrivals"] == True)
-    ]
-
-    if filtered.empty:
-        if debug:
-            print("No agencies with events, picks, and arrivals == True.")
-        return None
-
-    fig = plt.figure(figsize=(15, 8))
-    ax = plt.axes(projection=ccrs.PlateCarree())
-    ax.set_global()
-    ax.coastlines()
-    ax.add_feature(cfeature.BORDERS, linestyle=":")
-    ax.gridlines(draw_labels=True)
-
-    # Prepare colors for each agency
-    agencies = filtered["agency"].tolist()
-    unique_agencies = sorted(set(agencies))
-    cmap = cm.get_cmap("tab20", len(unique_agencies))
-    agency_colors = {agency: cmap(i) for i, agency in enumerate(unique_agencies)}
-
-    # Track handles for legend
-    legend_handles = {}
-
-    station_count = 0
-
-    for _, row in filtered.iterrows():
-        agency = row["agency"]
-        has_station_service = row.get("station", False)
-
-        if debug:
-            print(f"Fetching stations for agency '{agency}' (station service: {has_station_service})")
-
-        try:
-            if has_station_service:
-                client = Client(agency)
-            else:
-                continue
-                client = Client("IRIS")
-
-            inventory = client.get_stations(
-                starttime=UTCDateTime(row["starttime"]),
-                endtime=UTCDateTime(row["endtime"]),
-                level="station"
-            )
-
-            color = agency_colors[agency]
-
-            for network in inventory:
-                for station in network.stations:
-                    lat = station.latitude
-                    lon = station.longitude
-                    h = ax.plot(
-                        lon, lat, "o", markersize=3, alpha=0.7,
-                        transform=ccrs.PlateCarree(),
-                        color=color,
-                        label=agency if agency not in legend_handles else None
-                    )
-                    if agency not in legend_handles:
-                        legend_handles[agency] = h[0]
-                    station_count += 1
-
-            if debug:
-                print(f"\tPlotted {len(inventory.networks)} networks for {agency}")
-
-        except Exception as e:
-            if debug:
-                print(f"\tFailed to fetch stations for {agency}: {e}")
-            continue
-
-    if station_count == 0 and debug:
-        print("No stations plotted.")
-
-    # Plot legend outside the axes
-    ax.legend(
-        handles=legend_handles.values(),
-        loc='center left',
-        bbox_to_anchor=(1.02, 0.5),
-        title="Agency",
-        fontsize="small"
-    )
-
-    plt.tight_layout()
-
-    if output_path:
-        fig.savefig(output_path, dpi=300, bbox_inches="tight")
-        if debug:
-            print(f"Saved plot to {output_path}")
-
-    return fig
-
-def catalog_generator(
-                        client: FDSNClient,
-                        starttime,
-                        endtime,
-                        chunk_seconds: int = 86400,
-                        patience: int = 5,
-                        debug: bool = False,
-                        **event_kwargs
-                    ):
-    """
-    Yield event Catalogs in time chunks from a FDSN client, up to a maximum
-    number of iterations (patience).
-
-    Parameters
-    ----------
-    client : obspy.clients.fdsn.Client
-        The FDSN client to query.
-    starttime : str or UTCDateTime
-        Start of the time range.
-    endtime : str or UTCDateTime
-        End of the time range.
-    chunk_seconds : int, optional
-        Time chunk size in seconds (default: 86400 = 1 day).
-    patience : int or None, optional
-        Maximum number of chunks to yield. If None, iterate over full time range.
-    debug : bool, optional
-        If True, print warnings and chunk info.
-    **event_kwargs : dict
-        Additional keyword arguments passed to `get_events()`.
-
-    Yields
-    ------
-    obspy.Catalog
-        A Catalog object with events in the given time chunk.
-    """
-    starttime = UTCDateTime(starttime)
-    endtime = UTCDateTime(endtime)
-
-    time_cursor = starttime
-    iteration = 0
-
-    while time_cursor < endtime:
-        if iteration >= patience:
-            if debug:
-                print(f"[Info] Patience limit of {patience} reached.")
-            break
-
-        chunk_end = min(time_cursor + chunk_seconds, endtime)
-
-        if debug:
-            print(f"Fetching events from {time_cursor} to {chunk_end}...")
-
-        try:
-            catalog = client.get_events(
-                starttime=time_cursor,
-                endtime=chunk_end,
-                orderby="time",
-                **event_kwargs
-            )
-        except Exception as e:
-            if debug:
-                print(f"[Warning] Error fetching events from {time_cursor} to {chunk_end}: {e}")
-            catalog = Catalog()
-
-        yield catalog
-
-        time_cursor = chunk_end
-        iteration += 1
 
 def get_valid_event_ids(catalog, tests=None):
     """
@@ -507,36 +154,21 @@ class Client(FDSNClient):
         self.event_id_query_fmt = None
         super().__init__(*args, **kwargs)
         
-    def _picks_availability(self, starttime, endtime, eventid_tests=None,
-                            chunk_seconds= 86400):
+    def _picks_availability(self, eventid_tests=None):
         """
-        Check availability of picks and arrivals using multiple query modes.
+        Check availability of picks and arrivals using different query modes.
 
-        The method first attempts to find picks in "natural mode". If unsuccessful,
-        it then tries "event ID mode", optionally using test cases.
+        Parameters:
+            eventid_tests (dict or None): Optional test cases for event ID mode.
 
-        Parameters
-        ----------
-        starttime : UTCDateTime
-            Start of the time window to search for picks.
-        endtime : UTCDateTime
-            End of the time window to search for picks.
-        eventid_tests : dict or None, optional
-            Optional test cases used when querying by event ID.
-        chunk_seconds : int, optional
-            Chunk size in seconds for time-windowed queries (default is 86400).
-
-        Returns
-        -------
-        dict
-            Dictionary indicating which mode (if any) contains valid picks and arrivals.
-            If neither mode succeeds, returns a default structure with `picks=False`.
+        Returns:
+            dict: Dictionary indicating which mode supports picks and arrivals.
         """
-        natural_mode = self._picks_in_natural_mode(starttime, endtime)
+        natural_mode = self._picks_in_natural_mode()
         if natural_mode["picks"]:
             return natural_mode
         else:
-            eventid_mode = self._picks_in_eventid_mode(starttime, endtime,tests=eventid_tests)
+            eventid_mode = self._picks_in_eventid_mode(tests=eventid_tests)
             if eventid_mode["picks"]:
                 return eventid_mode
             else:
@@ -548,31 +180,13 @@ class Client(FDSNClient):
                     "msg": None
                 }
             
-    def _picks_in_natural_mode(self,starttime, endtime):
+    def _picks_in_natural_mode(self):
         """
-        Attempt to retrieve picks and arrivals using a standard 'natural' query mode.
+        Try to retrieve picks and arrivals using the default natural query.
 
-        This method queries the event catalog within the given time window and checks
-        if picks and arrivals are available using `get_events(includearrivals=True)`.
-
-        Parameters
-        ----------
-        starttime : UTCDateTime
-            Start time of the query window.
-        endtime : UTCDateTime
-            End time of the query window.
-
-        Returns
-        -------
-        dict
-            Dictionary with information about the query result, including:
-            - name: Mode name ("natural")
-            - mode: Reserved for future use (currently None)
-            - picks: Boolean indicating whether picks were found
-            - arrivals: Boolean indicating whether arrivals were found
-            - msg: Error message, if any
+        Returns:
+            dict: Dictionary indicating result of the query.
         """
-        # Initialize result dictionary with default values
         info = {
             "name": "natural",
             "mode": None,
@@ -582,53 +196,28 @@ class Client(FDSNClient):
         }
 
         try:
-            # Query event catalog including arrivals
-            cat = self.get_events(starttime=starttime,
-                                    endtime=endtime,
-                                    includearrivals=True)
-            # Check for a preferred origin to determine if arrivals are present
+            cat = self.get_events(includearrivals=True, limit=1)
             pref_origin = cat[0].preferred_origin()
+
             if pref_origin:
                 info["arrivals"] = True
-
-            # Check if any picks exist for the first event in the catalog
             if cat[0].picks:
                 info["picks"] = True
         except Exception:
-            # If the client does not support includearrivals, record the issue
             info["msg"] = "Client does not support get_events with include_arrivals"
 
         return info
     
-    def _picks_in_eventid_mode(self,starttime, endtime, tests=None):
+    def _picks_in_eventid_mode(self, tests=None):
         """
-        Attempt to retrieve picks and arrivals by querying using event IDs.
+        Try to retrieve picks and arrivals by querying with event IDs.
 
-        This method first queries the catalog to get a reference event, then uses
-        various test strategies to construct potential event IDs. It queries again
-        using these IDs to check for associated picks and arrivals.
+        Parameters:
+            tests (dict or None): Optional test cases for generating event IDs.
 
-        Parameters
-        ----------
-        starttime : UTCDateTime
-            Start time of the query window.
-        endtime : UTCDateTime
-            End time of the query window.
-        tests : dict or None, optional
-            Optional dictionary of test strategies used by `EventIDTester` to generate
-            event IDs based on the reference event.
-
-        Returns
-        -------
-        dict
-            Dictionary with information about the result of the query, including:
-            - name: Mode name ("eventid")
-            - mode: The successful test key used to generate a valid event ID (if any)
-            - picks: Boolean indicating whether picks were found
-            - arrivals: Boolean indicating whether arrivals were found
-            - msg: Error message, if any
+        Returns:
+            dict: Dictionary indicating result of the query.
         """
-        # Initialize result dictionary with default values
         info = {
             "name": "eventid",
             "mode": None,
@@ -638,143 +227,60 @@ class Client(FDSNClient):
         }
 
         try:
-            # Get catalog of events in the given time range
-            catalog = self.get_events(starttime=starttime,
-                                    endtime=endtime)
+            catalog = self.get_events(limit=1)
         except Exception:
             info["msg"] = "Client does not support get_events"
             return info
 
-        # Select the first event as a reference to generate event IDs
         event = catalog[0]
         eit = EventIDTester(event, tests=tests)
 
-        # Iterate over all test keys to try multiple event ID generation strategies
         for test_key in eit.tests.keys():
             ev_id = eit.get_event_id(test_key)
 
             if ev_id is not None:
                 try:
-                    # Try querying by the generated event ID
-                    cat = self.get_events(eventid=ev_id)
+                    cat = self.get_events(eventid=ev_id, limit=1)
                     pref_origin = cat[0].preferred_origin()
 
-                    # Check for arrivals
                     if pref_origin:
                         info["arrivals"] = True
 
-                    # Check for picks
                     if cat[0].picks:
                         info["picks"] = True
                         info["mode"] = test_key
                         break  # Exit loop once a valid mode is found
                 except Exception:
-                    # Ignore failure and continue testing other strategies
                     pass
 
         return info
     
-    def _get_reference_event_time(self, starttime, endtime, 
-                                    chunk_seconds=3600,
-                                    patience: int = 10):
+    def get_available_services(self, confirm_arrivals=True, eventid_tests=None):
         """
-        Attempt to find the origin time of the first event within a time range.
+        Get the list of available web services, optionally confirming support for picks and arrivals.
 
-        This method divides the search time window into chunks and uses a generator
-        to iterate through catalogs of events. It returns the origin time of the 
-        first event found, or None if no events are available after the specified
-        number of chunks (controlled by `patience`).
+        Parameters:
+            confirm_arrivals (bool): Whether to verify support for picks and arrivals.
+            eventid_tests (dict or None): Optional test cases for event ID mode.
 
-        Parameters
-        ----------
-        starttime : str or UTCDateTime
-            Start of the search window.
-        endtime : str or UTCDateTime
-            End of the search window.
-        chunk_seconds : int, optional
-            Duration of each time chunk in seconds. Default is 3600 (1 hour).
-        patience : int, optional
-            Maximum number of chunks (iterations) to attempt. Default is 10.
-
-        Returns
-        -------
-        UTCDateTime or None
-            Origin time of the first available event, or None if no event is found
-            within the allowed chunks.
+        Returns:
+            list: List of available service names.
         """
-        # Create a generator to fetch event catalogs in chunks
-        generator = catalog_generator(self, starttime=starttime, endtime=endtime,
-                                    chunk_seconds=chunk_seconds,patience=patience)
-        origin_time = None
-
-        # Iterate through each catalog chunk
-        for catalog in generator:
-
-            if len(catalog) > 0:
-                # If at least one event is present, get the origin time of the first
-                event = catalog[0]
-                origin_time = event.preferred_origin().time
-                break
-
-        return origin_time
-
-    def picks_service(self, starttime, endtime, 
-                        chunk_seconds=3600,
-                        patience: int = 10,
-                        eventid_tests=None):
-        """
-        Determine pick availability for a client that supports the 'event' service.
-
-        This method attempts to find a reference event time within the specified 
-        time range by chunking the request window. It then checks for the availability 
-        of picks and arrivals using different query modes.
-
-        Parameters
-        ----------
-        starttime : str or UTCDateTime
-            Start of the time range to search for events.
-        endtime : str or UTCDateTime
-            End of the time range to search for events.
-        chunk_seconds : int, optional
-            Duration of each time chunk in seconds. Default is 3600 (1 hour).
-        patience : int, optional
-            Number of chunks to try before giving up. Default is 10.
-        eventid_tests : dict or None, optional
-            Optional dictionary used to test different event ID strategies.
-
-        Returns
-        -------
-        dict
-            Dictionary indicating the availability of picks and arrivals.
-
-        Raises
-        ------
-        Exception
-            If no events are found or if the 'event' service is not supported.
-        """
-       
-        # Get the list of supported services from the client
         services = list(self.services.keys())
 
-        # Proceed only if 'event' service is supported
-        if "event" in services:
+        if confirm_arrivals:
+            picks_av = self._picks_availability(eventid_tests=eventid_tests)
 
-            # Try to find a reference event time in the specified range
-            ref_event_time = self._get_reference_event_time(starttime, endtime,
-                                                            chunk_seconds=chunk_seconds,
-                                                            patience=patience)
-            # Raise an error if no events were found
-            if ref_event_time is None:
-                raise Exception("No events found in the specified time range.")
-
-            # Check pick availability within ±60 seconds of the reference event
-            picks_avail = self._picks_availability( starttime=ref_event_time - 60,
-                                                    endtime=ref_event_time + 60,
-                                                    eventid_tests=eventid_tests)
-            return picks_avail
-        else:
-            raise Exception("The client does not support the 'event' service.")
+            if picks_av["picks"]:
+                services.append("picks")
+            if picks_av["arrivals"]:
+                services.append("arrivals")
                 
+        available_services = {"available_services":services, 
+                              "available_event_contributors":self.services["available_event_contributors"]}
+        
+        return available_services
+    
     def _get_custom_event_ids(self, tests=None, **ev_kwargs):
         """
         Retrieve custom event IDs from a catalog of seismic events.

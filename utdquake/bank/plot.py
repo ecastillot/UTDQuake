@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import MaxNLocator
 import matplotlib as mpl
-
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 def plot_earthquake_overview(
     earthquake_df,
@@ -14,6 +15,7 @@ def plot_earthquake_overview(
     station_df=None,
     lon_range=None,
     lat_range=None,
+    depth_lim=None,
     plot_start_time=None,
     plot_end_time=None,
     timeline_start=None,
@@ -41,6 +43,14 @@ def plot_earthquake_overview(
         fig (matplotlib.figure.Figure): The generated figure.
         axes (list): List of axes [ax_map, ax_depth, ax_time].
     """
+    try:
+        import cartopy.crs as ccrs
+        import cartopy.feature as cfeature
+        HAS_CARTOPY = True
+    except ImportError:
+        HAS_CARTOPY = False
+    
+    
     # Validate required columns in earthquake data
     required_cols = {'longitude', 'latitude', 'depth', 'magnitude', 'origin_time'}
     if not required_cols.issubset(earthquake_df.columns):
@@ -77,29 +87,52 @@ def plot_earthquake_overview(
     )
 
     # Panel (a): Map view
-    ax0 = fig.add_subplot(grd[:3, 0])
-    ax0.plot(earthquake_df["longitude"], earthquake_df["latitude"], 'k.', markersize=6, alpha=0.6)
-    ax0.set_xlim(np.array(lon_range) + np.array([-0.05, 0.05]))
-    ax0.set_ylim(np.array(lat_range) + np.array([-0.05, 0.05]))
-    ax0.set_xlabel("Longitude (°)")
-    ax0.set_ylabel("Latitude (°)")
+     # Panel (a): Map view
+    if HAS_CARTOPY:
+        ax0 = fig.add_subplot(grd[:3, 0], projection=ccrs.PlateCarree())
+        ax0.set_extent([lon_range[0] - 0.05, lon_range[1] + 0.05,
+                        lat_range[0] - 0.05, lat_range[1] + 0.05])
+        ax0.coastlines(resolution='10m', linewidth=0.8)
+        ax0.add_feature(cfeature.BORDERS, linewidth=0.5)
+        ax0.add_feature(cfeature.LAND, facecolor='lightgray', alpha=0.3)
+        ax0.add_feature(cfeature.OCEAN, facecolor='lightblue', alpha=0.2)
 
-    # Plot stations if provided
-    if station_df is not None:
-        ax0.plot(
-            station_df["longitude"], station_df["latitude"],
-            'r^', markersize=8, alpha=0.7, label="Stations"
-        )
+        ax0.scatter(earthquake_df["longitude"], earthquake_df["latitude"],
+                    s=12, c='red', alpha=0.6, transform=ccrs.PlateCarree())
 
-    # Dummy point for dataset label
-    ax0.plot(lon_range[0] - 1, lat_range[0] - 1, 'k.', markersize=5, label=result_label)
-    ax0.legend(loc="lower left")
+        if station_df is not None:
+            ax0.scatter(station_df["longitude"], station_df["latitude"],
+                        s=40, c='lightgreen', marker='^', alpha=0.7,
+                        transform=ccrs.PlateCarree(), label="Stations")
+
+        ax0.set_xlabel("Longitude (°)")
+        ax0.set_ylabel("Latitude (°)")
+        ax0.legend(loc="lower left")
+    else:
+        ax0 = fig.add_subplot(grd[:3, 0])
+        ax0.plot(earthquake_df["longitude"], earthquake_df["latitude"], 'red', markersize=6, alpha=0.6)
+        ax0.set_xlim(np.array(lon_range) + np.array([-0.05, 0.05]))
+        ax0.set_ylim(np.array(lat_range) + np.array([-0.05, 0.05]))
+        ax0.set_xlabel("Longitude (°)")
+        ax0.set_ylabel("Latitude (°)")
+
+        # Plot stations if provided
+        if station_df is not None:
+            ax0.plot(
+                station_df["longitude"], station_df["latitude"],
+                c='lightgreen', marker='^', markersize=8, alpha=0.7, label="Stations"
+            )
+
+    # # Dummy point for dataset label
+    # ax0.plot(lon_range[0] - 1, lat_range[0] - 1, 'red', markersize=5, label=result_label)
+    # ax0.legend(loc="lower left")
 
     # Panel (b): Longitude vs. Depth
     ax1 = fig.add_subplot(grd[3:6, 0], sharex=ax0)
     ax1.plot(earthquake_df["longitude"], earthquake_df["depth"], 'k.', markersize=2, alpha=1.0)
     ax1.set_xlim(lon_range)
-    ax1.set_ylim([0, 12])
+    if depth_lim:
+        ax1.set_ylim([0, 12])
     ax1.invert_yaxis()  # Depth increases downward
     ax1.grid(True, which='minor', linestyle='--', linewidth=0.5, alpha=0.5)
     ax1.grid(True, which='major', linestyle='--', linewidth=1.5)
