@@ -10,24 +10,45 @@ from obspy import UTCDateTime
 from utdquake.bank.fdsn import Client
 
 
-# provider = "USGS"
+provider = "USGS"
+# provider = "http://sismo.sgc.gov.co:8080/"
 # provider = "BGR"
 # provider = "http://sismo.sgc.gov.co:8080"
-provider = "http://eida"
-bank_folder = "/groups/igonin/utdquake/bank2"
+# provider = "http://eida"
+bank_folder = "/groups/igonin/utdquake/bank"
 events_folder = os.path.join(bank_folder, "events")
+stations_folder = os.path.join(bank_folder, "stations")
 bank =  Client(provider)
 starttime = UTCDateTime("2024-01-01T00:00:00")
 endtime = UTCDateTime("2024-01-03T00:00:00")
+
+# bank.save_stations_to_bank(
+#     base_path=stations_folder)
+
 bank.save_events_to_bank(
     base_path=events_folder,
     starttime=starttime,
     endtime=endtime,
-    max_n_events=254,
+    chunk_seconds=7200,
+    max_n_events=200,
+    calculate_d_az=True,
+    stations_bank_path=stations_folder,
+    workers = 16,
+    debug=True
     # contributor="ak"
     # minlatitude=region[2], maxlatitude=region[3],
     # minlongitude=region[0], maxlongitude=region[1],
 )
+
+# bank.save_events_to_bank(
+#     base_path=events_folder,
+#     starttime=starttime,
+#     endtime=endtime,
+#     max_n_events=254,
+#     # contributor="ak"
+#     # minlatitude=region[2], maxlatitude=region[3],
+#     # minlongitude=region[0], maxlongitude=region[1],
+# )
 
 
 # ebank = obsplus.EventBank(base_path=events_folder)

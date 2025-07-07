@@ -13,34 +13,18 @@ import gc
 import os
 import sqlite3
 import time
-import glob
-import requests
 import obsplus
 import warnings
 import pandas as pd
 from tqdm import tqdm
 import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 
-import datetime
-from obspy import UTCDateTime
-from obsplus.events.get_events import _get_ids
-from obspy import UTCDateTime, Catalog
-from obspy.clients.fdsn.header import DEFAULT_PARAMETERS
-from typing import Generator, Optional
-from obspy.clients.fdsn.header import URL_MAPPINGS
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
+from . import utils as fut
 
-warnings.filterwarnings(
-    "ignore",
-    message="'smi:org.gfz-potsdam.de/geofon/.*' is not a valid QuakeML URI.*",
-    category=UserWarning,
-    module="obspy.io.quakeml.core"
-)
+
+warnings.filterwarnings("ignore", category=UserWarning, module="obspy.io.quakeml.core")
 
 available_events_keys = [
-    "starttime", "endtime",
     "minlatitude", "maxlatitude", "minlongitude", "maxlongitude",
     "latitude", "longitude", "minradius", "maxradius",
     "mindepth", "maxdepth",
@@ -48,439 +32,6 @@ available_events_keys = [
     "magnitudetype", "eventtype", 
     "catalog", "contributor", "updatedafter"]
 
-OTHER_MAPPINGS = {
-        "IRIS": "https://service.iris.edu", #USA
-        "NIED": "http://www.fnet.bosai.go.jp",
-        "EIDA2": "https://eida.orfeus-eu.org",
-        "SED": "https://eida.ethz.ch",
-        "GEOFON": "https://geofon.gfz-potsdam.de",
-        "INGV": "https://webservices.ingv.it",
-        "NRCan": "https://earthquakes.canada.ca",
-        "CSN": "https://csn.uchile.cl",
-        "GeoNet": "https://service.geonet.org.nz",
-        "RESIF": "https://ws.resif.fr",
-        "IIEES": "http://ws.iiees.ac.ir",
-        "SSN": "https://ssn.unam.mx",
-        "ISC": "http://isc-mirror.iris.washington.edu"
-    }
-
-
-def extend_fdsn_url_mappings(additional_mappings: Optional[dict] = None) -> dict:
-    """
-    Extend the global URL_MAPPINGS dictionary with new entries from additional_mappings.
-
-    If no additional mappings are provided, the function uses OTHER_MAPPINGS by default.
-    It adds only those entries whose keys (case-insensitive) do not already exist in 
-    URL_MAPPINGS.
-
-    Parameters
-    ----------
-    additional_mappings : dict, optional
-        Dictionary of new FDSN provider name to URL mappings to be added. If None,
-        OTHER_MAPPINGS will be used.
-
-    Returns
-    -------
-    dict
-        The updated URL_MAPPINGS dictionary including any new entries.
-    """
-    # Use OTHER_MAPPINGS by default if no input is provided
-    if additional_mappings is None:
-        additional_mappings = OTHER_MAPPINGS.copy()
-    else:
-        # Merge OTHER_MAPPINGS and additional_mappings, giving priority to the latter
-        additional_mappings = OTHER_MAPPINGS | additional_mappings
-
-    # Normalize the existing keys in URL_MAPPINGS for case-insensitive comparison
-    url_mappings_keys = [k.lower() for k in URL_MAPPINGS.keys()]
-
-    # Iterate through the provided additional mappings
-    for key, url in additional_mappings.items():
-        # Add the new mapping if the key (case-insensitive) does not already exist
-        if key.lower() not in url_mappings_keys:
-            URL_MAPPINGS[key] = url
-
-    return URL_MAPPINGS
-
-def generate_agency_availability_report(
-    starttime: UTCDateTime,
-    endtime: UTCDateTime,
-    chunk_seconds: int = 3600,
-    patience: int = 10,
-    debug: bool = False,
-    output: Optional[str] = None,
-    additional_mappings: Optional[dict] = None,
-    ):
-    """
-    Generate a report of FDSN agency capabilities, including picks and arrivals.
-
-    Parameters
-    ----------
-    starttime : UTCDateTime
-        Start time of the query window.
-    endtime : UTCDateTime
-        End time of the query window.
-    chunk_seconds : int, optional
-        Duration of each time chunk (in seconds). Default is 3600.
-    patience : int, optional
-        Number of chunks to try before giving up. Default is 10.
-    debug : bool, optional
-        If True, print progress and debug messages. Default is False.
-    output : str or None, optional
-        Path to output CSV file. If None, result is returned but not saved.
-    additional_mappings : dict or None, optional
-        Additional FDSN URL mappings to use.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame containing agency capabilities and pick information.
-    """
-    agency_info_template = {
-        "agency": None,
-        "starttime": starttime,
-        "endtime": endtime,
-        "url": None,
-        "dataselect": False,
-        "station": False,
-        "event": False,
-        "picks": False,
-        "arrivals": False,
-        "picks_method_name": None,
-        "picks_method_mode": None,
-    }
-
-    # Merge additional mappings if provided
-    url_mappings = extend_fdsn_url_mappings(additional_mappings or {}).copy()
-
-    info = []
-
-    for key in sorted(url_mappings.keys()):
-        agency_info = agency_info_template.copy()
-        agency_info["agency"] = key
-        agency_info["url"] = url_mappings[key]
-
-        if debug:
-            print(f"{key:<11} {agency_info['url']}")
-
-        try:
-            client = Client(key)
-        except Exception as e:
-            if debug:
-                print(f"\tError creating client for {key}: {e}")
-            continue
-
-        # Check which FDSN services are supported
-        services = list(client.services.keys())
-        for service in services:
-            if service in agency_info:
-                agency_info[service] = True
-
-        # Try to retrieve picks and arrivals
-        try:
-            picks_service = client.picks_service(
-                starttime=starttime,
-                endtime=endtime,
-                chunk_seconds=chunk_seconds,
-                patience=patience,
-            )
-
-            agency_info["picks"] = picks_service["picks"]
-            agency_info["arrivals"] = picks_service["arrivals"]
-            agency_info["picks_method_name"] = picks_service["name"]
-            agency_info["picks_method_mode"] = picks_service["mode"]
-
-        except Exception as e:
-            if debug:
-                print(f"\tError getting picks service for {key}: {e}")
-
-        if debug:
-            print("\t", agency_info)
-
-        info.append(agency_info)
-
-    df = pd.DataFrame(info)
-
-    if output:
-        df.to_csv(output, index=False)
-        if debug:
-            print(f"\nSaved output to {output}")
-
-    return df
-
-def plot_agencies_stations(df, output_path=None, debug=False):
-    """
-    Create and optionally save a global map figure plotting stations for agencies
-    where events, picks, and arrivals are all True, colored by agency.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame containing agency info with columns 'agency', 'station', 'event',
-        'picks', 'arrivals'.
-    output_path : str or None, optional
-        File path to save the PNG figure. If None, figure is not saved.
-    debug : bool, optional
-        If True, print debug messages. Default is False.
-
-    Returns
-    -------
-    matplotlib.figure.Figure
-        The created matplotlib figure with plotted stations.
-    """
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-
-    # Filter agencies meeting criteria
-    filtered = df[
-        (df["event"] == True) &
-        (df["picks"] == True) &
-        (df["arrivals"] == True)
-    ]
-
-    if filtered.empty:
-        if debug:
-            print("No agencies with events, picks, and arrivals == True.")
-        return None
-
-    fig = plt.figure(figsize=(15, 8))
-    ax = plt.axes(projection=ccrs.PlateCarree())
-    ax.set_global()
-    ax.coastlines()
-    ax.add_feature(cfeature.BORDERS, linestyle=":")
-    ax.gridlines(draw_labels=True)
-
-    # Prepare colors for each agency
-    agencies = filtered["agency"].tolist()
-    unique_agencies = sorted(set(agencies))
-    cmap = cm.get_cmap("tab20", len(unique_agencies))
-    agency_colors = {agency: cmap(i) for i, agency in enumerate(unique_agencies)}
-
-    # Track handles for legend
-    legend_handles = {}
-
-    station_count = 0
-
-    for _, row in filtered.iterrows():
-        agency = row["agency"]
-        has_station_service = row.get("station", False)
-
-        if debug:
-            print(f"Fetching stations for agency '{agency}' (station service: {has_station_service})")
-
-        try:
-            if has_station_service:
-                client = Client(agency)
-            else:
-                continue
-                client = Client("IRIS")
-
-            inventory = client.get_stations(
-                starttime=UTCDateTime(row["starttime"]),
-                endtime=UTCDateTime(row["endtime"]),
-                level="station"
-            )
-
-            color = agency_colors[agency]
-
-            for network in inventory:
-                for station in network.stations:
-                    lat = station.latitude
-                    lon = station.longitude
-                    h = ax.plot(
-                        lon, lat, "o", markersize=3, alpha=0.7,
-                        transform=ccrs.PlateCarree(),
-                        color=color,
-                        label=agency if agency not in legend_handles else None
-                    )
-                    if agency not in legend_handles:
-                        legend_handles[agency] = h[0]
-                    station_count += 1
-
-            if debug:
-                print(f"\tPlotted {len(inventory.networks)} networks for {agency}")
-
-        except Exception as e:
-            if debug:
-                print(f"\tFailed to fetch stations for {agency}: {e}")
-            continue
-
-    if station_count == 0 and debug:
-        print("No stations plotted.")
-
-    # Plot legend outside the axes
-    ax.legend(
-        handles=legend_handles.values(),
-        loc='center left',
-        bbox_to_anchor=(1.02, 0.5),
-        title="Agency",
-        fontsize="small"
-    )
-
-    plt.tight_layout()
-
-    if output_path:
-        fig.savefig(output_path, dpi=300, bbox_inches="tight")
-        if debug:
-            print(f"Saved plot to {output_path}")
-
-    return fig
-
-def catalog_generator(
-                        client: FDSNClient,
-                        starttime,
-                        endtime,
-                        chunk_seconds: int = 86400,
-                        patience: int = 5,
-                        debug: bool = False,
-                        **event_kwargs
-                    ):
-    """
-    Yield event Catalogs in time chunks from a FDSN client, up to a maximum
-    number of iterations (patience).
-
-    Parameters
-    ----------
-    client : obspy.clients.fdsn.Client
-        The FDSN client to query.
-    starttime : str or UTCDateTime
-        Start of the time range.
-    endtime : str or UTCDateTime
-        End of the time range.
-    chunk_seconds : int, optional
-        Time chunk size in seconds (default: 86400 = 1 day).
-    patience : int or None, optional
-        Maximum number of chunks to yield. If None, iterate over full time range.
-    debug : bool, optional
-        If True, print warnings and chunk info.
-    **event_kwargs : dict
-        Additional keyword arguments passed to `get_events()`.
-
-    Yields
-    ------
-    obspy.Catalog
-        A Catalog object with events in the given time chunk.
-    """
-    starttime = UTCDateTime(starttime)
-    endtime = UTCDateTime(endtime)
-
-    time_cursor = starttime
-    iteration = 0
-
-    while time_cursor < endtime:
-        if iteration >= patience:
-            if debug:
-                print(f"[Info] Patience limit of {patience} reached.")
-            break
-
-        chunk_end = min(time_cursor + chunk_seconds, endtime)
-
-        if debug:
-            print(f"Fetching events from {time_cursor} to {chunk_end}...")
-
-        try:
-            catalog = client.get_events(
-                starttime=time_cursor,
-                endtime=chunk_end,
-                orderby="time",
-                **event_kwargs
-            )
-        except Exception as e:
-            if debug:
-                print(f"[Warning] Error fetching events from {time_cursor} to {chunk_end}: {e}")
-            catalog = Catalog()
-
-        yield catalog
-
-        time_cursor = chunk_end
-        iteration += 1
-
-def get_valid_event_ids(catalog, tests=None):
-    """
-    Get a list of valid custom event IDs from a catalog using specified tests.
-
-    Parameters:
-    - catalog: list of Event objects
-    - tests: dictionary of test functions to apply (optional).
-
-    Returns:
-    - ev_ids: list of valid event IDs
-    - final_tests: the reduced dictionary of tests that passed
-    """
-    # Initialize an empty list to collect valid custom event IDs
-    ev_ids = []
-
-    # Iterate through each event in the catalog
-    for event in catalog:
-        # Initialize the event ID tester with the given tests
-        eit = EventIDTester(event, tests=tests)
-
-        # Iterate through all test functions
-        for test_key, test_f in eit.tests.items():
-            # Generate the custom event ID using the test
-            ev_id = eit.get_event_id(test_key)
-
-            # If a valid ID is returned, save it and break the loop
-            if ev_id is not None:
-                ev_ids.append(ev_id)
-
-                # Update tests to only retain the successful one for consistency
-                tests = {test_key: test_f}
-                break
-
-    return ev_ids, tests
-
-class EventIDTester:
-    """
-    A class to test and extract event identifiers using different functions.
-    """
-
-    def __init__(self, event, tests=None):
-        """
-        Initialize the EventIDTester with an event object and optional test functions.
-
-        Parameters:
-        - event: An event object containing metadata.
-        - tests: A dictionary of test functions (optional).
-        """
-        self.event = event
-
-        if tests is None:
-            tests = self._get_default_tests()
-        self.tests = tests
-
-    def _get_default_tests(self):
-        """
-        Define a default dictionary of test functions to extract event IDs.
-
-        Returns:
-        - dict: A dictionary where keys are test names and values are lambda functions.
-        """
-        tests = {
-            "f1": lambda event: event.extra.datasource.value + event.extra.eventid.value,
-            "f2": lambda event: event.extra.eventid.value,
-            "f3": lambda event: event.extra.datasource.value,
-            "f4": lambda event: event.resource_id.id.split("/")[-1],
-            "f5": lambda event: event.creation_info.agency_id + event.resource_id.id.split("/")[-1]
-        }
-        return tests
-
-    def get_event_id(self, function_name):
-        """
-        Apply the selected test function to the event and return the extracted ID.
-
-        Parameters:
-        - function_name: The key corresponding to the desired test function.
-
-        Returns:
-        - str or None: The extracted event ID or None if the function fails.
-        """
-        try:
-            return self.tests[function_name](self.event)
-        except Exception:
-            return None
-    
- 
 class Client(FDSNClient):
     """
     A bank class for retrieving and calculating rolling statistics on seismic data.
@@ -507,8 +58,7 @@ class Client(FDSNClient):
         self.event_id_query_fmt = None
         super().__init__(*args, **kwargs)
         
-    def _picks_availability(self, starttime, endtime, eventid_tests=None,
-                            chunk_seconds= 86400):
+    def _picks_availability(self, starttime, endtime, eventid_tests=None):
         """
         Check availability of picks and arrivals using multiple query modes.
 
@@ -523,8 +73,7 @@ class Client(FDSNClient):
             End of the time window to search for picks.
         eventid_tests : dict or None, optional
             Optional test cases used when querying by event ID.
-        chunk_seconds : int, optional
-            Chunk size in seconds for time-windowed queries (default is 86400).
+
 
         Returns
         -------
@@ -647,7 +196,7 @@ class Client(FDSNClient):
 
         # Select the first event as a reference to generate event IDs
         event = catalog[0]
-        eit = EventIDTester(event, tests=tests)
+        eit = fut.EventIDTester(event, tests=tests)
 
         # Iterate over all test keys to try multiple event ID generation strategies
         for test_key in eit.tests.keys():
@@ -703,7 +252,7 @@ class Client(FDSNClient):
             within the allowed chunks.
         """
         # Create a generator to fetch event catalogs in chunks
-        generator = catalog_generator(self, starttime=starttime, endtime=endtime,
+        generator = fut.catalog_generator(self, starttime=starttime, endtime=endtime,
                                     chunk_seconds=chunk_seconds,patience=patience)
         origin_time = None
 
@@ -774,36 +323,53 @@ class Client(FDSNClient):
             return picks_avail
         else:
             raise Exception("The client does not support the 'event' service.")
-                
-    def _get_custom_event_ids(self, tests=None, **ev_kwargs):
+
+    @staticmethod
+    def save_inventory_to_bank(base_path, inventory):
         """
-        Retrieve custom event IDs from a catalog of seismic events.
+        Saves each network from an ObsPy Inventory to a StationXML file and
+        inserts its metadata into a shared SQLite database.
 
-        Parameters:
-            tests (dict or None): Dictionary of test functions used to generate custom event IDs.
-            **ev_kwargs: Additional keyword arguments passed to the get_events method.
-
-        Returns:
-            list: A list of custom event IDs generated using provided test functions.
-            final_tests: the reduced dictionary of tests that passed
+        Parameters
+        ----------
+        base_path : str
+            Path to the folder where files and database will be stored.
+        inventory : obspy.Inventory
+            The Inventory object containing network/station metadata.
         """
+        os.makedirs(base_path, exist_ok=True)
+        db_path = os.path.join(base_path, ".stations.db")
 
-        # Keys that should be disabled to ensure clean event retrieval
-        keys = ["includearrivals", "includeallorigins", "includeallmagnitudes"]
-        for key in keys:
-            if key in ev_kwargs:
-                # Override specific event parameters to avoid side effects
-                ev_kwargs[key] = False
+        try:
+            with sqlite3.connect(db_path) as conn:
+                for net in inventory.networks:
+                    try:
+                        net_code = net.code
+                        # Create a new Inventory with just this network
+                        single_inv = inventory.select(network=net_code)
+                        
+                        # Save StationXML
+                        xml_path = os.path.join(base_path, f"{net_code}.xml")
+                        single_inv.write(xml_path, format="STATIONXML")
+                        print(f"Saved XML for network {net_code} at {xml_path}")
 
-        # Retrieve the event catalog with filtered parameters
-        catalog = self.get_events(**ev_kwargs)
+                        # Save to DB
+                        df = single_inv.to_df()
+                        df.to_sql("/stations/index", conn, if_exists="append", index=False)
+                        print(f"Saved DB entry for network {net_code}")
 
-        ev_ids, tests =  get_valid_event_ids(catalog=catalog,tests=tests)
+                        del df, single_inv
+                        gc.collect()
 
-        # Return the list of valid custom event IDs
-        return ev_ids, tests
+                    except Exception as e:
+                        print(f"Failed to process network {net.code}: {e}")
+                        traceback.print_exc()
+        except Exception as e:
+            print(f"Could not connect to SQLite DB: {e}")
+            traceback.print_exc()
 
-    def save_stations_to_bank(self, base_path, workers=None, **sta_kwargs):
+    def save_stations_to_bank(self, base_path, 
+                            workers=None, **sta_kwargs):
         """
         Saves station data to a specified base path using parallel threads.
 
@@ -816,6 +382,12 @@ class Client(FDSNClient):
         **sta_kwargs : dict
             Additional keyword arguments passed to the `get_stations` method.
         """
+        # Get the list of supported services from the client
+        services = list(self.services.keys())
+        if "station" not in services:
+            raise Exception("The client does not support the 'station' service.")
+
+
         # Ensure the base directory exists
         os.makedirs(base_path, exist_ok=True)
         
@@ -913,8 +485,261 @@ class Client(FDSNClient):
         # Stop DB writer thread
         write_queue.put(None)
         writer_thread.join()
-        
+
     def save_events_to_bank(self, base_path,
+                        starttime, endtime, 
+                        path_structure='{year}/{month}/{day}/{hour}',
+                        name_structure='{event_id_end}',
+                        chunk_seconds=7200,
+                        patience=10,
+                        max_n_events=None,
+                        eventid_tests=None,
+                        calculate_d_az = False,
+                        stations_bank_path=None,
+                        minlatitude=None,
+                        maxlatitude=None, minlongitude=None, maxlongitude=None,
+                        latitude=None, longitude=None, minradius=None,
+                        maxradius=None, mindepth=None, maxdepth=None,
+                        minmagnitude=None, maxmagnitude=None, magnitudetype=None,
+                        eventtype=None, includeallorigins=None,
+                        includeallmagnitudes=None,
+                        catalog=None, contributor=None, updatedafter=None,
+                        format='quakeml', 
+                        workers=4, 
+                        debug=False):
+        """
+        Save seismic events from a data source to an EventBank on disk.
+
+        Downloads events in chunks and stores them in a structured directory layout.
+        Can use either natural mode or eventid-based mode depending on the availability
+        of picks.
+
+        Parameters
+        ----------
+        base_path : str
+            Root directory to store the event files.
+
+        starttime, endtime : UTCDateTime or str
+            Time window to filter events.
+
+        path_structure : str, optional
+            Template for directory layout (default uses year/month/day/hour).
+
+        name_structure : str, optional
+            Template for naming individual event files.
+
+        chunk_seconds : int, optional
+            Duration (in seconds) of each data chunk window. Default is 7200 (2 hours).
+
+        patience : int, optional
+            Number of empty chunks to tolerate before stopping.
+
+        max_n_events : int or None, optional
+            Maximum number of events to download. If None, fetch all.
+
+        eventid_tests : dict or None, optional
+            Dictionary with test cases for extracting custom event IDs (eventid mode).
+
+        calculate_d_az : bool, optional
+            If True, calculate azimuth and distance for each pick in the event.
+
+        stations_bank_path : str or None, optional
+            Path to a station bank for calculating azimuth and distance. Mandatory if `calculate_d_az` is True.
+
+        Filtering parameters (all optional) -> check get_events documentation for details
+        -----------------------------------
+        latitude, longitude, minradius, maxradius,
+        minlatitude, maxlatitude, minlongitude, maxlongitude,
+        mindepth, maxdepth, minmagnitude, maxmagnitude,
+        magnitudetype, eventtype, includeallorigins,
+        includeallmagnitudes, catalog, contributor, updatedafter
+
+        format : str, optional
+            Output format for the saved events (default is 'quakeml').
+
+        workers : int, optional
+            Number of parallel threads to use when saving with eventid mode.
+
+        debug : bool, optional
+            Print verbose output if True.
+        """
+
+        # Check for available picks
+        if debug:
+            print(f"Checking picks availability from {starttime} to {endtime}...")
+        picks_avail = self._picks_availability( starttime=starttime, endtime=endtime,
+                                                eventid_tests=eventid_tests)
+
+        if not picks_avail["picks"]:
+            raise Exception("No available picks service in the Client.")
+
+        if calculate_d_az and stations_bank_path is None:
+            raise Exception("If calculate_d_az is True, stations_bank_path must be provided.")
+        elif calculate_d_az and not os.path.exists(stations_bank_path):
+            raise Exception(f"Stations bank path {stations_bank_path} does not exist.")
+        elif calculate_d_az is None and stations_bank_path is not None:
+            warnings.warn(
+                "calculate_d_az is None, but stations_bank_path is provided. "
+                "This will not be used. Set calculate_d_az=True to use it.",
+                UserWarning
+            )
+        elif calculate_d_az and os.path.exists(stations_bank_path):
+            db_path = os.path.join(stations_bank_path, ".stations.db")
+            stations = fut.load_stations_metadata_from_bank(db_path=db_path)
+            csv_path = os.path.join(base_path, ".bad_stations.csv")
+        else:
+            stations = None
+            csv_path = None
+
+        # Prepare keyword arguments for get_events
+        ev_kwargs = {
+            k: v for k, v in locals().items()
+            if k in available_events_keys and v is not None
+        }
+
+        if picks_avail["name"] == "natural":
+            ev_kwargs.update({
+                "includearrivals": True,
+                "includeallorigins": includeallorigins,
+                "includeallmagnitudes": includeallmagnitudes
+            })
+        elif picks_avail["name"] == "eventid":
+            ev_kwargs.update({
+                "includearrivals": False,
+                "includeallorigins": False,
+                "includeallmagnitudes": False
+            })
+
+        os.makedirs(base_path, exist_ok=True)
+
+        ebank = obsplus.EventBank(
+            base_path=base_path,
+            path_structure=path_structure,
+            name_structure=name_structure,
+            format=format
+        )
+
+
+        print(f"Saving events to {base_path} with structure: {path_structure}")
+
+        if stations is not None and picks_avail["name"] == "eventid":
+            if debug:
+                print(f"Initiating dedicated thread for CSV writing at {csv_path}")
+
+            # if csv_path is not None and picks_avail["name"] == "eventid":
+            csv_queue = queue.Queue()
+            csv_lock = threading.Lock()
+            def csv_writer():
+                """Dedicated thread to write bad_inv_data to CSV from queue."""
+                while True:
+                    item = csv_queue.get()
+                    if item is None:
+                        break
+                    df = item
+                    try:
+                        with csv_lock:
+                            df.to_csv(csv_path, mode="a", index=False, header=not os.path.exists(csv_path))
+                    except Exception as e:
+                        print(f"[CSV Write Error] {e}")
+                    csv_queue.task_done()
+            # Start the writer thread
+            writer_thread = threading.Thread(target=csv_writer)
+            writer_thread.start()
+
+        total_events = 0
+        iteration = 0
+        id_tests = eventid_tests
+
+        print(f"Starting event download from {starttime} to {endtime} ")
+        for catalog in fut.catalog_generator(self, starttime=starttime, endtime=endtime,
+                                 chunk_seconds=chunk_seconds, debug=debug, 
+                                 patience=patience, **ev_kwargs):
+
+            # print(catalog)
+            if len(catalog) == 0:
+                continue
+
+            # Trim if over the event limit
+            if max_n_events is not None:
+                remaining = max_n_events - total_events
+                if remaining <= 0:
+                    break
+                elif remaining < len(catalog):
+                    catalog.events = catalog.events[:remaining]
+
+            n_events = len(catalog)
+            total_events += n_events
+            iteration += 1
+
+            print(f"\t... Saving Iter {iteration:<3} ({n_events:>4} events)")
+            if stations is not None:
+                print(f"\t... Using stations from {stations_bank_path} to recalculate distances and azimuths")
+
+            tic = time.time()
+
+
+            if picks_avail["name"] == "natural":
+                if stations is not None:
+                    # Append stations metadata to the catalog
+                    catalog,bad_inv_data = fut.append_stations_to_catalog(catalog=catalog, df_stations=stations,
+                                                            debug=debug)
+
+                    if not bad_inv_data.empty:
+                        bad_inv_data.to_csv(
+                            csv_path, mode="a", index=False,
+                            header=not os.path.exists(csv_path)
+                        )
+
+                        if debug:
+                            print(f"Check bad station metadata entries in {csv_path}")
+
+                ebank.put_events(catalog)
+
+            elif picks_avail["name"] == "eventid":
+                ev_ids, id_tests =  fut.get_valid_event_ids(catalog=catalog,tests=id_tests)
+
+                def save_single_event(ev_id):
+                    single_catalog = self.get_events(eventid=ev_id, **ev_kwargs)
+
+                    if stations is not None:
+                        
+                        # Append stations metadata to the single event catalog
+                        single_catalog, single_bad_inv_data = fut.append_stations_to_catalog(
+                                                                catalog=single_catalog, df_stations=stations,
+                                                                debug=debug
+                                                            )
+                        if not single_bad_inv_data.empty:
+                            csv_queue.put(single_bad_inv_data)
+
+                    ebank.put_events(single_catalog)
+
+                # for ev_id in ev_ids:
+                #     save_single_event(ev_id)
+                with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+                    executor.map(save_single_event, ev_ids)
+
+                if debug and stations is not None:
+                    print(f"Check bad station metadata entries in {csv_path}")
+                
+            else:
+                raise Exception("No way to extract the picks")
+
+            toc = time.time()
+
+            print(
+                f"Iter {iteration:<3} ({n_events:>4} events in {toc - tic:.2f} s) | "
+                f"Total: {total_events:>4}/{max_n_events}"
+            )
+                
+            if max_n_events is not None and total_events >= max_n_events:
+                break
+        
+        if stations is not None and picks_avail["name"] == "eventid":
+            #     # Signal the writer thread to stop
+            csv_queue.put(None)
+            writer_thread.join()
+        
+    def save2_events_to_bank(self, base_path,
                        path_structure='{year}/{month}/{day}/{hour}',
                        name_structure='{event_id_end}',
                         chunks=100,

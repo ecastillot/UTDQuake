@@ -50,6 +50,9 @@ exit()
 # provider = "USGS"
 provider = "ICGC"
 client = Client(provider )
+
+
+
 # catalog = client.get_events(starttime=UTCDateTime("2024-01-01T00:00:00"),
 #                           endtime=UTCDateTime("2024-01-02T00:00:00"),
 #                           eventid=40453703
