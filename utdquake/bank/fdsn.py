@@ -59,8 +59,6 @@ def generate_agency_availability_report(
         Duration of each time chunk (in seconds). Default is 3600.
     patience : int, optional
         Number of chunks to try before giving up. Default is 10.
-    debug : bool, optional
-        If True, print progress and debug messages. Default is False.
     output : str or None, optional
         Path to output CSV file. If None, result is returned but not saved.
     additional_mappings : dict or None, optional
@@ -95,14 +93,12 @@ def generate_agency_availability_report(
         agency_info["agency"] = key
         agency_info["url"] = url_mappings[key]
 
-        if debug:
-            print(f"{key:<11} {agency_info['url']}")
+        logger.info(f"Checking agency: {key} at {agency_info['url']}")
 
         try:
             client = Client(key)
         except Exception as e:
-            if debug:
-                print(f"\tError creating client for {key}: {e}")
+            logger.error(f"Error creating client for {key}: {e}")
             continue
 
         # Check which FDSN services are supported
@@ -126,11 +122,9 @@ def generate_agency_availability_report(
             agency_info["picks_method_mode"] = picks_service["mode"]
 
         except Exception as e:
-            if debug:
-                print(f"\tError getting picks service for {key}: {e}")
+            logger.error(f"Error getting picks service for {key}: {e}")
 
-        if debug:
-            print("\t", agency_info)
+        logger.debug(f"Agency {key} info: {agency_info}")
 
         info.append(agency_info)
 
@@ -138,33 +132,29 @@ def generate_agency_availability_report(
 
     if output:
         df.to_csv(output, index=False)
-        if debug:
-            print(f"\nSaved output to {output}")
+        logger.info(f"Saved agency report to {output}")
 
     return df
 
 class Client(FDSNClient):
-    """
-    A bank class for retrieving and calculating rolling statistics on seismic data.
-
-    Inherits from:
-        Client: Base class for FDSN web service clients.
-
-    Attributes:
-        output (str): Path to the SQLite database file for saving results.
-        step (int): Step size for the rolling window in seconds.
-    """
 
     def __init__(self,*args, **kwargs):
         """
-        Initializes the Client class by calling the constructor 
-        of the base FDSN Client class.
+        Initialize the Client class with logging configuration and base setup.
 
-        Parameters:
-        *args : variable length argument list
-            Positional arguments passed to the base class constructor.
-        **kwargs : variable length keyword arguments
-            Keyword arguments passed to the base class constructor.
+        This constructor extends the standard FDSNClient by optionally enabling
+        logging configuration. Additional arguments are passed to the base class.
+
+        Parameters
+        ----------
+        *args : tuple
+            Positional arguments to be passed to the base FDSNClient constructor.
+        **kwargs : dict
+            Keyword arguments to be passed to the base FDSNClient constructor.
+            Special keys include:
+                - configure_logging (bool): Whether to set up logging. Default is True.
+                - logging_level (int): Logging level (e.g., logging.INFO or logging.DEBUG).
+                                    Default is logging.INFO.
         """
 
         if "configure_logging" not in kwargs:   

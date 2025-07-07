@@ -37,7 +37,6 @@ df = generate_agency_availability_report(
                                     chunk_seconds=chunk_seconds,
                                     patience=patience,
                                     output=output,
-                                    debug=debug,
                                     additional_mappings=additional_mappings
                                 )
 print(df)
