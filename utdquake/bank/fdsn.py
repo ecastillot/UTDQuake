@@ -509,6 +509,8 @@ class Client(FDSNClient):
         **sta_kwargs : dict
             Additional keyword arguments passed to the `get_stations` method.
         """
+        logger.info(f"Saving stations to bank at {base_path} with workers={workers} and sta_kwargs={sta_kwargs}")
+
         # Get the list of supported services from the client
         services = list(self.services.keys())
         if "station" not in services:
