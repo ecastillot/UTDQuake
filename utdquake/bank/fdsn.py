@@ -10,17 +10,20 @@ import queue
 import traceback
 import threading
 import gc
+from typing import  Optional
 import os
 import sqlite3
 import time
 import obsplus
 import warnings
 import pandas as pd
+from obspy import UTCDateTime
 from tqdm import tqdm
 import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 
 import logging
 from . import utils as fut
+from . import setup_logger
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +36,112 @@ available_events_keys = [
     "minmagnitude", "maxmagnitude",
     "magnitudetype", "eventtype", 
     "catalog", "contributor", "updatedafter"]
+
+def generate_agency_availability_report(
+    starttime: UTCDateTime,
+    endtime: UTCDateTime,
+    chunk_seconds: int = 3600,
+    patience: int = 10,
+    debug: bool = False,
+    output: Optional[str] = None,
+    additional_mappings: Optional[dict] = None,
+    ):
+    """
+    Generate a report of FDSN agency capabilities, including picks and arrivals.
+
+    Parameters
+    ----------
+    starttime : UTCDateTime
+        Start time of the query window.
+    endtime : UTCDateTime
+        End time of the query window.
+    chunk_seconds : int, optional
+        Duration of each time chunk (in seconds). Default is 3600.
+    patience : int, optional
+        Number of chunks to try before giving up. Default is 10.
+    debug : bool, optional
+        If True, print progress and debug messages. Default is False.
+    output : str or None, optional
+        Path to output CSV file. If None, result is returned but not saved.
+    additional_mappings : dict or None, optional
+        Additional FDSN URL mappings to use.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing agency capabilities and pick information.
+    """
+    agency_info_template = {
+        "agency": None,
+        "starttime": starttime,
+        "endtime": endtime,
+        "url": None,
+        "dataselect": False,
+        "station": False,
+        "event": False,
+        "picks": False,
+        "arrivals": False,
+        "picks_method_name": None,
+        "picks_method_mode": None,
+    }
+
+    # Merge additional mappings if provided
+    url_mappings = fut.extend_fdsn_url_mappings(additional_mappings or {}).copy()
+
+    info = []
+
+    for key in sorted(url_mappings.keys()):
+        agency_info = agency_info_template.copy()
+        agency_info["agency"] = key
+        agency_info["url"] = url_mappings[key]
+
+        if debug:
+            print(f"{key:<11} {agency_info['url']}")
+
+        try:
+            client = Client(key)
+        except Exception as e:
+            if debug:
+                print(f"\tError creating client for {key}: {e}")
+            continue
+
+        # Check which FDSN services are supported
+        services = list(client.services.keys())
+        for service in services:
+            if service in agency_info:
+                agency_info[service] = True
+
+        # Try to retrieve picks and arrivals
+        try:
+            picks_service = client.picks_service(
+                starttime=starttime,
+                endtime=endtime,
+                chunk_seconds=chunk_seconds,
+                patience=patience,
+            )
+
+            agency_info["picks"] = picks_service["picks"]
+            agency_info["arrivals"] = picks_service["arrivals"]
+            agency_info["picks_method_name"] = picks_service["name"]
+            agency_info["picks_method_mode"] = picks_service["mode"]
+
+        except Exception as e:
+            if debug:
+                print(f"\tError getting picks service for {key}: {e}")
+
+        if debug:
+            print("\t", agency_info)
+
+        info.append(agency_info)
+
+    df = pd.DataFrame(info)
+
+    if output:
+        df.to_csv(output, index=False)
+        if debug:
+            print(f"\nSaved output to {output}")
+
+    return df
 
 class Client(FDSNClient):
     """
@@ -57,8 +166,21 @@ class Client(FDSNClient):
         **kwargs : variable length keyword arguments
             Keyword arguments passed to the base class constructor.
         """
+
+        if "configure_logging" not in kwargs:   
+            self.configure_logging = True
+        else:
+            self.configure_logging = kwargs["configure_logging"]
+        if "logging_level" not in kwargs:
+            self.logging_level = logging.INFO
+        else:
+            self.logging_level = kwargs["logging_level"]
+
+        if self.configure_logging:
+            setup_logger(self.logging_level)
+
         self.event_id_query_fmt = None
-        super().__init__(*args, **kwargs)
+        super().__init__(*args,**kwargs)
         
     def _picks_availability(self, starttime, endtime, eventid_tests=None):
         """
@@ -83,14 +205,21 @@ class Client(FDSNClient):
             Dictionary indicating which mode (if any) contains valid picks and arrivals.
             If neither mode succeeds, returns a default structure with `picks=False`.
         """
+        logger.info(f"Checking picks availability for {self.base_url} from {starttime} to {endtime}")
         natural_mode = self._picks_in_natural_mode(starttime, endtime)
+
         if natural_mode["picks"]:
+            logger.info(f"Found picks in natural mode (using includearrivals=True) for {self.base_url}")
             return natural_mode
         else:
+            logger.info(f"No picks found in natural mode (using includearrivals=True) for {self.base_url}, trying event ID mode")
             eventid_mode = self._picks_in_eventid_mode(starttime, endtime,tests=eventid_tests)
+            
             if eventid_mode["picks"]:
+                logger.info(f"Found picks in event ID mode for {self.base_url} using {eventid_mode['mode']} strategy. Check DEFAULT strategies in fdsn.utils.EventIDTester")
                 return eventid_mode
             else:
+                logger.warning(f"No picks found in either mode for {self.base_url} from {starttime} to {endtime}")
                 return {
                     "name": None,
                     "mode": None,
@@ -198,13 +327,16 @@ class Client(FDSNClient):
 
         # Select the first event as a reference to generate event IDs
         event = catalog[0]
+        logger.debug(f"Using event {event.resource_id} as reference for event ID generation.")
         eit = fut.EventIDTester(event, tests=tests)
+        logger.debug(f"EventIDTester initialized with {len(eit.tests)} test strategies.")
 
         # Iterate over all test keys to try multiple event ID generation strategies
         for test_key in eit.tests.keys():
+            logger.debug(f"Testing event ID generation with key: {test_key}")
             ev_id = eit.get_event_id(test_key)
-
             if ev_id is not None:
+                logger.debug(f"Generated event ID: {ev_id} using key: {test_key}")
                 try:
                     # Try querying by the generated event ID
                     cat = self.get_events(eventid=ev_id)
@@ -220,8 +352,11 @@ class Client(FDSNClient):
                         info["mode"] = test_key
                         break  # Exit loop once a valid mode is found
                 except Exception:
+                    logger.error(f"Failed to retrieve events for event ID: {ev_id} using key: {test_key}")
                     # Ignore failure and continue testing other strategies
                     pass
+            else:
+                logger.debug(f"Event ID generation failed for key: {test_key}")
 
         return info
     
@@ -506,8 +641,7 @@ class Client(FDSNClient):
                         includeallmagnitudes=None,
                         catalog=None, contributor=None, updatedafter=None,
                         format='quakeml', 
-                        workers=4, 
-                        debug=False):
+                        workers=4):
         """
         Save seismic events from a data source to an EventBank on disk.
 
@@ -561,21 +695,18 @@ class Client(FDSNClient):
         workers : int, optional
             Number of parallel threads to use when saving with eventid mode.
 
-        debug : bool, optional
-            Print verbose output if True.
         """
+        logger.info(f"Saving events from {starttime} to {endtime} in {base_path}")
 
         # Check for available picks
         logger.debug(f"Checking picks availability from {starttime} to {endtime}...")
-        logger.info(f"Test")
-        ## I need to change all the debug prints to logger.debug
-        exit()
+        
         picks_avail = self._picks_availability( starttime=starttime, endtime=endtime,
                                                 eventid_tests=eventid_tests)
 
 
         if not picks_avail["picks"]:
-            raise Exception("No available picks service in the Client.")
+            raise Exception(f"No available picks service in the Client. Picks = {picks_avail}")
 
         if calculate_d_az and stations_bank_path is None:
             raise Exception("If calculate_d_az is True, stations_bank_path must be provided.")
@@ -627,8 +758,9 @@ class Client(FDSNClient):
         logger.info(f"Saving events to {base_path} with structure: {path_structure}")
 
         if stations is not None and picks_avail["name"] == "eventid":
-            if debug:
-                logger.info(f"Initiating dedicated thread for CSV writing at {csv_path}")
+
+            logger.info(f"Creating File at {csv_path} for collecting stations that are not included in the station bank")
+            logger.debug(f"Initiating dedicated thread for CSV writing at {csv_path}")
 
             # if csv_path is not None and picks_avail["name"] == "eventid":
             csv_queue = queue.Queue()
@@ -656,7 +788,7 @@ class Client(FDSNClient):
 
         logger.info(f"Starting event download from {starttime} to {endtime}")
         for catalog in fut.catalog_generator(self, starttime=starttime, endtime=endtime,
-                                 chunk_seconds=chunk_seconds, debug=debug, 
+                                 chunk_seconds=chunk_seconds,
                                  patience=patience, **ev_kwargs):
 
             # print(catalog)
@@ -685,8 +817,7 @@ class Client(FDSNClient):
             if picks_avail["name"] == "natural":
                 if stations is not None:
                     # Append stations metadata to the catalog
-                    catalog,bad_inv_data = fut.append_stations_to_catalog(catalog=catalog, df_stations=stations,
-                                                            debug=debug)
+                    catalog,bad_inv_data = fut.append_stations_to_catalog(catalog=catalog, df_stations=stations)
 
                     if not bad_inv_data.empty:
                         bad_inv_data.to_csv(
@@ -694,8 +825,7 @@ class Client(FDSNClient):
                             header=not os.path.exists(csv_path)
                         )
 
-                        if debug:
-                            logger.info(f"Check bad station metadata entries in {csv_path}")
+                        logger.debug(f"Check bad station metadata entries in {csv_path}")
 
                 ebank.put_events(catalog)
 
@@ -709,8 +839,7 @@ class Client(FDSNClient):
                         
                         # Append stations metadata to the single event catalog
                         single_catalog, single_bad_inv_data = fut.append_stations_to_catalog(
-                                                                catalog=single_catalog, df_stations=stations,
-                                                                debug=debug
+                                                                catalog=single_catalog, df_stations=stations
                                                             )
                         if not single_bad_inv_data.empty:
                             csv_queue.put(single_bad_inv_data)
@@ -722,8 +851,8 @@ class Client(FDSNClient):
                 with cf.ThreadPoolExecutor(max_workers=workers) as executor:
                     executor.map(save_single_event, ev_ids)
 
-                if debug and stations is not None:
-                    print(f"Check bad station metadata entries in {csv_path}")
+                if stations is not None:
+                    logger.debug(f"Check bad station metadata entries in {csv_path}")
                 
             else:
                 raise Exception("No way to extract the picks")

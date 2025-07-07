@@ -6,8 +6,9 @@ if lib not in sys.path:
 from obspy.clients.fdsn.header import URL_MAPPINGS
 import os
 import pandas as pd
-from utdquake.bank.fdsn import (Client,catalog_generator,
-                    extend_fdsn_url_mappings, generate_agency_availability_report,
+from utdquake.bank.fdsn import Client,generate_agency_availability_report
+from utdquake.bank.utils import (catalog_generator,
+                    extend_fdsn_url_mappings,
                     plot_agencies_stations)
 from obspy import UTCDateTime
 
@@ -15,10 +16,10 @@ output = "/groups/igonin/ecastillo/UTDQuake/test/bank/info.csv"
 png_output = "/groups/igonin/ecastillo/UTDQuake/test/bank/info.png"
 df = pd.read_csv(output)
 
-plot_agencies_stations(df,png_output,debug=True)
+# plot_agencies_stations(df,png_output,debug=True)
 
 
-exit()
+# exit()
 
 ## Parameters
 starttime = UTCDateTime("2024-01-01T00:00:00")
@@ -26,7 +27,7 @@ endtime = UTCDateTime("2024-12-02T00:00:00")
 chunk_seconds=3600
 patience=10
 debug = True
-output = "/groups/igonin/ecastillo/UTDQuake/test/bank/info.csv"
+output = "/groups/igonin/ecastillo/UTDQuake/test/bank/info2.csv"
 additional_mappings = {}
 
 #code

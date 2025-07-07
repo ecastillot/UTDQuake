@@ -6,12 +6,13 @@
 #  * @desc [description]
 #  */
 import os
+import logging
 import obsplus
 import warnings
 import sqlite3
 import pandas as pd
 from obspy.clients.fdsn import Client as FDSNClient 
-from obspy import UTCDateTime
+
 from obspy import UTCDateTime, Catalog
 from typing import  Optional
 from obspy.clients.fdsn.header import URL_MAPPINGS
@@ -20,6 +21,8 @@ import matplotlib.cm as cm
 from obspy.geodetics import gps2dist_azimuth, kilometer2degrees
 
 warnings.filterwarnings("ignore", category=UserWarning, module="obspy.io.quakeml.core")
+
+logger = logging.getLogger(__name__)
 
 OTHER_MAPPINGS = {
         "IRIS": "https://service.iris.edu", #USA
@@ -52,17 +55,21 @@ def load_stations_metadata_from_bank(db_path):
         DataFrame containing the station metadata.
     """
     if not os.path.exists(db_path):
+        logger.error(f"Database file not found: {db_path}")
         raise FileNotFoundError(f"Database file not found: {db_path}")
 
     try:
         with sqlite3.connect(db_path) as conn:
+            logger.info(f"Loading stations from database: {db_path}")
             df = pd.read_sql("SELECT * FROM '/stations/index'", conn)
+            logger.info(f"Loaded {len(df)} stations from database.")
     except Exception as e:
+        logger.error(f"Failed to load stations from database: {e}")
         raise RuntimeError(f"Failed to load stations from database: {e}")
 
     return df
 
-def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Catalog:
+def append_stations_to_catalog(catalog: Catalog, df_stations) -> Catalog:
     """
     Append inventory station metadata (lat/lon) to event arrivals in the catalog.
     
@@ -73,8 +80,6 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
     df_stations : pandas.DataFrame
         DataFrame containing station metadata with columns:
         ['network', 'station', 'latitude', 'longitude'].
-    debug : bool, optional
-        If True, print debug information for each event and station processed.
 
     Returns:
     --------
@@ -92,8 +97,7 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
         # Iterate through each origin associated with the event
         origin = event.preferred_origin() or event.origins[0] if event.origins else None
 
-        if debug:
-            print(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id}")
+        logger.info(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id if origin else 'None'}")
 
         olon = origin.longitude
         olat = origin.latitude
@@ -114,8 +118,7 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
                 (df_stations.station == station)
             ][['station', 'network', 'latitude', 'longitude']]
 
-            if debug:
-                print(f"Processing network: {network}, station: {station}")
+            logger.debug(f"Processing arrival for network: {network}, station: {station}")
 
             # Handle case where station metadata is missing
             if _df_sta.empty:
@@ -125,8 +128,7 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
                     "event_id": event.resource_id.id,
                     "error": "No station data found"
                 })
-                if debug:
-                    print(f"\tNo station data found for {network}.{station} in event {event.resource_id.id}")
+                logger.warning(f"No station data found for {network}.{station} in event {event.resource_id.id}")
                 continue
 
             # Safely extract station latitude and longitude
@@ -140,8 +142,8 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
                     "event_id": event.resource_id.id,
                     "error": "Invalid station lat/lon data"
                 })
-                if debug:
-                    print(f"\tInvalid station lat/lon data for {network}.{station} in event {event.resource_id.id}")
+
+                logger.error(f"Invalid station lat/lon data for {network}.{station} in event {event.resource_id.id}")
                 continue
 
             # Compute distance and azimuths between origin and station
@@ -156,9 +158,9 @@ def append_stations_to_catalog(catalog: Catalog, df_stations, debug=False) -> Ca
     # Collect missing/invalid station data into a DataFrame
     bad_inv_data_df = pd.DataFrame(bad_inv_data)
 
-    # Warn user if any station data was missing
-    if not bad_inv_data_df.empty and debug:
-        warnings.warn("Some stations had no data. Check bad_inv_data", UserWarning)
+    # # Warn user if any station data was missing
+    # if not bad_inv_data_df.empty:
+    #     logger.warning(f"Some stations had no data. Check bad_inv_data for your catalog: \n{catalog}")
 
     return catalog, bad_inv_data_df
 
@@ -198,112 +200,6 @@ def extend_fdsn_url_mappings(additional_mappings: Optional[dict] = None) -> dict
             URL_MAPPINGS[key] = url
 
     return URL_MAPPINGS
-
-def generate_agency_availability_report(
-    starttime: UTCDateTime,
-    endtime: UTCDateTime,
-    chunk_seconds: int = 3600,
-    patience: int = 10,
-    debug: bool = False,
-    output: Optional[str] = None,
-    additional_mappings: Optional[dict] = None,
-    ):
-    """
-    Generate a report of FDSN agency capabilities, including picks and arrivals.
-
-    Parameters
-    ----------
-    starttime : UTCDateTime
-        Start time of the query window.
-    endtime : UTCDateTime
-        End time of the query window.
-    chunk_seconds : int, optional
-        Duration of each time chunk (in seconds). Default is 3600.
-    patience : int, optional
-        Number of chunks to try before giving up. Default is 10.
-    debug : bool, optional
-        If True, print progress and debug messages. Default is False.
-    output : str or None, optional
-        Path to output CSV file. If None, result is returned but not saved.
-    additional_mappings : dict or None, optional
-        Additional FDSN URL mappings to use.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame containing agency capabilities and pick information.
-    """
-    agency_info_template = {
-        "agency": None,
-        "starttime": starttime,
-        "endtime": endtime,
-        "url": None,
-        "dataselect": False,
-        "station": False,
-        "event": False,
-        "picks": False,
-        "arrivals": False,
-        "picks_method_name": None,
-        "picks_method_mode": None,
-    }
-
-    # Merge additional mappings if provided
-    url_mappings = extend_fdsn_url_mappings(additional_mappings or {}).copy()
-
-    info = []
-
-    for key in sorted(url_mappings.keys()):
-        agency_info = agency_info_template.copy()
-        agency_info["agency"] = key
-        agency_info["url"] = url_mappings[key]
-
-        if debug:
-            print(f"{key:<11} {agency_info['url']}")
-
-        try:
-            client = Client(key)
-        except Exception as e:
-            if debug:
-                print(f"\tError creating client for {key}: {e}")
-            continue
-
-        # Check which FDSN services are supported
-        services = list(client.services.keys())
-        for service in services:
-            if service in agency_info:
-                agency_info[service] = True
-
-        # Try to retrieve picks and arrivals
-        try:
-            picks_service = client.picks_service(
-                starttime=starttime,
-                endtime=endtime,
-                chunk_seconds=chunk_seconds,
-                patience=patience,
-            )
-
-            agency_info["picks"] = picks_service["picks"]
-            agency_info["arrivals"] = picks_service["arrivals"]
-            agency_info["picks_method_name"] = picks_service["name"]
-            agency_info["picks_method_mode"] = picks_service["mode"]
-
-        except Exception as e:
-            if debug:
-                print(f"\tError getting picks service for {key}: {e}")
-
-        if debug:
-            print("\t", agency_info)
-
-        info.append(agency_info)
-
-    df = pd.DataFrame(info)
-
-    if output:
-        df.to_csv(output, index=False)
-        if debug:
-            print(f"\nSaved output to {output}")
-
-    return df
 
 def plot_agencies_stations(df, output_path=None, debug=False):
     """
@@ -429,7 +325,6 @@ def catalog_generator(
                         endtime,
                         chunk_seconds: int = 86400,
                         patience: int = 10,
-                        debug: bool = False,
                         **event_kwargs
                     ):
     """
@@ -448,8 +343,6 @@ def catalog_generator(
         Time chunk size in seconds (default: 86400 = 1 day).
     patience : int or None, optional
         Maximum number of chunks to yield. If None, iterate over full time range.
-    debug : bool, optional
-        If True, print warnings and chunk info.
     **event_kwargs : dict
         Additional keyword arguments passed to `get_events()`.
 
@@ -466,14 +359,12 @@ def catalog_generator(
 
     while time_cursor < endtime:
         if iteration >= patience:
-            if debug:
-                print(f"[Info] Patience limit of {patience} reached.")
+            logger.debug(f"Patience limit of {patience} reached.")
             break
 
         chunk_end = min(time_cursor + chunk_seconds, endtime)
 
-        if debug:
-            print(f"Fetching events from {time_cursor} to {chunk_end}...")
+        logger.info(f"Fetching events from {time_cursor} to {chunk_end}...")
 
         try:
             catalog = client.get_events(
@@ -483,8 +374,7 @@ def catalog_generator(
                 **event_kwargs
             )
         except Exception as e:
-            if debug:
-                print(f"[Warning] Error fetching events from {time_cursor} to {chunk_end}: {e}")
+            logger.error(f"Error fetching events from {time_cursor} to {chunk_end}: {e}")
             catalog = Catalog()
 
         yield catalog
@@ -524,7 +414,6 @@ def get_valid_event_ids(catalog, tests=None):
                 # Update tests to only retain the successful one for consistency
                 tests = {test_key: test_f}
                 break
-
     return ev_ids, tests
 
 class EventIDTester:

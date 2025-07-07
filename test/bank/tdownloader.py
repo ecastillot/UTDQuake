@@ -8,9 +8,10 @@ import pandas as pd
 import obsplus
 from obspy import UTCDateTime
 from utdquake.bank.fdsn import Client
-from utdquake.bank import setup_logger
+from obspy.clients.fdsn import Client as FDSNClient
+# from utdquake.bank import setup_logger
 
-logger = setup_logger(debug=False)
+# logger = setup_logger(debug=False)
 
 provider = "USGS"
 # provider = "http://sismo.sgc.gov.co:8080/"
@@ -20,14 +21,25 @@ provider = "USGS"
 bank_folder = "/groups/igonin/utdquake/bank"
 events_folder = os.path.join(bank_folder, "events")
 stations_folder = os.path.join(bank_folder, "stations")
-bank =  Client(provider)
+client =  Client(provider)
+# client2 =  FDSNClient(provider)
 starttime = UTCDateTime("2024-01-01T00:00:00")
 endtime = UTCDateTime("2024-01-03T00:00:00")
 
-# bank.save_stations_to_bank(
-#     base_path=stations_folder)
-
-bank.save_events_to_bank(
+# # client.save_stations_to_client(
+# #     base_path=stations_folder)
+# events= client2.get_events(
+#                         # contributor="tx", 
+#                         eventid='tx2023skwh'
+# )
+# print(events[0])
+# events= client.get_events(
+#                         # contributor="tx", 
+#                         eventid='tx2023skwh'
+# )
+# print(events[0])
+# exit()
+client.save_events_to_bank(
     base_path=events_folder,
     starttime=starttime,
     endtime=endtime,
@@ -36,7 +48,7 @@ bank.save_events_to_bank(
     calculate_d_az=True,
     stations_bank_path=stations_folder,
     workers = 16,
-    debug=True
+    
     # contributor="ak"
     # minlatitude=region[2], maxlatitude=region[3],
     # minlongitude=region[0], maxlongitude=region[1],
