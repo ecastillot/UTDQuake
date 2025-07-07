@@ -8,7 +8,9 @@ import pandas as pd
 import obsplus
 from obspy import UTCDateTime
 from utdquake.bank.fdsn import Client
+from utdquake.bank import setup_logger
 
+logger = setup_logger(debug=False)
 
 provider = "USGS"
 # provider = "http://sismo.sgc.gov.co:8080/"

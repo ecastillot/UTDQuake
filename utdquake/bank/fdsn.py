@@ -19,8 +19,10 @@ import pandas as pd
 from tqdm import tqdm
 import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 
+import logging
 from . import utils as fut
 
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore", category=UserWarning, module="obspy.io.quakeml.core")
 
@@ -351,21 +353,21 @@ class Client(FDSNClient):
                         # Save StationXML
                         xml_path = os.path.join(base_path, f"{net_code}.xml")
                         single_inv.write(xml_path, format="STATIONXML")
-                        print(f"Saved XML for network {net_code} at {xml_path}")
+                        logger.info(f"Saved XML for network {net_code} at {xml_path}")
 
                         # Save to DB
                         df = single_inv.to_df()
                         df.to_sql("/stations/index", conn, if_exists="append", index=False)
-                        print(f"Saved DB entry for network {net_code}")
+                        logger.info(f"Saved DB entry for network {net_code}")
 
                         del df, single_inv
                         gc.collect()
 
                     except Exception as e:
-                        print(f"Failed to process network {net.code}: {e}")
+                        logger.exception(f"Failed to process network {net.code}: {e}")
                         traceback.print_exc()
         except Exception as e:
-            print(f"Could not connect to SQLite DB: {e}")
+            logger.exception(f"Could not connect to SQLite DB: {e}")
             traceback.print_exc()
 
     def save_stations_to_bank(self, base_path, 
@@ -428,8 +430,7 @@ class Client(FDSNClient):
                     try:
                         df.to_sql("/stations/index", conn, if_exists="append", index=False)
                     except Exception as e:
-                        print(f"DB write error: {e}")
-                        traceback.print_exc()
+                        logger.exception(f"DB write error: {e}")
                     write_queue.task_done()
 
         writer_thread = threading.Thread(target=db_writer)
@@ -464,13 +465,13 @@ class Client(FDSNClient):
                     time.sleep(2)  # wait before retry
                     msg = f"RemoteDisconnected on {network_code}, attempt {attempt+1}."
                 except Exception as e:
+                    logger.exception(f"Error processing network {network_code}: {e}")
                     msg = f"Error processing network {network_code}: {e}"
-                    traceback.print_exc()
                     break  # unexpected error, stop retrying
 
             with lock:
                 completed += 1
-                print(f"Progress: {completed}/{total_networks}, {msg}")
+                logger.info(f"Progress: {completed}/{total_networks}, {msg}")
             del df
             del net_inv
             gc.collect()
@@ -565,10 +566,13 @@ class Client(FDSNClient):
         """
 
         # Check for available picks
-        if debug:
-            print(f"Checking picks availability from {starttime} to {endtime}...")
+        logger.debug(f"Checking picks availability from {starttime} to {endtime}...")
+        logger.info(f"Test")
+        ## I need to change all the debug prints to logger.debug
+        exit()
         picks_avail = self._picks_availability( starttime=starttime, endtime=endtime,
                                                 eventid_tests=eventid_tests)
+
 
         if not picks_avail["picks"]:
             raise Exception("No available picks service in the Client.")
@@ -620,11 +624,11 @@ class Client(FDSNClient):
         )
 
 
-        print(f"Saving events to {base_path} with structure: {path_structure}")
+        logger.info(f"Saving events to {base_path} with structure: {path_structure}")
 
         if stations is not None and picks_avail["name"] == "eventid":
             if debug:
-                print(f"Initiating dedicated thread for CSV writing at {csv_path}")
+                logger.info(f"Initiating dedicated thread for CSV writing at {csv_path}")
 
             # if csv_path is not None and picks_avail["name"] == "eventid":
             csv_queue = queue.Queue()
@@ -640,7 +644,7 @@ class Client(FDSNClient):
                         with csv_lock:
                             df.to_csv(csv_path, mode="a", index=False, header=not os.path.exists(csv_path))
                     except Exception as e:
-                        print(f"[CSV Write Error] {e}")
+                        logger.exception(f"CSV Write Error: {e}")
                     csv_queue.task_done()
             # Start the writer thread
             writer_thread = threading.Thread(target=csv_writer)
@@ -650,7 +654,7 @@ class Client(FDSNClient):
         iteration = 0
         id_tests = eventid_tests
 
-        print(f"Starting event download from {starttime} to {endtime} ")
+        logger.info(f"Starting event download from {starttime} to {endtime}")
         for catalog in fut.catalog_generator(self, starttime=starttime, endtime=endtime,
                                  chunk_seconds=chunk_seconds, debug=debug, 
                                  patience=patience, **ev_kwargs):
@@ -671,9 +675,9 @@ class Client(FDSNClient):
             total_events += n_events
             iteration += 1
 
-            print(f"\t... Saving Iter {iteration:<3} ({n_events:>4} events)")
+            logger.info(f"Saving Iter {iteration:<3} ({n_events:>4} events)")
             if stations is not None:
-                print(f"\t... Using stations from {stations_bank_path} to recalculate distances and azimuths")
+                logger.info(f"Using stations from {stations_bank_path} to recalculate distances and azimuths")
 
             tic = time.time()
 
@@ -691,7 +695,7 @@ class Client(FDSNClient):
                         )
 
                         if debug:
-                            print(f"Check bad station metadata entries in {csv_path}")
+                            logger.info(f"Check bad station metadata entries in {csv_path}")
 
                 ebank.put_events(catalog)
 
@@ -726,7 +730,7 @@ class Client(FDSNClient):
 
             toc = time.time()
 
-            print(
+            logger.info(
                 f"Iter {iteration:<3} ({n_events:>4} events in {toc - tic:.2f} s) | "
                 f"Total: {total_events:>4}/{max_n_events}"
             )
