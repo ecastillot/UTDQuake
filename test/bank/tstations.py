@@ -15,7 +15,7 @@ region = [-104.84329,-103.79942,31.39610,31.91505]
 # provider = "http://eida.ethz.ch"
 provider = "texnet"
 # provider = "USGS"
-bank_folder = "/groups/igonin/utdquake/bank"
+bank_folder = "/groups/igonin/utdquake/bank2"
 stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(provider)
 

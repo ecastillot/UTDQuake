@@ -16,11 +16,13 @@ import pandas as pd
 # print(df)
 
 
-path = "/groups/igonin/utdquake/bank/stations/.stations.db"
+path = "/groups/igonin/utdquake/bank2/stations/.stations.db"
 conn = sqlite3.connect(path)
 query = "SELECT name FROM sqlite_master WHERE type='table';"
 tables = pd.read_sql_query(query, conn)
 print(tables)
 
 df = pd.read_sql_query('SELECT * FROM "/stations/index"', conn)
+print(df)
+df = df.drop_duplicates(subset=['network', 'station', 'location', 'channel'])
 print(df)

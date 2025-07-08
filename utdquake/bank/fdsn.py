@@ -789,11 +789,14 @@ class Client(FDSNClient):
 
             # Trim if over the event limit
             if max_n_events is not None:
+                logger.debug(f"Checking if total events {total_events} exceed max_n_events {max_n_events}")
                 remaining = max_n_events - total_events
                 if remaining <= 0:
+                    logger.info(f"Reached max_n_events limit of {max_n_events}. Stopping download.")
                     break
                 elif remaining < len(catalog):
                     catalog.events = catalog.events[:remaining]
+                    logger.debug(f"Trimming catalog to {len(catalog)} events (remaining: {remaining})")
 
             n_events = len(catalog)
             total_events += n_events
@@ -840,6 +843,10 @@ class Client(FDSNClient):
 
                 # for ev_id in ev_ids:
                 #     save_single_event(ev_id)
+
+                if workers > len(ev_ids):
+                    workers = len(ev_ids)  # Use one thread per event if fewer events than workers
+
                 with cf.ThreadPoolExecutor(max_workers=workers) as executor:
                     executor.map(save_single_event, ev_ids)
 
