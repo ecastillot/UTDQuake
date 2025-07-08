@@ -509,7 +509,7 @@ class Client(FDSNClient):
         **sta_kwargs : dict
             Additional keyword arguments passed to the `get_stations` method.
         """
-        logger.info(f"Saving stations to bank at {base_path} with workers={workers} and sta_kwargs={sta_kwargs}")
+        logger.info(f"Saving stations to bank at {base_path} and sta_kwargs={sta_kwargs}")
 
         # Get the list of supported services from the client
         services = list(self.services.keys())
@@ -520,9 +520,6 @@ class Client(FDSNClient):
         # Ensure the base directory exists
         os.makedirs(base_path, exist_ok=True)
         
-        if workers is None:
-            cpu_cores = os.cpu_count() or 1  # fallback to 1 if cpu_count() returns None
-            workers = min(4, cpu_cores)  # max 4 workers or number of cores, whichever is smaller
 
         # Default to response level if not specified
         if "level" not in sta_kwargs:
@@ -535,6 +532,15 @@ class Client(FDSNClient):
         networks = sorted(set(net.code for net in net_inv))
         
         del net_inv, kwargs
+
+        if workers is None:
+            cpu_cores = os.cpu_count() or 1  # fallback to 1 if cpu_count() returns None
+            workers = min(workers, cpu_cores)  # max 4 workers or number of cores, whichever is smaller
+            if len(networks) <= workers:
+                workers = len(networks)  # Use one thread per network if fewer networks than workers
+            
+            logger.info(f"Using {workers} worker threads for saving stations.")
+
 
         # SQLite DB path
         db_path = os.path.join(base_path, ".stations.db")
@@ -637,8 +643,6 @@ class Client(FDSNClient):
             del net_inv
             gc.collect()
 
-        if len(networks) <= workers:
-            workers = len(networks)  # Use one thread per network if fewer networks than workers
         
         # Run threads
         with cf.ThreadPoolExecutor(max_workers=workers) as executor:
@@ -1033,7 +1037,7 @@ class Client(FDSNClient):
             ev_kwargs["includearrivals"] = False
             ev_kwargs["includeallorigins"] = False
             ev_kwargs["includeallmagnitudes"] = False
-        
+
         # # Print timing information if debug is enabled
         # print(f"Event kwargs: {ev_kwargs}")
         

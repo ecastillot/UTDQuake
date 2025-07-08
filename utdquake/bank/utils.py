@@ -41,15 +41,28 @@ OTHER_MAPPINGS = {
     }
 
 def initialize_stations_db(db_path):
-    """Create the SQLite table with a primary key to avoid duplicates."""
+    """
+    Initialize the stations database with the proper table and primary key.
+
+    Parameters
+    ----------
+    db_path : str
+        Path to the SQLite database file.
+
+    Notes
+    -----
+    This function creates the 'stations_index' table with a primary key on
+    'seed_id' to ensure inserts with the same seed_id will overwrite existing rows.
+    """
     with sqlite3.connect(db_path) as conn:
-        conn.execute("""
+        cursor = conn.cursor()
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS stations_index (
                 network TEXT,
                 station TEXT,
                 location TEXT,
                 channel TEXT,
-                seed_id TEXT,
+                seed_id TEXT PRIMARY KEY,
                 latitude REAL,
                 longitude REAL,
                 elevation REAL,
@@ -58,10 +71,10 @@ def initialize_stations_db(db_path):
                 dip REAL,
                 sample_rate REAL,
                 start_date TEXT,
-                end_date TEXT,
-                PRIMARY KEY (network, station, location, channel, start_date, end_date)
+                end_date TEXT
             )
         """)
+        conn.commit()
 
 def load_stations_metadata_from_bank(db_path):
     """
