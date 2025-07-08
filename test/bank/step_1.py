@@ -18,8 +18,8 @@ df = pd.read_csv(output)
 
 # plot_agencies_stations(df,png_output,debug=True)
 
-
-# exit()
+print(URL_MAPPINGS)
+exit()
 
 ## Parameters
 starttime = UTCDateTime("2024-01-01T00:00:00")

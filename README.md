@@ -18,6 +18,8 @@ University of Texas at Dallas Earthquake Dataset
 | UTDPlot| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_plots.ipynb) |
 
 # Versions
+This should go to PHASED (Phase Association Dataset for Earthquakes)
+
 
 ## Development
 - 0.0.23-Unstable version Use of Obspy-plus (Unstable version)
