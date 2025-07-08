@@ -18,7 +18,7 @@ provider = "USGS"
 # provider = "BGR"
 # provider = "http://sismo.sgc.gov.co:8080"
 # provider = "http://eida"
-bank_folder = "/groups/igonin/utdquake/bank2"
+bank_folder = "/groups/igonin/utdquake/bank"
 events_folder = os.path.join(bank_folder, "events")
 stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(provider)
@@ -45,8 +45,8 @@ client.save_events_to_bank(
     endtime=endtime,
     chunk_seconds=7200,
     max_n_events=2,
-    # calculate_d_az=True,
-    # stations_bank_path=stations_folder,
+    calculate_d_az=True,
+    stations_bank_path=stations_folder,
     workers = 16,
     
     contributor="tx"

@@ -547,19 +547,53 @@ class Client(FDSNClient):
         lock = threading.Lock()  # to safely update the counter
 
         def db_writer():
-            """Dedicated DB writer thread to avoid SQLite locking issues."""
+            """Dedicated DB writer thread with INSERT OR REPLACE to avoid duplicates."""
             with sqlite3.connect(db_path) as conn:
+                cursor = conn.cursor()
                 while True:
-                    item = write_queue.get()
-                    if item is None:
+                    df = write_queue.get()
+                    if df is None:
                         break
-                    df = item
                     try:
-                        df.to_sql("/stations/index", conn, if_exists="append", index=False)
+                        columns = list(df.columns)
+                        colnames = ", ".join(columns)
+                        placeholders = ", ".join(["?"] * len(columns))
+                        insert_stmt = f"""
+                            INSERT OR REPLACE INTO stations_index ({colnames})
+                            VALUES ({placeholders})
+                        """
+
+                        for _, row in df.iterrows():
+
+                            values = tuple()
+                            for col in columns:
+                                if isinstance(row[col], pd.Timestamp) and not pd.isna(row[col]):
+                                    row[col] = row[col].isoformat(sep=' ')
+                                elif pd.isna(row[col]):
+                                    row[col] = None  # Convert NaT to None for SQLite compatibility 
+                                elif isinstance(row[col], str):
+                                    if col == "location":
+                                        row[col] = row[col].zfill(2).strip()  # Ensure location codes are
+                                    else:
+                                        row[col] = row[col].strip()
+                                elif isinstance(row[col], (int, float)):
+                                    row[col] = float(row[col])  # Ensure numeric types are float
+                                else:
+                                    row[col] = str(row[col])  # Convert other types to string
+                                values += (row[col],)
+
+                            try:
+                                cursor.execute(insert_stmt, values)
+                            except Exception as e:
+                                logger.warning(f"Failed to insert row: {row.to_dict()} - {e}")
+                        conn.commit()
+
                     except Exception as e:
                         logger.exception(f"DB write error: {e}")
-                    write_queue.task_done()
+                    finally:
+                        write_queue.task_done()
 
+        fut.initialize_stations_db(db_path)
         writer_thread = threading.Thread(target=db_writer)
         writer_thread.start()
 

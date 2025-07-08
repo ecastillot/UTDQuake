@@ -40,6 +40,29 @@ OTHER_MAPPINGS = {
         "ISC": "http://isc-mirror.iris.washington.edu"
     }
 
+def initialize_stations_db(db_path):
+    """Create the SQLite table with a primary key to avoid duplicates."""
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS stations_index (
+                network TEXT,
+                station TEXT,
+                location TEXT,
+                channel TEXT,
+                seed_id TEXT,
+                latitude REAL,
+                longitude REAL,
+                elevation REAL,
+                depth REAL,
+                azimuth REAL,
+                dip REAL,
+                sample_rate REAL,
+                start_date TEXT,
+                end_date TEXT,
+                PRIMARY KEY (network, station, location, channel, start_date, end_date)
+            )
+        """)
+
 def load_stations_metadata_from_bank(db_path):
     """
     Loads the station metadata database stored in a SQLite file.
@@ -62,6 +85,7 @@ def load_stations_metadata_from_bank(db_path):
         with sqlite3.connect(db_path) as conn:
             logger.info(f"Loading stations from database: {db_path}")
             df = pd.read_sql("SELECT * FROM '/stations/index'", conn)
+            df["location"] = df["location"].astype(str).str.zfill(2)
             logger.info(f"Loaded {len(df)} stations from database.")
     except Exception as e:
         logger.error(f"Failed to load stations from database: {e}")
@@ -69,98 +93,144 @@ def load_stations_metadata_from_bank(db_path):
 
     return df
 
-def append_stations_to_catalog(catalog: Catalog, df_stations) -> Catalog:
+def process_origin_arrivals(origin, df_stations, bad_inv_data):
     """
-    Append inventory station metadata (lat/lon) to event arrivals in the catalog.
-    
-    Parameters:
-    -----------
+    Process all arrivals in a single origin to:
+      - Compute distance (in degrees) and azimuth from origin to station
+      - Populate Origin.quality metadata in a single pass
+
+    Parameters
+    ----------
+    origin : obspy.core.event.Origin
+        The origin object containing associated arrivals to process.
+    df_stations : pandas.DataFrame
+        DataFrame with station metadata containing columns:
+        ['network', 'station', 'latitude', 'longitude'].
+    bad_inv_data : list of dict
+        A list to store metadata about arrivals with missing or invalid station info.
+
+    Returns
+    -------
+    None
+        Modifies the `origin` in-place and appends errors to `bad_inv_data`.
+    """
+    olat, olon = origin.latitude, origin.longitude
+    arrivals = origin.arrivals
+
+    distances = []
+    esazs = []
+    stations_used = set()
+    used_phase_count = 0
+
+    logger.debug(f"Processing origin {origin.resource_id.id} with {len(arrivals)} arrivals")
+
+    for arrival in arrivals:
+        pick = arrival.pick_id.get_referred_object()
+        net = pick.waveform_id.network_code
+        sta = pick.waveform_id.station_code
+
+        logger.debug(f"Processing arrival for {net}.{sta}")
+
+        df_sta = df_stations[
+            (df_stations.network == net) & (df_stations.station == sta)
+        ]
+
+        if df_sta.empty:
+            logger.warning(f"Missing station metadata for {net}.{sta} in origin {origin.resource_id.id}")
+            bad_inv_data.append({
+                "network": net,
+                "station": sta,
+                "event_id": origin.resource_id.id,
+                "error": "No station data found"
+            })
+            continue
+
+        try:
+            slat, slon = df_sta[["latitude", "longitude"]].values[0]
+            dist_m, _, esaz = gps2dist_azimuth(slat, slon, olat, olon)
+            dist_deg = kilometer2degrees(dist_m * 1e-3)
+
+            arrival.distance = dist_deg
+            arrival.azimuth = esaz
+
+            distances.append(dist_deg)
+            esazs.append(esaz)
+            stations_used.add((net, sta))
+
+            if arrival.time_weight is None or arrival.time_weight > 0:
+                used_phase_count += 1
+
+        except Exception as e:
+            logger.error(f"Error processing {net}.{sta} in origin {origin.resource_id.id}: {e}")
+            bad_inv_data.append({
+                "network": net,
+                "station": sta,
+                "event_id": origin.resource_id.id,
+                "error": "Invalid lat/lon or processing failure"
+            })
+
+    # Update Origin.quality metadata
+    quality = origin.quality
+    quality.associated_phase_count = len(arrivals)
+    quality.used_phase_count = used_phase_count
+    quality.used_station_count = len(stations_used)
+
+    if distances:
+        quality.minimum_distance = min(distances)
+        quality.maximum_distance = max(distances)
+        quality.median_distance = float(np.median(distances))
+        logger.debug(f"Updated distance metrics for origin {origin.resource_id.id}")
+
+    if len(esazs) >= 2:
+        esazs = sorted(set(esazs))
+        gaps = [esazs[i+1] - esazs[i] for i in range(len(esazs)-1)]
+        gaps.append(360 - esazs[-1] + esazs[0])
+
+        quality.azimuthal_gap = max(gaps)
+        if len(gaps) >= 2:
+            quality.secondary_azimuthal_gap = sorted(gaps)[-2]
+
+        logger.debug(f"Updated azimuthal gaps for origin {origin.resource_id.id}")
+
+def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, pd.DataFrame]:
+    """
+    Append distance and azimuth to each arrival in a catalog,
+    and update Origin.quality metadata for each event.
+
+    Parameters
+    ----------
     catalog : obspy.core.event.Catalog
         Catalog object containing events and arrivals.
     df_stations : pandas.DataFrame
         DataFrame containing station metadata with columns:
         ['network', 'station', 'latitude', 'longitude'].
 
-    Returns:
-    --------
+    Returns
+    -------
     catalog : obspy.core.event.Catalog
-        Modified catalog with arrival distances and azimuths filled (only for preferred origin).
+        Modified catalog with distance, azimuth, and quality metrics added.
     bad_inv_data_df : pandas.DataFrame
-        DataFrame containing information about stations with missing or invalid metadata.
+        DataFrame listing arrivals with missing or invalid station metadata.
     """
-
-    origin_gaps = []
     bad_inv_data = []
 
-    # Iterate through each event in the catalog
-    for event in catalog.events:
-        # Iterate through each origin associated with the event
-        origin = event.preferred_origin() or event.origins[0] if event.origins else None
+    logger.info(f"Starting to process {len(catalog.events)} events in catalog.")
 
-        logger.info(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id if origin else 'None'}")
+    for event in catalog:
+        origin = event.preferred_origin() or (event.origins[0] if event.origins else None)
 
-        olon = origin.longitude
-        olat = origin.latitude
+        if origin is None:
+            logger.warning(f"Event {event.resource_id.id} has no origin. Skipping.")
+            continue
 
-        # Track unique back-azimuths
-        bazs = set()
+        logger.info(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id}")
+        process_origin_arrivals(origin, df_stations, bad_inv_data)
 
-        # Iterate through all arrivals (picks) for this origin
-        for arrival in origin.arrivals:
-            pick = arrival.pick_id.get_referred_object()
-
-            # Retrieve station metadata
-            network = pick.waveform_id.network_code
-            station = pick.waveform_id.station_code
-
-            _df_sta = df_stations[
-                (df_stations.network == network) &
-                (df_stations.station == station)
-            ][['station', 'network', 'latitude', 'longitude']]
-
-            logger.debug(f"Processing arrival for network: {network}, station: {station}")
-
-            # Handle case where station metadata is missing
-            if _df_sta.empty:
-                bad_inv_data.append({
-                    "network": network,
-                    "station": station,
-                    "event_id": event.resource_id.id,
-                    "error": "No station data found"
-                })
-                logger.warning(f"No station data found for {network}.{station} in event {event.resource_id.id}")
-                continue
-
-            # Safely extract station latitude and longitude
-            try:
-                slon = _df_sta.longitude.values[0]
-                slat = _df_sta.latitude.values[0]
-            except Exception:
-                bad_inv_data.append({
-                    "network": network,
-                    "station": station,
-                    "event_id": event.resource_id.id,
-                    "error": "Invalid station lat/lon data"
-                })
-
-                logger.error(f"Invalid station lat/lon data for {network}.{station} in event {event.resource_id.id}")
-                continue
-
-            # Compute distance and azimuths between origin and station
-            dist_m, seaz, esaz = gps2dist_azimuth(slat, slon, olat, olon)
-
-            # Convert distance to degrees and assign to arrival
-            arrival.distance = kilometer2degrees(dist_m * 1e-3)
-
-            # Assign event-to-station azimuth (back-azimuth)
-            arrival.azimuth = esaz
-
-    # Collect missing/invalid station data into a DataFrame
     bad_inv_data_df = pd.DataFrame(bad_inv_data)
 
-    # # Warn user if any station data was missing
-    # if not bad_inv_data_df.empty:
-    #     logger.warning(f"Some stations had no data. Check bad_inv_data for your catalog: \n{catalog}")
+    logger.info("Finished processing catalog.")
+    if not bad_inv_data_df.empty:
+        logger.warning(f"{len(bad_inv_data_df)} stations had missing/invalid metadata.")
 
     return catalog, bad_inv_data_df
 
