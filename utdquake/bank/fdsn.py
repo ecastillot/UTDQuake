@@ -172,7 +172,7 @@ class Client(FDSNClient):
         self.event_id_query_fmt = None
         super().__init__(*args,**kwargs)
         
-    def _picks_availability(self, starttime, endtime, eventid_tests=None):
+    def _picks_availability(self, starttime, endtime, eventid_tests=None, **ev_kwargs):
         """
         Check availability of picks and arrivals using multiple query modes.
 
@@ -196,15 +196,14 @@ class Client(FDSNClient):
             If neither mode succeeds, returns a default structure with `picks=False`.
         """
         logger.info(f"Checking picks availability for {self.base_url} from {starttime} to {endtime}")
-        natural_mode = self._picks_in_natural_mode(starttime, endtime)
+        natural_mode = self._picks_in_natural_mode(starttime, endtime,**ev_kwargs)
 
         if natural_mode["picks"]:
             logger.info(f"Found picks in natural mode (using includearrivals=True) for {self.base_url}")
             return natural_mode
         else:
             logger.info(f"No picks found in natural mode (using includearrivals=True) for {self.base_url}, trying event ID mode")
-            eventid_mode = self._picks_in_eventid_mode(starttime, endtime,tests=eventid_tests)
-            
+            eventid_mode = self._picks_in_eventid_mode(starttime, endtime,tests=eventid_tests,**ev_kwargs)
             if eventid_mode["picks"]:
                 logger.info(f"Found picks in event ID mode for {self.base_url} using {eventid_mode['mode']} strategy. Check DEFAULT strategies in fdsn.utils.EventIDTester")
                 return eventid_mode
@@ -218,7 +217,7 @@ class Client(FDSNClient):
                     "msg": None
                 }
             
-    def _picks_in_natural_mode(self,starttime, endtime):
+    def _picks_in_natural_mode(self,starttime, endtime,**ev_kwargs):
         """
         Attempt to retrieve picks and arrivals using a standard 'natural' query mode.
 
@@ -252,10 +251,14 @@ class Client(FDSNClient):
         }
 
         try:
+            if "includearrivals" in ev_kwargs:
+                # Remove includearrivals from kwargs to avoid conflicts
+                ev_kwargs.pop("includearrivals")
+
             # Query event catalog including arrivals
             cat = self.get_events(starttime=starttime,
                                     endtime=endtime,
-                                    includearrivals=True)
+                                    includearrivals=True,**ev_kwargs)
             # Check for a preferred origin to determine if arrivals are present
             pref_origin = cat[0].preferred_origin()
             if pref_origin:
@@ -270,7 +273,7 @@ class Client(FDSNClient):
 
         return info
     
-    def _picks_in_eventid_mode(self,starttime, endtime, tests=None):
+    def _picks_in_eventid_mode(self,starttime, endtime, tests=None,**ev_kwargs):
         """
         Attempt to retrieve picks and arrivals by querying using event IDs.
 
@@ -306,13 +309,13 @@ class Client(FDSNClient):
             "arrivals": False,
             "msg": None
         }
-
         try:
             # Get catalog of events in the given time range
             catalog = self.get_events(starttime=starttime,
-                                    endtime=endtime)
-        except Exception:
+                                    endtime=endtime,**ev_kwargs)
+        except Exception as e:
             info["msg"] = "Client does not support get_events"
+            logger.error(f"Failed to retrieve events: {e}")
             return info
 
         # Select the first event as a reference to generate event IDs
@@ -352,7 +355,7 @@ class Client(FDSNClient):
     
     def _get_reference_event_time(self, starttime, endtime, 
                                     chunk_seconds=3600,
-                                    patience: int = 10):
+                                    patience: int = 10,**ev_kwargs):
         """
         Attempt to find the origin time of the first event within a time range.
 
@@ -380,7 +383,7 @@ class Client(FDSNClient):
         """
         # Create a generator to fetch event catalogs in chunks
         generator = fut.catalog_generator(self, starttime=starttime, endtime=endtime,
-                                    chunk_seconds=chunk_seconds,patience=patience)
+                                    chunk_seconds=chunk_seconds,patience=patience,**ev_kwargs)
         origin_time = None
 
         # Iterate through each catalog chunk
@@ -397,7 +400,7 @@ class Client(FDSNClient):
     def picks_service(self, starttime, endtime, 
                         chunk_seconds=3600,
                         patience: int = 10,
-                        eventid_tests=None):
+                        eventid_tests=None,**ev_kwargs):
         """
         Determine pick availability for a client that supports the 'event' service.
 
@@ -438,7 +441,7 @@ class Client(FDSNClient):
             # Try to find a reference event time in the specified range
             ref_event_time = self._get_reference_event_time(starttime, endtime,
                                                             chunk_seconds=chunk_seconds,
-                                                            patience=patience)
+                                                            patience=patience,**ev_kwargs)
             # Raise an error if no events were found
             if ref_event_time is None:
                 raise Exception("No events found in the specified time range.")
@@ -446,7 +449,7 @@ class Client(FDSNClient):
             # Check pick availability within ±60 seconds of the reference event
             picks_avail = self._picks_availability( starttime=ref_event_time - 60,
                                                     endtime=ref_event_time + 60,
-                                                    eventid_tests=eventid_tests)
+                                                    eventid_tests=eventid_tests,**ev_kwargs)
             return picks_avail
         else:
             raise Exception("The client does not support the 'event' service.")
@@ -730,10 +733,23 @@ class Client(FDSNClient):
 
         # Check for available picks
         logger.debug(f"Checking picks availability from {starttime} to {endtime}...")
-        
-        picks_avail = self._picks_availability( starttime=starttime, endtime=endtime,
-                                                eventid_tests=eventid_tests)
 
+        ev_kwargs = {"latitude": latitude, "longitude": longitude,
+                     "minradius": minradius, "maxradius": maxradius,
+                     "minlatitude": minlatitude, "maxlatitude": maxlatitude,
+                     "minlongitude": minlongitude, "maxlongitude": maxlongitude,
+                     "mindepth": mindepth, "maxdepth": maxdepth,
+                     "minmagnitude": minmagnitude, "maxmagnitude": maxmagnitude,
+                     "magnitudetype": magnitudetype, "eventtype": eventtype,
+                     "catalog": catalog,
+                     "contributor": contributor, "updatedafter": updatedafter}
+        
+        picks_avail = self.picks_service(
+                                        starttime=starttime, endtime=endtime,
+                                        chunk_seconds=chunk_seconds, patience=patience,
+                                        eventid_tests=eventid_tests, **ev_kwargs)
+        # picks_avail = self._picks_availability( starttime=starttime, endtime=starttime + chunk_seconds,
+        #                                         eventid_tests=eventid_tests,**ev_kwargs)
 
         if not picks_avail["picks"]:
             raise Exception(f"No available picks service in the Client. Picks = {picks_avail}")
@@ -743,11 +759,8 @@ class Client(FDSNClient):
         elif calculate_d_az and not os.path.exists(stations_bank_path):
             raise Exception(f"Stations bank path {stations_bank_path} does not exist.")
         elif calculate_d_az is None and stations_bank_path is not None:
-            warnings.warn(
-                "calculate_d_az is None, but stations_bank_path is provided. "
-                "This will not be used. Set calculate_d_az=True to use it.",
-                UserWarning
-            )
+            logger.debug("calculate_d_az is None, but stations_bank_path is provided. "
+                         "This will not be used. Set calculate_d_az=True to use it.")
         elif calculate_d_az and os.path.exists(stations_bank_path):
             db_path = os.path.join(stations_bank_path, ".stations.db")
             stations = fut.load_stations_metadata_from_bank(db_path=db_path)

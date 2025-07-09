@@ -97,7 +97,7 @@ def load_stations_metadata_from_bank(db_path):
     try:
         with sqlite3.connect(db_path) as conn:
             logger.info(f"Loading stations from database: {db_path}")
-            df = pd.read_sql("SELECT * FROM '/stations/index'", conn)
+            df = pd.read_sql("SELECT * FROM 'stations_index'", conn)
             df["location"] = df["location"].astype(str).str.zfill(2)
             logger.info(f"Loaded {len(df)} stations from database.")
     except Exception as e:
