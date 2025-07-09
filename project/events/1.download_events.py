@@ -23,7 +23,6 @@ bank_folder = "/groups/igonin/PHASED"
 events_folder = os.path.join(bank_folder, "events")
 stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(base_url=provider, 
-            logging_level=logger.INFO
             )
 usgs_contributors = [ 'ci', 'se', 'tx',
                     'ismp', 'ak', 'nn', 'ld', 'pr', 'us', 
@@ -43,35 +42,35 @@ endtime = UTCDateTime("2025-01-01T00:00:00")
 #     # contributor="tx"
 #     )
 # print(catalog)
-client.save_events_to_bank(
+    # client.save_events_to_bank(
+    #             base_path=events_folder,
+    #             starttime=starttime,
+    #             endtime=endtime,
+    #             path_structure='{year}/{month}/{day}',
+    #             name_structure='{event_id_end}',
+    #             chunk_seconds=86400,
+    #             max_n_events=20,
+    #             calculate_d_az=True,
+    #             stations_bank_path=stations_folder,
+    #             workers = 16,
+    #             contributor="tx"
+    #         )
+
+for contributor in usgs_contributors:
+    logger.info(f"Downloading events for contributor: {contributor}")
+    try:
+        client.save_events_to_bank(
             base_path=events_folder,
             starttime=starttime,
             endtime=endtime,
-            path_structure='{year}/{month}/{day}',
+            path_structure='{network}/{year}/{month}/{day}',
             name_structure='{event_id_end}',
             chunk_seconds=86400,
-            max_n_events=20,
+            max_n_events=100,
             calculate_d_az=True,
             stations_bank_path=stations_folder,
             workers = 16,
-            contributor="tx"
+            contributor=contributor
         )
-
-# for contributor in usgs_contributors:
-#     logger.info(f"Downloading events for contributor: {contributor}")
-#     try:
-#         client.save_events_to_bank(
-#             base_path=events_folder,
-#             starttime=starttime,
-#             endtime=endtime,
-#             path_structure='{network}/{year}/{month}/{day}',
-#             name_structure='{event_id_end}',
-#             chunk_seconds=86400,
-#             max_n_events=20,
-#             calculate_d_az=True,
-#             stations_bank_path=stations_folder,
-#             workers = 16,
-#             contributor=contributor
-#         )
-#     except Exception as e:
-#         logger.error(f"Error downloading events for {contributor}")
+    except Exception as e:
+        logger.error(f"Error downloading events for {contributor}")
