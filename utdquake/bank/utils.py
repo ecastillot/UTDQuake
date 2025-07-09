@@ -12,7 +12,7 @@ import warnings
 import sqlite3
 import pandas as pd
 from obspy.clients.fdsn import Client as FDSNClient 
-
+import numpy as np
 from obspy import UTCDateTime, Catalog
 from typing import  Optional
 from obspy.clients.fdsn.header import URL_MAPPINGS
@@ -143,7 +143,6 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
         sta = pick.waveform_id.station_code
 
         logger.debug(f"Processing arrival for {net}.{sta}")
-
         df_sta = df_stations[
             (df_stations.network == net) & (df_stations.station == sta)
         ]
@@ -157,6 +156,7 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
                 "error": "No station data found"
             })
             continue
+
 
         try:
             slat, slon = df_sta[["latitude", "longitude"]].values[0]
@@ -172,6 +172,7 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
 
             if arrival.time_weight is None or arrival.time_weight > 0:
                 used_phase_count += 1
+        
 
         except Exception as e:
             logger.error(f"Error processing {net}.{sta} in origin {origin.resource_id.id}: {e}")
@@ -204,6 +205,7 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
             quality.secondary_azimuthal_gap = sorted(gaps)[-2]
 
         logger.debug(f"Updated azimuthal gaps for origin {origin.resource_id.id}")
+    
 
 def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, pd.DataFrame]:
     """

@@ -161,15 +161,18 @@ class Client(FDSNClient):
             self.configure_logging = True
         else:
             self.configure_logging = kwargs["configure_logging"]
+            kwargs.pop("configure_logging", None)  # Remove to avoid passing to FDSNClient
         if "logging_level" not in kwargs:
             self.logging_level = logging.INFO
         else:
             self.logging_level = kwargs["logging_level"]
+            kwargs.pop("logging_level", None)  # Remove to avoid passing to FDSNClient
 
         if self.configure_logging:
             setup_logger(self.logging_level)
 
         self.event_id_query_fmt = None
+
         super().__init__(*args,**kwargs)
         
     def _picks_availability(self, starttime, endtime, eventid_tests=None, **ev_kwargs):
@@ -885,21 +888,25 @@ class Client(FDSNClient):
                         
                         # Append stations metadata to the single event catalog
                         single_catalog, single_bad_inv_data = fut.append_stations_to_catalog(
-                                                                catalog=single_catalog, df_stations=stations
+                                                                catalog=single_catalog, 
+                                                                df_stations=stations
                                                             )
+                        
                         if not single_bad_inv_data.empty:
                             csv_queue.put(single_bad_inv_data)
 
                     ebank.put_events(single_catalog)
 
-                # for ev_id in ev_ids:
-                #     save_single_event(ev_id)
 
                 if workers > len(ev_ids):
                     workers = len(ev_ids)  # Use one thread per event if fewer events than workers
-
-                with cf.ThreadPoolExecutor(max_workers=workers) as executor:
-                    executor.map(save_single_event, ev_ids)
+                
+                if workers == 1:
+                    for ev_id in ev_ids:
+                        save_single_event(ev_id)
+                else:
+                    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+                        executor.map(save_single_event, ev_ids)
 
                 if stations is not None:
                     logger.debug(f"Check bad station metadata entries in {csv_path}")
