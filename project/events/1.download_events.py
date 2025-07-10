@@ -24,12 +24,15 @@ events_folder = os.path.join(bank_folder, "events")
 stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(base_url=provider, 
             )
-usgs_contributors = [ 'ci', 'se', 'tx',
+usgs_contributors = [ 
+                    'ci', 'se', 'tx',
                     'ismp', 'ak', 'nn', 'ld', 'pr', 'us', 
                     'uw', 'cgs', 'ew', 
                     'ok', 'admin', 'av', 'np', 'at',
                     'nm', 'mb', 
-                    'uu', 'hv', 'pt', 'nc']
+                    'uu', 'hv', 
+                    'pt', 'nc'
+                    ]
 
 
 # client2 =  FDSNClient(provider)
@@ -42,28 +45,29 @@ endtime = UTCDateTime("2025-01-01T00:00:00")
 #     # contributor="tx"
 #     )
 # print(catalog)
-    # client.save_events_to_bank(
-    #             base_path=events_folder,
-    #             starttime=starttime,
-    #             endtime=endtime,
-    #             path_structure='{year}/{month}/{day}',
-    #             name_structure='{event_id_end}',
-    #             chunk_seconds=86400,
-    #             max_n_events=20,
-    #             calculate_d_az=True,
-    #             stations_bank_path=stations_folder,
-    #             workers = 16,
-    #             contributor="tx"
-    #         )
-
+# client.save_events_to_bank(
+#                 base_path=events_folder,
+#                 starttime=starttime,
+#                 endtime=endtime,
+#                 path_structure='{network}/{year}/{month}/{day}',
+#                 name_structure='{event_id_end}',
+#                 chunk_seconds=86400,
+#                 max_n_events=20,
+#                 calculate_d_az=True,
+#                 stations_bank_path=stations_folder,
+#                 workers = 1,
+#                 contributor="tx"
+#             )
+# exit()
 for contributor in usgs_contributors:
     logger.info(f"Downloading events for contributor: {contributor}")
+    contributor_events_folder = os.path.join(events_folder, contributor)
     try:
         client.save_events_to_bank(
-            base_path=events_folder,
+            base_path=contributor_events_folder,
             starttime=starttime,
             endtime=endtime,
-            path_structure='{network}/{year}/{month}/{day}',
+            path_structure='{year}/{month}/{day}',
             name_structure='{event_id_end}',
             chunk_seconds=86400,
             max_n_events=100,
