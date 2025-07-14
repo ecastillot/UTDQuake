@@ -7,6 +7,8 @@
 #  */
 import os
 import datetime
+import random
+import string
 import logging
 import obsplus
 import warnings
@@ -538,6 +540,18 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data, event_id):
 
         logger.debug(f"Updated azimuthal gaps for origin {origin.resource_id.id}")
     
+def random_string(length=8):
+    """
+    Generate a random alphanumeric string.
+
+    Parameters:
+        length (int): Length of the string (default 8).
+
+    Returns:
+        str: Random string.
+    """
+    chars = string.ascii_letters + string.digits  # a-z, A-Z, 0-9
+    return ''.join(random.choices(chars, k=length))
 
 def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, pd.DataFrame]:
     """
@@ -561,7 +575,9 @@ def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, 
     """
     bad_inv_data = []
 
-    logger.info(f"Starting to process {len(catalog.events)} events in catalog.")
+
+    random_id = random_string(8)
+    logger.info(f"Starting to process {len(catalog.events)} events in catalog {random_id}. (This id is created just for logging purposes)")
 
     for event in catalog:
         origin = event.preferred_origin() or (event.origins[0] if event.origins else None)
@@ -575,7 +591,7 @@ def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, 
 
     bad_inv_data_df = pd.DataFrame(bad_inv_data)
 
-    logger.info("Finished processing catalog.")
+    logger.info(f"Finishing to process {len(catalog.events)} events in catalog {random_id}.")
     if not bad_inv_data_df.empty:
         logger.warning(f"{len(bad_inv_data_df)} stations had missing/invalid metadata.")
 

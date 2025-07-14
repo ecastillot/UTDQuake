@@ -843,6 +843,10 @@ class Client(FDSNClient):
             chunk_endtime = catalog_dict["endtime"].strftime("%Y-%m-%d %H:%M:%S.%f")
             chunk_creation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
+            logger.info(f"Chunk id: {iteration:<3} initiated | "
+                        f"Time range: {chunk_starttime} - {chunk_endtime} | "
+                        f"Chunk creation time: {chunk_creation_time}")
+
             # print(catalog)
             if len(catalog) == 0:
                 continue
@@ -858,9 +862,6 @@ class Client(FDSNClient):
                     catalog.events = catalog.events[:remaining]
                     logger.debug(f"Trimming catalog to {len(catalog)} events (remaining: {remaining})")
 
-            logger.info(f"Chunk id: {iteration:<3} - "
-                        f"Time range: {chunk_starttime} - {chunk_endtime} | "
-                        f"Chunk creation time: {chunk_creation_time}")
             logger.info(f"Chunk id: {iteration:<3} - Initial fast query without requering picks. "
                         f"Apparently {len(catalog):>4} events")
 
@@ -895,6 +896,7 @@ class Client(FDSNClient):
 
                 if workers > len(ev_ids):
                     workers = len(ev_ids)  # Use one thread per event if fewer events than workers
+                    logger.info(f"Using {workers} worker threads for saving events.")
                 
                 if workers == 1:
                     for ev_id in ev_ids:
@@ -979,7 +981,7 @@ class Client(FDSNClient):
             total_events += n_events
             
             logger.info(
-                f"Chunk id: {iteration:<3} | "
+                f"Chunk id: {iteration:<3} concluded | "
                 f"{starttime.isoformat()} - {endtime.isoformat()} | "
                 f"({n_events:>4} events in {toc - tic:.2f} s) | "
                 f"Total: {total_events:>4}/{max_n_events}"
