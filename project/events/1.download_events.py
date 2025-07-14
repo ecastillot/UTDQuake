@@ -18,20 +18,26 @@ provider = "USGS"
 # provider = "BGR"
 # provider = "http://sismo.sgc.gov.co:8080"
 # provider = "http://eida"
-bank_folder = "/groups/igonin/PHASED"
+bank_folder = "/groups/igonin/Bank"
 
 events_folder = os.path.join(bank_folder, "events")
 stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(base_url=provider, 
             )
 usgs_contributors = [ 
-                    'ci', 'se', 'tx',
-                    'ismp', 'ak', 'nn', 'ld', 'pr', 'us', 
-                    'uw', 'cgs', 'ew', 
-                    'ok', 'admin', 'av', 'np', 'at',
-                    'nm', 'mb', 
-                    'uu', 'hv', 
-                    'pt', 'nc'
+                    # 'ci', 
+                    # 'se',
+                     'tx',
+                    #  'ak', 'nn',  'pr', 'us', 
+                    # 'uw', 'cgs', 'ew', 
+                    # 'ok', 'av' , 'at',
+                    # 'nm', 'mb', 
+                    # 'uu', 
+                    # 'hv', 
+                    # 'pt',
+                    #  'nc',
+                    #  'ld' # bad
+                    #  'np' # bad
                     ]
 
 
@@ -69,12 +75,16 @@ for contributor in usgs_contributors:
             endtime=endtime,
             path_structure='{year}/{month}/{day}',
             name_structure='{event_id_end}',
+            patience=100,
             chunk_seconds=86400,
-            max_n_events=100,
+            max_n_events=10,
+            max_from_bank=True,
             calculate_d_az=True,
             stations_bank_path=stations_folder,
-            workers = 16,
+            stats=True,
+            workers = 30,
             contributor=contributor
         )
     except Exception as e:
-        logger.error(f"Error downloading events for {contributor}")
+        logger.error(f"Error downloading events for {contributor}: {e}")
+        continue

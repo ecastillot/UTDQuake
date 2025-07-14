@@ -6,6 +6,7 @@
 #  * @desc [description]
 #  */
 import os
+import datetime
 import logging
 import obsplus
 import warnings
@@ -39,6 +40,274 @@ OTHER_MAPPINGS = {
         "SSN": "https://ssn.unam.mx",
         "ISC": "http://isc-mirror.iris.washington.edu"
     }
+def standardize_phases(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    For each network-station pair, keep only one P and one S.
+    Rename Pg, Pn, etc. to P if no explicit P exists.
+    Pick the earliest arrival for each.
+    """
+    # Identify P-type and S-type phases
+    P_phases = ['P', 'Pg', 'Pn', 'Pb']
+    S_phases = ['S', 'Sn', 'Sg']
+
+    def keep_first_P_S(group):
+        # Filter for P-type and S-type
+        p_group = group[group['phase'].isin(P_phases)]
+        s_group = group[group['phase'].isin(S_phases)]
+
+        selected = []
+
+        # Handle P
+        if not p_group.empty:
+            # If explicit P exists, keep only it
+            if 'P' in p_group['phase'].values:
+                p_group = p_group[p_group['phase'] == 'P']
+            # Take earliest by time
+            first_p = p_group.loc[p_group['time'].idxmin()]
+            first_p = first_p.copy()
+            first_p['phase'] = 'P'
+            selected.append(first_p)
+
+        # Handle S
+        if not s_group.empty:
+            if 'S' in s_group['phase'].values:
+                s_group = s_group[s_group['phase'] == 'S']
+            first_s = s_group.loc[s_group['time'].idxmin()]
+            first_s = first_s.copy()
+            first_s['phase'] = 'S'
+            selected.append(first_s)
+
+        return pd.DataFrame(selected)
+
+    cleaned = df.groupby(['origin_id','network', 'station'], group_keys=False).apply(keep_first_P_S)
+
+    return cleaned.reset_index(drop=True)
+    
+def merge_arrivals_and_picks(
+    arrivals: pd.DataFrame,
+    picks: pd.DataFrame,
+    picks_subset_columns: list = ['time']
+) -> pd.DataFrame:
+    """
+    Merge arrivals with a subset of columns from picks, using 'seed_id'.
+    Keeps all arrival columns plus the specified columns from picks.
+
+    :param arrivals: DataFrame with arrival info.
+    :param picks: DataFrame with pick info.
+    :param picks_subset_columns: List of column names from picks to keep (default is ['time']).
+    :return: Merged DataFrame.
+    """
+    # Always include 'resource_id' for the join
+    picks_subset = picks[['resource_id'] + picks_subset_columns]
+    # picks_subset = picks[picks_subset_columns]
+
+    merged = pd.merge(
+                arrivals,
+                picks_subset,
+                left_on='pick_id',     # column in arrivals
+                right_on='resource_id', # column in picks
+                how='inner',             # or 'left', 'right', 'outer'
+                suffixes=('_arrival', '_pick')   # suffix for overlapping columns
+            )
+    
+
+    return merged
+
+def analysis_to_df(analysis: dict) -> pd.DataFrame:
+    """
+    Flatten the analysis dictionary into a single-row DataFrame,
+    excluding 'stations_data'.
+
+    Parameters
+    ----------
+    analysis : dict
+        The analysis dictionary.
+
+    Returns
+    -------
+    pd.DataFrame
+        A single-row DataFrame with flattened keys.
+    """
+    flat_data = {}
+
+    for key, values in analysis.items():
+        if key == 'stations_data':
+            continue
+        for subkey, value in values.items():
+            col_name = f"{key}_{subkey}"
+            flat_data[col_name] = value
+
+    return pd.DataFrame([flat_data])
+
+def parse_catalog(catalog,stations=None,to_df=False):
+    """
+    Parse a seismic catalog, merge arrivals with picks and stations,
+    standardize phases, and produce summary statistics.
+
+    Parameters
+    ----------
+    catalog : Catalog object
+        Seismic catalog containing events, arrivals, and picks.
+    stations : DataFrame or None,optional
+        Station metadata to merge with arrivals.
+    to_df : bool, optional
+        If True, converts the final analysis dictionary to a DataFrame.
+
+    Returns
+    -------
+    dict or DataFrame
+        Summary statistics of events, arrivals, and stations.
+    """
+
+    total_events = len(catalog.events)
+
+    arrival_dict = {}
+    arrivals = catalog.arrivals_to_df()
+    picks = catalog.picks_to_df()
+
+    logger.info(f"Initial total events in catalog: {total_events} ")
+    logger.info(f"Arrivals: {len(arrivals)} | Picks: {len(picks)} -- Initially")
+
+    # removing duplicates based on 'seed_id'
+    arrivals = arrivals.drop_duplicates(subset=['resource_id'])
+    picks = picks.drop_duplicates(subset=['resource_id'])
+
+
+    logger.info(f"Arrivals: {len(arrivals)} | Picks: {len(picks)} -- After drop duplicates")
+
+
+    # merge arrivals with picks to extract time
+    arrivals = merge_arrivals_and_picks(arrivals, picks)
+
+    logger.info(f"Arrivals: {len(arrivals)} | Picks: {len(picks)} -- After merge arrivals with picks")
+
+    # standardize phases
+    # This will keep only one P and one S for each network-station pair
+    arrivals = standardize_phases(arrivals)
+    logger.info(f"Arrivals: {len(arrivals)} -- After standardize phases (keep only one P and one S)")
+
+    # arrival analysis
+    total_arrivals = len(arrivals)
+    total_p_arrivals = len(arrivals[arrivals['phase'].isin( ['P'])])
+    total_s_arrivals = len(arrivals[arrivals['phase'].isin(['S'])])
+
+    arrival_dict['total_arrivals'] = total_arrivals
+    arrival_dict['total_p_arrivals'] = total_p_arrivals
+    arrival_dict['total_s_arrivals'] = total_s_arrivals
+
+    if stations is None:
+        analysis = {
+            "events": {"total": total_events},
+            "arrivals": {
+                "total": total_arrivals,
+                "good": np.nan,  # all arrivals are considered good if no stations
+                "bad": np.nan},
+            "p_arrivals": {
+                "total": total_p_arrivals,
+                "good": np.nan,  # all arrivals are considered nan
+                "bad": np.nan},
+            "s_arrivals": {
+                "total": total_s_arrivals,
+                "good": np.nan,  # all arrivals are considered nan
+                "bad": np.nan},
+            "stations": {"total": 0, "good": 0, "bad": 0},
+            "stations_data": {"good": pd.DataFrame(), "bad": pd.DataFrame()}}
+        return analysis_to_df(analysis) if to_df else analysis
+
+    stations = stations.drop_duplicates(subset=['network', 'station'],
+                                            ignore_index=True)
+    arrivals_with_stations = arrivals.merge(
+                                            stations[['network', 'station','latitude', 'longitude','elevation']],
+                                            on=['network', 'station'], 
+                                            how='left')
+
+    logger.info(f"Arrivals: {len(arrivals_with_stations)} -- After merge arrivals with stations")
+
+
+    gd_arrivals_mask = arrivals_with_stations[['latitude', 'longitude']].notna().all(axis=1)
+    gd_arrivals = arrivals_with_stations[gd_arrivals_mask]
+    total_gd_arrivals = len(gd_arrivals)
+    total_p_gd_arrivals = len(gd_arrivals[gd_arrivals['phase'].isin(['P'])])
+    total_s_gd_arrivals = len(gd_arrivals[gd_arrivals['phase'].isin(['S'])])
+
+    total_bad_arrivals = total_arrivals - total_gd_arrivals
+    total_bad_p_arrivals = total_p_arrivals - total_p_gd_arrivals
+    total_bad_s_arrivals = total_s_arrivals - total_s_gd_arrivals
+
+    # Summary of arrivals
+    logger.info(f"Summary of arrivals for {total_events} events:")
+    logger.info(f"Total arrivals: {total_arrivals} -- Good arrivals: {total_gd_arrivals} -- Bad arrivals: {total_bad_arrivals}")
+    logger.info(f"P arrivals: {total_p_arrivals} -- Good P arrivals: {total_p_gd_arrivals} -- Bad P arrivals: {total_bad_p_arrivals}")
+    logger.info(f"S arrivals: {total_s_arrivals} -- Good S arrivals: {total_s_gd_arrivals} -- Bad S arrivals: {total_bad_s_arrivals}")
+
+    stations_with_arrivals = arrivals_with_stations.drop_duplicates(subset=['network', 'station'])
+    total_stations = len(stations_with_arrivals)
+    bad_stations_mask = stations_with_arrivals[['latitude', 'longitude']].isna().any(axis=1)
+    bad_stations = stations_with_arrivals[bad_stations_mask]
+    gd_stations = stations_with_arrivals[~bad_stations_mask]
+    total_bad_stations = len(bad_stations)
+    total_gd_stations = len(gd_stations)
+
+    # Summary of stations
+    logger.info(f"Summary of stations for {total_events} events:")
+    logger.info(f"Total stations: {total_stations} -- Good stations: {total_gd_stations} -- Bad stations: {total_bad_stations}")
+
+    analysis = {}
+    analysis['events'] = {"total": total_events}
+    analysis['arrivals'] = {
+        "total": total_arrivals,
+        "good": total_gd_arrivals,
+        "bad": total_bad_arrivals}
+    analysis['p_arrivals'] = {
+        "total": total_p_arrivals, 
+        "good": total_p_gd_arrivals,
+        "bad": total_bad_p_arrivals}
+    analysis['s_arrivals'] = {
+        "total": total_s_arrivals,
+        "good": total_s_gd_arrivals,
+        "bad": total_bad_s_arrivals}
+    analysis['stations'] = {
+        "total": total_stations,
+        "good": total_gd_stations,
+        "bad": total_bad_stations}
+    analysis['stations_data'] = {
+        "good": gd_stations,
+        "bad": bad_stations
+        }
+
+    if to_df:
+        analysis = analysis_to_df(analysis)
+
+    # test = analysis["stations_data"]["good"].drop_duplicates(subset=['network', 'station'])
+
+    # # test_stations = test_arrivals[test_arrivals[["network", "station"]].apply(tuple, axis=1).isin(test[["network", "station"]].apply(tuple, axis=1))]
+    # test_stations = test_arrivals[test_arrivals[["network", "station"]].apply(tuple, axis=1).isin([("GO","SHNK"),("AU","MTN")])]
+    # # print(test_stations[['network', 'station']].head(10))
+
+    # print(f"testing arrivals with stations: IM GO AU")
+    # print(test_stations)
+    # print(test_arrivals[test_arrivals["network"].isin(["IM","GO","AU"])])
+
+    # fig = plt.figure(figsize=(10, 8))
+    # ax = fig.add_subplot()
+
+    # # Basic scatter plot
+    # ax.scatter(test['longitude'], test['latitude'], color='red', s=50, marker='^')
+
+    # # Add labels (NO transform needed!)
+    # for _, row in test.iterrows():
+    #     ax.text(row['longitude'] + 0.05, row['latitude'] + 0.05, row["network"] +"."+ row['station'], fontsize=9)
+
+    # ax.set_xlabel("Longitude")
+    # ax.set_ylabel("Latitude")
+    # ax.set_title("Station Map")
+
+    # fig.savefig(os.path.join(output_dir, "stations_map.png"), dpi=300)
+    # print("plotted")
+    # print(arrivals_with_stations[['network', 'station', 'latitude', 'longitude']].head(10))
+
+
+    return analysis
 
 def initialize_stations_db(db_path):
     """
@@ -106,7 +375,67 @@ def load_stations_metadata_from_bank(db_path):
 
     return df
 
-def process_origin_arrivals(origin, df_stations, bad_inv_data):
+def update_starttime_from_bank(ebank, starttime, endtime, max_n_events=None):
+    """
+    Update starttime based on the last event in the event bank index.
+
+    Parameters
+    ----------
+    ebank : EventBank
+        An event bank object with a read_index() method.
+    starttime : datetime.datetime
+        The original start time.
+    endtime : datetime.datetime
+        The end time for the query.
+    max_n_events : int or None, optional
+        Maximum number of events to keep in the bank.
+
+    Returns
+    -------
+    tuple
+        (new_starttime, total_events) or (None, total_events) if no update is needed.
+    """
+    if max_n_events is None:
+        logger.warning(
+            "max_n_events is None. "
+            "This will download all events from the event bank."
+        )
+
+    archive_bank = ebank.read_index()
+    total_events = len(archive_bank)
+    logger.info("Total events in archive bank: %d", total_events)
+
+    if total_events > max_n_events:
+        logger.info(
+            "Event bank already has %d events, which exceeds max_n_events=%d. "
+            "Skipping download.",
+            total_events,
+            max_n_events
+        )
+        return None, total_events
+
+    if not archive_bank.empty:
+        last_event_time = archive_bank['time'].max()
+        new_starttime = last_event_time + datetime.timedelta(seconds=1)
+        logger.info(
+            "Setting starttime to %s based on last event in bank.",
+            new_starttime
+        )
+
+        if new_starttime >= endtime:
+            logger.error(
+                "Start time %s is after end time %s. No events will be downloaded.",
+                new_starttime,
+                endtime
+            )
+            return None, total_events
+
+        return new_starttime, total_events
+
+    logger.info("Event bank is empty, starting from original starttime.")
+    return starttime, total_events
+
+def process_origin_arrivals(origin, df_stations, bad_inv_data, event_id):
     """
     Process all arrivals in a single origin to:
       - Compute distance (in degrees) and azimuth from origin to station
@@ -121,6 +450,8 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
         ['network', 'station', 'latitude', 'longitude'].
     bad_inv_data : list of dict
         A list to store metadata about arrivals with missing or invalid station info.
+    event_id : str, optional
+        The event ID to associate with metadata entries. 
 
     Returns
     -------
@@ -152,7 +483,8 @@ def process_origin_arrivals(origin, df_stations, bad_inv_data):
             bad_inv_data.append({
                 "network": net,
                 "station": sta,
-                "event_id": origin.resource_id.id,
+                "origin_id": origin.resource_id.id,
+                "event_id": event_id,
                 "error": "No station data found"
             })
             continue
@@ -239,7 +571,7 @@ def append_stations_to_catalog(catalog: Catalog, df_stations) -> tuple[Catalog, 
             continue
 
         logger.info(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id}")
-        process_origin_arrivals(origin, df_stations, bad_inv_data)
+        process_origin_arrivals(origin, df_stations, bad_inv_data,event.resource_id.id)
 
     bad_inv_data_df = pd.DataFrame(bad_inv_data)
 
@@ -433,8 +765,11 @@ def catalog_generator(
 
     Yields
     ------
-    obspy.Catalog
-        A Catalog object with events in the given time chunk.
+    dict
+        A dictionary containing:
+        - 'catalog': obspy.core.event.Catalog object with events in the chunk.
+        - 'starttime': Start time of the chunk.
+        - 'endtime': End time of the chunk.
     """
     starttime = UTCDateTime(starttime)
     endtime = UTCDateTime(endtime)
@@ -444,12 +779,12 @@ def catalog_generator(
 
     while time_cursor < endtime:
         if iteration >= patience:
-            logger.debug(f"Patience limit of {patience} reached.")
+            logger.info(f"Patience limit of {patience} reached.")
             break
 
         chunk_end = min(time_cursor + chunk_seconds, endtime)
 
-        logger.info(f"Fetching events from {time_cursor} to {chunk_end}...")
+        logger.info(f"Patience [{iteration+1}/{patience}] Fetching events from {time_cursor} to {chunk_end}...")
 
         try:
             catalog = client.get_events(
@@ -458,11 +793,15 @@ def catalog_generator(
                 orderby="time-asc",
                 **event_kwargs
             )
+            # Restarting patience counter to -1 because we successfully fetched events
+            # it is -1 because we will increment it at the end of the loop
+            iteration = -1
+            logger.info(f"Restarting patience iterator to 1 after successful fetch.") # 0 for the programmer but 1 for the user
         except Exception as e:
             logger.error(f"Error fetching events from {time_cursor} to {chunk_end}: {e}")
             catalog = Catalog()
 
-        yield catalog
+        yield {"catalog": catalog, "starttime": time_cursor, "endtime": chunk_end}
 
         time_cursor = chunk_end
         iteration += 1

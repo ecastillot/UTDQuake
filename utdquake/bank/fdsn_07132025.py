@@ -814,6 +814,31 @@ class Client(FDSNClient):
 
         logger.info(f"Saving events to {base_path} with structure: {path_structure}")
 
+        if stations is not None and picks_avail["name"] == "eventid":
+
+            logger.info(f"Creating File at {csv_path} for collecting stations that are not included in the station bank")
+            logger.debug(f"Initiating dedicated thread for CSV writing at {csv_path}")
+
+            # if csv_path is not None and picks_avail["name"] == "eventid":
+            csv_queue = queue.Queue()
+            csv_lock = threading.Lock()
+            def csv_writer():
+                """Dedicated thread to write bad_inv_data to CSV from queue."""
+                while True:
+                    item = csv_queue.get()
+                    if item is None:
+                        break
+                    df = item
+                    try:
+                        with csv_lock:
+                            df.to_csv(csv_path, mode="a", index=False, header=not os.path.exists(csv_path))
+                    except Exception as e:
+                        logger.exception(f"CSV Write Error: {e}")
+                    csv_queue.task_done()
+            # Start the writer thread
+            writer_thread = threading.Thread(target=csv_writer)
+            writer_thread.start()
+
 
         # Getting the total number of events in the event bank
         # if max_from_bank is True, we will read the event bank index
@@ -876,6 +901,13 @@ class Client(FDSNClient):
                     # Append stations metadata to the catalog
                     catalog,bad_inv_data = fut.append_stations_to_catalog(catalog=catalog, df_stations=stations)
 
+                    if not bad_inv_data.empty:
+                        bad_inv_data.to_csv(
+                            csv_path, mode="a", index=False,
+                            header=not os.path.exists(csv_path)
+                        )
+
+
             elif picks_avail["name"] == "eventid":
                 ev_ids, id_tests =  fut.get_valid_event_ids(catalog=catalog,tests=id_tests)
 
@@ -890,6 +922,10 @@ class Client(FDSNClient):
                                                                 catalog=single_catalog, 
                                                                 df_stations=stations
                                                             )
+
+                        if not single_bad_inv_data.empty:
+                            csv_queue.put(single_bad_inv_data)
+
                     events_from_evid.append(single_catalog[0])
                 
 
@@ -937,8 +973,7 @@ class Client(FDSNClient):
                     logger.warning("Time column is missing in either catalog or event bank DataFrame.")
 
             if stats:
-                stats_path = ebank.index_path
-                # stats_path = os.path.join(base_path, f".summary.db")
+                stats_path = os.path.join(base_path, ".stats", f"summary.db")
                 os.makedirs(os.path.dirname(stats_path), exist_ok=True)
 
                 logger.info(f"Statistical summary for chunk {iteration}")
@@ -973,6 +1008,9 @@ class Client(FDSNClient):
                     bad_stations.to_sql("/stations/bad", conn, if_exists="append", index=False)
 
 
+            if stations is not None:
+                logger.debug(f"Check bad station metadata entries in {csv_path}")
+
             toc = time.time()
 
             n_events = len(catalog)
@@ -989,7 +1027,12 @@ class Client(FDSNClient):
                 
             if max_n_events is not None and total_events >= max_n_events:
                 break
+        
 
+        if stations is not None and picks_avail["name"] == "eventid":
+            #     # Signal the writer thread to stop
+            csv_queue.put(None)
+            writer_thread.join()
         
     def save2_events_to_bank(self, base_path,
                        path_structure='{year}/{month}/{day}/{hour}',
