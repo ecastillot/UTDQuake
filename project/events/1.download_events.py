@@ -25,17 +25,17 @@ stations_folder = os.path.join(bank_folder, "stations")
 client =  Client(base_url=provider, 
             )
 usgs_contributors = [ 
-                    # 'ci', 
-                    # 'se',
+                    'ci', 
+                    'se',
                      'tx',
-                    #  'ak', 'nn',  'pr', 'us', 
-                    # 'uw', 'cgs', 'ew', 
-                    # 'ok', 'av' , 'at',
-                    # 'nm', 'mb', 
-                    # 'uu', 
-                    # 'hv', 
-                    # 'pt',
-                    #  'nc',
+                     'ak', 'nn',  'pr', 'us', 
+                    'uw', 'cgs', 'ew', 
+                    'ok', 'av' , 'at',
+                    'nm', 'mb', 
+                    'uu', 
+                    'hv', 
+                    'pt',
+                     'nc',
                     #  'ld' # bad
                     #  'np' # bad
                     ]
@@ -77,12 +77,12 @@ for contributor in usgs_contributors:
             name_structure='{event_id_end}',
             patience=100,
             chunk_seconds=86400,
-            max_n_events=10,
+            max_n_events=100,
             max_from_bank=True,
             calculate_d_az=True,
             stations_bank_path=stations_folder,
             stats=True,
-            workers = 30,
+            workers = 50,
             contributor=contributor
         )
     except Exception as e:
