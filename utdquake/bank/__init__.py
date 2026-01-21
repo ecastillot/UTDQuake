@@ -1,7 +1,7 @@
 import os
 import logging
 
-def setup_logger(logging_level=logging.INFO):
+def setup_logger(logging_level=logging.INFO,log_file=None):
     """
     Set up a logger that includes module name, function name, and line number
     for DEBUG level. INFO and higher levels use a cleaner format.
@@ -25,6 +25,11 @@ def setup_logger(logging_level=logging.INFO):
         format=fmt,
         datefmt="%Y-%m-%d %H:%M:%S"
     )
+
+    if log_file is not None:
+        # Ensure the log file directory exists
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        add_file_handler(log_file)
 
 def add_file_handler(log_file, logger=None, level=None):
     """

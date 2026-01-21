@@ -20,6 +20,7 @@ import warnings
 import pandas as pd
 from obspy import UTCDateTime
 from obspy.core.event import Catalog
+from obsplus.utils.events import _summarize_event, get_event_client
 from tqdm import tqdm
 import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 
@@ -360,7 +361,9 @@ class Client(FDSNClient):
     
     def _get_reference_event_time(self, starttime, endtime, 
                                     chunk_seconds=3600,
-                                    patience: int = 10,**ev_kwargs):
+                                    patience: int = 10,
+                                    reverse=False,
+                                    **ev_kwargs):
         """
         Attempt to find the origin time of the first event within a time range.
 
@@ -388,7 +391,8 @@ class Client(FDSNClient):
         """
         # Create a generator to fetch event catalogs in chunks
         generator_dict = fut.catalog_generator(self, starttime=starttime, endtime=endtime,
-                                    chunk_seconds=chunk_seconds,patience=patience,**ev_kwargs)
+                                    chunk_seconds=chunk_seconds,patience=patience,
+                                    reverse=reverse,**ev_kwargs)
         origin_time = None
 
         # Iterate through each catalog chunk
@@ -405,7 +409,9 @@ class Client(FDSNClient):
     def picks_service(self, starttime, endtime, 
                         chunk_seconds=3600,
                         patience: int = 10,
-                        eventid_tests=None,**ev_kwargs):
+                        eventid_tests=None,
+                        reverse=False,
+                        **ev_kwargs):
         """
         Determine pick availability for a client that supports the 'event' service.
 
@@ -446,7 +452,9 @@ class Client(FDSNClient):
             # Try to find a reference event time in the specified range
             ref_event_time = self._get_reference_event_time(starttime, endtime,
                                                             chunk_seconds=chunk_seconds,
-                                                            patience=patience,**ev_kwargs)
+                                                            patience=patience,
+                                                            reverse=reverse,
+                                                            **ev_kwargs)
             # Raise an error if no events were found
             if ref_event_time is None:
                 raise Exception("No events found in the specified time range.")
@@ -460,20 +468,24 @@ class Client(FDSNClient):
             raise Exception("The client does not support the 'event' service.")
 
     @staticmethod
-    def save_inventory_to_bank(base_path, inventory):
+    def save_inventory_to_bank(stations_bank_path, inventory):
         """
         Saves each network from an ObsPy Inventory to a StationXML file and
         inserts its metadata into a shared SQLite database.
 
         Parameters
         ----------
-        base_path : str
+        stations_bank_path : str
             Path to the folder where files and database will be stored.
         inventory : obspy.Inventory
             The Inventory object containing network/station metadata.
         """
-        os.makedirs(base_path, exist_ok=True)
-        db_path = os.path.join(base_path, ".stations.db")
+        os.makedirs(stations_bank_path, exist_ok=True)
+        db_path = os.path.join(stations_bank_path, ".stations.db")
+
+        if not os.path.exists(db_path):
+            logger.info(f"Creating new SQLite DB at {db_path}")
+
 
         try:
             with sqlite3.connect(db_path) as conn:
@@ -484,7 +496,7 @@ class Client(FDSNClient):
                         single_inv = inventory.select(network=net_code)
                         
                         # Save StationXML
-                        xml_path = os.path.join(base_path, f"{net_code}.xml")
+                        xml_path = os.path.join(stations_bank_path, f"{net_code}.xml")
                         single_inv.write(xml_path, format="STATIONXML")
                         logger.info(f"Saved XML for network {net_code} at {xml_path}")
 
@@ -503,21 +515,21 @@ class Client(FDSNClient):
             logger.exception(f"Could not connect to SQLite DB: {e}")
             traceback.print_exc()
 
-    def save_stations_to_bank(self, base_path, 
+    def download_stations(self, stations_bank_path, 
                             workers=None, **sta_kwargs):
         """
         Saves station data to a specified base path using parallel threads.
 
         Parameters
         ----------
-        base_path : str
+        stations_bank_path : str
             Base directory where station files will be saved.
         workers : int or None, optional
             Number of worker threads to use. If None, the default from ThreadPoolExecutor is used.
         **sta_kwargs : dict
             Additional keyword arguments passed to the `get_stations` method.
         """
-        logger.info(f"Saving stations to bank at {base_path} and sta_kwargs={sta_kwargs}")
+        logger.info(f"Saving stations to bank at {stations_bank_path} and sta_kwargs={sta_kwargs}")
 
         # Get the list of supported services from the client
         services = list(self.services.keys())
@@ -526,7 +538,7 @@ class Client(FDSNClient):
 
 
         # Ensure the base directory exists
-        os.makedirs(base_path, exist_ok=True)
+        os.makedirs(stations_bank_path, exist_ok=True)
         
 
         # Default to response level if not specified
@@ -551,7 +563,7 @@ class Client(FDSNClient):
 
 
         # SQLite DB path
-        db_path = os.path.join(base_path, ".stations.db")
+        db_path = os.path.join(stations_bank_path, ".stations.db")
 
         # Queue for thread-safe database writing
         write_queue = queue.Queue()
@@ -627,7 +639,7 @@ class Client(FDSNClient):
                         break
 
                     # Save StationXML
-                    xml_path = os.path.join(base_path, f"{network_code}.xml")
+                    xml_path = os.path.join(stations_bank_path, f"{network_code}.xml")
                     net_inv.write(xml_path, format="STATIONXML")
 
                     # Convert to DataFrame and queue for DB write
@@ -660,18 +672,18 @@ class Client(FDSNClient):
         write_queue.put(None)
         writer_thread.join()
 
-    def save_events_to_bank(self, base_path,
+    def download_events(self, events_bank_path,
                         starttime, endtime, 
                         path_structure='{year}/{month}/{day}/{hour}',
                         name_structure='{event_id_end}',
-                        chunk_seconds=7200,
-                        patience=10,
+                        stations_bank_path=None,
+                        calculate_d_az = False,
                         max_n_events=None,
                         max_from_bank=False,
+                        chunk_seconds=7200,
+                        patience=10,
                         eventid_tests=None,
-                        calculate_d_az = False,
-                        stations_bank_path=None,
-                        stats = True,
+                        reverse=False,
                         minlatitude=None,
                         maxlatitude=None, minlongitude=None, maxlongitude=None,
                         latitude=None, longitude=None, minradius=None,
@@ -691,7 +703,7 @@ class Client(FDSNClient):
 
         Parameters
         ----------
-        base_path : str
+        events_bank_path : str
             Root directory to store the event files.
 
         starttime, endtime : UTCDateTime or str
@@ -721,6 +733,7 @@ class Client(FDSNClient):
         stations_bank_path : str or None, optional
             Path to a station bank for calculating azimuth and distance. Mandatory if `calculate_d_az` is True.
 
+
         Filtering parameters (all optional) -> check get_events documentation for details
         -----------------------------------
         latitude, longitude, minradius, maxradius,
@@ -738,15 +751,15 @@ class Client(FDSNClient):
         """
         # Prepare the log file path
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_file = os.path.join(base_path, ".logs", f"events_{timestamp}.log")
+        log_file = os.path.join(events_bank_path, ".logs", f"events_{timestamp}.log")
         # Add file handler for this run
         add_file_handler(log_file)
         logger.info(f"Logging this run to {log_file}")
 
-
-        logger.info(f"Saving events from {starttime} to {endtime} in {base_path}")
+        logger.info(f"{'#'*20} PREPARING TO DOWNLOAD EVENTS ")
+        logger.info(f"Saving events from {starttime} to {endtime} in {events_bank_path}")
         # Check for available picks
-        logger.debug(f"Checking picks availability from {starttime} to {endtime}...")
+        logger.info(f"Checking picks availability from {starttime} to {endtime}...")
 
         ev_kwargs = {"latitude": latitude, "longitude": longitude,
                      "minradius": minradius, "maxradius": maxradius,
@@ -761,9 +774,9 @@ class Client(FDSNClient):
         picks_avail = self.picks_service(
                                         starttime=starttime, endtime=endtime,
                                         chunk_seconds=chunk_seconds, patience=patience,
-                                        eventid_tests=eventid_tests, **ev_kwargs)
-        # picks_avail = self._picks_availability( starttime=starttime, endtime=starttime + chunk_seconds,
-        #                                         eventid_tests=eventid_tests,**ev_kwargs)
+                                        eventid_tests=eventid_tests,reverse=reverse, **ev_kwargs)
+        if stations_bank_path is not None:
+            stations_db_path = os.path.join(stations_bank_path, ".stations.db")
 
         if not picks_avail["picks"]:
             raise Exception(f"No available picks service in the Client. Picks = {picks_avail}")
@@ -776,12 +789,12 @@ class Client(FDSNClient):
             logger.debug("calculate_d_az is None, but stations_bank_path is provided. "
                          "This will not be used. Set calculate_d_az=True to use it.")
         elif calculate_d_az and os.path.exists(stations_bank_path):
-            db_path = os.path.join(stations_bank_path, ".stations.db")
-            stations = fut.load_stations_metadata_from_bank(db_path=db_path)
-            csv_path = os.path.join(base_path, ".bad_stations.csv")
+            stations_db_path = os.path.join(stations_bank_path, ".stations.db")
+            stations = fut.load_stations_metadata_from_bank(db_path=stations_db_path)
         else:
             stations = None
-            csv_path = None
+
+
 
         # Prepare keyword arguments for get_events
         ev_kwargs = {
@@ -802,43 +815,59 @@ class Client(FDSNClient):
                 "includeallmagnitudes": False
             })
 
-        os.makedirs(base_path, exist_ok=True)
+        os.makedirs(events_bank_path, exist_ok=True)
 
+
+        ## initialize the event bank
         ebank = obsplus.EventBank(
-            base_path=base_path,
+            base_path=events_bank_path,
             path_structure=path_structure,
             name_structure=name_structure,
             format=format
         )
+        ebank_index_path = os.path.join(events_bank_path, ".index.db")
+        
 
-
-        logger.info(f"Saving events to {base_path} with structure: {path_structure}")
-
+        logger.info(f"Saving events to {events_bank_path} with structure: {path_structure}")
 
         # Getting the total number of events in the event bank
         # if max_from_bank is True, we will read the event bank index
         if max_from_bank:
-            new_starttime, total_events = fut.update_starttime_from_bank(
-                                                                    ebank,
-                                                                    starttime, endtime,
-                                                                    max_n_events=max_n_events
-                                                                )
-            if new_starttime is None:
-                logger.warning(f"Skipping download from {starttime} to {endtime} ")
+            new_time, total_events = fut.update_time_from_bank(
+                ebank=ebank,
+                starttime=starttime,
+                endtime=endtime,
+                max_n_events=max_n_events,
+                reverse=reverse
+            )
+            if new_time is None:
+                logger.warning(f"Skipping download: no new events in range.")
                 return
 
-            starttime = new_starttime
+            if reverse:
+                endtime = new_time
+            else:
+                starttime = new_time
         else:
             total_events = 0
 
         iteration = 0
         id_tests = eventid_tests
 
-        logger.info(f"Starting event download from {starttime} to {endtime}")
+        logger.info(f"{'#'*20} EVENT DOWNLOADING")
+        logger.info(f"Starting event download from from {starttime} to {endtime} (reverse={reverse})")
+        error_patience_counter = 0
         for catalog_dict in fut.catalog_generator(self, starttime=starttime, endtime=endtime,
                                  chunk_seconds=chunk_seconds,
-                                 patience=patience, **ev_kwargs):
+                                 patience=patience,reverse=reverse, **ev_kwargs):
+            # print("This function is under development. Please check back later.")
+            
+            if error_patience_counter >= patience:
+                logger.error(f"Error patience counter reached {error_patience_counter}. Stopping download.")
+                break
+
             catalog = catalog_dict["catalog"]
+            original_len_catalog = len(catalog)
             chunk_starttime = catalog_dict["starttime"].strftime("%Y-%m-%d %H:%M:%S.%f")
             chunk_endtime = catalog_dict["endtime"].strftime("%Y-%m-%d %H:%M:%S.%f")
             chunk_creation_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -847,8 +876,12 @@ class Client(FDSNClient):
                         f"Time range: {chunk_starttime} - {chunk_endtime} | "
                         f"Chunk creation time: {chunk_creation_time}")
 
-            # print(catalog)
             if len(catalog) == 0:
+                error_patience_counter += 1
+                logger.warning(f"Chunk id {iteration:<3} has no events. "
+                               f"Start time: {chunk_starttime}, End time: {chunk_endtime}. "
+                               f"Error patience counter: {error_patience_counter}. "
+                               f"Continuing to next chunk.")
                 continue
 
             # Trim if over the event limit
@@ -875,7 +908,20 @@ class Client(FDSNClient):
             if picks_avail["name"] == "natural":
                 if stations is not None:
                     # Append stations metadata to the catalog
-                    catalog,bad_inv_data = fut.append_stations_to_catalog(catalog=catalog, df_stations=stations)
+                    catalog = fut.append_stations_to_catalog(catalog=catalog, 
+                                                            df_stations=stations,
+                                                            calculate_d_az=calculate_d_az,
+                                                            ebank_index_path=ebank_index_path,
+                                                                        )
+                    if len(catalog) == 0:
+                        logger.error(f"Failed to save events in chunk id {iteration:<3}. No events after appending stations metadata.")
+                        error_patience_counter += 1
+                        logger.warning(
+                                    f"Error Patience counter [{error_patience_counter}/{patience}]. "
+                                    f"Chunk id {iteration:<3} has no acceptable events. "
+                                    f"Start time: {chunk_starttime}, End time: {chunk_endtime}. "
+                                    f"Continuing to next chunk.")
+                        continue
 
             elif picks_avail["name"] == "eventid":
                 ev_ids, id_tests =  fut.get_valid_event_ids(catalog=catalog,tests=id_tests)
@@ -885,13 +931,19 @@ class Client(FDSNClient):
                     single_catalog = self.get_events(eventid=ev_id, **ev_kwargs)
 
                     if stations is not None:
-                        
                         # Append stations metadata to the single event catalog
-                        single_catalog, single_bad_inv_data = fut.append_stations_to_catalog(
+                        single_catalog = fut.append_stations_to_catalog(
                                                                 catalog=single_catalog, 
-                                                                df_stations=stations
+                                                                df_stations=stations,
+                                                                calculate_d_az=calculate_d_az,
+                                                                ebank_index_path=ebank_index_path,
                                                             )
-                    events_from_evid.append(single_catalog[0])
+                        
+                    
+                    if len(single_catalog) == 0:
+                        logger.error(f"Failed to save event {ev_id} in chunk id {iteration:<3}. No events after appending stations metadata.")
+                    else:
+                        events_from_evid.append(single_catalog[0])
                 
 
                 if workers > len(ev_ids):
@@ -906,18 +958,61 @@ class Client(FDSNClient):
                         executor.map(save_single_event, ev_ids)
 
                 catalog.events = events_from_evid
-                
+                if len(catalog) == 0:
+                    logger.error(f"Failed to save events in chunk id {iteration:<3}. No events after appending stations metadata.")
+                    error_patience_counter += 1
+                    logger.warning(
+                                    f"Error Patience counter [{error_patience_counter}/{patience}]. "
+                                    f"Chunk id {iteration:<3} has no acceptable events. "
+                                    f"Start time: {chunk_starttime}, End time: {chunk_endtime}. "
+                                    f"Continuing to next chunk.")
+                    continue
+
             else:
                 raise Exception("No way to extract the picks")
 
 
+
+            new_len_catalog = len(catalog)
+
             ### putting events
             try:
                 ebank.put_events(catalog)
+                logger.info(f"Saved {new_len_catalog} events of {original_len_catalog} possible in chunk id {iteration:<3} "
+                            f"from {chunk_starttime} to {chunk_endtime} in {events_bank_path}")
             except Exception as e:
-                logger.error(f"Failed to save events: {e}")
+                error_patience_counter += 1
+                logger.error(f"Failed to save events: {e}. "
+                            )
+                logger.warning(
+                                    f"Error Patience counter [{error_patience_counter}/{patience}]. "
+                                    f"Chunk id {iteration:<3} has no acceptable events. "
+                                    f"Start time: {chunk_starttime}, End time: {chunk_endtime}. "
+                                    f"Continuing to next chunk.")
                 continue
 
+
+            logger.info(f"Creating stations summary based on the events in the event bank at {events_bank_path}/.stations")
+            stations_folder = os.path.join( events_bank_path,".stations")
+            summary = fut.get_stations_summary(stations_folder=stations_folder)
+            if summary is not None:
+                logger.info(f"Updating stations summary in the event bank at {events_bank_path}")
+                with sqlite3.connect(ebank_index_path) as ev_con:
+                    summary.to_sql(
+                                    "/stations/index", ev_con, 
+                                    if_exists='append', index=False
+                                )
+                    
+                    now = datetime.datetime.now().timestamp()
+
+                    # put it in a dataframe
+                    df = pd.DataFrame({"last_updated": [now]})
+                    df.to_sql(
+                            "/stations/last_updated", ev_con,
+                            if_exists="replace", index=False
+                        )
+                logger.info(f"Stations summary updated successfully.")
+                    # summary["creation_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             # Trying to double check if they are well saved
             # we will check if the value in time column are the same in both dataframes
@@ -938,43 +1033,6 @@ class Client(FDSNClient):
                 else:
                     logger.warning("Time column is missing in either catalog or event bank DataFrame.")
 
-            if stats:
-                stats_path = ebank.index_path
-                # stats_path = os.path.join(base_path, f".summary.db")
-                os.makedirs(os.path.dirname(stats_path), exist_ok=True)
-
-                logger.info(f"Statistical summary for chunk {iteration}")
-                
-                analysis = fut.parse_catalog(catalog,stations,to_df=False)
-                gd_stations = analysis["stations_data"]["good"]
-                bad_stations = analysis["stations_data"]["bad"]
-
-                analysis = fut.analysis_to_df(analysis)
-                analysis["chunk_id"] = iteration
-                analysis["chunk_starttime"] = chunk_starttime
-                analysis["chunk_endtime"] = chunk_endtime
-                analysis["chunk_creation_time"] = chunk_creation_time
-
-                # Reorder columns
-                cols_first = ["chunk_id", "chunk_starttime", "chunk_endtime", "chunk_creation_time"]
-                remaining_cols = [col for col in analysis.columns if col not in cols_first]
-                analysis = analysis[cols_first + remaining_cols]
-
-                logger.info(f"Saving statistics for chunk {iteration} to {stats_path} in '/events/summary'")
-                conn = sqlite3.connect(stats_path)
-                analysis.to_sql("/events/summary", conn, if_exists="append", index=False)
-                
-                if gd_stations.empty:
-                    logger.warning(f"No good stations found for chunk {iteration}.")
-                else:
-                    logger.info(f"Saving good stations for chunk {iteration} to {stats_path} in '/stations/gd'")
-                    gd_stations.to_sql("/stations/gd",conn, if_exists="append", index=False)
-
-                if not bad_stations.empty:
-                    logger.info(f"Saving bad stations for chunk {iteration} to {stats_path} in '/stations/bad'")
-                    bad_stations.to_sql("/stations/bad", conn, if_exists="append", index=False)
-
-
             toc = time.time()
 
             n_events = len(catalog)
@@ -982,223 +1040,15 @@ class Client(FDSNClient):
             
             logger.info(
                 f"Chunk id: {iteration:<3} concluded | "
-                f"{starttime.isoformat()} - {endtime.isoformat()} | "
+                f"Start time: {chunk_starttime}, End time: {chunk_endtime} | "
                 f"({n_events:>4} events in {toc - tic:.2f} s) | "
-                f"Total: {total_events:>4}/{max_n_events}"
+                f"Total: {total_events:>4}/{max_n_events} |"
+                f"Bank : {events_bank_path}"
             )
+            error_patience_counter = 0  # Reset error patience counter after successful chunk
+            logger.info(f"Reset error patience counter to 0 after successful chunk if {iteration}")
             iteration += 1
-
-                
             if max_n_events is not None and total_events >= max_n_events:
                 break
 
         
-    def save2_events_to_bank(self, base_path,
-                       path_structure='{year}/{month}/{day}/{hour}',
-                       name_structure='{event_id_end}',
-                        chunks=100,
-                        max_n_events=None,
-                        eventid_tests=None,
-                        starttime=None, endtime=None, minlatitude=None,
-                        maxlatitude=None, minlongitude=None, maxlongitude=None,
-                        latitude=None, longitude=None, minradius=None,
-                        maxradius=None, mindepth=None, maxdepth=None,
-                        minmagnitude=None, maxmagnitude=None, magnitudetype=None,
-                        eventtype=None,includeallorigins=None,
-                        includeallmagnitudes=None,
-                        catalog=None, contributor=None, updatedafter=None,
-                       format='quakeml', 
-                       workers=1):
-        """
-        Save seismic events from a data source to an EventBank on disk.
-
-        This method downloads events in chunks and stores them in a structured 
-        directory layout. If event IDs are known, it will fetch each event individually.
-        Picks must be available from the source.
-
-        Parameters
-        ----------
-        base_path : str
-            Root directory to store the event files.
-
-        path_structure : str, optional
-            Template for subdirectory structure under `base_path`.
-            Supports format keys like {year}, {month}, {day}, and {hour}.
-
-        name_structure : str, optional
-            Template for naming individual event files.
-            Supports format keys like {event_id_end}.
-
-        chunks : int, optional
-            Number of events to fetch per iteration. Default is 100.
-
-        max_n_events : int or None, optional
-            Maximum number of events to download and save. If None, fetch all.
-
-        eventid_tests : dict or None, optional
-            Dictionary of test functions used to extract custom event IDs
-            from each event object. If provided, switches fetch mode to 
-            "eventid" based retrieval.
-
-        starttime, endtime : UTCDateTime or str, optional
-            Time window to filter events.
-
-        minlatitude, maxlatitude : float, optional
-            Minimum and maximum latitudes for event filtering.
-
-        minlongitude, maxlongitude : float, optional
-            Minimum and maximum longitudes for event filtering.
-
-        latitude, longitude : float, optional
-            Central coordinates for radial filtering (used with radius).
-
-        minradius, maxradius : float, optional
-            Minimum and maximum radii (in degrees) for radial filtering
-            from the specified latitude/longitude.
-
-        mindepth, maxdepth : float, optional
-            Minimum and maximum depth filters in kilometers.
-
-        minmagnitude, maxmagnitude : float, optional
-            Minimum and maximum magnitude filters.
-
-        magnitudetype : str, optional
-            Type of magnitude to filter by, e.g., 'ml', 'mb', 'mw'.
-
-        eventtype : str or list of str, optional
-            Filter events by type, e.g., 'earthquake', 'quarry blast'.
-
-        includeallorigins : bool, optional
-            Whether to include all origins in event download. Defaults
-            depend on picks availability mode.
-
-        includeallmagnitudes : bool, optional
-            Whether to include all magnitudes in event download.
-
-        catalog : str, optional
-            Limit to specific event catalog name (if supported by service).
-
-        contributor : str, optional
-            Limit to events from a specific contributing agency.
-
-        updatedafter : UTCDateTime or str, optional
-            Only include events updated after this time.
-
-        format : str, optional
-            File format to save events in. Default is 'quakeml'.
-
-        workers : int, optional
-            Number of threads to use when saving events in parallel
-            (used only in eventid mode).
-
-        Raises
-        ------
-        Exception
-            If no picks service is available or pick extraction method is undefined.
-        """
-
-        # Check for available picks and determine how to fetch them
-        picks_avail = self._picks_availability(eventid_tests)
-        
-        # Collect event filtering arguments
-        ev_kwargs = {
-                    k: v for k, v in locals().items()
-                    if k in available_events_keys and v is not None
-                        }
-        
-        # Raise error if picks are unavailable
-        if not picks_avail["picks"]:
-            raise Exception(f"No available picks service in the Client.")
-        
-        # natural mode refers to extract the events using the native obspy get_events function
-        if picks_avail["name"] == "natural":
-            ev_kwargs["includearrivals"] = True
-            ev_kwargs["includeallorigins"] = includeallorigins
-            ev_kwargs["includeallmagnitudes"] = includeallmagnitudes
-        # This is created for cases when the full information is provided
-        # only if you provide eventid information
-        elif picks_avail["name"] == "eventid":
-            ev_kwargs["includearrivals"] = False
-            ev_kwargs["includeallorigins"] = False
-            ev_kwargs["includeallmagnitudes"] = False
-
-        # # Print timing information if debug is enabled
-        # print(f"Event kwargs: {ev_kwargs}")
-        
-        # Ensure the base directory exists
-        os.makedirs(base_path, exist_ok=True)
-        
-        # Initialize the event bank for storing events to disk
-        ebank = obsplus.EventBank(
-            base_path=base_path,
-            path_structure=path_structure,
-            name_structure=name_structure,
-            format=format
-        )
-        
-        
-        total_events = 0
-        offset_iter = 1
-        iteration = 1
-        while True:
-            
-            # Stop if maximum number of events has been reached
-            if max_n_events is not None:
-                remaining = max_n_events - total_events
-                if remaining <= 0:
-                    break
-                current_chunk = min(chunks, remaining)
-            else:
-                current_chunk = chunks
-                
-            # Download event catalog
-            catalog = self.get_events(orderby="time-asc", limit=current_chunk, 
-                                     offset=offset_iter, **ev_kwargs)
-            n_events = len(catalog)
-            total_events += n_events
-            
-            # Prepare time window information for logging
-            if n_events > 0:
-                starttime = catalog[0].preferred_origin().time.strftime("%Y-%m-%d %H:%M:%S")
-                endtime = catalog[-1].preferred_origin().time.strftime("%Y-%m-%d %H:%M:%S")
-                
-                
-            tic = time.time()
-            # Save events using selected mode
-            if picks_avail["name"] == "natural":
-                ebank.put_events(catalog)
-            elif picks_avail["name"] == "eventid":
-                
-                ev_ids = self._get_custom_event_ids(tests=eventid_tests,**ev_kwargs)
-                def save_single_event(ev_id):
-                    """Fetch and save a single event to the event bank."""
-                    single_event = self.get_events(eventid=ev_id, **ev_kwargs)
-                    ebank.put_events(single_event)
-                
-                # Save chunk of events in parallel using threads
-                with cf.ThreadPoolExecutor(max_workers=workers) as executor:
-                    executor.map(save_single_event, ev_ids)
-                    
-                # for ev_id in ev_ids:
-                    # save_single_event(ev_id)
-                
-            else:
-                raise Exception("No way to extract the picks")
-            
-            toc = time.time()
-
-            # Log progress
-            print(
-                    f"Iter {iteration:<3} | "
-                    f"{n_events:>4} events | "
-                    f"{starttime} → {endtime} | "
-                    f"Total: {total_events:>4} | Seconds: {toc - tic:.2f}"
-                )
-
-            # Break loop if last page of results has fewer than requested
-            if not catalog or len(catalog)<current_chunk:  # If no more events, break the loop
-                break
-            
-            offset_iter += current_chunk
-            iteration += 1
-            

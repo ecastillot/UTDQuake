@@ -5,23 +5,15 @@ University of Texas at Dallas Earthquake Dataset
 
 # Authors
 - Emmanuel Castillo (edc240000@utdallas.edu)
-- Riven White (Riven.White@utdallas.edu)
+- Nadine Ushakov
+- Marine Denolle
 
 # Examples
 
-| Examples | Notebook  |
-|---|---|
-| UTDClient| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_client.ipynb) |
-|---|---|
-| UTDWindow| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_window.ipynb) |
-|---|---|
-| UTDPlot| [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/utd_plots.ipynb) |
-
-# Versions
-This should go to PHASED (Phase Association Dataset for Earthquakes)
 
 
 ## Development
+- 0.1 UTDQuake (Global Earthquake Dataset)
 - 0.0.23-Unstable version Use of Obspy-plus (Unstable version)
 - 0.0.22 Picks.remove_phases_randomly() -> phase_removal function: control nan dataframes
 - 0.0.21 EQWindow Parameter:  

@@ -129,7 +129,8 @@ def plot_earthquake_overview(
 
     # Panel (b): Longitude vs. Depth
     ax1 = fig.add_subplot(grd[3:6, 0], sharex=ax0)
-    ax1.plot(earthquake_df["longitude"], earthquake_df["depth"], 'k.', markersize=2, alpha=1.0)
+    ax1.plot(earthquake_df["longitude"], earthquake_df["depth"], 
+        'k.', markersize=2, alpha=1.0)
     ax1.set_xlim(lon_range)
     if depth_lim:
         ax1.set_ylim([0, 12])
