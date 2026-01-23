@@ -377,7 +377,7 @@ class EventBank(obsplus.EventBank):
         """
         events = self.read_index()
         try:
-            picks = self.get_picks()
+            picks = self.load_picks()
         except FileNotFoundError:
             logger.error("Picks database not found. Please run 'save_picks()' first.")
 
@@ -416,7 +416,7 @@ class EventBank(obsplus.EventBank):
         save_path : str or None
             If given, save the figure to this path instead of showing it.
         """
-        picks = self.get_picks()
+        picks = self.load_picks()
         plot_pick_stats(picks, save_path=savepath)
 
     def plot_station_location_uncertainty(self, savepath: str=None) -> None:
@@ -443,8 +443,7 @@ class EventBank(obsplus.EventBank):
         save_path : str or None
             If given, save the figure to this path instead of showing it.
         """
-        picks = self.get_picks()
-        print(picks.info())
+        picks = self.load_picks()
         plot_pick_histograms(picks, save_path=savepath)
 
     ## others
