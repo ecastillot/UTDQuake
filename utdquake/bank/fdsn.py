@@ -19,8 +19,6 @@ import obsplus
 import warnings
 import pandas as pd
 from obspy import UTCDateTime
-from obspy.core.event import Catalog
-from obsplus.utils.events import _summarize_event, get_event_client
 from tqdm import tqdm
 import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 

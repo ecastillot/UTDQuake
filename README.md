@@ -1,4 +1,4 @@
-![Twitter Follow](https://img.shields.io/twitter/follow/manuavid?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)![GitHub stars](https://img.shields.io/github/stars/ecastillot/EQviewer?style=social)![GitHub forks](https://img.shields.io/github/forks/ecastillot/EQviewer?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/manuavid?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social)![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social)
 
 # UTDQuake
 University of Texas at Dallas Earthquake Dataset
@@ -10,7 +10,7 @@ University of Texas at Dallas Earthquake Dataset
 
 # Examples
 
-
+Coming soon!
 
 ## Development
 - 0.1 UTDQuake (Global Earthquake Dataset)
