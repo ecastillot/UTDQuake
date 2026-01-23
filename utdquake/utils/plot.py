@@ -1487,6 +1487,40 @@ def plot_pick_histograms(df, save_path=None):
     return fig
 
 def plot_pick_stats(df, save_path=None):
+
+    """
+    Plot summary statistics for seismic picks (P, S, and S-P) as jointplots.
+
+    This function computes:
+    - First/last P travel times per event
+    - First/last S travel times per event
+    - First/last S-P times for stations that have both P and S picks
+    - Corresponding epicentral distances (converted to km)
+
+    It creates individual seaborn jointplots (scatter + marginal histograms),
+    saves them temporarily as PNGs, and then combines them into a single
+    multi-panel matplotlib figure.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame containing pick information. Expected columns include:
+        - "origin_id"
+        - "origin_time"
+        - "time"
+        - "phase"
+        - "distance" (in degrees)
+        - "network"
+        - "station"
+    save_path : str or pathlib.Path, optional
+        If provided, the final combined figure is saved to this path.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The combined multi-panel figure containing all jointplots.
+    """
+    
     import seaborn as sns
     import matplotlib.pyplot as plt
     import matplotlib.image as mpimg

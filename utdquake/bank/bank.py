@@ -32,23 +32,44 @@ class EventBank(obsplus.EventBank):
             bank_path (str): Path to the event bank.
         """
         super().__init__(bank_path, *args, **kwargs)
-        self.station_details_path = os.path.join(self.bank_path, ".stations")
+        self.stations_from_eqs_path = os.path.join(self.bank_path, ".stations")
         self.picks_path = os.path.join(self.bank_path, ".picks.db")
         self.contributor = os.path.basename(self.bank_path)
+
 
     @property
     def index_table_names(self) -> List[str]:
         """Return all table names in the event bank index."""
         return fut.get_table_names(self.index_path)
 
-    def stations_sanity_check(self) -> bool:
-        """ Check if station details path exists."""
-        if not os.path.isfile(self.station_details_path):
-            logger.warning("Station details path does not exist.")
-            return False
-        return True
+    @property
+    def picks_table_names(self) -> List[str]:
+        """Return all table names in the picks bank index."""
+        if not os.path.exists(self.picks_path):
+            raise FileNotFoundError(
+                f"Picks database not found at {self.picks_path}. "
+                "Please run 'save_picks()' to create it."
+            )
+        return fut.get_table_names(self.picks_path)
 
+    @property
+    def stats(self):
+        """Return summary statistics of the event bank."""
+        analysis, events, stations = self._get_analysis()
+        return analysis
 
+    def __str__(self,extended=False) -> str:
+        """Return string representation of the EventBank."""
+        base_info = super().__str__()
+        if extended:
+            stats = self.stats
+            stats_info = "\n".join(f"\t{key}: {value}" for key, value in stats.items())
+            return f"{base_info}\n{stats_info}"
+        
+        msg = "Use .__str__(True) to see more details."
+        return base_info+f"... {msg}"
+
+    # station methods
 
     def get_stations(self, query: Optional[str] = None) -> pd.DataFrame:
         """
@@ -72,51 +93,14 @@ class EventBank(obsplus.EventBank):
             """
         return fut._read_table(self.index_path, query)
 
-    
-
-    def get_picks(self, query: Optional[str] = None,
-                  time_columns = ['time','origin_time']) -> pd.DataFrame:
-        """
-        Return unique picks from the picks database.
-
-        Args:
-            query (Optional[str]): SQL query string.
-
-        Returns:
-            pd.DataFrame: DataFrame of picks.
-        """
-        if query is None:
-            query = """
-                SELECT *
-                FROM '/picks/index'
-                WHERE pick_id IN (
-                    SELECT pick_id
-                    FROM '/picks/index'
-                    GROUP BY pick_id
-                    HAVING COUNT(*) = 1
-                )
-            """
-        if not os.path.exists(self.picks_path):
-            raise FileNotFoundError(
-                f"Picks database not found at {self.picks_path}. "
-                "Please run 'save_picks()' to create it."
-            )
-        df = fut._read_table(self.picks_path, query)
-        #convert time columns to datetime
-        
-        for col in time_columns:
-            if col in df.columns:
-                df[col] = pd.to_datetime(df[col], errors='coerce')
-
-        return df
-
-    def get_stations_details(
+    def get_stations_from_eqs(
         self,
         stations: Optional[List[str]] = None,
         networks: Optional[List[str]] = None,
     ) -> pd.DataFrame:
         """
-        Retrieve details for selected stations.
+        Retrieve details for selected stations. 
+        The station locations were calculated from earthquake data.
 
         Args:
             stations (Optional[List[str]]): List of station names to filter.
@@ -127,7 +111,7 @@ class EventBank(obsplus.EventBank):
         """
         all_station_details = []
 
-        for filename in os.listdir(self.station_details_path):
+        for filename in os.listdir(self.stations_from_eqs_path):
             # Extract network and station name
             name = os.path.splitext(filename)[0].split(".")[1]
             network, station = name.split("_")
@@ -137,7 +121,7 @@ class EventBank(obsplus.EventBank):
             if stations and station not in stations:
                 continue
 
-            station_path = os.path.join(self.station_details_path, filename)
+            station_path = os.path.join(self.stations_from_eqs_path, filename)
             query = "SELECT * FROM '/stations/index'"
             details = fut._read_table(station_path, query)
             all_station_details.append(details)
@@ -148,16 +132,33 @@ class EventBank(obsplus.EventBank):
 
         return pd.concat(all_station_details, ignore_index=True)
 
-    def _get_picks_from_chunk(self, event_ids: List[str]) -> pd.DataFrame:
-        """Process a chunk of event IDs to extract picks."""
-        catalog = self.get_events(event_id=event_ids)
-        picks = catalog.picks_to_df()
-        arrivals = catalog.arrivals_to_df()
-        return fut.merge_arrivals_and_picks(arrivals, picks)
-
     def append_stations(self, stations, starttime, endtime,
                         chunk_seconds,
                         calculate_d_az=True) -> None:
+        """
+        Append station metadata to events in the event bank over a given time range.
+
+        The catalog is processed in time chunks. For each chunk:
+        - Events are loaded from the catalog generator
+        - Station information is appended to each event
+        - Valid events are stored in the event bank
+        - A stations summary table is updated in the event bank index
+
+        Parameters
+        ----------
+        stations : pandas.DataFrame
+            DataFrame containing station metadata.
+        starttime : obspy.UTCDateTime
+            Start time of the catalog processing window.
+        endtime : obspy.UTCDateTime
+            End time of the catalog processing window.
+        chunk_seconds : int
+            Length of each processing chunk in seconds.
+        calculate_d_az : bool, optional
+            Whether to calculate distance and azimuth between
+            events and stations (default is True).
+
+        """
         
         ebank_index_path = os.path.join(self.bank_path, ".index.db")
 
@@ -177,13 +178,11 @@ class EventBank(obsplus.EventBank):
                         f"Time range: {chunk_starttime} - {chunk_endtime} | "
                         f"Chunk creation time: {chunk_creation_time}")
 
-            # print(catalog)
             catalog = fut.append_stations_to_catalog(catalog=catalog, 
                                                     df_stations=stations,
                                                     calculate_d_az=calculate_d_az,
                                                     ebank_index_path=ebank_index_path,
                                                                 )
-            # print(catalog)
 
             new_len_catalog = len(catalog)
 
@@ -224,6 +223,30 @@ class EventBank(obsplus.EventBank):
                         )
                 logger.info(f"Stations summary updated successfully.")
 
+    # picks methods
+
+    def get_picks(self, event_ids: List[str]) -> pd.DataFrame:
+        """
+        Retrieve and merge picks and arrivals for a list of event IDs.
+
+        This method loads the events from the event bank, converts both picks and
+        arrivals to pandas DataFrames, and merges them into a single table using
+        the project-specific merge logic.
+
+        Parameters
+        ----------
+        event_ids : list of str
+            List of event identifiers to retrieve.
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame containing merged pick and arrival information.
+        """
+        catalog = self.get_events(event_id=event_ids)
+        picks = catalog.picks_to_df()
+        arrivals = catalog.arrivals_to_df()
+        return fut.merge_arrivals_and_picks(arrivals, picks)
 
     def save_picks(self, chunk_size: int = 100, event_id: Optional[List[str]] = None) -> None:
         """
@@ -265,7 +288,7 @@ class EventBank(obsplus.EventBank):
         table_exists = picks_table_name in fut.get_table_names(self.picks_path)
 
         for i, chunk_ids in enumerate(self._chunk_list(to_process_ids, chunk_size), start=1):
-            df = self._get_picks_from_chunk(chunk_ids)
+            df = self.get_picks(chunk_ids)
             if df.empty:
                 logger.warning("Chunk %d is empty. Skipping.", i)
                 continue
@@ -280,7 +303,53 @@ class EventBank(obsplus.EventBank):
         toc = time.time()
         logger.info("Saving picks completed in %.2f seconds", toc - tic)
 
+    def load_picks(self, query: Optional[str] = None,
+                  time_columns = ['time','origin_time']) -> pd.DataFrame:
+        """
+        Return unique picks from the picks database.
+
+        Args:
+            query (Optional[str]): SQL query string.
+
+        Returns:
+            pd.DataFrame: DataFrame of picks.
+        """
+        if query is None:
+            query = """
+                SELECT *
+                FROM '/picks/index'
+                WHERE pick_id IN (
+                    SELECT pick_id
+                    FROM '/picks/index'
+                    GROUP BY pick_id
+                    HAVING COUNT(*) = 1
+                )
+            """
+        if not os.path.exists(self.picks_path):
+            raise FileNotFoundError(
+                f"Picks database not found at {self.picks_path}. "
+                "Please run 'save_picks()' to create it."
+            )
+        df = fut._read_table(self.picks_path, query)
+        #convert time columns to datetime
+        
+        for col in time_columns:
+            if col in df.columns:
+                df[col] = pd.to_datetime(df[col], errors='coerce')
+
+        return df
+
+    #plotting functions
+    
     def plot_overview(self,savepath: str=None) -> None:
+        """
+        Plot a network map with events, stations, histograms, globe, and region.
+
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         
         analysis,events,stations = self._get_analysis()
 
@@ -292,8 +361,20 @@ class EventBank(obsplus.EventBank):
                         analysis=analysis,
                         output_file=savepath)
         
-
     def plot_stats(self,savepath: str=None) -> None:
+        """
+        Create a 5-panel seismic overview figure:
+            - Depth histogram
+            - Magnitude histogram
+            - Epicentral distance distribution (requires picks)
+            - Azimuthal gap (from events)
+            - Azimuth distribution (requires picks)
+        
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         events = self.read_index()
         try:
             picks = self.get_picks()
@@ -303,23 +384,92 @@ class EventBank(obsplus.EventBank):
         plot_stats(events, picks, savepath)
 
     def plot_uncertainty_boxplots(self, savepath: str=None) -> None:
+        """
+        Create a figure with two axes:
+        1. Boxplots for Horizontal and Vertical uncertainty (km)
+        2. Boxplot for Standard error
+
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         events = self.read_index()
         plot_uncertainty_boxplots(events, save_path=savepath)
 
     def plot_pick_stats(self, savepath: str=None) -> None:
+        """
+        Plot summary statistics for seismic picks (P, S, and S-P) as jointplots.
+
+        This function computes:
+        - First/last P travel times per event
+        - First/last S travel times per event
+        - First/last S-P times for stations that have both P and S picks
+        - Corresponding epicentral distances (converted to km)
+
+        It creates individual seaborn jointplots (scatter + marginal histograms),
+        saves them temporarily as PNGs, and then combines them into a single
+        multi-panel matplotlib figure.
+
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         picks = self.get_picks()
         plot_pick_stats(picks, save_path=savepath)
 
     def plot_station_location_uncertainty(self, savepath: str=None) -> None:
+        """
+        Compare confirmed vs calculated latitude and longitude in a DataFrame.
+
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         stations = self.get_stations()
         plot_station_location_uncertainty(stations, savepath)
 
     def plot_pick_histograms(self, savepath: str=None) -> None:
+        """
+        Plots three histograms:
+        1. Number of P picks per origin
+        2. Number of S picks per origin
+        3. Vp/Vs ratio histogram using Wadati method
+
+        Parameters
+        ----------
+        save_path : str or None
+            If given, save the figure to this path instead of showing it.
+        """
         picks = self.get_picks()
         print(picks.info())
         plot_pick_histograms(picks, save_path=savepath)
 
+    ## others
+
     def _get_analysis(self):
+        """
+        Compute summary statistics for the event bank.
+
+        This method gathers information about:
+        - Total number of events with valid locations
+        - Station availability and confirmation status
+        - Number of P and S phase arrivals
+        - Dataset contributor metadata
+
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - analysis : dict
+                Dictionary with summary statistics.
+            - events : pandas.DataFrame
+                DataFrame of events with valid latitude and longitude.
+            - stations : pandas.DataFrame
+                DataFrame of unique stations used in the analysis.
+        """
         stations = self.get_stations()
         stations.drop_duplicates(subset=["network","station"], inplace=True)
 
@@ -339,12 +489,18 @@ class EventBank(obsplus.EventBank):
                         "Total Stations": n_total_stations,
                         "Calculated Stations": n_calculated_stations,
                         "Confirmed Stations": n_confirmed_stations,
-                        "P arrivals": n_p_picks,
-                        "S arrivals": n_s_picks,
+                        "P arrivals": int(n_p_picks),
+                        "S arrivals": int(n_s_picks),
                         "contributor": self.contributor
                 }
         return analysis,events,stations
 
+    def __stations_sanity_check(self) -> bool:
+        """ Check if station details path exists."""
+        if not os.path.isdir(self.stations_from_eqs_path):
+            logger.warning("Station details path does not exist.")
+            return False
+        return True
 
     @staticmethod
     def _chunk_list(lst: List[str], n: int):
