@@ -3,9 +3,7 @@
 
 
 
-<h1>
-  <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
-</h1>
+# <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
 
 University of Texas at Dallas Earthquake Dataset
 
