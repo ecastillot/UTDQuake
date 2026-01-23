@@ -12,6 +12,12 @@ University of Texas at Dallas Earthquake Dataset
 - Nadine Ushakov
 - Marine Denolle
 
+# Dataset
+
+The dataset is available on Hugging Face: **UTDQuake**  
+
+[![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
+
 # Examples
 
 Coming soon!
