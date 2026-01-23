@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 
 
-ENV_CACHE_ROOT = "UTDQUAKE_ROOT"
-
+from .config import ENV_CACHE_ROOT
+from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
 
 def get_root() -> Path:
     """
@@ -39,20 +39,20 @@ def network_exists_locally(network: str) -> bool:
     path = get_eventbank_path(network)
     return path.exists() and any(path.iterdir())
 
-def list_remote_networks(repo_id="ecastillot/UTDQuake") -> list[str]:
+def list_remote_networks(repo_id: str = DEFAULT_REPO_ID) -> list[str]:
     """Return all networks available in the HF repo (without downloading)."""
     api = HfApi()
-    files = api.list_repo_files(repo_id, repo_type="dataset")
+    files = api.list_repo_files(repo_id, repo_type=DEFAULT_REPO_TYPE)
     return sorted(f.split("/")[-1].replace(".zip", "") for f in files if f.endswith(".zip"))
 
 def list_local_networks() -> list[str]:
     """Return all networks available locally."""
     root = get_root() / "events"
-    local_networks = sorted([p.name for p in root.iterdir() if p.is_dir() and any(p.iterdir())])
-    if local_networks:
-        return local_networks
+    if not root.exists():
+        return []
+    return sorted([p.name for p in root.iterdir() if p.is_dir() and any(p.iterdir())])
 
-def list_all_networks(repo_id="ecastillot/UTDQuake") -> list[str]:
+def list_all_networks(repo_id: str = DEFAULT_REPO_ID) -> list[str]:
     # Check local first
     root = get_root() / "events"
     local_networks = sorted([p.name for p in root.iterdir() if p.is_dir() and any(p.iterdir())])
@@ -61,7 +61,7 @@ def list_all_networks(repo_id="ecastillot/UTDQuake") -> list[str]:
 
     # Otherwise, fetch from HF
     api = HfApi()
-    files = api.list_repo_files(repo_id, repo_type="dataset")
+    files = api.list_repo_files(repo_id, repo_type=DEFAULT_REPO_TYPE)
     networks = sorted(f.split("/")[-1].replace(".zip", "") for f in files if f.endswith(".zip"))
     return networks
 

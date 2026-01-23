@@ -6,12 +6,12 @@ from typing import Optional
 from .cache import get_eventbank_path, get_root
 from .download import download_utdquake
 from utdquake.bank.bank import EventBank  
-
+from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
 
 def load_network(
     network: str,
-    repo_id: str = "ecastillot/UTDQuake",
-    repo_type: str = "dataset",
+    repo_id: str = DEFAULT_REPO_ID,
+    repo_type: str = DEFAULT_REPO_TYPE,
     download_if_missing: bool = True,
 ) -> EventBank:
     """
@@ -26,7 +26,7 @@ def load_network(
     repo_id
         Hugging Face repo id.
     repo_type
-        "dataset" recommended.
+        DEFAULT_REPO_TYPE recommended.
     download_if_missing
         If True, download missing data automatically.
 

@@ -8,15 +8,15 @@ __all__ = ["load_network"]
 repo_id = "ecastillot/UTDQuake"
 repo_type = "dataset"
 
-NETWORKS = []
+# NETWORKS = []
 
-if list_local_networks():
-    for net in list_local_networks():
-        globals()[net] = lambda net=net, **kwargs: load_network(net, **kwargs)
-    __all__.extend(list_local_networks())
+# if list_local_networks():
+#     for net in list_local_networks():
+#         globals()[net] = lambda net=net, **kwargs: load_network(net, **kwargs)
+#     __all__.extend(list_local_networks())
 
 
-__all__.extend(NETWORKS)
+# __all__.extend(NETWORKS)
 
 
 # api = HfApi()
