@@ -1017,14 +1017,6 @@ def plot_stats(events, picks=None, savepath=None):
     axes : dict of matplotlib.axes.Axes
     """
 
-    print(events.info())
-    print(picks.info())
-    print(events["event_id"].iloc[0])
-    print(events["time"].iloc[0])
-    print(picks["origin_id"].iloc[0])
-    print(picks["origin_time"].iloc[0])
-    exit()
-
     fig = plt.figure(figsize=(10, 8)) 
     gs = gridspec.GridSpec(2, 4, figure=fig)
     ax1 = fig.add_subplot(gs[0, 0:2]) # Depth 
@@ -1239,6 +1231,7 @@ def plot_stats(events, picks=None, savepath=None):
     
     if savepath:
         fig.savefig(savepath, dpi=300, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
     else:
         plt.show()
 
@@ -1733,7 +1726,7 @@ def plot_station_location_uncertainty(df, save_path,  dpi=300):
 
     plt.close(fig)
     
-    print(f"✅ Plot saved to {save_path}")
+    print(f"Plot saved to {save_path}")
     # print(f"Mean total difference: {distance.mean():.4f} km")
 
 def plot_venn(ax, df):

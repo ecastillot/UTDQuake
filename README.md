@@ -72,7 +72,7 @@ bank.plot_overview("./overview.png")
 bank.plot_uncertainty_boxplots("./uncertainty_boxplots.png")
 bank.plot_station_location_uncertainty("./station_location_uncertainty.png")
 bank.plot_stats("./stats.png")
-bank.plot_histograms("./histograms.png")
+bank.plot_pick_histograms("./histograms.png")
 bank.plot_pick_stats("./pick_stats.png")
 ```
 
