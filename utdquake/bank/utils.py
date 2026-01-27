@@ -19,6 +19,7 @@ import concurrent.futures as cf
 
 from obspy.clients.fdsn import Client as FDSNClient 
 import numpy as np
+import glob
 from obspy import UTCDateTime, Catalog
 from typing import  Optional
 from obspy.clients.fdsn.header import URL_MAPPINGS
@@ -71,6 +72,51 @@ picks_columns = ['agency','event_id','network',  'station', 'location', 'channel
 #     for catalog_dict in catalog_generator(catalog, starttime=starttime, endtime=endtime,
 #                                  chunk_seconds=chunk_seconds,
 #                                  patience=patience,reverse=reverse, **ev_kwargs):
+
+
+
+def load_picks_from_manifest( picks_dir:str,
+                            networks: list= None,
+                             
+                             ) -> pd.DataFrame:
+    """
+    Load picks from per-network Parquet manifests.
+
+    Args:
+        networks (Optional[List[str]]): List of network names to load. 
+            If None, loads all networks in manifests/picks/.
+        picks_dir (str): Directory where pick manifests are stored.
+    Returns:
+        pd.DataFrame: Combined picks for requested networks.
+    """
+    # picks_dir = os.path.join(self.bank_path, "manifests", "picks")
+
+    if networks is None:
+        pattern = os.path.join(picks_dir, "network=*.parquet")
+        files = glob.glob(pattern)
+    else:
+        files = [os.path.join(picks_dir, f"network={net}.parquet") for net in networks]
+
+    all_dfs = []
+    for f in files:
+        if os.path.exists(f):
+            df = pd.read_parquet(f)
+            all_dfs.append(df)
+        else:
+            logger.warning("Pick manifest not found: %s", f)
+
+    if not all_dfs:
+        return pd.DataFrame()
+
+    # Optional: convert time columns to datetime
+    time_cols = ['time', 'origin_time']
+    df_combined = pd.concat(all_dfs, ignore_index=True)
+    for col in time_cols:
+        if col in df_combined.columns:
+            df_combined[col] = pd.to_datetime(df_combined[col], errors='coerce')
+
+    return df_combined
+
 
 def remove_tables(path, tables_to_remove, test=True):
     """

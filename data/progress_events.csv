@@ -360,3 +360,4 @@ ISC,http://www.isc.ac.uk,CATAC,done,2026-01-07T06:03:20.173036,
 ISC,http://www.isc.ac.uk,BYKL,error,2026-01-10T15:17:28.139173,'NoneType' object has no attribute 'associated_phase_count'
 ISC,http://www.isc.ac.uk,BUC,done,2026-01-07T13:16:27.391250,
 ISC,http://www.isc.ac.uk,BGS,done,2026-01-07T13:21:08.107165,
+JAPAN,https://www.data.jma.go.jp/eqev/data/bulletin/eqdoc_e.html,JAPAN,done,2026-01-07T13:21:15.256823,

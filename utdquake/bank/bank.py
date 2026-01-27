@@ -7,17 +7,17 @@ import pandas as pd
 import obsplus
 import matplotlib.pyplot as plt
 from . import utils as fut
-from . import setup_logger, add_file_handler
+
 import datetime
+from utdquake.core.path import get_manifest_path
 from utdquake.utils.plot import (plot_overview,plot_stats,
                                  plot_station_location_uncertainty,
                                  plot_pick_histograms,
                                  plot_uncertainty_boxplots,
-                                 plot_pick_stats)
+                                 plot_pick_stats,
+                                 compute_region)
 
 logger = logging.getLogger(__name__)
-setup_logger(logging_level=logging.INFO)
-
 
 class EventBank(obsplus.EventBank):
     """
@@ -34,8 +34,24 @@ class EventBank(obsplus.EventBank):
         super().__init__(bank_path, *args, **kwargs)
         self.stations_from_eqs_path = os.path.join(self.bank_path, ".stations")
         self.picks_path = os.path.join(self.bank_path, ".picks.db")
+        self.manifest_picks_path = os.path.join(get_manifest_path(), "picks")
         self.contributor = os.path.basename(self.bank_path)
+        self.__sanitize()
 
+    def __sanitize(self) -> None:
+        """Perform sanity checks on the EventBank."""
+        try:
+            self.get_stations()
+        except Exception:
+            logger.exception("Sanity check failed (stations)")
+            raise RuntimeError("EventBank sanity check failed (stations)") from None
+
+        try:
+            self.read_index()
+        except Exception:
+            logger.exception("Sanity check failed (index)")
+            raise RuntimeError("EventBank sanity check failed (index)") from None
+        
 
     @property
     def index_table_names(self) -> List[str]:
@@ -246,19 +262,44 @@ class EventBank(obsplus.EventBank):
         catalog = self.get_events(event_id=event_ids)
         picks = catalog.picks_to_df()
         arrivals = catalog.arrivals_to_df()
+
+        # Build a table linking origin_id -> event_id
+        origin_map = []
+        for ev in catalog:
+            for org in ev.origins:
+                origin_map.append({
+                    "origin_id": str(org.resource_id),
+                    "event_id": str(ev.resource_id),
+                })
+        origin_map = pd.DataFrame(origin_map).drop_duplicates()
+
+        # Make sure arrivals origin_id is comparable (string)
+        arrivals["origin_id"] = arrivals["origin_id"].astype(str)
+
+        # Merge event_id into arrivals
+        arrivals = arrivals.merge(origin_map, on="origin_id", how="left")
+
         return fut.merge_arrivals_and_picks(arrivals, picks)
 
-    def save_picks(self, chunk_size: int = 100, event_id: Optional[List[str]] = None) -> None:
+    def save_picks(self, chunk_size: int = 100, 
+                   event_id: Optional[List[str]] = None,
+                   replace: bool = False) -> None:
         """
         Save picks to SQLite DB in chunks, avoiding duplicates.
 
         Args:
             chunk_size (int): Number of events to process per chunk.
             event_id (Optional[List[str]]): Specific event IDs to process.
+            replace (bool): If True, deletes the existing picks DB and rebuilds it from scratch.
         """
         picks_table_name = "/picks/index"
         progress_table_name = "/picks/progress"
         tic = time.time()
+
+        # If replace=True, remove DB so we start clean
+        if replace and os.path.exists(self.picks_path):
+            logger.warning("replace=True -> deleting existing picks DB: %s", self.picks_path)
+            os.remove(self.picks_path)
 
         # Determine event IDs
         if event_id is None:
@@ -292,7 +333,7 @@ class EventBank(obsplus.EventBank):
             if df.empty:
                 logger.warning("Chunk %d is empty. Skipping.", i)
                 continue
-
+            
             self._save_chunk_to_db(df, picks_table_name, conn, table_exists)
             self._update_progress_table(chunk_ids, progress_table_name, conn)
             table_exists = True
@@ -303,36 +344,53 @@ class EventBank(obsplus.EventBank):
         toc = time.time()
         logger.info("Saving picks completed in %.2f seconds", toc - tic)
 
-    def load_picks(self, query: Optional[str] = None,
-                  time_columns = ['time','origin_time']) -> pd.DataFrame:
+    def load_picks(
+                self,
+                time_columns: List[str] = ['time', 'origin_time'],
+                fmt: str = "sql",           # <-- "sql" or "manifest"
+                query: Optional[str] = None,
+                networks: Optional[List[str]] = None,  # only used for manifest
+                ) -> pd.DataFrame:
         """
-        Return unique picks from the picks database.
+        Load picks either from the picks database or from the manifest files.
 
         Args:
-            query (Optional[str]): SQL query string.
+            query (Optional[str]): SQL query string (used only for sql fmt).
+            time_columns (List[str]): Columns to parse as datetime.
+            fmt (str): 'sql' for .picks.db, 'manifest' for parquet manifests.
+            networks (Optional[List[str]]): Which networks to load (only for manifest).
 
         Returns:
             pd.DataFrame: DataFrame of picks.
         """
-        if query is None:
-            query = """
-                SELECT *
-                FROM '/picks/index'
-                WHERE pick_id IN (
-                    SELECT pick_id
-                    FROM '/picks/index'
-                    GROUP BY pick_id
-                    HAVING COUNT(*) = 1
+        if fmt == "manifest":
+            
+            df = fut.load_picks_from_manifest(
+                            self.manifest_picks_path,
+                            networks=networks)
+        elif fmt == "sql":
+            if not os.path.exists(self.picks_path):
+                raise FileNotFoundError(
+                    f"Picks database not found at {self.picks_path}. "
+                    "Please run 'save_picks()' to create it."
                 )
-            """
-        if not os.path.exists(self.picks_path):
-            raise FileNotFoundError(
-                f"Picks database not found at {self.picks_path}. "
-                "Please run 'save_picks()' to create it."
-            )
-        df = fut._read_table(self.picks_path, query)
-        #convert time columns to datetime
-        
+
+            if query is None:
+                query = """
+                    SELECT *
+                    FROM '/picks/index'
+                    WHERE pick_id IN (
+                        SELECT pick_id
+                        FROM '/picks/index'
+                        GROUP BY pick_id
+                        HAVING COUNT(*) = 1
+                    )
+                """
+            df = fut._read_table(self.picks_path, query)
+        else:
+            raise ValueError(f"Unknown fmt={fmt}, expected 'sql' or 'manifest'")
+
+        # convert time columns
         for col in time_columns:
             if col in df.columns:
                 df[col] = pd.to_datetime(df[col], errors='coerce')
@@ -480,17 +538,32 @@ class EventBank(obsplus.EventBank):
 
         events = self.read_index()
         events = events.dropna(subset=["latitude","longitude"])
+        min_event_time = events['time'].min()
+        max_event_time = events['time'].max()
         n_p_picks = events['p_phase_count'].sum()
         n_s_picks = events['s_phase_count'].sum()
 
+        confirmed_stations = confirmed_stations.rename(columns={"calculated_longitude": "longitude",
+                                                                "calculated_latitude": "latitude"})
+        (approx_lon_min, approx_lon_max, 
+        approx_lat_min, approx_lat_max)  = compute_region(df_events=events,
+                                                        df_stations=confirmed_stations,
+                                                        rm_outliers=True)
+
         analysis = {
+                        "Contributor": self.contributor,
                         "Events": len(events),
                         "Total Stations": n_total_stations,
                         "Calculated Stations": n_calculated_stations,
                         "Confirmed Stations": n_confirmed_stations,
                         "P arrivals": int(n_p_picks),
                         "S arrivals": int(n_s_picks),
-                        "contributor": self.contributor
+                        "Start Time": min_event_time,
+                        "End Time": max_event_time,
+                        "Approx Lon Min": approx_lon_min,
+                        "Approx Lon Max": approx_lon_max,
+                        "Approx Lat Min": approx_lat_min,
+                        "Approx Lat Max": approx_lat_max,
                 }
         return analysis,events,stations
 
@@ -529,7 +602,14 @@ class EventBank(obsplus.EventBank):
         if not table_exists:
             df.to_sql(table_name, conn, if_exists="replace", index=False)
         else:
-            df.to_sql(table_name, conn, if_exists="append", index=False, method="multi")
+            df.to_sql(
+                        table_name,
+                        conn,
+                        if_exists="append",
+                        index=False,
+                        method="multi",
+                        chunksize=80,
+                    )
         conn.commit()
 
     @staticmethod

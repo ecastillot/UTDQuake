@@ -260,7 +260,7 @@ def plot_overview(events, stations, analysis,
         DataFrame with station data.
     analysis : dict
         Dictionary with info to show: must contain keys like
-        'contributor', 'events_total', 'stations_good', 'stations_bad',
+        'Contributor', 'events_total', 'stations_good', 'stations_bad',
         'p_arrivals_total', 's_arrivals_total'.
     region : tuple
         (lon_min, lon_max, lat_min, lat_max) for map extent.
@@ -308,7 +308,7 @@ def plot_overview(events, stations, analysis,
     ax5 = fig.add_subplot(gs_right[2, 0])  # bottom histogram
 
 
-    ax1.set_title(f"Contributor: {analysis.get('contributor', 'N/A')}",
+    ax1.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
                   fontsize=14, weight='bold',loc='left')
     ax1.text(
         0.70, 0.8,
@@ -563,7 +563,7 @@ def plot_overview(events, stations, analysis,
     gl.top_labels = False
     gl.right_labels = False
 
-    # ax2.set_title(f"Contributor: {analysis.get('contributor', 'N/A')}",
+    # ax2.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
     #               fontsize=14, weight='bold',loc='left')
 
     add_scalebar(ax2, region, location='lower left')
@@ -595,7 +595,7 @@ def plot_network_map(events, stations, region, analysis,
         (lon_min, lon_max, lat_min, lat_max) for map extent.
     analysis : dict
         Dictionary with info to show: must contain keys like
-        'contributor', 'events_total', 'stations_good', 'stations_bad',
+        'Contributor', 'events_total', 'stations_good', 'stations_bad',
         'p_arrivals_total', 's_arrivals_total'.
     output_file : str, optional
         Path to save figure. If None, shows interactively.
@@ -747,7 +747,7 @@ def plot_network_map(events, stations, region, analysis,
     gl.top_labels = False
     gl.left_labels = False
 
-    ax5.set_title(f"Contributor: {analysis.get('contributor', 'N/A')}",
+    ax5.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
                   fontsize=14, weight='bold')
 
     add_scalebar(ax5, region, location='lower left')
@@ -794,7 +794,7 @@ def plot_network_map2(events, stations, region, analysis,
         (lon_min, lon_max, lat_min, lat_max) for map extent.
     analysis : dict
         Dictionary with info to show: must contain keys like
-        'contributor', 'events_total', 'stations_good', 'stations_bad',
+        'Contributor', 'events_total', 'stations_good', 'stations_bad',
         'p_arrivals_total', 's_arrivals_total'.
     output_file : str, optional
         Path to save figure. If None, shows interactively.
@@ -945,7 +945,7 @@ def plot_network_map2(events, stations, region, analysis,
     gl.top_labels = False
     gl.left_labels = False
 
-    ax5.set_title(f"Contributor: {analysis.get('contributor', 'N/A')}",
+    ax5.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
                   fontsize=14, weight='bold')
 
     add_scalebar(ax5, region, location='lower left')
@@ -2721,7 +2721,7 @@ if __name__ == "__main__":
     region = [-75, -70, 0, 3]  # [min_lon, max_lon, min_lat, max_lat]
     # region = [-180, 180, -90, 90]  # [min_lon, max_lon, min_lat, max_lat]
     analysis = {
-        'contributor': 'Emmanuel Castillo',
+        'Contributor': 'Emmanuel Castillo',
         'events_total': len(events['time_event'].unique()), 
         'stations_good': len(events['station'].unique()),
         'stations_bad': 0,  # Placeholder for bad stations

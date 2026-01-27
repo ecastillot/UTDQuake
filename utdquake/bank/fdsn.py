@@ -24,7 +24,6 @@ import concurrent.futures as cf
 from obspy.clients.fdsn import Client as FDSNClient 
 import logging
 from . import utils as fut
-from . import setup_logger,add_file_handler
 
 logger = logging.getLogger(__name__)
 
@@ -152,25 +151,7 @@ class Client(FDSNClient):
             Positional arguments to be passed to the base FDSNClient constructor.
         **kwargs : dict
             Keyword arguments to be passed to the base FDSNClient constructor.
-            Special keys include:
-                - configure_logging (bool): Whether to set up logging. Default is True.
-                - logging_level (int): Logging level (e.g., logging.INFO or logging.DEBUG).
-                                    Default is logging.INFO.
         """
-
-        if "configure_logging" not in kwargs:   
-            self.configure_logging = True
-        else:
-            self.configure_logging = kwargs["configure_logging"]
-            kwargs.pop("configure_logging", None)  # Remove to avoid passing to FDSNClient
-        if "logging_level" not in kwargs:
-            self.logging_level = logging.INFO
-        else:
-            self.logging_level = kwargs["logging_level"]
-            kwargs.pop("logging_level", None)  # Remove to avoid passing to FDSNClient
-
-        if self.configure_logging:
-            setup_logger(self.logging_level)
 
         self.event_id_query_fmt = None
 
@@ -747,13 +728,7 @@ class Client(FDSNClient):
             Number of parallel threads to use when saving with eventid mode.
 
         """
-        # Prepare the log file path
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_file = os.path.join(events_bank_path, ".logs", f"events_{timestamp}.log")
-        # Add file handler for this run
-        add_file_handler(log_file)
-        logger.info(f"Logging this run to {log_file}")
-
+        
         logger.info(f"{'#'*20} PREPARING TO DOWNLOAD EVENTS ")
         logger.info(f"Saving events from {starttime} to {endtime} in {events_bank_path}")
         # Check for available picks

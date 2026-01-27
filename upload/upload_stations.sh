@@ -11,10 +11,11 @@ source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
 
 BASE="/groups/igonin/ecastillo/UTDQuake"
-STATIONS_SRC="${BASE}/stations"
 
 STAGE="${BASE}/_hf_stage"
 
+HF_WORKERS=4
+echo "HF_WORKERS=$HF_WORKERS"
 
 hf upload-large-folder ecastillot/UTDQuake "$STAGE" \
   --include "stations/*.zip" \

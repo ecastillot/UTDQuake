@@ -1,0 +1,104 @@
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Checking availability for ISC-http://www.isc.ac.uk
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-VAO: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-UCR: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-UCC: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-SJA: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-RSPR: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-RSNC: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-RHSSO: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-PDG: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-NAO: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-MRB: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-LDG: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-KRSC: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-JSN: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-IGQ: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-GCG: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-ECX: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-CATAC: already done
+2026-01-10 09:17:13 [INFO] 1.download_specific_events.<module> - Downloading events for contributor: ISC-http://www.isc.ac.uk-BYKL
+2026-01-10 09:17:13 [INFO] __init__.add_file_handler - Added file handler: /groups/igonin/ecastillo/UTDQuake/test/10132025/bank_test/BYKL/.logs/events_20260110_091713.log
+2026-01-10 09:17:13 [INFO] fdsn.download_events - Logging this run to /groups/igonin/ecastillo/UTDQuake/test/10132025/bank_test/BYKL/.logs/events_20260110_091713.log
+2026-01-10 09:17:13 [INFO] fdsn.download_events - #################### PREPARING TO DOWNLOAD EVENTS 
+2026-01-10 09:17:13 [INFO] fdsn.download_events - Saving events from 2010-01-01T00:00:00.000000Z to 2025-08-01T00:00:00.000000Z in /groups/igonin/ecastillo/UTDQuake/test/10132025/bank_test/BYKL
+2026-01-10 09:17:13 [INFO] fdsn.download_events - Checking picks availability from 2010-01-01T00:00:00.000000Z to 2025-08-01T00:00:00.000000Z...
+2026-01-10 09:17:13 [INFO] utils.catalog_generator - [1/3650] Fetching events backward 2025-07-31T00:00:00.000000Z to 2025-08-01T00:00:00.000000Z...
+2026-01-10 09:17:14 [ERROR] utils.catalog_generator - Error fetching events from 2025-07-31T00:00:00.000000Z to 2025-08-01T00:00:00.000000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:14 [INFO] utils.catalog_generator - [2/3650] Fetching events backward 2025-07-30T00:00:00.000000Z to 2025-07-31T00:00:00.000000Z...
+2026-01-10 09:17:15 [ERROR] utils.catalog_generator - Error fetching events from 2025-07-30T00:00:00.000000Z to 2025-07-31T00:00:00.000000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:15 [INFO] utils.catalog_generator - [3/3650] Fetching events backward 2025-07-29T00:00:00.000000Z to 2025-07-30T00:00:00.000000Z...
+2026-01-10 09:17:15 [ERROR] utils.catalog_generator - Error fetching events from 2025-07-29T00:00:00.000000Z to 2025-07-30T00:00:00.000000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:15 [INFO] utils.catalog_generator - [4/3650] Fetching events backward 2025-07-28T00:00:00.000000Z to 2025-07-29T00:00:00.000000Z...
+2026-01-10 09:17:17 [INFO] utils.catalog_generator - Restarting patience counter after successful fetch.
+2026-01-10 09:17:17 [INFO] fdsn._picks_availability - Checking picks availability for http://www.isc.ac.uk from 2025-07-28T17:23:56.800000Z to 2025-07-28T17:25:56.800000Z
+2026-01-10 09:17:18 [INFO] fdsn._picks_availability - Found picks in natural mode (using includearrivals=True) for http://www.isc.ac.uk
+2026-01-10 09:17:18 [INFO] utils.load_stations_metadata_from_bank - Loading stations from database: /groups/igonin/ecastillo/Bank/stations/.stations.db
+2026-01-10 09:17:21 [INFO] utils.load_stations_metadata_from_bank - Loaded 641922 stations from database.
+2026-01-10 09:17:21 [INFO] fdsn.download_events - Saving events to /groups/igonin/ecastillo/UTDQuake/test/10132025/bank_test/BYKL with structure: {year}/{month}/{day}
+2026-01-10 09:17:23 [INFO] utils.update_time_from_bank - Total events in archive bank: 3006
+2026-01-10 09:17:23 [INFO] fdsn.download_events - #################### EVENT DOWNLOADING
+2026-01-10 09:17:23 [INFO] fdsn.download_events - Starting event download from from 2010-01-01T00:00:00.000000Z to 2010-03-19 19:10:51.800000 (reverse=True)
+2026-01-10 09:17:23 [INFO] utils.catalog_generator - [1/3650] Fetching events backward 2010-03-18T19:10:51.800000Z to 2010-03-19T19:10:51.800000Z...
+2026-01-10 09:17:24 [ERROR] utils.catalog_generator - Error fetching events from 2010-03-18T19:10:51.800000Z to 2010-03-19T19:10:51.800000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:24 [INFO] fdsn.download_events - Chunk id: 0   initiated | Time range: 2010-03-18 19:10:51.800000 - 2010-03-19 19:10:51.800000 | Chunk creation time: 2026-01-10 09:17:24.009240
+2026-01-10 09:17:24 [WARNING] fdsn.download_events - Chunk id 0   has no events. Start time: 2010-03-18 19:10:51.800000, End time: 2010-03-19 19:10:51.800000. Error patience counter: 1. Continuing to next chunk.
+2026-01-10 09:17:24 [INFO] utils.catalog_generator - [2/3650] Fetching events backward 2010-03-17T19:10:51.800000Z to 2010-03-18T19:10:51.800000Z...
+2026-01-10 09:17:24 [ERROR] utils.catalog_generator - Error fetching events from 2010-03-17T19:10:51.800000Z to 2010-03-18T19:10:51.800000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:24 [INFO] fdsn.download_events - Chunk id: 0   initiated | Time range: 2010-03-17 19:10:51.800000 - 2010-03-18 19:10:51.800000 | Chunk creation time: 2026-01-10 09:17:24.844506
+2026-01-10 09:17:24 [WARNING] fdsn.download_events - Chunk id 0   has no events. Start time: 2010-03-17 19:10:51.800000, End time: 2010-03-18 19:10:51.800000. Error patience counter: 2. Continuing to next chunk.
+2026-01-10 09:17:24 [INFO] utils.catalog_generator - [3/3650] Fetching events backward 2010-03-16T19:10:51.800000Z to 2010-03-17T19:10:51.800000Z...
+2026-01-10 09:17:25 [ERROR] utils.catalog_generator - Error fetching events from 2010-03-16T19:10:51.800000Z to 2010-03-17T19:10:51.800000Z: No data available for request.
+HTTP Status code: 204
+Detailed response of server:
+
+
+2026-01-10 09:17:25 [INFO] fdsn.download_events - Chunk id: 0   initiated | Time range: 2010-03-16 19:10:51.800000 - 2010-03-17 19:10:51.800000 | Chunk creation time: 2026-01-10 09:17:25.559823
+2026-01-10 09:17:25 [WARNING] fdsn.download_events - Chunk id 0   has no events. Start time: 2010-03-16 19:10:51.800000, End time: 2010-03-17 19:10:51.800000. Error patience counter: 3. Continuing to next chunk.
+2026-01-10 09:17:25 [INFO] utils.catalog_generator - [4/3650] Fetching events backward 2010-03-15T19:10:51.800000Z to 2010-03-16T19:10:51.800000Z...
+2026-01-10 09:17:26 [INFO] utils.catalog_generator - Restarting patience counter after successful fetch.
+2026-01-10 09:17:26 [INFO] fdsn.download_events - Chunk id: 0   initiated | Time range: 2010-03-15 19:10:51.800000 - 2010-03-16 19:10:51.800000 | Chunk creation time: 2026-01-10 09:17:26.365243
+2026-01-10 09:17:26 [INFO] fdsn.download_events - Chunk id: 0   - Initial fast query without requering picks. Apparently    1 events
+2026-01-10 09:17:26 [INFO] fdsn.download_events - Using stations from /groups/igonin/ecastillo/Bank/stations to recalculate distances and azimuths
+2026-01-10 09:17:26 [INFO] utils.append_stations_to_catalog - Starting to process 1 events in catalog YOSDuuXz. (This id is created just for logging purposes)
+2026-01-10 09:17:26 [INFO] utils.append_stations_to_catalog - Processing event smi:ISC/evid=301442392 with origin smi:ISC/origid=300766339
+2026-01-10 09:17:26 [WARNING] utils.process_arrival - Station IR.ORL not found in station metadata.
+2026-01-10 09:17:26 [WARNING] utils.process_arrival - Station IR.MOY not found in station metadata.
+2026-01-10 09:17:26 [WARNING] utils.process_arrival - Station IR.MOY not found in station metadata.
+2026-01-10 09:17:26 [WARNING] utils.process_arrival - Station IR.ARS not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.ARS not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.ZAK not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.ZAK not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.IRK not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.IRK not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.TRG not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.TRG not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.TRG not found in station metadata.
+2026-01-10 09:17:27 [WARNING] utils.process_arrival - Station IR.OGRR not found in station metadata.
+2026-01-10 09:17:28 [WARNING] utils.process_arrival - Station IR.OGRR not found in station metadata.
+2026-01-10 09:17:28 [WARNING] utils.process_arrival - Station IR.OGRR not found in station metadata.
+2026-01-10 09:17:28 [INFO] utils.parse_origin - Processed origin smi:ISC/origid=300766339. Ready to update quality metrics.
+2026-01-10 09:17:28 [INFO] utils.update_origin_quality - Updating quality metrics for origin smi:ISC/origid=300766339.
+2026-01-10 09:17:28 [ERROR] 1.download_specific_events.<module> - Error for BYKL: 'NoneType' object has no attribute 'associated_phase_count'
+2026-01-10 09:17:28 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-BUC: already done
+2026-01-10 09:17:28 [INFO] 1.download_specific_events.<module> - Skipping ISC-http://www.isc.ac.uk-BGS: already done
+2026-01-10 09:17:28 [INFO] 1.download_specific_events.<module> - Finished processing ISC-http://www.isc.ac.uk

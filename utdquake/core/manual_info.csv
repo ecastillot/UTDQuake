@@ -1,0 +1,115 @@
+network,score,continent,countries,agency,url
+AAE,2,Africa,"Ethiopia,Kenya, Tanzania",ISC,http://www.isc.ac.uk
+AEIC,5,North America,"US: Alaska",ISC,http://www.isc.ac.uk
+admin,4,World,World,USGS,http://earthquake.usgs.gov
+AFAD,5,Middle East,Middle East,ISC,http://www.isc.ac.uk
+ak,5,North America,US: Alaska,USGS,http://earthquake.usgs.gov
+ANF,5,North America,"US: Alaska, Eastern site",ISC,http://www.isc.ac.uk
+ASGSR,1,Other,,ISC,http://www.isc.ac.uk
+ATH,5,Europe,Greece,ISC,http://www.isc.ac.uk
+at,5,World,World,USGS,http://earthquake.usgs.gov
+AUST,5,Oceania,Australia,ISC,http://www.isc.ac.uk
+av,5,North America,Alaska,USGS,http://earthquake.usgs.gov
+AWI,1,Antartic,Antartic,ISC,http://www.isc.ac.uk
+BEO,5,Europe,"Croatia,serbia, romania, kosovo albania, bulgaria",ISC,http://www.isc.ac.uk
+BER,5,Europe,"Norway, Sweeden, Finland, Svalbard",ISC,http://www.isc.ac.uk
+BGS,4,Europe,UK,ISC,http://www.isc.ac.uk
+BJI,3,Asia,China,ISC,http://www.isc.ac.uk
+BNS,1,Other,,ISC,http://www.isc.ac.uk
+BUC,5,Europe,,ISC,http://www.isc.ac.uk
+BYKL,4,Asia,Mongolia?,ISC,http://www.isc.ac.uk
+CATAC,5,Central America,"Panama, Costa Rica, Nicaragua, Honduras, Guatemala, Salvador",ISC,http://www.isc.ac.uk
+CLL,1,Other,,ISC,http://www.isc.ac.uk
+CNRM,5,Europe,"Spain, Morocco, South Portugal",ISC,http://www.isc.ac.uk
+DJA,5,Asia,"Sumatra, Indonesia",ISC,http://www.isc.ac.uk
+EAF,5,Africa,,ISC,http://www.isc.ac.uk
+ECGS,3,Africa,,ISC,http://www.isc.ac.uk
+ECX,5,North America,Baja California (South),ISC,http://www.isc.ac.uk
+EST,4,Europe,Estonia,ISC,http://www.isc.ac.uk
+ETH,5,Europe,Switzerland,ETH,http://eida.ethz.ch
+ew,2,North America,"US: California, Oregon, Washington",USGS,http://earthquake.usgs.gov
+FCIAR,1,Other,,ISC,http://www.isc.ac.uk
+FUNV,5,South America,Venezuela,ISC,http://www.isc.ac.uk
+GCG,5,Central America,Guatemala?,ISC,http://www.isc.ac.uk
+GEOFON,5,World,,GEOFON,http://geofon.gfz-potsdam.de
+GFZ,5,World,,GFZ,http://geofon.gfz-potsdam.de
+GFZ,5,World,,ISC,http://www.isc.ac.uk
+GII,5,Middle East,"Cyprus, Lebanon, Israel",ISC,http://www.isc.ac.uk
+HEL,5,Europe,"Finland, Sweden",ISC,http://www.isc.ac.uk
+hv,5,North America,Hawai,USGS,http://earthquake.usgs.gov
+HVO,3,North America,Hawai,ISC,http://www.isc.ac.uk
+HYB,1,Africa,,ISC,http://www.isc.ac.uk
+IAGMA,1,Asia,Mongolia?,ISC,http://www.isc.ac.uk
+IDC,5,World,,ISC,http://www.isc.ac.uk
+IEPN,3,Other,???,ISC,http://www.isc.ac.uk
+IGQ,4,South America,Ecuador,ISC,http://www.isc.ac.uk
+INET,4,Central America,Nicaragua,ISC,http://www.isc.ac.uk
+INMG,5,Europe,"Spain, Morocco, South Portugal",ISC,http://www.isc.ac.uk
+IPEC,3,Other,,ISC,http://www.isc.ac.uk
+IPGP,5,Central America,Lesser Antilles,IPGP,http://ws.ipgp.fr
+IPGP,5,Central America,Lesser Antilles,ISC,http://www.isc.ac.uk
+ISC,5,World,,ISC,http://www.isc.ac.uk
+ISK,5,Europe,Turkey,ISC,http://www.isc.ac.uk
+JAPAN,5,Asia,Japan,JAPAN,https://www.data.jma.go.jp/eqev/data/bulletin/eqdoc_e.html
+ISN,4,Middle East,"Iraq, Iran",ISC,http://www.isc.ac.uk
+JSN,4,Central America,Jamaica,ISC,http://www.isc.ac.uk
+JSO,2,Middle East,"Israel, Jordan",ISC,http://www.isc.ac.uk
+KISR,2,Middle East,Kuwait,ISC,http://www.isc.ac.uk
+KMA,4,Asia,South Korea,ISC,http://www.isc.ac.uk
+KNET,4,Middle East,"Tajikistan, Kyrgyztan",ISC,http://www.isc.ac.uk
+KRNET,5,Middle East,,ISC,http://www.isc.ac.uk
+KRSC,5,Asia,East Russia,ISC,http://www.isc.ac.uk
+KRSZO,5,Europe,,ISC,http://www.isc.ac.uk
+LDG,5,Europe,,ISC,http://www.isc.ac.uk
+LIC,1,Other,,ISC,http://www.isc.ac.uk
+LJU,1,Other,,ISC,http://www.isc.ac.uk
+MAN,2,Asia,Philippines,ISC,http://www.isc.ac.uk
+mb,5,North America,Montana,USGS,http://earthquake.usgs.gov
+MDD,5,Europe,"Spain, Morocco, South Portugal",ISC,http://www.isc.ac.uk
+MEX,5,Central America,Mexico,ISC,http://www.isc.ac.uk
+MRB,5,Europe,"Spain, France",ISC,http://www.isc.ac.uk
+NAO,3,Europe,"Norway, Sweeden, Finland, Svalbard",ISC,http://www.isc.ac.uk
+nc,5,North America,northern california,USGS,http://earthquake.usgs.gov
+NIC,5,Middle East,Cyprus,ISC,http://www.isc.ac.uk
+nm,5,North America,New Mexico,USGS,http://earthquake.usgs.gov
+nn,5,North America,Nevada,USGS,http://earthquake.usgs.gov
+NNC,5,Asia,"Kazakhstan, China",ISC,http://www.isc.ac.uk
+NOA,5,Europe,"Greece, Albania, North Macedonia, Bulgaria, Romania",ISC,http://www.isc.ac.uk
+NOU,5,Oceania,"New Zeland, New Caledonia",ISC,http://www.isc.ac.uk
+ok,5,North America,Oklahoma,USGS,http://earthquake.usgs.gov
+OSPL,5,Central America,"Haiti, Dominic Republic, Puerto Rico",ISC,http://www.isc.ac.uk
+OTT,5,North America,"North US, East Canada, North East Canada",ISC,http://www.isc.ac.uk
+PDG,4,Europe,"Bosnia, Croatia, Montenegro",ISC,http://www.isc.ac.uk
+pr,5,Central America,Puerto Rico,USGS,http://earthquake.usgs.gov
+PRE,5,Africa,South Africa,ISC,http://www.isc.ac.uk
+pt,2,World,,USGS,http://earthquake.usgs.gov
+REN,2,North America,US: Nevada,ISC,http://www.isc.ac.uk
+RHSSO,5,Europe,"Bosnia, Croatia, Montenegro, Albania",ISC,http://www.isc.ac.uk
+RSNC,5,South America,Colombia,ISC,http://www.isc.ac.uk
+RSPR,5,Central America,Puerto Rico,ISC,http://www.isc.ac.uk
+SCEDC,2,North America,Southern California,ISC,http://www.isc.ac.uk
+se,4,North America,US: South East US,USGS,http://earthquake.usgs.gov
+SJA,5,South America,"Chile, Argentina",ISC,http://www.isc.ac.uk
+SOF,3,Europe,Bulgaria,ISC,http://www.isc.ac.uk
+SSN,1,Other,,ISC,http://www.isc.ac.uk
+SSS,1,Other,,ISC,http://www.isc.ac.uk
+STR,2,Other,,ISC,http://www.isc.ac.uk
+TAP,5,Asia,Taiwan,ISC,http://www.isc.ac.uk
+THE,5,Europe,Greece,ISC,http://www.isc.ac.uk
+THR,3,Middle East,Iran,ISC,http://www.isc.ac.uk
+TIF,3,Middle East,"Georgia, Azerbaijan",ISC,http://www.isc.ac.uk
+TIR,5,Europe,"Italy, Greece",ISC,http://www.isc.ac.uk
+TUN,4,Africa,Tunisia,ISC,http://www.isc.ac.uk
+tx,5,North America,US: Texas,USGS,http://earthquake.usgs.gov
+UCC,4,Europe,"Belgium, Luxemburg, Germany",ISC,http://www.isc.ac.uk
+UCR,5,Central America,"Panama, Costa Rica, Nicaragua, Honduras, Guatemala, Salvador",ISC,http://www.isc.ac.uk
+UPA,5,Central America,"Panama, Costa Rica",ISC,http://www.isc.ac.uk
+UPP,5,Europe,Sweeden,ISC,http://www.isc.ac.uk
+USP,5,South America,"Brazil and world",ISC,http://www.isc.ac.uk
+us,5,World,,USGS,http://earthquake.usgs.gov
+uu,5,North America,US: Utah,USGS,http://earthquake.usgs.gov
+UUSS,2,North America,US: Utah Wyoming,ISC,http://www.isc.ac.uk
+uw,5,North America,US: Washington and Oregon,USGS,http://earthquake.usgs.gov
+VAO,4,South America,"Brazil, Chile",ISC,http://www.isc.ac.uk
+VIE,5,Europe,Austria,ISC,http://www.isc.ac.uk
+ZUR,5,Europe,Switzerland,ISC,http://www.isc.ac.uk

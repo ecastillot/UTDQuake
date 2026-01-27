@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"name": "CMEZ-SPHighResCatalog",
+			"path": "../../TEST/CMEZ-SPHighResCatalog"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}

@@ -16,7 +16,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-test/
 test/10132025/bank_test/**
 eggs/
 .eggs/

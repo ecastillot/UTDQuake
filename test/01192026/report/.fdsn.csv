@@ -1,0 +1,338 @@
+agency,contributor,url,notes
+ETH,ETH,http://eida.ethz.ch,
+GEOFON,GEOFON,http://geofon.gfz-potsdam.de,
+GEONET,WEL,http://service.geonet.org.nz,No events found in the specified time range.
+GFZ,GFZ,http://geofon.gfz-potsdam.de,
+IPGP,IPGP,http://ws.ipgp.fr,
+ISC,AAA,http://www.isc.ac.uk,
+ISC,AAE,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,ABA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ADE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,AFAD,http://www.isc.ac.uk,
+ISC,AFAR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,AFUA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ALG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ALI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ANDRE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ANF,http://www.isc.ac.uk,
+ISC,ASGSR,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,ASIES,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,ASL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ASM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ATA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ATH,http://www.isc.ac.uk,
+ISC,AUST,http://www.isc.ac.uk,
+ISC,AVE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,AVETI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,AWI,http://www.isc.ac.uk,
+ISC,BAA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BAAS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BDF,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BELR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BEO,http://www.isc.ac.uk,
+ISC,BERK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BGS,http://www.isc.ac.uk,
+ISC,BHUJ2,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BIAK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BJI,http://www.isc.ac.uk,
+ISC,BNS,http://www.isc.ac.uk,
+ISC,BRG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BRK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BRS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BUC,http://www.isc.ac.uk,
+ISC,BUD,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,BYKL,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,CADCG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CAR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CASC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CATAC,http://www.isc.ac.uk,
+ISC,CENT,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CHU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CLL,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,CNG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,COM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CON,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CRAAG,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,CRT,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,CSC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,DHMR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,DIAS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,DJA,http://www.isc.ac.uk,
+ISC,DUSS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,EAF,http://www.isc.ac.uk,
+ISC,ECGS,http://www.isc.ac.uk,
+ISC,ECX,http://www.isc.ac.uk,
+ISC,EFATE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,EKA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,EPSI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ESK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,EST,http://www.isc.ac.uk,
+ISC,EUROP,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,EVBIB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,FBR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,FCIAR,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,FOR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,FRU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,FUNV,http://www.isc.ac.uk,
+ISC,FUR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GBZT,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GCG,http://www.isc.ac.uk,
+ISC,GDNRW,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GEM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GEOAZ,http://www.isc.ac.uk,
+ISC,GFZ,http://www.isc.ac.uk,
+ISC,GII,http://www.isc.ac.uk,
+ISC,GOL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GOM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,GSET2,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HAM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HDC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HEL,http://www.isc.ac.uk,
+ISC,HFS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HFS2,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HON,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HRVD_LR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,HVO,http://www.isc.ac.uk,
+ISC,HYB,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,HYD,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IAG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IAGMA,http://www.isc.ac.uk,
+ISC,IASBS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IDG,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,IEPN,http://www.isc.ac.uk,
+ISC,IGQ,http://www.isc.ac.uk,
+ISC,IGS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,INAM,http://www.isc.ac.uk,
+ISC,INC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,INDEPTH3,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,INET,http://www.isc.ac.uk,
+ISC,INMG,http://www.isc.ac.uk,
+ISC,INMGC,http://www.isc.ac.uk,
+ISC,IPEC,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,IPER,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IPGP,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,IPRG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IRIS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IRK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IRSM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ISC,http://www.isc.ac.uk,
+ISC,ISC-PPSM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ISK,http://www.isc.ac.uk,
+ISC,ISN,http://www.isc.ac.uk,
+ISC,ISS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,IST,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ITU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,JEN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,JSA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,JSN,http://www.isc.ac.uk,
+ISC,JSO,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,KBC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,KEW,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,KHC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,KISR,http://www.isc.ac.uk,
+ISC,KLM,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,KMA,http://www.isc.ac.uk,
+ISC,KMGSR,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,KNET,http://www.isc.ac.uk,
+ISC,KOB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,KOGSR,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,KRNET,http://www.isc.ac.uk,
+ISC,KRSC,http://www.isc.ac.uk,
+ISC,KRSZO,http://www.isc.ac.uk,
+ISC,KUK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LDG,http://www.isc.ac.uk,
+ISC,LDN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LEM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LER,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LIB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LIC,http://www.isc.ac.uk,
+ISC,LIS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LJU,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,LPA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LPB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LRA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LRSM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,LSZ,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,MAN,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,MAT,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MCO,http://www.isc.ac.uk,
+ISC,MER,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MERI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MES,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MEX,http://www.isc.ac.uk,
+ISC,MKY,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MOLD,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MOZAR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MRB,http://www.isc.ac.uk,
+ISC,MSSP,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,MUN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NAG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NAI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NAM,http://www.isc.ac.uk,
+ISC,NAN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NAO,http://www.isc.ac.uk,
+ISC,NEGSR,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,NEIS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NERS,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,NEU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NIC,http://www.isc.ac.uk,
+ISC,NKSZ,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NNC,http://www.isc.ac.uk,
+ISC,NOU,http://www.isc.ac.uk,
+ISC,NSSC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,NSSP,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,NUR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,OAX,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,OBGSR,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,OGAUC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,OGSO,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,OSPL,http://www.isc.ac.uk,
+ISC,OSUB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,OTT,http://www.isc.ac.uk,
+ISC,PAL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PAV,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PDA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PDE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PDG,http://www.isc.ac.uk,
+ISC,PEK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PIST,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PMG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PMR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PNG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PNNL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,POO,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PRA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,PRE,http://www.isc.ac.uk,
+ISC,PTWC,http://www.isc.ac.uk,
+ISC,PYA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,QUE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,QUI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,RAB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,RBA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,RDP,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,REN,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,RHSSO,http://www.isc.ac.uk,
+ISC,RMIT,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,RRLJ,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,RSNC,http://www.isc.ac.uk,
+ISC,RSPR,http://www.isc.ac.uk,
+ISC,SAN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SAPSE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SBDV,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SCEDC,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,SCSIO,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SET,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SFS,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,SHI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SHIDE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SIGU,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,SIK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SJA,http://www.isc.ac.uk,
+ISC,SJP,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SJS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SLC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SLM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SMI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SNSN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SOD,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SOF,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,SPA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SPGM,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SPITAK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SRI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SSN,http://www.isc.ac.uk,
+ISC,SSS,http://www.isc.ac.uk,
+ISC,STK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,STL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,STR,http://www.isc.ac.uk,
+ISC,SUC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,SUS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TAC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TANZANIA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TAP,http://www.isc.ac.uk,
+ISC,TAU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,THR,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,TIF,http://www.isc.ac.uk,
+ISC,TIR,http://www.isc.ac.uk,
+ISC,TOK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TOL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TRN,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,TTG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TUN,http://www.isc.ac.uk,
+ISC,TVA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,TZN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UATDG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UAV,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UCB,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UCC,http://www.isc.ac.uk,
+ISC,UCDES,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UCR,http://www.isc.ac.uk,
+ISC,UCSC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UESG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UGN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ULE,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UNAH,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UNK,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UPA,http://www.isc.ac.uk,
+ISC,UPIES,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UPP,http://www.isc.ac.uk,
+ISC,UPSL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UREES,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,USAEC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,USCGS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,USGS,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UTEP,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UUSS,http://www.isc.ac.uk,
+ISC,UVC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,UWMDG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,VAO,http://www.isc.ac.uk,
+ISC,VIE,http://www.isc.ac.uk,
+ISC,VLA,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,VMGSR,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,VSI,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,VUW,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,WAR,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,WASN,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,WBNET,http://www.isc.ac.uk,'NoneType' object has no attribute 'associated_phase_count'
+ISC,WEL,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,WES,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,WMO,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,WUSTL,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,X,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,YAGSR,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,YAL,http://www.isc.ac.uk,
+ISC,YARS,http://www.isc.ac.uk,"No available picks service in the Client. Picks = {'name': None, 'mode': None, 'picks': False, 'arrivals': False, 'msg': None}"
+ISC,ZAG,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ZEMSU,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ZKW,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ZSC,http://www.isc.ac.uk,No events found in the specified time range.
+ISC,ZUR,http://www.isc.ac.uk,
+ISC,ZUR_RMT,http://www.isc.ac.uk,
+JAPAN,JAPAN,https://www.data.jma.go.jp/eqev/data/bulletin/eqdoc_e.html,No FDSN web service available.
+USGS,admin,http://earthquake.usgs.gov,
+USGS,ak,http://earthquake.usgs.gov,
+USGS,at,http://earthquake.usgs.gov,
+USGS,atlas,http://earthquake.usgs.gov,
+USGS,av,http://earthquake.usgs.gov,
+USGS,cgs,http://earthquake.usgs.gov,
+USGS,ci,http://earthquake.usgs.gov,
+USGS,ew,http://earthquake.usgs.gov,
+USGS,hv,http://earthquake.usgs.gov,
+USGS,ismp,http://earthquake.usgs.gov,
+USGS,ld,http://earthquake.usgs.gov,
+USGS,mb,http://earthquake.usgs.gov,
+USGS,nc,http://earthquake.usgs.gov,
+USGS,nm,http://earthquake.usgs.gov,
+USGS,nn,http://earthquake.usgs.gov,
+USGS,np,http://earthquake.usgs.gov,
+USGS,official,http://earthquake.usgs.gov,
+USGS,ok,http://earthquake.usgs.gov,
+USGS,pr,http://earthquake.usgs.gov,
+USGS,prod01-pdl01.cr.usgs.gov,http://earthquake.usgs.gov,
+USGS,prod02-pdl01.cr.usgs.gov,http://earthquake.usgs.gov,
+USGS,pt,http://earthquake.usgs.gov,
+USGS,se,http://earthquake.usgs.gov,
+USGS,tx,http://earthquake.usgs.gov,
+USGS,us,http://earthquake.usgs.gov,
+USGS,uu,http://earthquake.usgs.gov,
+USGS,uw,http://earthquake.usgs.gov,

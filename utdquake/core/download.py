@@ -3,6 +3,9 @@ import zipfile
 from huggingface_hub import snapshot_download
 from pathlib import Path
 from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
+import logging
+
+logger = logging.getLogger(__name__)
 
 def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
                         repo_type: str = DEFAULT_REPO_TYPE):
@@ -42,9 +45,9 @@ def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
         pattern = f"events/{net}.zip" if "*" not in net else f"events/{net}.zip"
         allow_patterns.append(pattern)
 
-    print(f"Downloading data from: {repo_id}")
-    print(f"Saving into: {os.path.abspath(local_dir)}")
-    print(f"Allow patterns: {allow_patterns}")
+    logger.info("Downloading data from: %s", repo_id)
+    logger.info("Saving into: %s", os.path.abspath(local_dir))
+    logger.info("Allow patterns: %s", allow_patterns)
 
     # Download files matching allow_patterns
     path = snapshot_download(
@@ -52,19 +55,19 @@ def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
         local_dir=local_dir,
         repo_type=repo_type,
         allow_patterns=allow_patterns,
-        max_workers=4
+        max_workers=1,
     )
 
 
     # Unzip downloaded files and remove .zip
     for zip_file in Path(local_dir).glob("events/*.zip"):
-        print(f"Unzipping {zip_file}...")
+        logger.info("Unzipping %s...", zip_file)
         with zipfile.ZipFile(zip_file, "r") as zip_ref:
             zip_ref.extractall(zip_file.parent)
         zip_file.unlink()  # remove .zip
-        print(f"Removed {zip_file}")
+        logger.info("Removed %s", zip_file)
 
-    print(" Extraction complete!")
+    logger.info("Extraction complete!")
 
     return Path(local_dir)
 

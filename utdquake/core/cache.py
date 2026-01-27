@@ -2,38 +2,12 @@ from __future__ import annotations
 from huggingface_hub import HfApi
 import os
 from pathlib import Path
+import pandas as pd
+import concurrent.futures as cf
+from .config import ENV_CACHE_ROOT, DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
+from ..bank.bank import EventBank
+from .path import get_root, get_eventbank_path
 
-
-from .config import ENV_CACHE_ROOT
-from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
-
-def get_root() -> Path:
-    """
-    Return the root directory used to store cached UTDQuake data.
-
-    Users can override this location by setting the environment variable
-    `UTDQUAKE_ROOT` before importing/using utdquake:
-
-    Example
-    -------
-    >>> import os
-    >>> os.environ["UTDQUAKE_ROOT"] = "/my/custom/cache"
-    """
-    root = os.environ.get(ENV_CACHE_ROOT, None)
-
-    if root is None or str(root).strip() == "":
-        # default Linux cache location
-        root = os.path.join(Path.home(), ".utdquake")
-
-    return Path(root).expanduser().resolve()
-
-
-def get_eventbank_path(network: str) -> Path:
-    """
-    Return the expected local path for a network EventBank.
-    """
-    network = network.strip()
-    return get_root() / "events" / network
 
 def network_exists_locally(network: str) -> bool:
     path = get_eventbank_path(network)
@@ -64,6 +38,110 @@ def list_all_networks(repo_id: str = DEFAULT_REPO_ID) -> list[str]:
     files = api.list_repo_files(repo_id, repo_type=DEFAULT_REPO_TYPE)
     networks = sorted(f.split("/")[-1].replace(".zip", "") for f in files if f.endswith(".zip"))
     return networks
+
+
+def _append_fdsn_info(stats: pd.DataFrame) -> pd.DataFrame:
+    """
+    Append FDSN metadata (url, notes) to a stats DataFrame.
+
+    Parameters
+    ----------
+    stats : pandas.DataFrame
+        Input DataFrame containing at least a "contributor" column.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Merged DataFrame with FDSN information appended and columns reordered.
+    """
+    fdsn_df = pd.read_csv(FDSN_CSV)
+
+    merged = pd.merge(
+        fdsn_df,
+        stats,
+        on="contributor",
+        how="right",
+    )
+
+    # Move "url" and "notes" to the last columns (if they exist).
+    cols = merged.columns.tolist()
+    for col in ["url", "notes"]:
+        if col in cols:
+            cols.remove(col)
+            cols.append(col)
+
+    return merged[cols]
+
+def create_report(save_path: str | None = None, max_workers: int | None = None):
+    """
+    Load all events and stations from local networks in parallel,
+    append FDSN info to stats, and optionally save them as CSV files.
+
+    Parameters
+    ----------
+    save_path : str | None
+        Directory where CSV files will be saved. If None, data is not saved.
+    max_workers : int | None
+        Number of threads to use for parallel loading.
+
+    Returns
+    -------
+    all_stats : pd.DataFrame
+        Concatenated DataFrame of network stats.
+    all_events : pd.DataFrame
+        Concatenated DataFrame of events from all local networks.
+    all_stations : pd.DataFrame
+        Concatenated DataFrame of stations from all local networks.
+    """
+    if save_path is not None:
+        os.makedirs(save_path, exist_ok=True)
+        stats_file = os.path.join(save_path, "stats.csv")
+        events_file = os.path.join(save_path, "events.csv")
+        stations_file = os.path.join(save_path, "stations.csv")
+
+        # If files already exist, just load them
+        if os.path.exists(stats_file) and os.path.exists(events_file) and os.path.exists(stations_file):
+            all_stats = pd.read_csv(stats_file)
+            all_events = pd.read_csv(events_file)
+            all_stations = pd.read_csv(stations_file)
+            return all_stats, all_events, all_stations
+
+    def _load_one_network(net: str):
+        path = get_eventbank_path(net)
+        bank = EventBank(str(path))
+        stats = pd.DataFrame([bank.stats])
+        stats = _append_fdsn_info(stats)
+        return stats, bank.read_index(), bank.get_stations()
+
+    networks = list_local_networks()
+
+    if not networks:
+        return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+
+    if max_workers is None:
+        max_workers = min(32, (os.cpu_count() or 1) + 4)
+    if len(networks) < max_workers:
+        max_workers = len(networks)
+
+    all_stats, all_events, all_stations = [], [], []
+
+    with cf.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for stats, events, stations in executor.map(_load_one_network, networks):
+            all_stats.append(stats)
+            all_events.append(events)
+            all_stations.append(stations)
+
+    all_stats = pd.concat(all_stats, ignore_index=True)
+    all_events = pd.concat(all_events, ignore_index=True)
+    all_stations = pd.concat(all_stations, ignore_index=True)
+
+    # Save if save_path is provided
+    if save_path is not None:
+        all_stats.to_csv(stats_file, index=False)
+        all_events.to_csv(events_file, index=False)
+        all_stations.to_csv(stations_file, index=False)
+
+    return all_stats, all_events, all_stations
 
 
 
