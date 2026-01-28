@@ -58,33 +58,6 @@ PREF_STATS_ORDER = ["network",
                     "url"]
                     
 
-
-
-
-# PREF_EVENTS_TYPES = {
-#     "network": "string",
-#     "time": "datetime",
-#     "latitude": "float",
-#     "longitude": "float",
-#     "depth": "float",
-#     "magnitude": "float",
-#     "azimuthal_gap": "float",
-# }
-
-# PREF_STATIONS_TYPES = {
-#     "network": "string",
-#     "station": "string",
-#     "available": "boolean",
-#     "confirmed": "boolean",
-#     "confirmed_latitude": "float",
-#     "confirmed_longitude": "float",
-#     "calculated": "boolean",
-#     "calculated_latitude": "float",
-#     "calculated_longitude": "float",
-# }
-
-
-
 def columns_by_type(dtypes: Dict[str, object]) -> Dict[str, List[str]]:
     """
     Given a dict of column_name -> dtype (string or Python type),
@@ -107,8 +80,7 @@ def columns_by_type(dtypes: Dict[str, object]) -> Dict[str, List[str]]:
                 float_cols.append(col)
             elif dtype_lower in ("int", "int64"):
                 int_cols.append(col)
-            elif dtype_lower in ("datetime", "datetime64", "datetime64[ns]",
-                                  "timestamp"):
+            elif dtype_lower in ("datetime", "datetime64", "timestamp"):
                 datetime_cols.append(col)
             elif dtype_lower in ("bool", "boolean"):
                 bool_cols.append(col)
@@ -132,7 +104,6 @@ def columns_by_type(dtypes: Dict[str, object]) -> Dict[str, List[str]]:
         "datetime_cols": datetime_cols,
         "bool_cols": bool_cols,
     }
-
 
 PREF_PICKS_TYPES = columns_by_type(PICK_DTYPES)
 PREF_ARRIVALS_TYPES = columns_by_type(ARRIVAL_DTYPES)

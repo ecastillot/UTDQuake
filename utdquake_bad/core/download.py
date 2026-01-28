@@ -8,7 +8,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
-                        repo_type: str = DEFAULT_REPO_TYPE):
+                        repo_type: str = DEFAULT_REPO_TYPE,
+                        bank: bool = True,
+                        events: bool = True,
+                        stations:bool = True,
+                        picks: bool = True) -> Path:
     """
     Download selected Texas (TX) data from the UTDQuake Hugging Face repository.
 
@@ -38,12 +42,23 @@ def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
     if isinstance(networks, str):
         networks = [networks]
 
+
     # Build allow_patterns for snapshot_download
     allow_patterns = []
     for net in networks:
         # Wildcard support
-        pattern = f"bank/{net}.zip" if "*" not in net else f"bank/{net}.zip"
-        allow_patterns.append(pattern)
+        if bank:
+            bank_pattern = f"events/{net}.zip" if "*" not in net else f"events/{net}.zip"
+            allow_patterns.append(bank_pattern)
+        if events:
+            events_pattern = f"manifests/events/network={net}.parquet"
+            allow_patterns.append(events_pattern)
+        if stations:
+            stations_pattern = f"manifests/stations/network={net}.parquet"
+            allow_patterns.append(stations_pattern)
+        if picks:
+            picks_pattern = f"manifests/picks/network={net}.parquet"
+            allow_patterns.append(picks_pattern)
 
     logger.info("Downloading data from: %s", repo_id)
     logger.info("Saving into: %s", os.path.abspath(local_dir))
@@ -58,14 +73,14 @@ def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
         max_workers=1,
     )
 
-
-    # Unzip downloaded files and remove .zip
-    for zip_file in Path(local_dir).glob("events/*.zip"):
-        logger.info("Unzipping %s...", zip_file)
-        with zipfile.ZipFile(zip_file, "r") as zip_ref:
-            zip_ref.extractall(zip_file.parent)
-        zip_file.unlink()  # remove .zip
-        logger.info("Removed %s", zip_file)
+    if bank:
+        # Unzip downloaded files and remove .zip
+        for zip_file in Path(local_dir).glob("events/*.zip"):
+            logger.info("Unzipping %s...", zip_file)
+            with zipfile.ZipFile(zip_file, "r") as zip_ref:
+                zip_ref.extractall(zip_file.parent)
+            zip_file.unlink()  # remove .zip
+            logger.info("Removed %s", zip_file)
 
     logger.info("Extraction complete!")
 
@@ -75,20 +90,3 @@ def download_utdquake(local_dir, networks, repo_id: str = DEFAULT_REPO_ID,
 if __name__ == "__main__":
     local_path = "/groups/igonin/ecastillo/test"
     download_utdquake(local_path,networks="RSNC")
-
-    # from huggingface_hub import HfApi
-
-    # repo_id = DEFAULT_REPO_ID
-
-    # api = HfApi()
-
-    # for repo_type in [DEFAULT_REPO_TYPE, "model"]:
-    #     try:
-    #         files = api.list_repo_files(repo_id=repo_id, repo_type=repo_type)
-    #         print(f"\nRepo type = {repo_type}")
-    #         print("Total files:", len(files))
-    #         print("First 30 files:")
-    #         for f in files[:30]:
-    #             print("  ", f)
-    #     except Exception as e:
-    #         print(f"\nRepo type = {repo_type} FAILED -> {e}")

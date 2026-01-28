@@ -12,13 +12,13 @@ conda activate utdq
 
 BASE="/groups/igonin/ecastillo/UTDQuake"
 
-STAGE="${BASE}/_hf_stage"
+STAGE="${BASE}/_hf_stage/manifests"
 
 HF_WORKERS=4
 echo "HF_WORKERS=$HF_WORKERS"
 
 hf upload-large-folder ecastillot/UTDQuake "$STAGE" \
-  --include "stations/*" \
+  --include "*" \
   --repo-type dataset \
   --num-workers "$HF_WORKERS"
 

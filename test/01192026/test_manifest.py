@@ -6,15 +6,15 @@ import logging
 import pandas as pd
 logger = logging.getLogger(__name__)
 
-manual_info_path = "/groups/igonin/ecastillo/utdquake/utdquake/core/manual_info.csv"
+manual_info_path = "/groups/igonin/ecastillo/utdquake/data/others/manual_info.csv"
 manual_info = pd.read_csv(manual_info_path)
 paths = build_manifests(
     force_download=False,
     overwrite=True,
-    include_events = True,
-    include_stations = True,
+    include_events = False,
+    include_stations = False,
     include_picks = True,
-    include_stats = True,
+    include_stats = False,
     per_network_shards=True,  # BEST for big datasets
     # networks=["RSNC"],
     include_manual_network_info=manual_info

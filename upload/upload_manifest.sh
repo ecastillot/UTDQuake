@@ -18,7 +18,7 @@ HF_WORKERS=4
 echo "HF_WORKERS=$HF_WORKERS"
 
 hf upload-large-folder ecastillot/UTDQuake "$STAGE" \
-  --include "manifests/*" \
+  --include "events/*" \
   --repo-type dataset \
   --num-workers "$HF_WORKERS"
 

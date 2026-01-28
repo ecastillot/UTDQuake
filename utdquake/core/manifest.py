@@ -152,7 +152,6 @@ def _safe_concat(existing: Optional[pd.DataFrame], new: pd.DataFrame) -> pd.Data
 
 def _load_eventbank(network: str, force_download: bool) -> EventBank:
     path = get_eventbank_path(network)
-
     if not path.exists():
         if force_download:
             logger.info("Downloading missing network %s...", network)
@@ -225,6 +224,12 @@ def sanitize_dataframe_for_parquet(
         pd.DataFrame: Sanitized DataFrame
     """
     df = df.copy()
+
+    string_cols = list(set(string_cols)) if string_cols else []
+    float_cols = list(set(float_cols)) if float_cols else []
+    int_cols = list(set(int_cols)) if int_cols else []
+    datetime_cols = list(set(datetime_cols)) if datetime_cols else []
+    bool_cols = list(set(bool_cols)) if bool_cols else []
     
     if debug:
         print("Step 0: Original DataFrame")
@@ -255,10 +260,17 @@ def sanitize_dataframe_for_parquet(
     # ---- 3. Force float columns ----
     if float_cols:
         for c in float_cols:
+            # if c not in df.columns:
+            #     continue
+
+            # # 🚫 skip datetime columns
+            # if pd.api.types.is_datetime64_any_dtype(df[c]):
+            #     continue
             if c in df.columns:
                 df[c] = pd.to_numeric(df[c], errors="coerce").astype("float64")
     if debug and float_cols:
         print(f"Step 3: Forced float columns: {float_cols}")
+        print(df.head(), "\n")
     
     # ---- 4. Force integer columns ----
     if int_cols:
@@ -266,6 +278,7 @@ def sanitize_dataframe_for_parquet(
             if c in df.columns:
                 df[c] = pd.to_numeric(df[c], errors="coerce").astype("Int64")  # nullable int
     if debug and int_cols:
+        print(df.head(), "\n")
         print(f"Step 4: Forced integer columns: {int_cols}")
     
     # ---- 5. Force string columns ----
@@ -304,7 +317,9 @@ def sanitize_dataframe_for_parquet(
         print(df.head(), "\n")
         print("Dtypes after sanitization:")
         print(df.dtypes)
-    
+        print("\nDescriptive statistics:")
+        print(df.describe())
+
     return df
 
 # ---------------------------------------------------------------------
@@ -479,6 +494,11 @@ def build_manifests(
             remaining = [c for c in df_picks.columns if c not in existing_pref]
             df_picks = df_picks[existing_pref + remaining]
 
+            # bdf = df_picks[df_picks["travel_time"]<0]
+            # if len(bdf)>0:
+            #     logger.warning("Negative travel times found in picks for network %s", net)
+            #     path =f"/groups/igonin/ecastillo/UTDQuake/tests/{net}_ntt.csv"
+            #     bdf.to_csv(path,index=False)
 
             if per_network_shards:
                 out = shard_dirs["picks"] / f"network={net}.parquet"

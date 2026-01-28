@@ -16,22 +16,77 @@ from utdquake.core.cache import _append_fdsn_info
 import time
 import logging
 from utdquake.bank.bank import EventBank
-
+from utdquake.core.manifest import sanitize_dataframe_for_parquet
+from utdquake.core.config import (PREF_PICKS_ORDER,PREF_EVENTS_ORDER,
+                                  PREF_STATIONS_ORDER,PREF_STATS_ORDER,
+                                  PREF_PICKS_TYPES,PREF_EVENTS_TYPES,
+                                  PREF_STATIONS_TYPES,PREF_STATS_TYPES)
+import datetime as dt
 logging.basicConfig(
     level=logging.INFO,  # or DEBUG for more details
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 
-# bank = EventBank("/groups/igonin/ecastillo/UTDQuake/events/uw")
+# net = "RSNC"
+# bank = EventBank(f"/groups/igonin/ecastillo/UTDQuake/events/{net}")
+
+# events = bank.read_index()
+# events = events[events["time"] >= dt.datetime(2024, 11,8,23,50,0)]
+# events = events[events["time"] < dt.datetime(2024, 11, 9)]
+
+# ev_ids = events["event_id"].tolist()
+# events = bank.get_events(event_id=ev_ids)
+# event = events[0]
+# arrival = event.arrivals_to_df()
+# picks = event.picks_to_df()
+# # print(arrival["pick_id"])
+# # print(picks["resource_id"])
+# # exit()
+# arrival = pd.merge(arrival,picks,left_on="pick_id",right_on="resource_id",
+#                    how="left",)
+
+# arrival["travel_time"] = (arrival["time"] - arrival["origin_time"]).dt.total_seconds()
+# arrival = arrival[arrival["travel_time"]<0]
+# print(arrival)
+# # print(events)
+# print(arrival[["station_x","time","phase","origin_time"]])
+# exit()
+
+# events = bank.get_events(starttime=UTCDateTime("2023-01-01T00:00:00"),
+#                         endtime=UTCDateTime("2023-12-31T23:59:59"))
+
+
+# net = "AEIC"
+# bank = EventBank(f"/groups/igonin/ecastillo/UTDQuake/events/{net}")
+# picks = bank.load_picks()
+
+# picks["tt"] = (picks["time"]-picks["origin_time"]).dt.total_seconds()
+
+# picks = sanitize_dataframe_for_parquet(picks,
+#                                        string_cols=PREF_PICKS_TYPES["string_cols"],
+#                                                 float_cols=PREF_PICKS_TYPES["float_cols"],
+#                                                 int_cols=PREF_PICKS_TYPES["int_cols"],
+#                                                 datetime_cols=PREF_PICKS_TYPES["datetime_cols"],
+#                                                 bool_cols=PREF_PICKS_TYPES["bool_cols"],
+#                                                 debug=True)
+# path = f"/groups/igonin/ecastillo/UTDQuake/manifests/picks/network={net}.parquet"
+# picks.to_parquet(path)
+# print(picks["time_correction"])
+
+# print(PREF_PICKS_TYPES)
+# exit()
+
+
+
 # print(bank)
 
 # exit()
 
 # # # loads tx
-bank =  utdq.load_network("ECX") 
-picks = bank.load_picks()
-print(picks)
-exit()
+# bank =  utdq.load_network("AEIC") 
+# picks = bank.load_picks()
+# print(picks)
+# exit()
 
 # df_stats = pd.DataFrame([bank.stats])
 # df_stats["network"] = df_stats["Contributor"]
