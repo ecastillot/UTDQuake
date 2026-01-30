@@ -104,10 +104,10 @@ network.plot_pick_histograms(savepath="histograms.png")
 network.plot_pick_stats(savepath="pick_stats.png")
 ```
 
-# Why this dataset matters?
+# Thanks
 
-Curated datasets of earthquake **events and phase picks** are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for **phase association** and **earthquake location**.  
+Thanks to the [UT Dallas HPC team](https://hpc.utdallas.edu/) for providing the computational resources for this dataset.  
 
-This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
+We also thank the seismology and AI communities for their work in earthquake research, and Hugging Face for hosting and sharing open datasets.
 
-
+We welcome feedback and contributions!
