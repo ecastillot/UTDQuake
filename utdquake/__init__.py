@@ -1,6 +1,6 @@
 __version__ = "0.1"
 
-from .core.utdquake import UTDQuake, Network
-from .data import download_utdquake, load
+from .core.utdquake import Dataset, Network
+from .core.data import download_snapshot, load
 
-__all__ = ["UTDQuake", "Network", "download_utdquake", "load"]
+__all__ = ["Dataset", "Network", "download_snapshot", "load"]

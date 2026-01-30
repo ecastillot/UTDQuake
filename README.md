@@ -7,10 +7,11 @@
 
 University of Texas at Dallas Earthquake Dataset
 
-# Authors
-- Emmanuel Castillo (edc240000@utdallas.edu)
-- Nadine Ushakov
-- Marine Denolle
+## Authors
+- Emmanuel Castillo (emmanuel.castillotaborda@utdallas.edu)
+- Nadine Ushakov (nadine.igonin@utdallas.edu)
+- Marine Denolle (mdenolle@uw.edu)
+
 
 # Dataset
 
@@ -18,62 +19,95 @@ The dataset is available on Hugging Face: **UTDQuake**
 
 [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
 
+## Why this dataset matters?
+
+Curated datasets of earthquake **events and phase picks** are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for **phase association** and **earthquake location**.  
+
+This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
+
 ## What’s inside?
 
-- `events/` → zipped datasets per network (`*.zip`)
-- Each network contains event and pick information (when available)
+| Directory   | Format        | Description |
+|------------|---------------|-------------|
+| `bank/`     | `*.zip`       | ObsPlus `EventBank` datasets, one per network. Can be read directly using [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html). |
+| `events/`   | `*.parquet`   | Earthquake event catalogs per network. |
+| `stations/` | `*.parquet`   | Station metadata per network. |
+| `picks/`    | `*.parquet`   | Seismic phase pick datasets per network. |
+
+For details on the contents and schema of each dataset, please refer to the **Hugging Face dataset viewer**.
+
+To get started, see the [Quick Start](#quick-start) section below, or click **“Use this dataset”** on the Hugging Face dataset page for example loading code.
+
 
 ## Quick start
 
-### Access
+### Basic Access
 ```python
 import utdquake as utdq
 
-# loads tx
-bank =  utdq.load_network("tx")   
-print(bank.stats)
+# dataset overview 
+dataset = utdq.Dataset()
+print(dataset)
 
-# read events information
-df = bank.read_index()    
-print(df.head())
+# network level
+network_data = dataset.networks
+print(network_data)
 
-ev_ids = df["event_id"].tolist()[:5]
-picks = bank.get_picks(event_ids=ev_ids)
+dataset.plot_overview(savepath="utdquake.png")
+```
+
+### Network Data
+```python
+# load network 
+network = dataset.get_network(name="tx")
+print(network)
+
+# events
+events = network.events
+print(events)
+
+# stations
+stations = network.stations
+print(stations)
+
+# picks
+picks = network.picks
 print(picks)
 ```
 
-### Catalog
+### Event Bank
+Check [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html) for more details.
 ```python
-# get Obspy Catalog
-catalog = bank.get_events(starttime=UTCDateTime("2025-07-31T00:00:00"), 
-                            endtime=UTCDateTime("2025-07-31T12:00:00"))
-print(catalog)
-print(catalog.to_df())
+# get event bank
+ebank = network.bank # 
 
-# get Obspy Event
-event = catalog[0]
-picks = event.picks_to_df()
-arrivals = event.arrivals_to_df()
-print(event,picks,arrivals)
+# Example: Filter by event_id
+ev_ids = events["event_id"].iloc[:5].tolist()
+cat = ebank.get_events(event_id=ev_ids)
+print(cat)
+
+# Example 2: Other filter (check obsplus.EventBank for more details)
+cat2 = ebank.get_events(minmagnitude=4.3)
+print(cat2)
 ```
 
-### Picks db (Massive)
-```python
-# Save
-bank.save_picks()
-picks = bank.load_picks()
-print(picks)
-```
 
 ### Plot
 ```python
 # get Obspy Event
-bank.plot_overview("./overview.png")
-bank.plot_uncertainty_boxplots("./uncertainty_boxplots.png")
-bank.plot_station_location_uncertainty("./station_location_uncertainty.png")
-bank.plot_stats("./stats.png")
-bank.plot_pick_histograms("./histograms.png")
-bank.plot_pick_stats("./pick_stats.png")
+network = dataset.get_network(name="tx")
+network.plot_overview(savepath="overview.png")
+network.plot_uncertainty_boxplots(savepath="uncertainty_boxplots.png")
+network.plot_station_location_uncertainty(savepath="station_location_uncertainty.png")
+network.plot_stats(savepath="stats.png")
+network.plot_pick_histograms(savepath="histograms.png")
+network.plot_pick_stats(savepath="pick_stats.png")
 ```
+
+# Why this dataset matters?
+
+Curated datasets of earthquake **events and phase picks** are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for **phase association** and **earthquake location**.  
+
+This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
 
 

@@ -13,7 +13,7 @@ from ..utils.plot import (plot_overview,
                           plot_utdq_overview
                           )
 
-class UTDQuake:
+class Dataset:
 
     def __init__(self):
         self.root = get_root()
@@ -71,7 +71,7 @@ class UTDQuake:
     def get_network(self, name: str):
         return Network(name)
     
-    def plot_utdq_overview(self, savepath=None, show=True):
+    def plot_overview(self, savepath=None, show=True):
         """
         Plot a comprehensive UTDQuake overview including events, stations, and analysis.
         """
@@ -113,8 +113,8 @@ class Network:
     
     @property
     def description(self) -> str:
-        networks_df = UTDQuake().get_local_networks(force_download=False)
-        # networks_df = UTDQuake().networks.to_pandas()
+        networks_df = Dataset().get_local_networks(force_download=False)
+        # networks_df = Dataset().networks.to_pandas()
         network_row = networks_df[networks_df["network"] == self.name]
         if network_row.empty:
             return f"Network '{self.name}' not found."
