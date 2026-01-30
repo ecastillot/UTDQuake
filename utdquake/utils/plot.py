@@ -1,3 +1,23 @@
+"""
+plot.py  
+(This can be improved significantly with more modularization later... I am a bit lazy to do it now)
+
+Functions for plotting seismic data, including:
+
+- Network and event overview maps (plot_overview, plot_utdq_overview)
+- Seismic statistics and histograms (plot_stats, plot_pick_histograms)
+- Uncertainty visualization (plot_uncertainty_boxplots)
+- Utility functions like add_scalebar
+
+Dependencies:
+- numpy, pandas, matplotlib, seaborn, scipy
+- cartopy (for geographic plotting)
+- .utils (custom helpers: compute_region, human_format, etc.)
+
+Author: Emmanuel David Castillo Taborda
+Date: 2026-01-30
+"""
+
 # Core packages
 import numpy as np
 import pandas as pd
@@ -5,6 +25,7 @@ import tempfile
 import os
 import warnings
 import string
+from typing import Dict, Any, Tuple, Optional
 
 # Matplotlib
 import matplotlib.pyplot as plt
@@ -18,10 +39,8 @@ import matplotlib.colors as mcolors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.image as mpimg
 
-
 # Seaborn
 import seaborn as sns
-
 
 # SciPy
 from scipy.stats import linregress
@@ -32,18 +51,33 @@ from .utils import (compute_region,
                     create_green_to_orange_cmap
                     )
 
-def add_scalebar(ax, region, location='upper left'):
+def add_scalebar(
+    ax: plt.Axes,
+    region: Tuple[float, float, float, float],
+    location: str = 'upper left'
+) -> None:
     """
-    Add a simple scale bar to a Cartopy GeoAxes.
+    Add a simple scale bar to a map.
 
-    Parameters:
-    -----------
-    ax : cartopy.mpl.geoaxes.GeoAxes
-        The GeoAxes to draw the scale bar on.
+    Parameters
+    ----------
+    ax : plt.Axes
+        Axes to draw the scale bar on.
     region : tuple
-        (lon_min, lon_max, lat_min, lat_max) map extent.
-    location : str
-        'upper left', 'upper right', 'lower left', 'lower right'.
+        Map extent as (lon_min, lon_max, lat_min, lat_max).
+    location : str, optional
+        Location of the scale bar. Options: 'upper left', 'upper right',
+        'lower left', 'lower right'. Default is 'upper left'.
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> fig, ax = plt.subplots()
+    >>> region = (-70, -60, 2, 10)
+    >>> add_scalebar(ax, region, location='lower left')
     """
     lon_min, lon_max, lat_min, lat_max = region
     lon_range = lon_max - lon_min
@@ -117,28 +151,40 @@ def add_scalebar(ax, region, location='upper left'):
         bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=0.8)
     )
 
-def plot_overview(events, stations, analysis, 
-                           region=None,
-                savepath=None, show=True):
+def plot_overview(
+    events: pd.DataFrame,
+    stations: pd.DataFrame,
+    analysis: Dict[str, Any],
+    region: Optional[Tuple[float, float, float, float]] = None,
+    savepath: Optional[str] = None,
+    show: bool = True
+) -> None:
     """
-    Plot a network map with events, stations, histograms, globe, and region.
+    Plot a network overview with events, stations, and statistics.
 
     Parameters
     ----------
-    events : pandas.DataFrame
-        DataFrame with earthquake events.
-    stations : pandas.DataFrame
-        DataFrame with station data.
+    events : pd.DataFrame
+        Event table with columns: ['longitude', 'latitude', 'time', 'magnitude'].
+    stations : pd.DataFrame
+        Station table with columns: ['longitude', 'latitude', 'calculated', 'confirmed'].
     analysis : dict
-        Dictionary with info to show: must contain keys like
-        'network', 'events', 'total_stations', 'stations', 
-        'p_arrivals', 's_arrivals'
-    region : tuple
-        (lon_min, lon_max, lat_min, lat_max) for map extent.
+        Dictionary with network statistics (events, stations, picks, etc.).
+    region : tuple, optional
+        Map extent (lon_min, lon_max, lat_min, lat_max). Default: None.
     savepath : str, optional
-        Path to save figure. If None, shows interactively.
+        Path to save the figure. Default: None.
     show : bool, optional
-        Whether to show the plot interactively. Default is True.
+        If True, display the figure. Default: True.
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> plot_overview(df_events, df_stations, analysis_dict, region=(-70, -60, 2, 10))
+    >>> plot_overview(df_events, df_stations, analysis_dict, savepath="overview.png", show=False)
     """
     try:
         import cartopy.crs as ccrs
@@ -451,13 +497,13 @@ def plot_overview(events, stations, analysis,
 
 
 def plot_utdq_overview(
-    events,
-    stations,
-    analysis,
-    region=None,
-    savepath=None,
-    show=False,
-):
+    events: pd.DataFrame,
+    stations: pd.DataFrame,
+    analysis: Dict[str, Any],
+    region: Optional[Tuple[float, float, float, float]] = None,
+    savepath: Optional[str] = None,
+    show: bool = False,
+) -> None:
     """
     Plot a two-panel map overview:
     - Top: Earthquake epicenters
@@ -573,29 +619,40 @@ def plot_utdq_overview(
 
 
 
-def plot_stats(events, picks=None, savepath=None, show=True):
+def plot_stats(
+    events: pd.DataFrame,
+    picks: Optional[pd.DataFrame] = None,
+    savepath: Optional[str] = None,
+    show: bool = True
+) -> Tuple[plt.Figure, Dict[str, plt.Axes]]:
     """
-    Create a 5-panel seismic overview figure:
-    - Depth histogram
-    - Magnitude histogram
-    - Epicentral distance distribution (requires picks)
-    - Azimuthal gap (from events)
-    - Azimuth distribution (requires picks)
-    
+    Plot a 5-panel figure with earthquake statistics.
+
+    Panels include: depth, magnitude, epicentral distance, azimuthal gap, azimuth distribution.
+
     Parameters
     ----------
-    events : pandas.DataFrame
-        DataFrame with columns: ['time', 'depth', 'magnitude', 'azimuthal_gap', ...]
-    picks : pandas.DataFrame or None, optional
-        If provided, used to plot epicentral distance and azimuth.
-    savepath : str or None, optional
-        If provided, saves the figure to this path with dpi=300.
-        If None, just returns fig and axes without saving.
-    
+    events : pd.DataFrame
+        Events table with columns: ['time', 'depth', 'magnitude', 'azimuthal_gap'].
+    picks : pd.DataFrame, optional
+        Picks table for distance and azimuth calculations. Default: None.
+    savepath : str, optional
+        Path to save the figure. Default: None.
+    show : bool, optional
+        If True, display the figure. Default: True.
+
     Returns
     -------
-    fig : matplotlib.figure.Figure
-    axes : dict of matplotlib.axes.Axes
+    fig : plt.Figure
+        Figure object.
+    axes_dict : dict
+        Dictionary with axes for each subplot:
+        {'depth', 'magnitude', 'epicentral_distance', 'azimuthal_gap', 'azimuth'}.
+
+    Examples
+    --------
+    >>> fig, axes = plot_stats(df_events)
+    >>> fig, axes = plot_stats(df_events, df_picks, savepath="stats.png", show=False)
     """
 
     fig = plt.figure(figsize=(10, 8)) 
@@ -828,23 +885,40 @@ def plot_stats(events, picks=None, savepath=None, show=True):
     }
     return fig, axes_dict
 
-def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, savepath=None,
-                              show=True):
+def plot_uncertainty_boxplots(
+    df: pd.DataFrame,
+    figsize: Tuple[int, int] = (4, 6),
+    dpi: int = 300,
+    savepath: Optional[str] = None,
+    show: bool = True
+) -> Tuple[plt.Figure, list]:
     """
-    Create a figure with two axes:
-    1. Boxplots for Horizontal and Vertical uncertainty (km)
-    2. Boxplot for Standard error
+    Plot boxplots for horizontal, vertical uncertainties and standard error.
 
     Parameters
     ----------
     df : pd.DataFrame
-        DataFrame with columns 'horizontal_uncertainty', 'vertical_uncertainty', 'standard_error'
-    figsize : tuple
-        Figure size
-    dpi : int
-        Resolution of the figure
-    savepath : str or None
-        If given, save the figure to this path instead of showing it.
+        Must include columns: ['horizontal_uncertainty', 'vertical_uncertainty', 'standard_error'].
+    figsize : tuple, optional
+        Figure size. Default: (4, 6).
+    dpi : int, optional
+        Figure resolution. Default: 300.
+    savepath : str, optional
+        Path to save figure. Default: None.
+    show : bool, optional
+        If True, display the figure. Default: True.
+
+    Returns
+    -------
+    fig : plt.Figure
+        Figure object.
+    axes : list
+        List of axes objects.
+
+    Examples
+    --------
+    >>> plot_uncertainty_boxplots(df)
+    >>> plot_uncertainty_boxplots(df, savepath="uncertainty.png", show=False)
     """
     fig, axes = plt.subplots(2, 1, figsize=figsize, dpi=dpi)
 
@@ -901,19 +975,34 @@ def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, savepath=None,
     return fig, axes
 
 
-def plot_pick_histograms(df, savepath=None,show=True):
+def plot_pick_histograms(
+    df: pd.DataFrame,
+    savepath: Optional[str] = None,
+    show: bool = True
+) -> Tuple[plt.Figure, list]:
     """
-    Plots three histograms:
-    1. Number of P picks per origin
-    2. Number of S picks per origin
-    3. Vp/Vs ratio histogram using Wadati method
-    
-    Args:
-        df (pd.DataFrame): DataFrame containing picks with columns:
-            ['phase', 'origin_id', 'origin_time', 'time']
-        savepath (str, optional): Path to save the figure. If None, shows the figure.
-    Returns:
-        fig, axes: Figure and axes objects
+    Plot histograms of P picks, S picks, and Vp/Vs ratio (Wadati method).
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Must include columns: ['phase', 'origin_id', 'origin_time', 'time', 'network', 'station'].
+    savepath : str, optional
+        Path to save the figure. Default: None.
+    show : bool, optional
+        If True, display the figure. Default: True.
+
+    Returns
+    -------
+    fig : plt.Figure
+        Figure object.
+    axes : list
+        List of axes objects.
+
+    Examples
+    --------
+    >>> plot_pick_histograms(df_picks)
+    >>> fig, axes = plot_pick_histograms(df_picks, savepath="pick_hist.png", show=False)
     """
     # -------------------------------
     # 1. Count P and S picks per origin
@@ -1074,7 +1163,7 @@ def plot_pick_histograms(df, savepath=None,show=True):
 
     plt.close(fig)
 
-    return fig
+    return fig, axes
 
 def plot_pick_stats(df, savepath=None, show=True):
 
@@ -1234,19 +1323,42 @@ def plot_pick_stats(df, savepath=None, show=True):
     # plt.show()
     return fig
 
-def plot_station_location_uncertainty(df, savepath,  dpi=300,show=True):
+def plot_station_location_uncertainty(
+    df: pd.DataFrame,
+    savepath: str,
+    dpi: int = 300,
+    show: bool = True
+) -> None:
     """
-    Compare confirmed vs calculated latitude and longitude in a DataFrame.
+    Plot and compare confirmed vs calculated station locations.
+
+    This function visualizes the difference between confirmed and
+    calculated station coordinates. It plots a scatter plot of
+    confirmed coordinates and overlays calculated coordinates, allowing
+    for quick inspection of station location accuracy.
 
     Parameters
     ----------
-    df : pandas.DataFrame
-        DataFrame containing confirmed_latitude, confirmed_longitude,
-        calculated_latitude, and calculated_longitude columns.
+    df : pd.DataFrame
+        Must contain the following columns:
+        - 'confirmed_latitude'
+        - 'confirmed_longitude'
+        - 'calculated_latitude'
+        - 'calculated_longitude'
     savepath : str
-        File path to save the output plot (e.g., 'output.png').
-    dpi : int, default=300
-        Resolution of the saved figure.
+        Path to save the resulting plot (e.g., 'station_uncertainty.png').
+    dpi : int, optional
+        Resolution of the saved figure. Default is 300.
+    show : bool, optional
+        If True, display the figure interactively. Default is True.
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> plot_station_location_uncertainty(df_stations, "uncertainty.png", show=True)
     """
     try:
         import cartopy.crs as ccrs
@@ -1330,8 +1442,39 @@ def plot_station_location_uncertainty(df, savepath,  dpi=300,show=True):
     
     # print(f"Mean total difference: {distance.mean():.4f} km")
 
-def plot_venn(ax, df):
-    """Draw Venn diagram of calculated vs confirmed stations."""
+def plot_venn(ax: "plt.Axes", df: pd.DataFrame) -> "plt.Axes":
+    """
+    Draw a Venn diagram comparing calculated and confirmed stations.
+
+    This function visualizes the overlap between calculated and confirmed
+    stations using a two-set Venn diagram. It highlights stations that are
+    only calculated, only confirmed, and those present in both.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Axes object to draw the Venn diagram on.
+    df : pandas.DataFrame
+        DataFrame containing boolean or binary columns:
+        - 'calculated': 1 if station is calculated, 0 otherwise
+        - 'confirmed': 1 if station is confirmed, 0 otherwise
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The axes object with the Venn diagram drawn.
+
+    Raises
+    ------
+    ImportError
+        If the `matplotlib-venn` library is not installed.
+
+    Examples
+    --------
+    >>> fig, ax = plt.subplots()
+    >>> plot_venn(ax, df_stations)
+    >>> plt.show()
+    """
     try:
         from matplotlib_venn import venn2
     except ImportError:
@@ -1376,8 +1519,43 @@ def plot_venn(ax, df):
 
     return ax
 
-def setup_map(ax, region):
-    """Configure a cartopy map axis."""
+def setup_map(ax: "plt.Axes", region: list) -> tuple:
+    """
+    Configure a Cartopy map axis with standard geographic features.
+
+    This function sets up a map with coastlines, borders, states, land, ocean,
+    lakes, rivers, and gridlines. It also applies a geographic extent defined
+    by the `region`.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The matplotlib axes object where the map will be drawn. Typically
+        created using `plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})`.
+    region : list
+        Geographic extent of the map in the format [min_lon, max_lon, min_lat, max_lat].
+
+    Returns
+    -------
+    tuple
+        - ax : matplotlib.axes.Axes
+            The configured axes with map features.
+        - gl : cartopy.mpl.gridliner.Gridliner
+            Gridliner object for further customization.
+
+    Raises
+    ------
+    ImportError
+        If the Cartopy library is not installed.
+
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> import cartopy.crs as ccrs
+    >>> fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
+    >>> ax, gl = setup_map(ax, [-120, -70, 20, 50])
+    >>> plt.show()
+    """
     try:
         import cartopy.crs as ccrs
         import cartopy.feature as cfeature
@@ -1400,8 +1578,46 @@ def setup_map(ax, region):
     gl.bottom_labels = True
     return ax, gl
 
-def plot_station_map(ax, df,  region):
-    """Plot calculated and confirmed station locations."""
+def plot_station_map(ax: "plt.Axes", df: "pd.DataFrame", region: list) -> "plt.Axes":
+    """
+    Plot calculated and confirmed station locations on a geographic map.
+
+    This function uses Cartopy to display station locations, distinguishing
+    between stations that are only calculated and those that are both
+    calculated and confirmed. It also adds a scale bar and a legend.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The matplotlib axes object where the map will be drawn.
+    df : pandas.DataFrame
+        DataFrame containing station information with at least the following columns:
+        - 'network' : str, network code
+        - 'station' : str, station code
+        - 'confirmed' : int, 1 if station is confirmed, 0 otherwise
+        - 'calculated' : int, 1 if station is calculated, 0 otherwise
+        - 'confirmed_latitude', 'confirmed_longitude' : float, coordinates of confirmed stations
+        - 'calculated_latitude', 'calculated_longitude' : float, coordinates of calculated stations
+    region : list
+        Geographic extent of the map in the format [min_lon, max_lon, min_lat, max_lat].
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The axes object with the plotted station locations.
+
+    Raises
+    ------
+    ImportError
+        If Cartopy is not installed.
+
+    Examples
+    --------
+    >>> import matplotlib.pyplot as plt
+    >>> fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()})
+    >>> ax = plot_station_map(ax, df_stations, [-120, -70, 20, 50])
+    >>> plt.show()
+    """
     try:
         import cartopy.crs as ccrs
     except ImportError:

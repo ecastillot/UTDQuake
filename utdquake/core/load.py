@@ -1,17 +1,32 @@
 from __future__ import annotations
 
-import obsplus
-import logging 
-import shutil
 import logging
+import shutil
+from pathlib import Path
+from typing import Dict, Set
+
+import obsplus
 import pyarrow.parquet as pq
 from .data import download_snapshot
-from .config import get_root,HF_CONFIG
+from .config import get_root, HF_CONFIG
 
 logger = logging.getLogger(__name__)
 
 
-def validate_eventbank(path) -> bool:
+def validate_eventbank(path: Path) -> bool:
+    """
+    Validate that a path contains a readable ObsPlus EventBank.
+
+    Parameters
+    ----------
+    path : Path
+        Path to the EventBank directory.
+
+    Returns
+    -------
+    bool
+        True if the EventBank exists and is readable, False otherwise.
+    """
     if not path.exists():
         return False
     try:
@@ -21,7 +36,20 @@ def validate_eventbank(path) -> bool:
     except Exception:
         return False
 
-def validate_parquet(path) -> bool:
+def validate_parquet(path: Path) -> bool:
+    """
+    Validate that a path contains a valid Parquet file.
+
+    Parameters
+    ----------
+    path : Path
+        Path to the Parquet file.
+
+    Returns
+    -------
+    bool
+        True if the file exists and can be read by PyArrow, False otherwise.
+    """
     if not path.exists():
         return False
     try:
@@ -31,11 +59,30 @@ def validate_parquet(path) -> bool:
         return False
 
 def resolve_missing_components(
-    bank_path,
-    parquets,
-    flags,
-    include_bank
-) -> set:
+    bank_path: Path,
+    parquets: Dict[str, Path],
+    flags: Dict[str, bool],
+    include_bank: bool
+) -> Set[str]:
+    """
+    Determine which components are missing or invalid locally.
+
+    Parameters
+    ----------
+    bank_path : Path
+        Path to the EventBank directory.
+    parquets : dict
+        Dictionary of Parquet file paths for keys 'events', 'stations', 'picks'.
+    flags : dict
+        Dictionary indicating which components to check.
+    include_bank : bool
+        Whether to include bank validation.
+
+    Returns
+    -------
+    set
+        Set of missing components (keys) that need to be downloaded.
+    """
 
     missing = set()
 
@@ -55,7 +102,19 @@ def resolve_missing_components(
 
     return missing
 
-def cleanup_components(to_download, bank_path, parquets):
+def cleanup_components(to_download: Set[str], bank_path: Path, parquets: Dict[str, Path]) -> None:
+    """
+    Remove local files/directories for components that will be re-downloaded.
+
+    Parameters
+    ----------
+    to_download : set
+        Components to remove ('banks', 'events', 'stations', 'picks').
+    bank_path : Path
+        Path to the EventBank directory.
+    parquets : dict
+        Dictionary of Parquet file paths.
+    """
     if "banks" in to_download:
         shutil.rmtree(bank_path, ignore_errors=True)
 
@@ -75,13 +134,41 @@ def resolve_network_paths(
     include_stations: bool = True,
     include_picks: bool = True,
     max_retries: int = 2,
-) -> dict:
+) -> Dict[str, Path]:
     """
-    Ensure network data exists locally and return paths.
-    """
+    Ensure that all network data components exist locally and return their paths.
 
+    If any required components are missing or invalid, attempts to download them
+    using `download_snapshot`. Raises RuntimeError if unable to resolve after retries.
+
+    Parameters
+    ----------
+    network : str
+        Network code to resolve.
+    include_bank : bool, optional
+        Whether to include EventBank. Default is True.
+    include_events : bool, optional
+        Whether to include event Parquet. Default is True.
+    include_stations : bool, optional
+        Whether to include stations Parquet. Default is True.
+    include_picks : bool, optional
+        Whether to include picks Parquet. Default is True.
+    max_retries : int, optional
+        Maximum number of download attempts. Default is 2.
+
+    Returns
+    -------
+    dict
+        Dictionary of component paths. Keys include 'bank', 'events', 'stations', 'picks'.
+
+    Raises
+    ------
+    RuntimeError
+        If network data could not be resolved after `max_retries` attempts.
+    """
     network = network.strip()
 
+    # Paths for EventBank and Parquet components
     bank_path = get_root() / "bank" / network
     parquets = {
         "events": get_root() / HF_CONFIG["events"].path.format(network=network),
@@ -112,8 +199,10 @@ def resolve_network_paths(
             network, attempt + 1, max_retries, missing
         )
 
+        # Remove invalid/missing components before redownloading
         cleanup_components(missing, bank_path, parquets)
 
+        # Download missing components
         download_snapshot(
             local_dir=get_root(),
             networks=network,

@@ -34,7 +34,7 @@ This dataset offers structured event catalogs, station metadata, and phase picks
 | `stations/` | `*.parquet`   | Station metadata per network. |
 | `picks/`    | `*.parquet`   | Seismic phase pick datasets per network. |
 
-For details on the contents and schema of each dataset, please refer to the **Hugging Face dataset viewer**.
+For details on the contents and schema of each dataset, please refer to the [Hugging Face dataset viewer](https://huggingface.co/datasets/ecastillot/UTDQuake/viewer).
 
 To get started, see the [Quick Start](#quick-start) section below, or click **“Use this dataset”** on the Hugging Face dataset page for example loading code.
 

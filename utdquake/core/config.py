@@ -1,21 +1,36 @@
 import os
-from typing import Dict
+from typing import Dict, Optional
 from pathlib import Path
 from dataclasses import dataclass
 
-UTDQUAKE_ROOT = "UTDQUAKE_ROOT"
-HF_REPO_ID = "ecastillot/UTDQuake"
-HF_REPO_TYPE = "dataset"
+UTDQUAKE_ROOT: str = "UTDQUAKE_ROOT"
+"""Environment variable name for UTDQuake cache root."""
 
-CORE_DIR = Path(__file__).resolve().parent
+HF_REPO_ID: str = "ecastillot/UTDQuake"
+"""Hugging Face repository ID for UTDQuake dataset."""
+
+HF_REPO_TYPE: str = "dataset"
+"""Type of Hugging Face repository (default: 'dataset')."""
+
+CORE_DIR: Path = Path(__file__).resolve().parent
+"""Path to the core directory of the UTDQuake package."""
 
 @dataclass(frozen=True)
 class HFEntry:
     """
     Configuration entry for a Hugging Face dataset component.
+
+    Attributes
+    ----------
+    name : str
+        Dataset name or identifier (e.g., '0_networks').
+    split : str
+        Dataset split (e.g., 'metadata').
+    path : str
+        Relative path pattern for the dataset file.
     """
-    name: str
-    split: str
+    name: Optional[str]
+    split: Optional[str]
     path: str
 
 HF_CONFIG: Dict[str, HFEntry] = {
@@ -49,15 +64,27 @@ HF_CONFIG: Dict[str, HFEntry] = {
 
 def get_root() -> Path:
     """
-    Return the root directory used to store cached UTDQuake data.
+    Return the root directory for cached UTDQuake data.
 
     Users can override this location by setting the environment variable
-    `UTDQUAKE_ROOT` before importing/using utdquake:
+    `UTDQUAKE_ROOT` before importing or using UTDQuake.
 
-    Example
+    If the variable is not set, the default location is:
+    ``~/.utdquake``
+
+    Returns
     -------
+    Path
+        Resolved path to the root cache directory.
+
+    Examples
+    --------
     >>> import os
     >>> os.environ["UTDQUAKE_ROOT"] = "/my/custom/cache"
+    >>> from utdquake.core import get_root
+    >>> root_path = get_root()
+    >>> print(root_path)
+    /my/custom/cache
     """
     root = os.environ.get(UTDQUAKE_ROOT, None)
 

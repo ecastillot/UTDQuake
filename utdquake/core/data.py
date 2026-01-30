@@ -2,42 +2,65 @@ import os
 import logging
 import zipfile
 from pathlib import Path
-from datasets import load_dataset
-from typing import Union, Optional
+from datasets import load_dataset, Dataset, IterableDataset
+from typing import Union, List, Optional
 from huggingface_hub import snapshot_download
 from .config import HF_REPO_ID, HF_REPO_TYPE,HF_CONFIG
 
 logger = logging.getLogger(__name__)
 
-def download_snapshot(local_dir, networks, 
-                    include_banks: bool = True,
-                    include_networks: bool = True,
-                    include_events: bool = True,
-                    include_stations:bool = True,
-                    include_picks: bool = True,
-                    overwrite: bool = True,
-                    unzip_banks: bool = True
-                    ) -> Path:
+def download_snapshot(
+    local_dir: Union[str, Path],
+    networks: Union[str, List[str]],
+    include_banks: bool = True,
+    include_networks: bool = True,
+    include_events: bool = True,
+    include_stations: bool = True,
+    include_picks: bool = True,
+    overwrite: bool = True,
+    unzip_banks: bool = True
+) -> Path:
     """
-    Download selected  data from the UTDQuake Hugging Face repository.
+    Download selected data from the UTDQuake Hugging Face repository.
 
     Parameters
     ----------
-    local_dir : str
-        Local directory where the data will be downloaded.
+    local_dir : str or Path
+        Local directory where the data will be downloaded. Created if it does not exist.
     networks : str or list of str
         Networks to download:
         - "*" downloads all networks
         - "t*" downloads all networks starting with 't'
         - ["tx", "uw"] downloads only specified networks
-    repo_id : str
-        Hugging Face repository ID (default: DEFAULT_REPO_ID).
-    repo_type : str
-        Type of repository (default: DEFAULT_REPO_TYPE).
+    include_banks : bool, optional
+        Whether to download the bank (synthetic) data. Default: True.
+    include_networks : bool, optional
+        Whether to download the network metadata. Default: True.
+    include_events : bool, optional
+        Whether to download the events data. Default: True.
+    include_stations : bool, optional
+        Whether to download station metadata. Default: True.
+    include_picks : bool, optional
+        Whether to download seismic picks. Default: True.
+    overwrite : bool, optional
+        If True, existing files will be re-downloaded. Default: True.
+    unzip_banks : bool, optional
+        If True, downloaded bank zip files will be automatically extracted. Default: True.
+
     Returns
     -------
     Path
-        Path to the downloaded folder.
+        Path to the local directory containing the downloaded snapshot.
+
+    Notes
+    -----
+    The function builds a set of allowed file patterns based on the requested networks and data types.
+    Only files matching these patterns are downloaded. Zip files in banks are optionally unzipped.
+    
+    Examples
+    --------
+    >>> download_snapshot("/tmp/utdquake", networks=["tx", "uw"], include_picks=False)
+    >>> download_snapshot("/tmp/utdquake", networks="*", overwrite=False)
     """
     repo_id = HF_REPO_ID
     repo_type = HF_REPO_TYPE
@@ -49,6 +72,7 @@ def download_snapshot(local_dir, networks,
     if isinstance(networks, str):
         networks = [networks]
 
+    # Dictionary to check which data types to include
     include = {
             "banks": include_banks,
             "events": include_events,
@@ -68,12 +92,14 @@ def download_snapshot(local_dir, networks,
             if overwrite or not path_to_check.exists():
                 allow_patterns.append(cfg.path.format(network=net))
 
+    # Always include networks metadata if requested
     if include_networks:
         network_path = Path(local_dir) / HF_CONFIG["networks"].path
         # Only append if file does not exist, or overwrite is True
         if overwrite or not network_path.exists():
             allow_patterns.append(HF_CONFIG["networks"].path)
 
+    # Logging for debug
     logger.info("Downloading data from: %s", repo_id)
     logger.info("Saving into: %s", os.path.abspath(local_dir))
     logger.info("Allow patterns: %s", allow_patterns)
@@ -87,6 +113,7 @@ def download_snapshot(local_dir, networks,
         max_workers=1,
     )
 
+    # Optionally unzip bank files
     if include_banks:
         if unzip_banks:
             for net in networks:
@@ -106,22 +133,45 @@ def download_snapshot(local_dir, networks,
 
 def load(
     key: str,
-    network: Optional[Union[str, list[str]]] = None,
+    network: Optional[Union[str, List[str]]] = None,
     streaming: bool = False,
     **kwargs
-    ):
+) -> Union[Dataset, IterableDataset]:
     """
-    Load the dataset from Hugging Face by key.
+    Load a dataset from the UTDQuake Hugging Face repository.
 
-    Args:
-        key (str): One of "network", "stations", "events", "picks".
-        network (str | list[str] | None): Network code(s) to filter. "*" for all. 
-                                            Ignored if key == "network".
-        streaming (bool): Whether to use streaming mode.
-        **kwargs: Additional arguments for `datasets.load_dataset`.
+    Parameters
+    ----------
+    key : str
+        Dataset key. Must be one of "networks", "stations", "events", "picks".
+    network : str or list of str, optional
+        Network code(s) to filter. Use "*" for all networks.
+        Ignored if key == "networks".
+    streaming : bool, optional
+        If True, loads dataset in streaming mode (lazy iteration).
+    **kwargs : dict
+        Additional keyword arguments forwarded to `datasets.load_dataset`.
 
-    Returns:
-        Dataset or IterableDataset: Loaded Hugging Face dataset.
+    Returns
+    -------
+    Dataset or IterableDataset
+        Loaded Hugging Face dataset. Type depends on `streaming`.
+
+    Raises
+    ------
+    ValueError
+        If `key` is not one of the supported dataset types.
+
+    Notes
+    -----
+    - When `key` is "networks", the `network` parameter is ignored.
+    - For other keys, the `network` argument filters the files to load.
+    - Supports both single network (str) and multiple networks (list of str).
+    
+    Examples
+    --------
+    >>> ds = load("stations", network="tx")
+    >>> ds = load("events", network=["tx","uw"], streaming=True)
     """
     if key not in HF_CONFIG:
         raise ValueError(f"Unknown key '{key}'. Must be one of {list(HF_CONFIG.keys())}.")

@@ -1,3818 +1,0 @@
-========================================
-UTDQuake zip+upload
-Node: c-03-10
-Cores allocated: 64
-MAX_ZIP_JOBS=20
-HF_WORKERS=4
-========================================
-Processing 82 networks:
-  - AEIC
-  - AFAD
-  - ANF
-  - ATH
-  - AUST
-  - BEO
-  - BER
-  - BGS
-  - BUC
-  - BYKL
-  - CATAC
-  - CNRM
-  - DJA
-  - EAF
-  - ECX
-  - EST
-  - ETH
-  - FUNV
-  - GCG
-  - GEOFON
-  - GFZ
-  - GII
-  - HEL
-  - IDC
-  - IGQ
-  - INET
-  - INMG
-  - IPGP
-  - ISC
-  - ISK
-  - ISN
-  - JAPAN
-  - JSN
-  - KMA
-  - KNET
-  - KRNET
-  - KRSC
-  - KRSZO
-  - LDG
-  - MDD
-  - MEX
-  - MRB
-  - NIC
-  - NNC
-  - NOA
-  - NOU
-  - OSPL
-  - OTT
-  - PDG
-  - PRE
-  - RHSSO
-  - RSNC
-  - RSPR
-  - SJA
-  - TAP
-  - THE
-  - TIR
-  - TUN
-  - UCC
-  - UCR
-  - UPA
-  - UPP
-  - USP
-  - VAO
-  - VIE
-  - ZUR
-  - admin
-  - ak
-  - at
-  - av
-  - hv
-  - mb
-  - nc
-  - nm
-  - nn
-  - ok
-  - pr
-  - se
-  - tx
-  - us
-  - uu
-  - uw
-
-Step 1) Zipping networks into: /groups/igonin/ecastillo/UTDQuake/_hf_stage/events
-----------------------------------------
-[ZIP  START] AEIC
-[ZIP  START] AFAD
-[ZIP  START] ANF
-[ZIP  START] ATH
-[ZIP  START] AUST
-[ZIP  START] BEO
-[ZIP  START] BER
-[ZIP  START] BGS
-[ZIP  START] BUC
-[ZIP  START] BYKL
-[ZIP  START] CATAC
-[ZIP  START] CNRM
-[ZIP  START] DJA
-[ZIP  START] EAF
-[ZIP  START] ECX
-[ZIP  START] EST
-[ZIP  START] ETH
-[ZIP  START] FUNV
-[ZIP  START] GCG
-[ZIP  START] GEOFON
-[ZIP  DONE ] EST
-[ZIP  START] GFZ
-[ZIP  DONE ] BGS
-[ZIP  START] GII
-[ZIP  DONE ] BYKL
-[ZIP  START] HEL
-[ZIP  DONE ] EAF
-[ZIP  START] IDC
-[ZIP  DONE ] CNRM
-[ZIP  START] IGQ
-[ZIP  DONE ] FUNV
-[ZIP  START] INET
-[ZIP  DONE ] ETH
-[ZIP  START] INMG
-[ZIP  DONE ] ECX
-[ZIP  START] IPGP
-[ZIP  DONE ] BER
-[ZIP  START] ISC
-[ZIP  DONE ] ANF
-[ZIP  START] ISK
-[ZIP  DONE ] GCG
-[ZIP  START] ISN
-[ZIP  DONE ] CATAC
-[ZIP  START] JAPAN
-[ZIP  DONE ] ATH
-[ZIP  START] JSN
-[ZIP  DONE ] IGQ
-[ZIP  START] KMA
-[ZIP  DONE ] BUC
-[ZIP  START] KNET
-[ZIP  DONE ] BEO
-[ZIP  START] KRNET
-[ZIP  DONE ] INET
-[ZIP  START] KRSC
-[ZIP  DONE ] GEOFON
-[ZIP  START] KRSZO
-[ZIP  DONE ] AFAD
-[ZIP  START] LDG
-[ZIP  DONE ] ISN
-[ZIP  START] MDD
-[ZIP  DONE ] DJA
-[ZIP  START] MEX
-[ZIP  DONE ] KNET
-[ZIP  START] MRB
-[ZIP  DONE ] JSN
-[ZIP  START] NIC
-[ZIP  DONE ] GII
-[ZIP  START] NNC
-[ZIP  DONE ] HEL
-[ZIP  START] NOA
-[ZIP  DONE ] KMA
-[ZIP  START] NOU
-[ZIP  DONE ] GFZ
-[ZIP  START] OSPL
-[ZIP  DONE ] AEIC
-[ZIP  START] OTT
-[ZIP  DONE ] ISK
-[ZIP  START] PDG
-[ZIP  DONE ] INMG
-[ZIP  START] PRE
-[ZIP  DONE ] JAPAN
-[ZIP  START] RHSSO
-[ZIP  DONE ] KRNET
-[ZIP  START] RSNC
-[ZIP  DONE ] AUST
-[ZIP  START] RSPR
-[ZIP  DONE ] IDC
-[ZIP  START] SJA
-[ZIP  DONE ] KRSZO
-[ZIP  START] TAP
-[ZIP  DONE ] KRSC
-[ZIP  START] THE
-[ZIP  DONE ] PDG
-[ZIP  START] TIR
-[ZIP  DONE ] NNC
-[ZIP  START] TUN
-[ZIP  DONE ] MEX
-[ZIP  START] UCC
-[ZIP  DONE ] MRB
-[ZIP  START] UCR
-[ZIP  DONE ] NIC
-[ZIP  START] UPA
-[ZIP  DONE ] TUN
-[ZIP  START] UPP
-[ZIP  DONE ] LDG
-[ZIP  START] USP
-[ZIP  DONE ] NOU
-[ZIP  START] VAO
-[ZIP  DONE ] MDD
-[ZIP  START] VIE
-[ZIP  DONE ] NOA
-[ZIP  START] ZUR
-[ZIP  DONE ] OSPL
-[ZIP  START] admin
-[ZIP  DONE ] PRE
-[ZIP  START] ak
-[ZIP  DONE ] OTT
-[ZIP  START] at
-[ZIP  DONE ] ISC
-[ZIP  START] av
-[ZIP  DONE ] IPGP
-[ZIP  START] hv
-[ZIP  DONE ] RSNC
-[ZIP  START] mb
-[ZIP  DONE ] RSPR
-[ZIP  START] nc
-[ZIP  DONE ] UCC
-[ZIP  START] nm
-[ZIP  DONE ] RHSSO
-[ZIP  START] nn
-[ZIP  DONE ] VAO
-[ZIP  START] ok
-[ZIP  DONE ] TAP
-[ZIP  START] pr
-[ZIP  DONE ] SJA
-[ZIP  START] se
-[ZIP  DONE ] UPA
-[ZIP  START] tx
-[ZIP  DONE ] TIR
-[ZIP  START] us
-[ZIP  DONE ] VIE
-[ZIP  START] uu
-[ZIP  DONE ] UPP
-[ZIP  START] uw
-[ZIP  DONE ] THE
-[ZIP  DONE ] USP
-[ZIP  DONE ] ZUR
-[ZIP  DONE ] UCR
-[ZIP  DONE ] se
-[ZIP  DONE ] ak
-[ZIP  DONE ] av
-[ZIP  DONE ] at
-[ZIP  DONE ] mb
-[ZIP  DONE ] pr
-[ZIP  DONE ] hv
-[ZIP  DONE ] nc
-[ZIP  DONE ] ok
-[ZIP  DONE ] nm
-[ZIP  DONE ] nn
-[ZIP  DONE ] uu
-[ZIP  DONE ] admin
-[ZIP  DONE ] uw
-[ZIP  DONE ] us
-[ZIP  DONE ] tx
-All zip jobs finished.
-
-Step 2) Uploading zips to HuggingFace as events/*.zip
-----------------------------------------
-Repo created: https://huggingface.co/datasets/ecastillot/UTDQuake
-Found 82 candidate files to upload
-Running validation checks on files to upload...
-Validation checks complete.
-Starting upload...
-[33mYou are about to upload a large folder to the Hub using `hf upload-large-folder`. This is a new feature so feedback is very welcome!
-
-A few things to keep in mind:
-  - Repository limits still apply: https://huggingface.co/docs/hub/repositories-recommendations
-  - Do not start several processes in parallel.
-  - You can interrupt and resume the process at any time. The script will pick up where it left off except for partially uploaded files that would have to be entirely reuploaded.
-  - Do not upload the same folder to several repositories. If you need to do so, you must delete the `./.cache/huggingface/` folder first.
-
-Some temporary metadata will be stored under `/groups/igonin/ecastillo/UTDQuake/_hf_stage/.cache/huggingface`.
-  - You must not modify those files manually.
-  - You must not delete the `./.cache/huggingface/` folder while a process is running.
-  - You can delete the `./.cache/huggingface/` folder to reinitialize the upload state when process is not running. Files will have to be hashed and preuploaded again, except for already committed files.
-
-If the process output is too verbose, you can disable the progress bars with `--no-bars`. You can also entirely disable the status report with `--no-report`.
-
-For more details, run `hf upload-large-folder --help` or check the documentation at https://huggingface.co/docs/huggingface_hub/guides/upload#upload-a-large-folder.[0m
-Recovering from metadata files:   0%|          | 0/82 [00:00<?, ?it/s]Recovering from metadata files:  23%|██▎       | 19/82 [00:00<00:00, 184.11it/s]Recovering from metadata files:  46%|████▋     | 38/82 [00:00<00:00, 176.50it/s]Recovering from metadata files:  71%|███████   | 58/82 [00:00<00:00, 182.92it/s]Recovering from metadata files:  94%|█████████▍| 77/82 [00:00<00:00, 185.30it/s]Recovering from metadata files: 100%|██████████| 82/82 [00:00<00:00, 184.26it/s]
-
-
-
----------- 2026-01-22 10:07:13 (0:00:00) ----------
-Files:   hashed 0/82 (0.0/3.0G) | pre-uploaded: 0/0 (0.0/3.0G) (+82 unsure) | committed: 0/82 (0.0/3.0G) | ignored: 0
-Workers: hashing: 4 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  ...e/_hf_stage/events/uu.zip:  64%|██████▍   | 16.7MB / 26.2MB            [A[A
-
-
-  ...e/_hf_stage/events/us.zip:  25%|██▍       | 16.8MB / 67.1MB            [A[A[A
-
-
-
-  ...hf_stage/events/admin.zip:  13%|█▎        | 16.8MB /  125MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/nc.zip:  51%|█████▏    | 16.7MB / 32.5MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/nn.zip:  51%|█████     | 16.7MB / 33.1MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/ok.zip:  53%|█████▎    | 16.8MB / 31.8MB            [A[A[A[A[A[A[A
-
-  ...e/_hf_stage/events/uu.zip:  64%|██████▍   | 16.7MB / 26.2MB            [A[A
-
-
-  ...e/_hf_stage/events/us.zip:  25%|██▍       | 16.8MB / 67.1MB            [A[A[A
-
-
-
-  ...hf_stage/events/admin.zip:  13%|█▎        | 16.8MB /  125MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/nc.zip:  51%|█████▏    | 16.7MB / 32.5MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/nn.zip:  51%|█████     | 16.7MB / 33.1MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/ok.zip:  53%|█████▎    | 16.8MB / 31.8MB            [A[A[A[A[A[A[AProcessing Files (0 / 6)      :   5%|▌         |  100MB / 1.88GB,  251MB/s  
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/nm.zip:  94%|█████████▍| 58.6MB / 62.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/pr.zip: 100%|██████████| 20.0MB / 20.0MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/mb.zip: 100%|██████████| 34.0MB / 34.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...e/_hf_stage/events/uu.zip: 100%|██████████| 26.2MB / 26.2MB            [A[A
-
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A[A
-
-
-
-  ...hf_stage/events/admin.zip:  74%|███████▎  | 92.2MB /  125MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/nc.zip: 100%|██████████| 32.5MB / 32.5MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/ok.zip: 100%|██████████| 31.8MB / 31.8MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/nm.zip:  94%|█████████▍| 58.6MB / 62.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/pr.zip: 100%|██████████| 20.0MB / 20.0MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/mb.zip: 100%|██████████| 34.0MB / 34.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 5 files]                 :  51%|█████     |  122MB /  240MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (6 / 15)     :  27%|██▋       |  517MB / 1.88GB,  863MB/s  
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...hf_stage/events/admin.zip: 100%|██████████|  125MB /  125MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.0MB / 62.1MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/av.zip: 100%|██████████| 21.5MB / 21.5MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/ak.zip: 100%|██████████| 25.3MB / 25.3MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/se.zip: 100%|██████████| 20.4MB / 20.4MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ZUR.zip: 100%|██████████| 26.1MB / 26.1MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 6 files]                 :  74%|███████▍  |  298MB /  404MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (11 / 21)    :  46%|████▌     |  865MB / 1.88GB, 1.08GB/s  
-
-  .../_hf_stage/events/BGS.zip: 100%|█████████▉| 28.8MB / 29.0MB            [A[A
-
-  .../_hf_stage/events/GFZ.zip:  94%|█████████▍| 67.0MB / 71.1MB            [A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|█████████▉| 32.1MB / 32.2MB            [A[A
-
-  .../_hf_stage/events/BGS.zip: 100%|█████████▉| 28.8MB / 29.0MB            [A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|█████████▉| 32.1MB / 32.2MB            [A[AProcessing Files (0 / 1)      : 100%|█████████▉| 28.8MB / 29.0MB, 36.0MB/s  Processing Files (0 / 1)      : 100%|█████████▉| 32.1MB / 32.2MB, 40.1MB/s  
-
-
-  ..._hf_stage/events/AEIC.zip:  45%|████▌     | 33.6MB / 73.8MB            [A[A[A
-
-
-
-  .../_hf_stage/events/HEL.zip: 100%|██████████| 16.6MB / 16.6MB            [A[A[A[A
-
-  .../_hf_stage/events/GFZ.zip:  94%|█████████▍| 67.0MB / 71.1MB            [A[A
-
-
-  ..._hf_stage/events/AEIC.zip:  45%|████▌     | 33.6MB / 73.8MB            [A[A[A
-
-
-
-  .../_hf_stage/events/HEL.zip: 100%|██████████| 16.6MB / 16.6MB            [A[A[A[AProcessing Files (1 / 3)      :  11%|█         |  117MB / 1.09GB,  146MB/s  
-
-  .../_hf_stage/events/BGS.zip: 100%|█████████▉| 28.8MB / 29.0MB            [A[A
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.0MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/at.zip: 100%|██████████|  104MB /  104MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.3MB / 34.4MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip:  97%|█████████▋| 72.4MB / 74.6MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip:  87%|████████▋ | 32.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 9 files]                 :  89%|████████▊ |  355MB /  400MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[AProcessing Files (18 / 30)    :  64%|██████▍   | 1.21GB / 1.88GB, 1.21GB/s  
-
-
-
-
-  .../_hf_stage/events/KMA.zip: 100%|██████████| 21.7MB / 21.7MB            [A[A[A[A[AProcessing Files (1 / 1)      : 100%|██████████| 32.2MB / 32.2MB, 32.2MB/s  
-New Data Upload               : 100%|██████████|  131kB /  131kB,  131kB/s  [A
-
-
-
-
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ..._hf_stage/events/KNET.zip: 100%|██████████| 5.48MB / 5.48MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/JSN.zip: 100%|██████████| 6.30MB / 6.30MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/AFAD.zip: 100%|██████████| 23.7MB / 23.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/DJA.zip:  70%|██████▉   | 41.9MB / 60.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GFZ.zip: 100%|██████████| 71.1MB / 71.1MB            [A[A
-
-
-  ..._hf_stage/events/AEIC.zip: 100%|██████████| 73.8MB / 73.8MB            [A[A[A
-
-
-
-  .../_hf_stage/events/HEL.zip: 100%|██████████| 16.6MB / 16.6MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/KMA.zip: 100%|██████████| 21.7MB / 21.7MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ..._hf_stage/events/KNET.zip: 100%|██████████| 5.48MB / 5.48MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/JSN.zip: 100%|██████████| 6.30MB / 6.30MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/AFAD.zip: 100%|██████████| 23.7MB / 23.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 3 files]                 :  18%|█▊        | 81.0MB /  461MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (8 / 13)     :  29%|██▉       |  320MB / 1.09GB,  320MB/s  
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.0MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.3MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip:  97%|█████████▋| 72.4MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip:  87%|████████▋ | 32.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.4MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 8 files]                 :  86%|████████▋ |  312MB /  362MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[A
-
-  .../_hf_stage/events/KMA.zip: 100%|██████████| 21.7MB / 21.7MB            [A[A
-
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A[A
-
-
-
-  ..._hf_stage/events/KNET.zip: 100%|██████████| 5.48MB / 5.48MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/JSN.zip: 100%|██████████| 6.30MB / 6.30MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ..._hf_stage/events/AFAD.zip: 100%|██████████| 23.7MB / 23.7MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/DJA.zip: 100%|██████████| 60.0MB / 60.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/INET.zip: 100%|██████████| 5.69MB / 5.69MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 6 files]                 :  54%|█████▎    |  309MB /  575MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (23 / 36)    :  75%|███████▌  | 1.42GB / 1.88GB, 1.18GB/s  
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[AProcessing Files (10 / 19)    :  63%|██████▎   |  685MB / 1.09GB,  571MB/s  Processing Files (1 / 1)      : 100%|██████████| 29.0MB / 29.0MB, 24.1MB/s  
-New Data Upload               : 100%|██████████|  126kB /  126kB,  105kB/s  [A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[A
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[A
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AUST.zip:  49%|████▉     |  159MB /  324MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/BUC.zip: 100%|██████████| 52.4MB / 52.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.7MB / 25.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.8MB / 29.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 8 files]                 : 100%|█████████▉|  174MB /  174MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[A
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.0MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.3MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip:  97%|█████████▋| 72.4MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip:  87%|████████▋ | 32.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.4MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 15 files]                :  90%|████████▉ |  434MB /  482MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (16 / 27)    :  85%|████████▍ |  924MB / 1.09GB,  660MB/s  Processing Files (29 / 48)    :  91%|█████████▏| 1.72GB / 1.88GB, 1.23GB/s  Processing Files (1 / 1)      : 100%|██████████| 32.2MB / 32.2MB, 23.0MB/s  
-New Data Upload               : 100%|██████████|  131kB /  131kB, 93.6kB/s  
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            
-
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[A
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.0MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.4MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip:  97%|█████████▋| 72.5MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip:  87%|████████▋ | 32.9MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.4MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 14 files]                :  97%|█████████▋|  444MB /  459MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AUST.zip:  73%|███████▎  |  235MB /  324MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.7MB / 25.8MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.8MB / 29.9MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.6MB / 26.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 1 files]                 :  99%|█████████▉| 29.7MB / 29.9MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (34 / 53)    :  99%|█████████▉| 1.86GB / 1.88GB, 1.16GB/s  
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[AProcessing Files (16 / 27)    :  92%|█████████▏|  999MB / 1.09GB,  625MB/s  
-New Data Upload               :   2%|▏         |  563kB / 23.1MB,  352kB/s  [AProcessing Files (1 / 1)      : 100%|██████████| 29.0MB / 29.0MB, 18.1MB/s  
-New Data Upload               : 100%|██████████|  126kB /  126kB, 78.6kB/s  
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            
-
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.0MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.0MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.1MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.3MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.4MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip:  99%|█████████▊| 73.6MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip:  94%|█████████▍| 35.5MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.5MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 9 files]                 :  98%|█████████▊|  346MB /  353MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip:  99%|█████████▉| 13.5MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip:  99%|█████████▉| 7.09MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AUST.zip:  96%|█████████▌|  310MB /  324MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.7MB / 25.8MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.8MB / 29.9MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.6MB / 26.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 1 files]                 :  99%|█████████▉| 29.7MB / 29.9MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (34 / 53)    :  99%|█████████▉| 1.87GB / 1.88GB, 1.04GB/s  Processing Files (16 / 27)    :  99%|█████████▊| 1.07GB / 1.09GB,  597MB/s  
-New Data Upload               :  54%|█████▎    | 12.4MB / 23.1MB, 6.88MB/s  [A
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.1MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.1MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.1MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.4MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.4MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip: 100%|█████████▉| 74.6MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip: 100%|█████████▉| 37.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.5MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 9 files]                 : 100%|█████████▉|  353MB /  353MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 1 files]                 : 100%|█████████▉| 29.8MB / 29.9MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (34 / 53)    : 100%|█████████▉| 1.88GB / 1.88GB,  942MB/s  Processing Files (17 / 27)    : 100%|█████████▉| 1.09GB / 1.09GB,  545MB/s  
-New Data Upload               : 100%|█████████▉| 23.1MB / 23.1MB, 11.5MB/s  [A
-New Data Upload               :  58%|█████▊    |  527kB /  911kB,  264kB/s  [A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...e/_hf_stage/events/us.zip: 100%|█████████▉| 67.1MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|█████████▉| 33.1MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|█████████▉| 62.1MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|█████████▉| 42.4MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|█████████▉| 34.4MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip: 100%|█████████▉| 74.6MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|█████████▉| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip: 100%|█████████▉| 37.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|█████████▉| 24.5MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 9 files]                 : 100%|█████████▉|  353MB /  353MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...e/_hf_stage/events/us.zip: 100%|██████████| 67.1MB / 67.1MB            [A[A
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|██████████| 33.1MB / 33.1MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|██████████| 62.1MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|██████████| 42.4MB / 42.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/USP.zip: 100%|██████████| 34.4MB / 34.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip: 100%|██████████| 74.6MB / 74.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/THE.zip: 100%|██████████| 34.1MB / 34.1MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip: 100%|██████████| 37.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/UPP.zip: 100%|██████████| 24.5MB / 24.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 9 files]                 : 100%|██████████|  353MB /  353MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (53 / 53)    : 100%|██████████| 1.88GB / 1.88GB,  785MB/s  
-New Data Upload               : 100%|██████████| 23.1MB / 23.1MB, 9.65MB/s  [A
-
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            [A[A
-
-
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            [A[A
-
-
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            [A[A
-
-
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            [A[A
-
-
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (53 / 53)    : 100%|██████████| 1.88GB / 1.88GB,  628MB/s  
-New Data Upload               : 100%|██████████| 23.1MB / 23.1MB, 7.72MB/s  
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            
-
-
-  .../_hf_stage/events/GII.zip: 100%|█████████▉| 13.6MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|█████████▉| 7.14MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|█████████▉| 71.2MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|█████████▉| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|█████████▉| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|█████████▉| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|█████████▉| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|█████████▉| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|█████████▉| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|█████████▉| 10.9MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (27 / 27)    : 100%|██████████| 1.09GB / 1.09GB,  320MB/s  
-New Data Upload               : 100%|██████████|  911kB /  911kB,  268kB/s  [A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (27 / 27)    : 100%|██████████| 1.09GB / 1.09GB,  259MB/s  
-New Data Upload               : 100%|██████████|  911kB /  911kB,  217kB/s  
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            
-  .../_hf_stage/events/IGQ.zip: 100%|██████████| 25.8MB / 25.8MB            
-  .../_hf_stage/events/ATH.zip: 100%|██████████| 29.9MB / 29.9MB            
-  ...hf_stage/events/CATAC.zip: 100%|██████████| 33.0MB / 33.0MB            
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[A
-
-
-  ...e/_hf_stage/events/uu.zip: 100%|██████████| 26.2MB / 26.2MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|██████████| 33.1MB / 33.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/us.zip: 100%|██████████| 67.1MB / 67.1MB            [A[A[A[A[A
-
-
-
-
-
-  ...hf_stage/events/admin.zip:  60%|██████    | 75.4MB /  125MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip: 100%|██████████| 74.6MB / 74.6MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip: 100%|██████████| 37.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/ok.zip: 100%|██████████| 31.8MB / 31.8MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/nm.zip:  67%|██████▋   | 41.8MB / 62.1MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/BYKL.zip: 100%|██████████| 32.2MB / 32.2MB            [A[A
-
-
-  ...e/_hf_stage/events/uu.zip: 100%|██████████| 26.2MB / 26.2MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nn.zip: 100%|██████████| 33.1MB / 33.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/us.zip: 100%|██████████| 67.1MB / 67.1MB            [A[A[A[A[A
-
-
-
-
-
-  ...hf_stage/events/admin.zip:  60%|██████    | 75.4MB /  125MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/BGS.zip: 100%|██████████| 29.0MB / 29.0MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/tx.zip: 100%|██████████| 74.6MB / 74.6MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/uw.zip: 100%|██████████| 37.8MB / 37.8MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/ok.zip: 100%|██████████| 31.8MB / 31.8MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 7 files]                 :  69%|██████▉   |  178MB /  258MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (10 / 17)    :  32%|███▏      |  585MB / 1.84GB,   ???B/s  
-
-  ...hf_stage/events/admin.zip: 100%|██████████|  125MB /  125MB            [A[A
-
-
-  ...e/_hf_stage/events/ok.zip: 100%|██████████| 31.8MB / 31.8MB            [A[A[A
-
-
-
-  ...e/_hf_stage/events/nm.zip: 100%|██████████| 62.1MB / 62.1MB            [A[A[A[A
-
-
-
-
-  ...e/_hf_stage/events/nc.zip: 100%|██████████| 32.5MB / 32.5MB            [A[A[A[A[A
-
-
-
-
-
-  ...e/_hf_stage/events/pr.zip: 100%|██████████| 20.0MB / 20.0MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...e/_hf_stage/events/hv.zip: 100%|██████████| 42.4MB / 42.4MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/mb.zip: 100%|██████████| 34.0MB / 34.0MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/av.zip: 100%|██████████| 21.5MB / 21.5MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...e/_hf_stage/events/ak.zip: 100%|██████████| 25.3MB / 25.3MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 16 files]                :  65%|██████▌   |  425MB /  650MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (26 / 33)    :  61%|██████    | 1.12GB / 1.84GB, 2.67GB/s  
-
-  ...e/_hf_stage/events/at.zip: 100%|██████████|  104MB /  104MB            [A[A
-
-
-  .../_hf_stage/events/UCR.zip: 100%|██████████|  104MB /  104MB            [A[A[A
-
-
-
-  .../_hf_stage/events/TAP.zip: 100%|██████████| 22.3MB / 22.3MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/SJA.zip: 100%|██████████| 49.9MB / 49.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/TIR.zip: 100%|██████████| 53.8MB / 53.8MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/UCC.zip: 100%|██████████| 15.6MB / 15.6MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...hf_stage/events/RHSSO.zip: 100%|██████████| 39.4MB / 39.4MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/RSPR.zip: 100%|██████████| 15.5MB / 15.5MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/VAO.zip: 100%|██████████| 58.7MB / 58.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 13 files]                :  82%|████████▏ |  348MB /  426MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (40 / 46)    :  91%|█████████ | 1.68GB / 1.84GB, 2.74GB/s  
-
-  .../_hf_stage/events/OTT.zip: 100%|██████████| 56.5MB / 56.5MB            [A[A
-
-
-  .../_hf_stage/events/ISC.zip: 100%|██████████| 68.1MB / 68.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/MDD.zip: 100%|██████████| 33.0MB / 33.0MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/NOA.zip: 100%|██████████| 36.4MB / 36.4MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/TUN.zip: 100%|██████████| 2.41MB / 2.41MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NOU.zip: 100%|██████████| 23.5MB / 23.5MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/LDG.zip: 100%|██████████| 37.2MB / 37.2MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/MRB.zip: 100%|██████████| 37.4MB / 37.4MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 4 files]                 : 100%|██████████| 94.1MB / 94.1MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████| 1.84GB / 1.84GB, 2.09GB/s  
-
-  .../_hf_stage/events/TUN.zip: 100%|██████████| 2.41MB / 2.41MB            [A[A
-
-
-  .../_hf_stage/events/NOU.zip: 100%|██████████| 23.5MB / 23.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/LDG.zip: 100%|██████████| 37.2MB / 37.2MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/MRB.zip: 100%|██████████| 37.4MB / 37.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/MEX.zip: 100%|██████████| 12.5MB / 12.5MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/KRSZO.zip: 100%|██████████| 11.8MB / 11.8MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/TUN.zip: 100%|██████████| 2.41MB / 2.41MB            [A[A
-
-
-  .../_hf_stage/events/NOU.zip: 100%|██████████| 23.5MB / 23.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/LDG.zip: 100%|██████████| 37.2MB / 37.2MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/MRB.zip: 100%|██████████| 37.4MB / 37.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/MEX.zip: 100%|██████████| 12.5MB / 12.5MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/KRSZO.zip: 100%|██████████| 11.8MB / 11.8MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/TUN.zip: 100%|██████████| 2.41MB / 2.41MB            [A[A
-
-
-  .../_hf_stage/events/NOU.zip: 100%|██████████| 23.5MB / 23.5MB            [A[A[A
-
-
-
-  .../_hf_stage/events/LDG.zip: 100%|██████████| 37.2MB / 37.2MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/MRB.zip: 100%|██████████| 37.4MB / 37.4MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/MEX.zip: 100%|██████████| 12.5MB / 12.5MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...hf_stage/events/KRSZO.zip: 100%|██████████| 11.8MB / 11.8MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████| 1.84GB / 1.84GB, 1.26GB/s  
-New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
-  .../_hf_stage/events/TUN.zip: 100%|██████████| 2.41MB / 2.41MB            
-  .../_hf_stage/events/NOU.zip: 100%|██████████| 23.5MB / 23.5MB            
-  .../_hf_stage/events/LDG.zip: 100%|██████████| 37.2MB / 37.2MB            
-  .../_hf_stage/events/NIC.zip: 100%|██████████| 36.9MB / 36.9MB            
-  .../_hf_stage/events/MRB.zip: 100%|██████████| 37.4MB / 37.4MB            
-  .../_hf_stage/events/NNC.zip: 100%|██████████| 9.13MB / 9.13MB            
-  .../_hf_stage/events/MEX.zip: 100%|██████████| 12.5MB / 12.5MB            
-  ..._hf_stage/events/KRSC.zip: 100%|██████████| 42.9MB / 42.9MB            
-  .../_hf_stage/events/PDG.zip: 100%|██████████| 17.7MB / 17.7MB            
-  ...hf_stage/events/KRSZO.zip: 100%|██████████| 11.8MB / 11.8MB            
-Successfully committed 50 at once. Increasing the limit for next batch.
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  .../_hf_stage/events/ISK.zip: 100%|██████████| 10.5MB / 10.5MB            [A[A
-
-
-  ...hf_stage/events/KRNET.zip: 100%|██████████| 15.0MB / 15.0MB            [A[A[A
-
-
-
-  .../_hf_stage/events/GFZ.zip: 100%|██████████| 71.1MB / 71.1MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AEIC.zip: 100%|██████████| 73.8MB / 73.8MB            [A[A[A[A[A
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/IDC.zip: 100%|██████████| 30.9MB / 30.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/HEL.zip: 100%|██████████| 16.6MB / 16.6MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/KMA.zip: 100%|██████████| 21.7MB / 21.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/GII.zip: 100%|██████████| 13.7MB / 13.7MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  .../_hf_stage/events/ISK.zip: 100%|██████████| 10.5MB / 10.5MB            [A[A
-
-
-  ...hf_stage/events/KRNET.zip: 100%|██████████| 15.0MB / 15.0MB            [A[A[A
-
-
-
-  .../_hf_stage/events/GFZ.zip: 100%|██████████| 71.1MB / 71.1MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/AEIC.zip: 100%|██████████| 73.8MB / 73.8MB            [A[A[A[A[A
-
-
-
-
-
-  ..._hf_stage/events/INMG.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/IDC.zip: 100%|██████████| 30.9MB / 30.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  .../_hf_stage/events/HEL.zip: 100%|██████████| 16.6MB / 16.6MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...hf_stage/events/JAPAN.zip: 100%|██████████| 30.1MB / 30.1MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/KMA.zip: 100%|██████████| 21.7MB / 21.7MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 11 files]                :  43%|████▎     |  288MB /  669MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (15 / 21)    :  48%|████▊     |  577MB / 1.20GB,   ???B/s  
-
-  ..._hf_stage/events/KNET.zip: 100%|██████████| 5.48MB / 5.48MB            [A[A
-
-
-  .../_hf_stage/events/ISN.zip: 100%|██████████| 7.17MB / 7.17MB            [A[A[A
-
-
-
-  ..._hf_stage/events/AFAD.zip: 100%|██████████| 23.7MB / 23.7MB            [A[A[A[A
-
-
-
-
-  ..._hf_stage/events/INET.zip: 100%|██████████| 5.69MB / 5.69MB            [A[A[A[A[A
-
-
-
-
-
-  ..._hf_stage/events/AUST.zip:  36%|███▋      |  117MB /  324MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/DJA.zip: 100%|██████████| 60.0MB / 60.0MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...f_stage/events/GEOFON.zip: 100%|██████████| 71.3MB / 71.3MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/BUC.zip: 100%|██████████| 52.4MB / 52.4MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/BEO.zip: 100%|██████████| 73.9MB / 73.9MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 11 files]                : 100%|██████████|  263MB /  263MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (31 / 32)    :  83%|████████▎ |  989MB / 1.20GB, 2.06GB/s  
-
-  ..._hf_stage/events/AUST.zip:  57%|█████▋    |  185MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (31 / 32)    :  88%|████████▊ | 1.06GB / 1.20GB, 1.20GB/s  
-
-  ..._hf_stage/events/AUST.zip:  80%|████████  |  260MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (31 / 32)    :  95%|█████████▍| 1.13GB / 1.20GB,  924MB/s  
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████| 1.20GB / 1.20GB,  773MB/s  
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            [A[A
-
-
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            [A[A[A
-
-
-
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            [A[A[A[A
-
-
-
-
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            [A[A[A[A[A
-
-
-
-
-
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            [A[A[A[A[A[A
-
-
-
-
-
-
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████| 1.20GB / 1.20GB,  441MB/s  
-New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
-  ..._hf_stage/events/AUST.zip: 100%|██████████|  324MB /  324MB            
-  .../_hf_stage/events/GCG.zip: 100%|██████████| 36.1MB / 36.1MB            
-  .../_hf_stage/events/ANF.zip: 100%|██████████| 26.7MB / 26.7MB            
-  .../_hf_stage/events/BER.zip: 100%|██████████| 19.5MB / 19.5MB            
-  .../_hf_stage/events/ECX.zip: 100%|██████████| 14.2MB / 14.2MB            
-  .../_hf_stage/events/ETH.zip: 100%|██████████| 18.9MB / 18.9MB            
-  ..._hf_stage/events/FUNV.zip: 100%|██████████| 29.8MB / 29.8MB            
-  .../_hf_stage/events/EST.zip: 100%|██████████| 7.78MB / 7.78MB            
-  ..._hf_stage/events/CNRM.zip: 100%|██████████| 11.0MB / 11.0MB            
-  .../_hf_stage/events/EAF.zip: 100%|██████████| 9.80MB / 9.80MB            
-All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
-
----------- 2026-01-22 10:07:41 (0:00:27) ----------
-Files:   hashed 82/82 (3.0G/3.0G) | pre-uploaded: 82/82 (3.0G/3.0G) | committed: 82/82 (3.0G/3.0G) | ignored: 0
-Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------
-INFO:huggingface_hub._upload_large_folder:
----------- 2026-01-22 10:07:41 (0:00:27) ----------
-Files:   hashed 82/82 (3.0G/3.0G) | pre-uploaded: 82/82 (3.0G/3.0G) | committed: 82/82 (3.0G/3.0G) | ignored: 0
-Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------
-✅ DONE
