@@ -1,125 +1,36 @@
+# Core packages
+import numpy as np
+import pandas as pd
+import tempfile
+import os
+import warnings
+import string
+
+# Matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import pandas as pd
-import numpy as np
-import seaborn as sns
 import matplotlib.patches as mpatches
-import matplotlib.ticker as mticker
 from matplotlib.lines import Line2D
-from matplotlib.ticker import FuncFormatter
-from matplotlib.ticker import MultipleLocator
-import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from matplotlib.ticker import FuncFormatter, MultipleLocator
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from matplotlib.colors import LinearSegmentedColormap
-from matplotlib.ticker import ScalarFormatter
-import random
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import obsplus
-from matplotlib.lines import Line2D
-import obspy
+import matplotlib.image as mpimg
+
+
+# Seaborn
+import seaborn as sns
+
+
+# SciPy
 from scipy.stats import linregress
 
-
-from obspy.geodetics import locations2degrees, gps2dist_azimuth
-from utdquake.bank.utils import (merge_arrivals_and_picks, get_preferred_origins,
-                                get_nth_arrival_time)
-
-def compute_region(
-    df_events,
-    df_stations,
-    padding=0.2,
-    global_region=None,
-    how="events",
-    rm_outliers=False,
-    ):
-    """
-    Compute a smart bounding box for plotting events/stations.
-    Handles wrap-around at the dateline.
-    
-    Parameters:
-        df_events: pd.DataFrame with 'longitude' and 'latitude'
-        df_stations: pd.DataFrame with 'longitude' and 'latitude'
-        padding: float, fraction of span to pad
-        global_region: if given, use this instead
-        how: 'events', 'stations', or 'both'
-        rm_outliers: bool, remove extreme outliers
-    
-    Returns:
-        (lon_min, lon_max, lat_min, lat_max)
-        Note: lon_min may be greater than lon_max if region wraps around dateline
-    """
-
-    if global_region is not None:
-        return global_region
-
-    # --- Collect data ---
-    if how == "events":
-        lons = df_events['longitude'].dropna()
-        lats = df_events['latitude'].dropna()
-    elif how == "stations":
-        lons = df_stations['longitude'].dropna()
-        lats = df_stations['latitude'].dropna()
-    elif how == "both":
-        lons = pd.concat([df_events['longitude'], df_stations['longitude']]).dropna()
-        lats = pd.concat([df_events['latitude'], df_stations['latitude']]).dropna()
-    else:
-        raise ValueError(f"Unknown how='{how}'. Must be 'events', 'stations', or 'both'.")
-
-    if lons.empty or lats.empty:
-        raise ValueError("No valid coordinates to compute region.")
-
-    # --- Remove outliers ---
-    if rm_outliers:
-        lons_mean, lons_std = lons.mean(), lons.std()
-        lats_mean, lats_std = lats.mean(), lats.std()
-        lons = lons[(lons >= lons_mean - 6 * lons_std) & (lons <= lons_mean + 6 * lons_std)]
-        lats = lats[(lats >= lats_mean - 6 * lats_std) & (lats <= lats_mean + 6 * lats_std)]
-
-    lons = lons.values
-    lats = lats.values
-
-    # --- Compute latitude bounds ---
-    lat_min, lat_max = np.min(lats), np.max(lats)
-    lon_min, lon_max = np.min(lons), np.max(lons)
-
-    #padding
-    lon_distance = lon_max - lon_min
-    lat_distance = lat_max - lat_min
-    lon_min -= padding * lon_distance
-    lon_max += padding * lon_distance
-    lat_min -= padding * lat_distance
-    lat_max += padding * lat_distance
-
-    if lon_min < -180:
-        lon_min=-180
-    if lon_max > 180:
-        lon_max=180
-    if lat_min < -90:
-        lat_min=-90
-    if lat_max > 90:
-        lat_max=90
-
-    return (lon_min, lon_max, lat_min, lat_max)
-
-def human_format(num,pos=None):
-    """
-    Format large numbers with K/M suffix.
-
-    Examples:
-    999 -> '999'
-    1200 -> '1.2K'
-    1500000 -> '1.5M'
-    """
-    if abs(num) >= 1_000_000:
-        return f"{num/1_000_000:.1f}M"
-    elif abs(num) >= 1_000:
-        return f"{num/1_000:.1f}K"
-    else:
-        return f"{num}"
+from .utils import (compute_region, 
+                    human_format, 
+                    smart_date_formatter,
+                    create_green_to_orange_cmap
+                    )
 
 def add_scalebar(ax, region, location='upper left'):
     """
@@ -206,49 +117,9 @@ def add_scalebar(ax, region, location='upper left'):
         bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=0.8)
     )
 
-def smart_date_formatter(bins):
-    import matplotlib.dates as mdates
-    from matplotlib.ticker import FuncFormatter
-    import pandas as pd
-
-    bins = pd.to_datetime(bins)
-    years = bins.year.unique()
-    months = bins.month.unique()
-
-    if len(years) == 1 and len(months) == 1:
-        # Case 1: Single month
-        def fmt(x, pos=None):
-            d = mdates.num2date(x)
-            if pos == 0:
-                return d.strftime("%Y\n%b")  # Year-Month on first tick
-            return d.strftime("%d") if d.day <= 7 else ""  # Show day only at start of weeks
-        return FuncFormatter(fmt)
-
-    elif len(years) == 1 and len(months) > 1:
-        # Case 2: Single year, multiple months
-        def fmt(x, pos=None):
-            d = mdates.num2date(x)
-            if pos == 0:
-                return d.strftime("%Y")  # First tick: Year
-            if d.day <= 7:  # Show month at the first tick of each month
-                return d.strftime("%b")
-            return ""  # Otherwise empty
-        return FuncFormatter(fmt)
-
-    else:
-        # Case 3: Multiple years
-        def fmt(x, pos=None):
-            d = mdates.num2date(x)
-            if d.month == 1 and d.day <= 7:  # First tick in January: Year
-                return d.strftime("%Y")
-            if d.day <= 7:  # First tick of month
-                return d.strftime("%b")
-            return ""  # Otherwise empty
-        return FuncFormatter(fmt)
-
 def plot_overview(events, stations, analysis, 
                            region=None,
-                output_file=None, show=True):
+                savepath=None, show=True):
     """
     Plot a network map with events, stations, histograms, globe, and region.
 
@@ -260,23 +131,21 @@ def plot_overview(events, stations, analysis,
         DataFrame with station data.
     analysis : dict
         Dictionary with info to show: must contain keys like
-        'Contributor', 'events_total', 'stations_good', 'stations_bad',
-        'p_arrivals_total', 's_arrivals_total'.
+        'network', 'events', 'total_stations', 'stations', 
+        'p_arrivals', 's_arrivals'
     region : tuple
         (lon_min, lon_max, lat_min, lat_max) for map extent.
-    output_file : str, optional
+    savepath : str, optional
         Path to save figure. If None, shows interactively.
     show : bool, optional
         Whether to show the plot interactively. Default is True.
     """
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    import cartopy
-    import datetime
-    from cartopy.mpl.geoaxes import GeoAxes
-    from cartopy.geodesic import Geodesic
-    
-    # print(events.describe())
+    try:
+        import cartopy.crs as ccrs
+        import cartopy.feature as cfeature
+    except ImportError:
+        raise ImportError("Cartopy is required for plot_overview")
+
     if region is None:
         calculated_stations = stations[stations["calculated"]==True]
         gd_stations = calculated_stations.rename(columns={"calculated_longitude": "longitude",
@@ -308,16 +177,16 @@ def plot_overview(events, stations, analysis,
     ax5 = fig.add_subplot(gs_right[2, 0])  # bottom histogram
 
 
-    ax1.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
+    ax1.set_title(f"Contributor: {analysis.get('network', 'N/A')}",
                   fontsize=14, weight='bold',loc='left')
     ax1.text(
         0.70, 0.8,
-        f"Events: {human_format(analysis.get('Events', len(events)))}\n"
-        f"Total Stations: {human_format(analysis['Total Stations'])}\n"
-        f"   Calculated: {human_format(analysis['Calculated Stations'])}\n"
-        f"   Confirmed: {human_format(analysis['Confirmed Stations'])}\n"
-        f"P Arrivals: {human_format(analysis.get('P arrivals', 0))}\n"
-        f"S Arrivals: {human_format(analysis.get('S arrivals', 0))}",
+        f"Events: {human_format(analysis.get('events', len(events)))}\n"
+        f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
+        f"   Calculated: {human_format(analysis.get('calculated_stations', 'N/A'))}\n"
+        f"   Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"
+        f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"
+        f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}",
         transform=ax1.transAxes,
         ha='left',
         va='top',
@@ -391,7 +260,7 @@ def plot_overview(events, stations, analysis,
 
     starttime = starttime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     # endtime = endtime.replace(day=30, hour=0, minute=0, second=0, microsecond=0)
-    print(f"Start time: {starttime}, End time: {endtime}")
+    # print(f"Start time: {starttime}, End time: {endtime}")
     total_days = (endtime - starttime).days
     if total_days <= 30*3:
     # less than ~1 month → daily bins
@@ -572,427 +441,139 @@ def plot_overview(events, stations, analysis,
     # plt.subplots_adjust(wspace=0.2, hspace=0.5)
     # plt.tight_layout()
 
-    if output_file:
-        plt.savefig(output_file, dpi=300)
-        print(f"Saved plot to {output_file}")
+    if savepath:
+        plt.savefig(savepath, dpi=300)
+        print(f"Saved plot to {savepath}")
     if show:
         plt.show()
 
     plt.close(fig)
 
-def plot_network_map(events, stations, region, analysis, 
-                output_file=None, show=True):
+
+def plot_utdq_overview(
+    events,
+    stations,
+    analysis,
+    region=None,
+    savepath=None,
+    show=False,
+):
     """
-    Plot a network map with events, stations, histograms, globe, and region.
+    Plot a two-panel map overview:
+    - Top: Earthquake epicenters
+    - Bottom: Seismic stations
 
     Parameters
     ----------
     events : pandas.DataFrame
-        DataFrame with earthquake events.
+        Must contain 'longitude' and 'latitude'.
     stations : pandas.DataFrame
-        DataFrame with station data.
-    region : tuple
-        (lon_min, lon_max, lat_min, lat_max) for map extent.
+        Must contain 'longitude' and 'latitude'.
     analysis : dict
-        Dictionary with info to show: must contain keys like
-        'Contributor', 'events_total', 'stations_good', 'stations_bad',
-        'p_arrivals_total', 's_arrivals_total'.
-    output_file : str, optional
-        Path to save figure. If None, shows interactively.
+        Summary statistics (events, arrivals, stations).
+    region : tuple or None, optional
+        Map extent as (lon_min, lon_max, lat_min, lat_max).
+        Defaults to global view.
+    savepath : str, optional
+        Output savepath.
     show : bool, optional
-        Whether to show the plot interactively. Default is True.
+        If True, displays the figure.
+
+    Returns
+    -------
+    output_path : str
+        Full path to the saved figure.
     """
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    import cartopy
-    from cartopy.mpl.geoaxes import GeoAxes
-    from cartopy.geodesic import Geodesic
-    
-    fig = plt.figure(figsize=(12, 6))
-    gs = gridspec.GridSpec(3, 5, figure=fig,wspace=0.1, hspace=0.5)
 
-    # Top-left text box
-    ax1 = fig.add_subplot(gs[0, 0])
+    try:
+        import cartopy.crs as ccrs
+    except ImportError:
+        raise ImportError("Cartopy is required for plot_overview")
 
-    # gd_stations = analysis['stations_good']
-    # bad_stations = analysis['stations_bad']
-    # total_stations = gd_stations + bad_stations
+    region = (-180, 180, -90, 90) if region is None else region
+
+    fig, (ax1, ax2) = plt.subplots(
+        nrows=2,
+        ncols=1,
+        figsize=(12, 8),
+        dpi=300,
+        subplot_kw={'projection': ccrs.PlateCarree()},
+        sharex=True
+    )
+
+    # ------------------ Earthquakes ------------------
+    ax1, gl1 = setup_map(ax1, region)
+    gl1.top_labels = True
+    gl1.right_labels = False
+    gl1.left_labels = True
+    gl1.bottom_labels = False
+
+    ax1.scatter(
+        events['longitude'],
+        events['latitude'],
+        color="#ec7524",
+        transform=ccrs.PlateCarree(),
+        label="Earthquakes"
+    )
+    ax1.legend(loc="lower right", fontsize=12)
 
     ax1.text(
-        0.10, 0.4,
-        f"Events: {human_format(analysis.get('Events', len(events)))}\n"
-        f"Total Stations: {human_format(analysis['Total Stations'])}\n"
-        f"   Calculated: {human_format(analysis['Calculated Stations'])}\n"
-        f"   Confirmed: {human_format(analysis['Confirmed Stations'])}\n"
-        f"P Arrivals: {human_format(analysis.get('P arrivals', 0))}\n"
-        f"S Arrivals: {human_format(analysis.get('S arrivals', 0))}",
+        0.02, 0.05,
+        f"Events: {human_format(analysis.get('events', len(events)))}\n"
+        f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"
+        f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}",
         transform=ax1.transAxes,
-        ha='left',
-        va='top',
-        fontsize=9,
+        ha="left",
+        va="bottom",
+        fontsize=12,
         bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
     )
-    ax1.set_axis_off()
 
-    ax3 = fig.add_subplot(gs[1, 0:2])
-    if 'depth' in events.columns:
-        # Depth histogram
-        ax3.hist(events['depth'].dropna()/1e3, bins=20, color='blue', alpha=0.7)
-        ax3.yaxis.set_major_formatter(FuncFormatter(human_format))
-        ax3.set_xlabel('Depth')
-        ax3.set_ylabel('Count')
-        ax3.grid(True, linestyle='--', alpha=0.5)
-    else:
-        ax3.text(
-            0.1, 0.5,
-            f"No Depth Data",
-            transform=ax3.transAxes,
-            ha='left',
-            va='bottom',
-            fontsize=10,
-            bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-        )
-        ax3.set_axis_off()
+    # ------------------ Stations ------------------
+    ax2, gl2 = setup_map(ax2, region)
+    gl2.top_labels = False
+    gl2.right_labels = False
+    gl2.left_labels = True
+    gl2.bottom_labels = True
 
-    ax4 = fig.add_subplot(gs[2:, 0:2])
-    m = events['magnitude'].dropna()
-    if 'magnitude' in events.columns and len(m)!=0:
-        # Magnitude histogram
-        ax4.hist(m , bins=20, color='green', alpha=0.7)
-        ax4.yaxis.set_major_formatter(FuncFormatter(human_format))
-        ax4.set_xlabel('Magnitude')
-        ax4.set_ylabel('Count')
-        ax4.grid(True, linestyle='--', alpha=0.5)
-    else:
-        ax4.text(
-            0.1, 0.5,
-            f"No Magnitude Data",
-            transform=ax4.transAxes,
-            ha='left',
-            va='bottom',
-            fontsize=10,
-            bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-        )
-        ax4.set_axis_off()
-
-    # Globe map
-    eq_lon_mean = events['longitude'].mean()
-    eq_lat_mean = events['latitude'].mean()
-    ax2 = fig.add_subplot(
-        gs[0, 1],
-        projection=ccrs.Orthographic(
-            central_longitude=eq_lon_mean,
-            central_latitude=eq_lat_mean
-        )
-    )
-    ax2.add_feature(cfeature.COASTLINE)
-    ax2.add_feature(cfeature.OCEAN)
-    ax2.add_feature(cfeature.LAND)
-    ax2.add_feature(cfeature.STATES, linestyle=':')
-    ax2.add_feature(cfeature.BORDERS, linestyle=':')
-    # ax2.coastlines()
-
-    ax2.set_global()
     ax2.scatter(
-        stations['longitude'],
-        stations['latitude'],
-        marker='^',
-        c='green',
+        stations['calculated_longitude'],
+        stations['calculated_latitude'],
+        marker="^",
+        c="green",
+        s=40,
         alpha=0.7,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
+        transform=ccrs.PlateCarree(),
+        label="Stations"
     )
-    ax2.scatter(
-        events['longitude'],
-        events['latitude'],
-        color="#ec7524",
-        alpha=1,
-        edgecolor="#ec7524",
-        transform=ccrs.PlateCarree()
-    )
+    ax2.legend(loc="lower right", fontsize=12)
 
-    # Region map
-    ax5 = fig.add_subplot(
-        gs[:, 2:5],
-        projection=ccrs.PlateCarree()
-    )
-    ax5.set_extent(region, crs=ccrs.PlateCarree())
-    ax5.add_feature(cfeature.COASTLINE)
-    ax5.add_feature(cfeature.BORDERS, linestyle=':')
-    ax5.add_feature(cfeature.STATES, linestyle=':')
-    ax5.add_feature(cfeature.LAND)
-    ax5.add_feature(cfeature.OCEAN)
-    ax5.add_feature(cfeature.LAKES, alpha=0.5)
-
-    ax5.scatter(
-        events['longitude'],
-        events['latitude'],
-        color="#ec7524",
-        alpha=1,
-        edgecolor="#ec7524",
-        transform=ccrs.PlateCarree()
-    )
-    ax5.scatter(
-        stations['longitude'],
-        stations['latitude'],
-        marker='^',
-        c='green',
-        alpha=1,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
+    ax2.text(
+        0.02, 0.05,
+        f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
+        f"   Calculated: {human_format(analysis.get('calculated_stations', 'N/A'))}\n"
+        f"   Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}",
+        transform=ax2.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=12,
+        bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
     )
 
-    gl = ax5.gridlines(draw_labels=True, linewidth=0.5, color='gray',
-                       alpha=0.5, linestyle='--')
-    gl.top_labels = False
-    gl.left_labels = False
-
-    ax5.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
-                  fontsize=14, weight='bold')
-
-    add_scalebar(ax5, region, location='lower left')
-
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', label='Earthquakes',
-               markerfacecolor='red', markersize=8, markeredgecolor='red'),
-        Line2D([0], [0], marker='^', color='w', label='Stations',
-               markerfacecolor='green', markersize=8, markeredgecolor='green')
-    ]
-    ax1.legend(handles=legend_elements,
-               loc='upper left',
-            #    fontsize='x-small',
-               bbox_to_anchor=(0.05, 0.97),
-               frameon=True,
-               fancybox=True,
-               fontsize=10,
-               framealpha=1,
-               edgecolor='gray')
-
-    # plt.subplots_adjust(wspace=0.2, hspace=0.5)
-    plt.tight_layout()
-
-    if output_file:
-        plt.savefig(output_file, dpi=300)
-        print(f"Saved plot to {output_file}")
+    # Layout + save
+    plt.subplots_adjust(hspace=0.05)
+    
+    if savepath:
+        fig.savefig(savepath, dpi=300, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
     if show:
         plt.show()
 
     plt.close(fig)
 
-def plot_network_map2(events, stations, region, analysis, 
-                output_file=None, show=True):
-    """
-    Plot a network map with events, stations, histograms, globe, and region.
 
-    Parameters
-    ----------
-    events : pandas.DataFrame
-        DataFrame with earthquake events.
-    stations : pandas.DataFrame
-        DataFrame with station data.
-    region : tuple
-        (lon_min, lon_max, lat_min, lat_max) for map extent.
-    analysis : dict
-        Dictionary with info to show: must contain keys like
-        'Contributor', 'events_total', 'stations_good', 'stations_bad',
-        'p_arrivals_total', 's_arrivals_total'.
-    output_file : str, optional
-        Path to save figure. If None, shows interactively.
-    show : bool, optional
-        Whether to show the plot interactively. Default is True.
-    """
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    import cartopy
-    from cartopy.mpl.geoaxes import GeoAxes
-    from cartopy.geodesic import Geodesic
-    
-    fig = plt.figure(figsize=(12, 6))
-    gs = gridspec.GridSpec(3, 5, figure=fig,wspace=0.1, hspace=0.5)
 
-    # Top-left text box
-    ax1 = fig.add_subplot(gs[0, 0])
-
-    gd_stations = analysis['stations_good']
-    bad_stations = analysis['stations_bad']
-    total_stations = gd_stations + bad_stations
-
-    ax1.text(
-        0.11, 0.4,
-        f"Events: {human_format(analysis.get('events_total', len(events)))}\n"
-        f"Total Stations: {human_format(total_stations)}\n"
-        f"Confirmed Stations: {human_format(gd_stations)}\n"
-        f"P Arrivals: {human_format(analysis.get('p_arrivals_total', 0))}\n"
-        f"S Arrivals: {human_format(analysis.get('s_arrivals_total', 0))}",
-        transform=ax1.transAxes,
-        ha='left',
-        va='top',
-        fontsize=10,
-        bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-    )
-    ax1.set_axis_off()
-
-    ax3 = fig.add_subplot(gs[1, 0:2])
-    if 'depth' in events.columns:
-        # Depth histogram
-        ax3.hist(events['depth'].dropna()/1e3, bins=20, color='blue', alpha=0.7)
-        ax3.yaxis.set_major_formatter(FuncFormatter(human_format))
-        ax3.set_xlabel('Depth')
-        ax3.set_ylabel('Count')
-        ax3.grid(True, linestyle='--', alpha=0.5)
-    else:
-        ax3.text(
-            0.1, 0.5,
-            f"No Depth Data",
-            transform=ax3.transAxes,
-            ha='left',
-            va='bottom',
-            fontsize=10,
-            bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-        )
-        ax3.set_axis_off()
-
-    ax4 = fig.add_subplot(gs[2:, 0:2])
-    m = events['magnitude'].dropna()
-    if 'magnitude' in events.columns and len(m)!=0:
-        # Magnitude histogram
-        ax4.hist(m , bins=20, color='green', alpha=0.7)
-        ax4.yaxis.set_major_formatter(FuncFormatter(human_format))
-        ax4.set_xlabel('Magnitude')
-        ax4.set_ylabel('Count')
-        ax4.grid(True, linestyle='--', alpha=0.5)
-    else:
-        ax4.text(
-            0.1, 0.5,
-            f"No Magnitude Data",
-            transform=ax4.transAxes,
-            ha='left',
-            va='bottom',
-            fontsize=10,
-            bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-        )
-        ax4.set_axis_off()
-
-    # Globe map
-    eq_lon_mean = events['longitude'].mean()
-    eq_lat_mean = events['latitude'].mean()
-    ax2 = fig.add_subplot(
-        gs[0, 1],
-        projection=ccrs.Orthographic(
-            central_longitude=eq_lon_mean,
-            central_latitude=eq_lat_mean
-        )
-    )
-    ax2.add_feature(cfeature.COASTLINE)
-    ax2.add_feature(cfeature.OCEAN)
-    ax2.add_feature(cfeature.LAND)
-    ax2.add_feature(cfeature.STATES, linestyle=':')
-    ax2.add_feature(cfeature.BORDERS, linestyle=':')
-    # ax2.coastlines()
-
-    ax2.set_global()
-    ax2.scatter(
-        stations['longitude'],
-        stations['latitude'],
-        marker='^',
-        c='green',
-        alpha=0.7,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
-    )
-    ax2.scatter(
-        events['longitude'],
-        events['latitude'],
-        color='red',
-        alpha=1,
-        edgecolor='red',
-        transform=ccrs.PlateCarree()
-    )
-
-    # Region map
-    ax5 = fig.add_subplot(
-        gs[:, 2:5],
-        projection=ccrs.PlateCarree()
-    )
-    ax5.set_extent(region, crs=ccrs.PlateCarree())
-    ax5.add_feature(cfeature.COASTLINE)
-    ax5.add_feature(cfeature.BORDERS, linestyle=':')
-    ax5.add_feature(cfeature.STATES, linestyle=':')
-    ax5.add_feature(cfeature.LAND)
-    ax5.add_feature(cfeature.OCEAN)
-    ax5.add_feature(cfeature.LAKES, alpha=0.5)
-
-    ax5.scatter(
-        events['longitude'],
-        events['latitude'],
-        color='red',
-        alpha=1,
-        edgecolor='red',
-        transform=ccrs.PlateCarree()
-    )
-    ax5.scatter(
-        stations['longitude'],
-        stations['latitude'],
-        marker='^',
-        c='green',
-        alpha=1,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
-    )
-
-    gl = ax5.gridlines(draw_labels=True, linewidth=0.5, color='gray',
-                       alpha=0.5, linestyle='--')
-    gl.top_labels = False
-    gl.left_labels = False
-
-    ax5.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
-                  fontsize=14, weight='bold')
-
-    add_scalebar(ax5, region, location='lower left')
-
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', label='Earthquakes',
-               markerfacecolor='red', markersize=8, markeredgecolor='red'),
-        Line2D([0], [0], marker='^', color='w', label='Stations',
-               markerfacecolor='green', markersize=8, markeredgecolor='green')
-    ]
-    ax1.legend(handles=legend_elements,
-               loc='upper left',
-            #    fontsize='x-small',
-               bbox_to_anchor=(0.05, 0.97),
-               frameon=True,
-               fancybox=True,
-               fontsize=10,
-               framealpha=1,
-               edgecolor='gray')
-
-    # plt.subplots_adjust(wspace=0.2, hspace=0.5)
-    plt.tight_layout()
-
-    if output_file:
-        plt.savefig(output_file, dpi=300)
-        print(f"Saved plot to {output_file}")
-    if show:
-        plt.show()
-
-    plt.close(fig)
-
-def create_green_to_orange_cmap(name='green_to_orange', n_colors=256):
-    """
-    Create a colormap that goes from green to a specific orange (#ec7524).
-
-    Parameters:
-    - name: str, name of the colormap
-    - n_colors: int, number of discrete colors in the colormap
-
-    Returns:
-    - cmap: matplotlib.colors.LinearSegmentedColormap object
-    """
-    colors = ['green', '#ec7524']
-    cmap = LinearSegmentedColormap.from_list(name, colors, N=n_colors)
-    return cmap
-
-def plot_stats(events, picks=None, savepath=None):
+def plot_stats(events, picks=None, savepath=None, show=True):
     """
     Create a 5-panel seismic overview figure:
     - Depth histogram
@@ -1218,7 +799,7 @@ def plot_stats(events, picks=None, savepath=None):
         cbar = plt.colorbar(sm, cax=cax, orientation="horizontal")
         cbar.set_label("Percentage [%]")
 
-    plt.tight_layout()
+    fig.tight_layout()
 
     pos = ax5.get_position()  # get current position: Bbox(x0, y0, x1, y1)
     # adjust position: (x0, y0, width, height)
@@ -1232,8 +813,11 @@ def plot_stats(events, picks=None, savepath=None):
     if savepath:
         fig.savefig(savepath, dpi=300, bbox_inches="tight")
         print(f"Saved plot to {savepath}")
-    else:
+
+    if show:
         plt.show()
+    
+    plt.close(fig)
 
     axes_dict = {
         'depth': ax1,
@@ -1244,7 +828,8 @@ def plot_stats(events, picks=None, savepath=None):
     }
     return fig, axes_dict
 
-def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, save_path=None):
+def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, savepath=None,
+                              show=True):
     """
     Create a figure with two axes:
     1. Boxplots for Horizontal and Vertical uncertainty (km)
@@ -1258,7 +843,7 @@ def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, save_path=None):
         Figure size
     dpi : int
         Resolution of the figure
-    save_path : str or None
+    savepath : str or None
         If given, save the figure to this path instead of showing it.
     """
     fig, axes = plt.subplots(2, 1, figsize=figsize, dpi=dpi)
@@ -1305,16 +890,18 @@ def plot_uncertainty_boxplots(df, figsize=(4, 6), dpi=300, save_path=None):
 
     plt.tight_layout()
 
-    if save_path:
-        fig.savefig(save_path, dpi=dpi, bbox_inches="tight")
-        plt.close(fig)
-    else:
+    if savepath:
+        fig.savefig(savepath, dpi=dpi, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
+    if show:
         plt.show()
+
+    plt.close(fig)
 
     return fig, axes
 
 
-def plot_pick_histograms(df, save_path=None):
+def plot_pick_histograms(df, savepath=None,show=True):
     """
     Plots three histograms:
     1. Number of P picks per origin
@@ -1324,12 +911,10 @@ def plot_pick_histograms(df, save_path=None):
     Args:
         df (pd.DataFrame): DataFrame containing picks with columns:
             ['phase', 'origin_id', 'origin_time', 'time']
-        save_path (str, optional): Path to save the figure. If None, shows the figure.
+        savepath (str, optional): Path to save the figure. If None, shows the figure.
     Returns:
         fig, axes: Figure and axes objects
     """
-    from scipy.stats import linregress
-
     # -------------------------------
     # 1. Count P and S picks per origin
     # -------------------------------
@@ -1372,9 +957,18 @@ def plot_pick_histograms(df, save_path=None):
 
         merged["tt_SP"] = merged["S_minus_P"].dt.total_seconds()
         merged["tt_P"] = (merged["time_P"] - group['origin_time'].iloc[0]).dt.total_seconds()
+
+        merged = merged.dropna(subset=['tt_P', 'tt_SP'])
+
+        if len(merged) < 2 or merged.empty or\
+            merged['tt_P'].nunique() < 2 or merged['tt_SP'].nunique() < 2:
+            # print(f"No Vp/Vs calculation for origin {origin_id}. Not enough valid points for linear regression. ")
+            warnings.warn(f"No Vp/Vs calculation for origin {origin_id}. Not enough valid points for linear regression. ")
+            lr = None
+            continue
+        else:
+            lr = linregress(merged['tt_P'], merged['tt_SP'])
         
-        # Linear regression: S-P vs P times
-        lr = linregress(merged['tt_P'], merged['tt_SP'])
         slope = lr.slope
         vp_vs_ratio = 1 + slope  # Wadati relation
         # print(f"Origin ID: {origin_id}, Vp/Vs Ratio: {vp_vs_ratio}")
@@ -1472,14 +1066,17 @@ def plot_pick_histograms(df, save_path=None):
 
     plt.tight_layout()
 
-    if save_path:
-        plt.savefig(save_path, dpi=300)
-    else:
+    if savepath:
+        plt.savefig(savepath, dpi=300)
+        print(f"Saved plot to {savepath}")
+    if show:
         plt.show()
+
+    plt.close(fig)
 
     return fig
 
-def plot_pick_stats(df, save_path=None):
+def plot_pick_stats(df, savepath=None, show=True):
 
     """
     Plot summary statistics for seismic picks (P, S, and S-P) as jointplots.
@@ -1505,7 +1102,7 @@ def plot_pick_stats(df, save_path=None):
         - "distance" (in degrees)
         - "network"
         - "station"
-    save_path : str or pathlib.Path, optional
+    savepath : str or pathlib.Path, optional
         If provided, the final combined figure is saved to this path.
 
     Returns
@@ -1514,13 +1111,6 @@ def plot_pick_stats(df, save_path=None):
         The combined multi-panel figure containing all jointplots.
     """
     
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-    import matplotlib.image as mpimg
-    import tempfile
-    import os
-    import string
-
     green = "#007A33"
     orange = "#ec7524"
 
@@ -1628,8 +1218,14 @@ def plot_pick_stats(df, save_path=None):
 
     plt.tight_layout()
 
-    if save_path:
-        plt.savefig(save_path, dpi=300)
+    if savepath:
+        plt.savefig(savepath, dpi=300)
+        print(f"Saved plot to {savepath}")
+
+    if show:
+        plt.show()
+
+    plt.close(fig)
 
     # Clean up temporary files
     for f in temp_files:
@@ -1638,9 +1234,7 @@ def plot_pick_stats(df, save_path=None):
     # plt.show()
     return fig
 
-
-
-def plot_station_location_uncertainty(df, save_path,  dpi=300):
+def plot_station_location_uncertainty(df, savepath,  dpi=300,show=True):
     """
     Compare confirmed vs calculated latitude and longitude in a DataFrame.
 
@@ -1649,12 +1243,16 @@ def plot_station_location_uncertainty(df, save_path,  dpi=300):
     df : pandas.DataFrame
         DataFrame containing confirmed_latitude, confirmed_longitude,
         calculated_latitude, and calculated_longitude columns.
-    save_path : str
+    savepath : str
         File path to save the output plot (e.g., 'output.png').
     dpi : int, default=300
         Resolution of the saved figure.
     """
-    import cartopy.crs as ccrs
+    try:
+        import cartopy.crs as ccrs
+    except ImportError:
+        raise ImportError("Cartopy is required for plot_overview")
+        
     # Compute differences
     dlat = df["calculated_latitude"] - df["confirmed_latitude"]
     dlon = df["calculated_longitude"] - df["confirmed_longitude"]
@@ -1718,20 +1316,26 @@ def plot_station_location_uncertainty(df, save_path,  dpi=300):
     ax4.grid(True, linestyle="--", alpha=0.3)
     
     fig.tight_layout()
-    if save_path is not None:
-        fig.savefig(save_path, dpi=dpi)
-        fig2.savefig(save_path.replace('.png','_map.png'), dpi=dpi)
-    else:
+    if savepath is not None:
+        fig.savefig(savepath, dpi=dpi)
+        map_path = savepath.replace('.png','_map.png')
+        fig2.savefig(map_path, dpi=dpi)
+        print(f"Saved plot to {savepath}")
+        print(f"Saved plot to {map_path}")
+    
+    if show:
         plt.show()
 
     plt.close(fig)
     
-    print(f"Plot saved to {save_path}")
     # print(f"Mean total difference: {distance.mean():.4f} km")
 
 def plot_venn(ax, df):
     """Draw Venn diagram of calculated vs confirmed stations."""
-    from matplotlib_venn import venn2
+    try:
+        from matplotlib_venn import venn2
+    except ImportError:
+        raise ImportError("matplotlib-venn is required for plot_venn")
 
     calc = df['calculated'].sum()
     conf = df['confirmed'].sum()
@@ -1774,8 +1378,11 @@ def plot_venn(ax, df):
 
 def setup_map(ax, region):
     """Configure a cartopy map axis."""
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
+    try:
+        import cartopy.crs as ccrs
+        import cartopy.feature as cfeature
+    except ImportError:
+        raise ImportError("Cartopy is required for setup_map")
     ax.set_extent(region, crs=ccrs.PlateCarree())
     ax.add_feature(cfeature.COASTLINE)
     ax.add_feature(cfeature.BORDERS, linestyle=':')
@@ -1791,13 +1398,15 @@ def setup_map(ax, region):
     gl.left_labels = True
     gl.right_labels = False
     gl.bottom_labels = True
-    return ax
+    return ax, gl
 
 def plot_station_map(ax, df,  region):
     """Plot calculated and confirmed station locations."""
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
-    ax = setup_map(ax, region)
+    try:
+        import cartopy.crs as ccrs
+    except ImportError:
+        raise ImportError("Cartopy is required for setup_map")
+    ax, gl = setup_map(ax, region)
 
     mask = (df['confirmed'] == 1) & (df['calculated'] == 1)
     df_diff = df.loc[mask, [
@@ -1827,906 +1436,3 @@ def plot_station_map(ax, df,  region):
     ax.legend(loc='upper right', title='Stations', fontsize=10)
     return ax
 
-def min_window_fixed(arrivals):
-    arrivals = np.array(arrivals, dtype=float)
-    N = len(arrivals)
-
-    if N == 1:
-        return arrivals[0]
-
-    last = arrivals[-1]
-    deltas = []
-
-    for i in range(N-1):
-        num = arrivals[i] - last
-        denom = (N - 1 - i)
-
-        # This gives a candidate Δ
-        d = num / denom
-        deltas.append(d)
-
-    Δ_min = max([0] + deltas)  # Δ cannot be negative
-
-    W_min = (N - 1) * Δ_min + last
-    return W_min
-
-def fixed_spacing(arrivals, window_size):
-    arrivals = np.array(arrivals, dtype=float)
-    N = len(arrivals)
-
-    if N == 1:
-        return np.array([0.0])
-
-    origins = np.linspace(0, window_size, N)
-
-    if np.any(origins + arrivals > window_size):
-        raise ValueError(
-            "Window too small for fixed spacing. "
-            "Minimum required window = %.3f" % min_window_fixed(arrivals)
-        )
-
-    return origins
-
-def random_spacing(arrivals, window_size, rng=None):
-    """
-    Generate a valid random spacing scenario.
-    Each origin[i] is sampled such that origin[i] + arrival[i] <= window_size.
-    """
-    arrivals = np.array(arrivals)
-    if rng is None:
-        rng = np.random.default_rng()
-
-    max_arr = arrivals.max()
-    if window_size < max_arr:
-        raise ValueError(f"Window too small. Must be >= max arrival ({max_arr}).")
-
-    # For each EQ, sample origin ∈ [0, window_size - arrival]
-    origins = rng.uniform(0, window_size - arrivals)
-
-    return origins
-
-def synthetic_wavelet(t, t0, phase):
-    """
-    Very small ringing at onset, then fast decay.
-    P: narrow, slightly more impulsive
-    S: wider, softer
-    """
-    if phase == "P":
-        sigma = 0.9
-        freq = 10          # LOW frequency = small wiggle
-        ring_amp = 0.1    # SMALL oscillation amplitude
-    else:
-        sigma = 1.8
-        freq = 7           # even softer for S
-        ring_amp = 0.18
-
-    # Gaussian envelope
-    envelope = np.exp(-0.5 * ((t - t0) / sigma)**2)
-
-    # Very small, very fast-decaying wiggle
-    carrier = ring_amp * np.sin(freq * (t - t0)) * np.exp(-3 * np.abs(t - t0))
-
-    # Impulsive part = envelope itself
-    pulse = envelope
-
-    # Combine: mostly impulsive bump + a tiny wiggle on top near t0
-    return pulse + carrier
-
-def plot_window_times(
-    arrivals,
-    last_allowed_arrival,
-    save_path,
-    relative_per_event=False,
-    p_color="orange",
-    s_color="green",
-    last_event_id= None,
-    last_p_color="blue",
-    last_s_color="cyan",
-    phase_column="phase",
-):
-    """
-    Plot arrival window times vs index.
-
-    - P and S phases colored by p_color / s_color.
-    - If highlight_last_event=True:
-        Last event P phases use last_p_color (default red)
-        Last event S phases use last_s_color (default black)
-    - Supports relative per-event y indexing.
-    - Draws a vertical threshold line.
-    """
-
-    df = arrivals.copy()
-
-    # Relative per-event y axis
-    if relative_per_event:
-        df["y"] = df.groupby("event_id").cumcount()
-    else:
-        df["y"] = df.index
-
-    # Base color (P/S)
-    df["color"] = df[phase_column].map({
-        "P": p_color,
-        "S": s_color
-    }).fillna("gray")
-
-    # Highlight last event if enabled
-    if last_event_id is not None:
-        is_last = df["event_id"] == last_event_id
-
-        # Override colors only for the last event
-        df.loc[is_last & (df[phase_column] == "P"), "color"] = last_p_color
-        df.loc[is_last & (df[phase_column] == "S"), "color"] = last_s_color
-
-    # --- Plot ---
-    fig, ax = plt.subplots(figsize=(12, 7))
-
-    ax.scatter(df["window_time"], df["y"], s=10, c=df["color"])
-
-
-    # Threshold line
-    ax.axvline(last_allowed_arrival, color="red", linestyle="--", linewidth=2)
-
-    # Labels
-    ax.set_xlabel("Window Time (s)")
-    ax.set_ylabel("Relative Index per Event" if relative_per_event else "Index")
-    ax.set_title("Arrival Window Times (Colored by Phase | Last Event Highlighted)")
-
-    # Legend
-    ax.scatter([], [], color=p_color, label="P phase")
-    ax.scatter([], [], color=s_color, label="S phase")
-
-    if last_event_id is not None:
-        ax.scatter([], [], color=last_p_color, label="Last Event P")
-        ax.scatter([], [], color=last_s_color, label="Last Event S")
-
-    ax.legend(loc="upper left")
-
-
-    # Save
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-
-
-def seismic_impulse_peak(points, dt=0.001, freq=20, damping=5, phase='P'):
-    t = np.arange(points) * dt
-    
-    if phase.upper() == 'P':
-        gaussian = np.exp(- (t/0.002)**2 )
-        decay = np.exp(-damping * t)
-        f = freq * 2
-    elif phase.upper() == 'S':
-        gaussian = np.exp(- (t/0.01)**2 )
-        decay = np.exp(-damping/3 * t)
-        f = freq
-    else:
-        raise ValueError("phase must be 'P' or 'S'")
-
-    wave = gaussian + np.sin(2*np.pi*f*t) * decay
-    return wave
-
-def create_seismic_trace(
-        total_points=2000,
-        wave_length=120,
-        positions=None,
-        colors=None,
-        pad=20,
-        dt=0.001,
-        freq=30,
-        damping=20,
-        phase='P'
-    ):
-    """
-    Create a synthetic seismic trace and return all components needed for plotting.
-
-    Returns a dictionary:
-        {
-            "seismo": 1D array,
-            "waves": list of (padded_start, padded_end, wave, pos, end, color)
-        }
-    """
-    if positions is None:
-        positions = [200, 600, 1200, 1700]
-    if colors is None:
-        colors = ['r', 'g', 'b', 'orange']
-
-    seismo = np.zeros(total_points)
-    waves = []
-
-    for i, pos in enumerate(positions):
-
-        # generate impulse
-        wave = seismic_impulse_peak(
-            wave_length, dt=dt, freq=freq, damping=damping, phase=phase
-        )
-
-        # insert wave
-        end = min(pos + wave_length, total_points)
-        seismo[pos:end] += wave[:end - pos]
-
-        # padding region for coloring
-        padded_start = max(0, pos - pad)
-        padded_end = min(total_points, end + pad)
-
-        # save info
-        waves.append((padded_start, padded_end, wave, pos, end, colors[i]))
-
-    return {
-        "seismo": seismo,
-        "waves": waves,
-    }
-
-def plot_seismic_stations(
-        df,
-        save_path,
-        total_points=2000,
-        wave_length=120,
-        sr=100,        # NEW PARAMETER
-        freq=30,
-        damping=100,
-        top_n=None,
-        color_by_event=True
-    ):
-    
-    import matplotlib.cm as cm
-
-    dt = 1.0 / sr   # sampling interval in seconds
-    
-    df = df.drop_duplicates(subset=["station", "event_id", "phase"])
-
-    if top_n is not None:
-        station_counts = df["station"].value_counts()
-        top_stations = station_counts.head(top_n).index
-        df = df[df["station"].isin(top_stations)]
-
-    stations = df["station"].unique()
-    stations = np.sort(stations)
-
-    # If coloring by event, create color map
-    if color_by_event:
-        unique_events = df["event_id"].unique()
-        n_events = len(unique_events)
-        cmap = cm.get_cmap("tab20", min(n_events, 20))
-        event_colors = {ev: cmap(i % 20) for i, ev in enumerate(unique_events)}
-
-    fig, ax = plt.subplots(figsize=(14, 8))
-
-    trace_scale = 1.0  # vertical scaling
-
-    for s_i, station in enumerate(stations):
-
-        df_s = df[df["station"] == station]
-
-        positions = df_s["window_sample"].astype(int).values
-        phases    = df_s["phase"].values
-        event_ids = df_s["event_id"].values
-
-        # Decide colors
-        if color_by_event:
-            colors = [event_colors[eid] for eid in event_ids]
-        else:
-            colors = ["#007A33" if p == "P" else "#005BBB" for p in phases]
-
-        trace = np.zeros(total_points)
-        wave_infos = []
-
-        for pos, phase, color in zip(positions, phases, colors):
-
-            pos = int(pos)
-            if pos < 0 or pos >= total_points:
-                continue
-
-            data = create_seismic_trace(
-                total_points=total_points,
-                wave_length=wave_length,
-                positions=[pos],
-                colors=[color],
-                pad=0,
-                dt=dt,
-                freq=freq,
-                damping=damping,
-                phase=phase
-            )
-
-            trace += data["seismo"]
-
-            for item in data["waves"]:
-                wave_infos.append(item)
-
-        # X axis in seconds
-        x_sec = np.arange(total_points) * dt
-
-        # # full trace 
-        # # ax.plot( # x_sec, # trace * trace_scale + s_i,
-        #  # color="black", # linewidth=1 # )
-
-        # Plot colored segments
-        for padded_start, padded_end, wave, pos, end, color in wave_infos:
-            x = np.arange(padded_start, padded_end) * dt
-            y = np.zeros_like(x, dtype=float)
-
-            inner_start = max(0, pos - padded_start)
-            inner_end = inner_start + (end - pos)
-
-            y[inner_start:inner_end] = wave[:inner_end - inner_start]
-
-            ax.plot(
-                x, y * trace_scale + s_i,
-                color=color,
-                linewidth=1.5
-            )
-
-    ax.set_yticks(range(len(stations)))
-    ax.set_yticklabels([])
-
-    ax.set_xlabel("Time (seconds)")
-    ax.set_ylabel("Station")
-    ax.set_title("Synthetic Seismic Signals per Station")
-    ax.set_xlim(0, total_points * dt)
-    ax.set_ylim(-1, len(stations))
-
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-
-class EQWindow:
-    def __init__(self, stations, 
-                length=None,
-                first_event_w=0.05, #percentage from 0 to 1 of the length
-                last_event_w=0.05, #percentage from 0 to 1 of the length
-                event_spacing="fixed", #fixed, random, free
-                min_n_phase=5,  
-                event_order="time"):
-
-        self.length = length  # total window length in seconds
-        self.first_event_w = first_event_w
-        self.last_event_w = last_event_w
-        self.event_spacing = event_spacing  # "fixed" or "random" or "free"
-        self.min_n_phase = min_n_phase
-        self.event_order = event_order  # "time" or "random" or column name
-
-        self.event_origins = pd.DataFrame()
-        self.arrivals = pd.DataFrame()
-
-        self.stations = stations  # DataFrame with station info
-
-        if self.first_event_w < 0 or self.last_event_w < 0 or self.first_event_w + self.last_event_w >=1:
-            raise ValueError("first_event_w and last_event_w must be >=0 and their sum < 1")
-
-        if 'latitude' not in stations.columns or 'longitude' not in stations.columns:
-            raise ValueError(f"Columns 'latitude' or 'longitude' not found in stations dataframe")
-
-    def sort_events(self,subset ="time"):
-        if self.event_origins.empty:
-            return
-
-        self.event_origins.sort_values(subset, inplace=True)
-        self.random_order = False
-
-    def randomize_events(self):
-        """
-        Randomly shuffle the rows of the event_origins DataFrame.
-
-        Notes
-        -----
-        - If `event_origins` is empty, the method returns immediately.
-        - `sample(frac=1)` returns all rows in random order.
-        - `reset_index(drop=True)` removes the old index and assigns a new one.
-        """
-        if self.event_origins.empty:
-            return
-        self.event_origins = self.event_origins.sample(frac=1).reset_index(drop=True)
-
-    def _update_timeline(self):
-
-        if self.event_origins.empty:
-            return
-
-        events = self.event_origins.copy()
-        
-
-        n_events = len(events)
-        if n_events == 0:
-            return
-
-        if self.event_order == None:
-            events.reset_index(drop=True, inplace=True)  # keep original order
-        elif self.event_order == "random":
-            events = events.sample(frac=1).reset_index(drop=True)
-        else:
-            try:
-                events = events.sort_values(by=self.event_order).reset_index(drop=True)
-            except KeyError:
-                raise ValueError(f"Invalid event_order: {self.event_order}.")
-        
-        #add a new column with the time of the Nth arrival per event
-        arrivals = self.arrivals.copy()
-        min_phase = int(self.min_n_phase)
-        
-        nth_tt = get_nth_arrival_time(arrivals, n=min_phase,column="travel_time")
-        
-        nth_tt_per_ev = events["event_id"].map(nth_tt).to_numpy()
-
-        max_nth_tt = np.nanmax(nth_tt_per_ev)
-        # max_last_nth_tt = np.nanmax(last_nth_tt_per_ev)
-
-        if self.length is not None:
-            w = self.length
-        else:
-            w = 2*max_nth_tt
-            self.length = w
-
-        # ev_w = w - 3*w/4
-        ev_w = w - self.last_event_w
-
-        ev_w_start_pad = np.random.uniform(0,w * self.first_event_w)
-        ev_w_end_pad = np.random.uniform(0,w * self.last_event_w)
-
-        if self.event_spacing == "fixed":
-            ev_times = np.linspace(ev_w_start_pad, ev_w, n_events, endpoint=True)
-        elif self.event_spacing == "random":
-            ev_times = np.sort(np.random.uniform(ev_w_start_pad, ev_w, n_events))
-        elif self.event_spacing == "free":
-            ev_times = np.array(nth_tt_per_ev)
-        else:
-            raise ValueError("event_spacing must be 'fixed', 'random', or 'free'")
-
-
-        events["window_time"] = ev_times
-        
-        arrivals["origin_window_time"] = arrivals["event_id"].map(events.set_index("event_id")["window_time"])
-        arrivals["window_time"] = arrivals["origin_window_time"] + arrivals["travel_time"]
-
-
-        last_allowed_arrival = ev_times + nth_tt_per_ev
-        max_last_allowed_arrival = np.nanmax(last_allowed_arrival)
-        window_end = max_last_allowed_arrival + ev_w_end_pad
-
-        path ="/groups/igonin/ecastillo/UTDQuake/utdquake/utils/window_debug.png"
-        plot_window_times(arrivals, 
-                            # max_last_allowed_arrival, 
-                            window_end, 
-                           relative_per_event=True,
-                           last_event_id=events["event_id"].iloc[-1],
-                            save_path=path)
-
-        arrivals = arrivals[arrivals["window_time"] <= window_end].reset_index(drop=True)
-
-        # print("ev_times:", ev_times)
-        # print("max_last_allowed_arrival:", max_last_allowed_arrival)
-        # print("nth_tt_per_ev:",nth_tt_per_ev)
-
-        if not arrivals.empty:
-            # Merge stations into arrivals, keeping existing columns clean
-            arrivals = arrivals.merge(
-                self.stations[["station", "latitude", 
-                                "longitude","elevation"]],
-                on="station",
-                how="left"
-            )
-
-            # Warn if any arrival has no latitude or longitude
-            missing_coords = arrivals[
-                arrivals["latitude"].isna() | arrivals["longitude"].isna()
-            ]
-
-            if not missing_coords.empty:
-                missing_stations = missing_coords["station"].unique()
-                print(
-                    f"Warning: Missing latitude/longitude for stations: {list(missing_stations)}"
-                )
-        
-        self.event_origins = events
-        self.arrivals = arrivals
-
-    def add_events(self, events):
-        if not isinstance(events, (list, tuple)):
-            events = [events]
-
-        cat = obspy.Catalog(events=events)
-
-        if len(cat) == 0:
-            #warning
-            print("Warning: No events to add.")
-            return
-
-        origins_df = get_preferred_origins(cat)
-        self.event_origins = pd.concat([self.event_origins, origins_df], 
-                                        ignore_index=True)
-
-        arrivals_df = cat.arrivals_to_df()
-
-        events_df = self.event_origins[["preferred_origin_id", 
-                                "event_id"]].copy()
-        # events_df.rename(columns={"time":"origin_time"}, inplace=True)
-
-        arrivals_df = arrivals_df.merge(
-            events_df,
-            left_on="origin_id",
-            right_on="preferred_origin_id",
-            how="left",
-        )
-
-        # m5 = origins_df[origins_df["magnitude"] >= 5]["event_id"].unique()
-        # arrivals_m5 = arrivals_df[arrivals_df["event_id"].isin(m5)]
-        # print(m5)
-        # print(len(arrivals_m5))
-
-        
-
-        picks_df = cat.picks_to_df()
-        merged = merge_arrivals_and_picks(arrivals_df, picks_df)
-        merged["travel_time"] = (
-                    merged["time"] - merged["origin_time"]
-                ).dt.total_seconds()
-        
-
-        self.arrivals = pd.concat([self.arrivals, merged], ignore_index=True)
-        # arrivals_m5 = self.arrivals[self.arrivals["event_id"].isin(m5)]
-        # print(len(arrivals_m5))
-        # exit()
-        self._update_timeline()
-
-    def add_stations(self, stations):
-        """
-        """
-        if 'latitude' not in stations.columns or 'longitude' not in stations.columns:
-            raise ValueError(f"Columns 'latitude' or 'longitude' not found in stations dataframe")
-        
-        self.stations = pd.concat([self.stations, stations], ignore_index=True)
-
-    def add_noise(self,random_range=(1, 500)):
-        n_phases = random.randint(*random_range)
-
-        noise = self.stations
-        sta_in_window = self.arrivals["station"].unique()
-        noise["weight"] = noise.apply(lambda x: 1 if x["station"] in sta_in_window else 0.05, axis=1)
-        noise = noise.sample(n_phases, weights="weight", replace=True,ignore_index=True) 
-
-
-        random_floats = [random.uniform(0, self.length+self.length * self.last_event_w) for _ in range(len(noise))]
-        random_phases = np.random.choice(['P', 'S'], size=len(noise))
-
-        noise["window_time"] = random_floats
-        noise["phase"] = random_phases
-        noise["author"] = "noise"
-
-        noise = noise[["author","station", "window_time", "phase", "latitude", "longitude", "elevation"]]
-
-        # print(noise)
-        self.arrivals = pd.concat([self.arrivals, noise], ignore_index=True)
-
-        # print(self.arrivals[self.arrivals["author"] == "noise"][["station", "window_time", "phase", "latitude", "longitude", "elevation"]])
-        # print(self.arrivals[self.arrivals["author"] == "noise"])
-        # exit()
-        # self.arrivals = pd.concat([self.arrivals, noise], ignore_index=True)
-
-    def plot_window(self,
-                    reference_location=None,
-                    show_earthquakes=True,
-                    show_earthquake_lines=True,
-                    show_phases="both",
-                    show_moveout=True,
-                    show_station_labels=True,
-                    
-                    show_legend=True,
-                    save_path=None,
-                    ax=None,
-                    show=True):
-
-        if self.arrivals.empty or self.event_origins.empty:
-            print("No events or arrivals to plot.")
-            return
-
-        if self.stations.empty:
-            raise ValueError(
-                "Station coordinates not found. Please use eqw.add_stations() before plotting."
-            )
-
-        stations = self.stations
-        arrivals = self.arrivals.copy()
-        earthquakes = self.event_origins
-
-        # ------------------------------------------------------
-        # 1. Determine reference mode
-        # ------------------------------------------------------
-        if reference_location is None:
-            local_reference = True
-        else:
-            local_reference = False
-            ref_lat, ref_lon, ref_elv = reference_location
-
-        # GLOBAL reference only used if reference_location is not None
-        if not local_reference:
-            arrivals["y"] = arrivals.apply(
-                lambda row: gps2dist_azimuth(
-                    ref_lat, ref_lon, row["latitude"], row["longitude"]
-                )[0] / 1000,
-                axis=1,
-            )
-        else:
-            arrivals["y"] = np.nan  # filled per event
-
-        # Clean NaN coordinates
-        nan_coords = arrivals[arrivals["latitude"].isna() | arrivals["longitude"].isna()]
-        if not nan_coords.empty:
-            missing_stations = nan_coords["station"].unique()
-            print(f"Warning: Missing latitude/longitude for stations: {list(missing_stations)}")
-
-        arrivals = arrivals.dropna(subset=["latitude", "longitude"], ignore_index=True)
-
-        event_ids = earthquakes.sort_values("window_time")
-        event_ids =event_ids["event_id"].unique()
-        phase_mask = {"P": ["P"], "S": ["S"], "both": ["P", "S"]}[show_phases]
-
-        colors = plt.cm.tab20c(np.linspace(0, 1, len(event_ids)))
-        color_map = dict(zip(event_ids, colors))
-
-        if ax is None:
-            fig, ax = plt.subplots(figsize=(8, 4))
-
-        # ------------------------------------------------------
-        # 2. Event loop
-        # ------------------------------------------------------
-        arrivals_noise = arrivals[arrivals["author"] == "noise"]
-        # Plot noise arrivals
-        
-
-
-        max_y = []
-        
-        for e, event_id in enumerate(event_ids, 1):
-
-            # Event origin time
-            event_start = earthquakes.loc[earthquakes["event_id"] == event_id, "window_time"].values[0]
-            arrivals_event = arrivals[arrivals["event_id"] == event_id].copy()
-
-            arrivals_event = arrivals_event[arrivals_event["author"] != "noise"]
-
-            # Earthquake info
-            eq = earthquakes[earthquakes["event_id"] == event_id].iloc[0]
-            eq_lat = eq["latitude"]
-            eq_lon = eq["longitude"]
-
-            # --------------------------------------------------
-            # Reference handling
-            # --------------------------------------------------
-            if local_reference:
-                # Earthquake itself is reference → y_eq = 0
-                y_eq = 0
-                arrivals_event["y"] = arrivals_event.apply(
-                    lambda row: gps2dist_azimuth(
-                        eq_lat, eq_lon, row["latitude"], row["longitude"]
-                    )[0] / 1000,
-                    axis=1,
-                )
-            else:
-                # Global reference already computed earlier
-                y_eq = gps2dist_azimuth(
-                    ref_lat, ref_lon, eq_lat, eq_lon
-                )[0] / 1000
-
-            print(f"Event #{e}: M{eq['magnitude']}-{eq['time']}. t={event_start} s, y={y_eq:.2f} km")
-            
-            # color = color_map[event_id]
-
-            # check if e is even or odd for color selection
-            if e % 2 == 0:
-                color = "#ec7524"  # orange
-            else:
-                color = "#007A33"  # green
-
-
-            # --------------------------------------------------
-            # 3. Plot earthquake star
-            # --------------------------------------------------
-            if show_earthquakes:
-                ax.scatter(event_start, y_eq, marker="*",alpha=0.5,
-                                    color=color, s=100, zorder=5)
-                
-                #plot vertical line from earthquake to bottom
-                
-
-            # --------------------------------------------------
-            # 4. Plot arrivals
-            # --------------------------------------------------
-            moveout_lines = {}
-            for phase in phase_mask:
-                arrivals_phase = arrivals_event[arrivals_event["phase"] == phase].copy()
-                if arrivals_phase.empty:
-                    continue
-
-                # x-position (moveout line)
-
-                
-                arrivals_phase["x"] = arrivals_phase["window_time"]
-
-                # arrivals_phase = arrivals_phase[arrivals_phase["x"] <= event_start + self.length]
-
-                # if phase == "P":
-                    # color_arrival = "#ec7524"
-                    
-                # else:
-                    # color_arrival = "#007A33"    
-
-                color_arrival = color
-
-                if show_moveout:
-                    # Draw moveout line from earthquake to each arrival
-                    how="interp"
-
-                    _x = arrivals_phase["x"]
-                    _y = arrivals_phase["y"]
-                    _x = np.append(_x, event_start)
-                    _y = np.append(_y, y_eq)
-
-                    if how == "linear":
-                        #add 0 point at event origin
-                        slope, intercept, r_value, _, _ = linregress(_x, _y)
-
-                        x_moveout = np.linspace(event_start, _x.max(), 100)
-                        y_moveout = slope * (x_moveout - event_start) + y_eq
-                    else:
-                        sort_idx = np.argsort(_x)
-                        _x_sorted = _x[sort_idx]
-                        _y_sorted = _y[sort_idx]
-                        x_moveout = np.linspace(event_start, _x.max(), 100)
-                        y_moveout = np.interp(x_moveout, _x_sorted, _y_sorted)
-
-
-                    moveout_lines[phase] = (x_moveout, y_moveout)
-                    
-                    ax.plot(x_moveout, y_moveout, linestyle="--", color=color,
-                            linewidth=0.8,
-                                alpha=0.5, zorder=1)
-
-
-
-
-                for _, row in arrivals_phase.iterrows():
-                    facecolor = color if row["phase"] == "P" else "none"
-                    # facecolor = color_arrival
-                    edgecolor = color_arrival
-                    ax.scatter(
-                        row["x"], row["y"], marker="o",
-                        facecolors=facecolor, edgecolors=edgecolor, 
-                        s=10,
-                        zorder=10
-                    )
-                # print(arrivals_phase[["station", "phase", "x", "y"]])
-                max_y.append(arrivals_phase["y"].max())
-
-            if "P" in moveout_lines and "S" in moveout_lines:
-                xP, yP = moveout_lines["P"]
-                xS, yS = moveout_lines["S"]
-
-                # Common x-range
-                xmin = max(xP.min(), xS.min())
-                xmax = min(xP.max(), xS.max())
-
-                if xmin < xmax:  # ensure overlap exists
-                    # Build one shared x grid
-                    x_common = np.linspace(xmin, xmax, 200)
-
-                    # Interpolate both curves onto the shared grid
-                    yP_common = np.interp(x_common, xP, yP)
-                    yS_common = np.interp(x_common, xS, yS)
-
-                    # Fill the area
-                    ax.fill_between(
-                        x_common,
-                        yP_common,
-                        yS_common,
-                        color=color,
-                        alpha=0.1,
-                        zorder=0
-                    )
-            # --------------------------------------------------
-            # 5. Station labels
-            # --------------------------------------------------
-            if show_station_labels:
-                arrivals_plot = arrivals_event[arrivals_event["phase"].isin(phase_mask)].copy()
-                arrivals_plot["x"] = event_start + (
-                    arrivals_plot["time"] - arrivals_plot["origin_time"]
-                ).dt.total_seconds()
-
-                for (net, sta), group in arrivals_plot.groupby(["network", "station"]):
-                    if "P" in group["phase"].values:
-                        row_label = group[group["phase"] == "P"].iloc[0]
-                        x_offset = -5
-                        ha = "right"
-                    else:
-                        row_label = group.iloc[0]
-                        x_offset = 5
-                        ha = "left"
-
-                    ax.text(
-                        row_label["x"] + x_offset, row_label["y"], sta,
-                        verticalalignment="center", horizontalalignment=ha,
-                        fontsize=9, color=color
-                    )
-        
-        max_distance = max(max_y)
-        y_noise = np.random.uniform(0, max_distance, 
-                                    size=len(arrivals_noise))
-        if not arrivals_noise.empty:
-            ax.scatter(
-                    arrivals_noise["window_time"], y_noise,
-                        marker="o",
-                        alpha=0.5,
-                    facecolors="gray",  s=10,
-                    zorder = 0
-                )
-            
-        y_min, y_max = ax.get_ylim()
-            
-        if show_earthquake_lines:
-            for e, event_id in enumerate(event_ids, 1):
-
-                eq = earthquakes[earthquakes["event_id"] == event_id].iloc[0]
-                event_start = eq["window_time"]
-                magnitude = eq["magnitude"]
-                origin_time = eq["time"]
-
-                # Draw main vertical line
-                ax.plot([event_start, event_start], [0, y_max],
-                        color="gray", alpha=0.5, linewidth=1.6, zorder=1)
-
-        ax.set_ylim(y_min, y_max)
-
-        if show_legend:
-            legend_elements = [
-                    Line2D([0], [0], marker='o', color='gray', label='Noise', 
-                        markerfacecolor='gray', markersize=8, linestyle='None'),
-                    Line2D([0], [0], marker='o', color='#007A33', label='P', 
-                        markerfacecolor='#007A33', markersize=8, linestyle='None'),
-                    Line2D([0], [0], marker='o', color='#007A33', label='S', 
-                        markerfacecolor="none", markersize=8, linestyle='None'),
-                    Line2D([0], [0], marker='*', color="#ec7524", label='Earthquake', 
-                        markerfacecolor="#ec7524", markersize=12, linestyle='None')
-                ]
-
-            ax.legend(handles=legend_elements, loc='lower left', framealpha=0.9)
-
-
-        # ax.set_xlim(0, self.max_length)
-        # ax.set_ylim(-10, max(max_y) + 5)
-        #inver  axis
-        ax.invert_yaxis()
-        ax.xaxis.tick_top()
-        ax.xaxis.set_label_position("top")
-
-        ax.set_xlabel("Window time [s]")
-        # ax.set_xlabel("Window time [s]", loc="left")
-        ax.set_ylabel("Distance [km]")
-        ax.grid(True, linestyle="--", alpha=0.5)
-        plt.tight_layout()
-
-        if save_path:
-            plt.savefig(save_path, dpi=300)
-        if show:
-            plt.show()
-        # else:
-        #     plt.close(fig)
-        
-        return ax
-
-
-
-
-if __name__ == "__main__":
-    events = pd.read_csv('sgc.csv', comment='#')
-    stations = events.sample(n=10, random_state=42)  # Sample 10 stations for visualization
-    # region = [-80, -70, 0, 10]  # [min_lon, max_lon, min_lat, max_lat]
-    region = [-75, -70, 0, 3]  # [min_lon, max_lon, min_lat, max_lat]
-    # region = [-180, 180, -90, 90]  # [min_lon, max_lon, min_lat, max_lat]
-    analysis = {
-        'Contributor': 'Emmanuel Castillo',
-        'events_total': len(events['time_event'].unique()), 
-        'stations_good': len(events['station'].unique()),
-        'stations_bad': 0,  # Placeholder for bad stations
-        'p_arrivals_total': events['pick_p'].notnull().sum(),
-        's_arrivals_total': events['pick_s'].notnull().sum()
-    }
-    output_file = 'output.png'
-    plot_network_map(events, stations, region, analysis)

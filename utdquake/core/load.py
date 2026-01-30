@@ -1,98 +1,131 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional
+import obsplus
+import logging 
 import shutil
 import logging
-from .path import get_eventbank_path, get_root
-from .download import download_utdquake
-from utdquake.bank.bank import EventBank  
-from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
+import pyarrow.parquet as pq
+from .data import download_snapshot
+from .config import get_root,HF_CONFIG
 
 logger = logging.getLogger(__name__)
 
 
-def load_network(
+def validate_eventbank(path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        bank = obsplus.EventBank(str(path))
+        bank.read_index()
+        return True
+    except Exception:
+        return False
+
+def validate_parquet(path) -> bool:
+    if not path.exists():
+        return False
+    try:
+        pq.ParquetFile(path)
+        return True
+    except Exception:
+        return False
+
+def resolve_missing_components(
+    bank_path,
+    parquets,
+    flags,
+    include_bank
+) -> set:
+
+    missing = set()
+
+    for key, path in parquets.items():
+        if flags[key] and not validate_parquet(path):
+            missing.add(key)
+
+    if include_bank:
+        #  DEBUG HERE
+        logger.debug("bank_path = %s", bank_path)
+        logger.debug("bank_path exists = %s", bank_path.exists())
+        if bank_path.exists():
+            logger.debug("bank_path contents = %s", list(bank_path.iterdir()))
+
+        if not validate_eventbank(bank_path):
+            missing.add("banks")
+
+    return missing
+
+def cleanup_components(to_download, bank_path, parquets):
+    if "banks" in to_download:
+        shutil.rmtree(bank_path, ignore_errors=True)
+
+    for key in ("events", "stations", "picks"):
+        if key in to_download:
+            path = parquets[key]
+            if path.exists():
+                if path.is_dir():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
+
+def resolve_network_paths(
     network: str,
-    repo_id: str = DEFAULT_REPO_ID,
-    repo_type: str = DEFAULT_REPO_TYPE,
-    download_if_missing: bool = True,
-    max_retries: int = 3,
-) -> EventBank:
+    include_bank: bool = True,
+    include_events: bool = True,
+    include_stations: bool = True,
+    include_picks: bool = True,
+    max_retries: int = 2,
+) -> dict:
     """
-    Load a UTDQuake network EventBank.
-
-    If the EventBank is not available locally, it is downloaded automatically.
-    If the local bank exists but is incomplete/corrupted, it will be re-downloaded.
-
-    Parameters
-    ----------
-    network
-        Network name (e.g., "tx", "rsnc").
-    repo_id
-        Hugging Face repo id.
-    repo_type
-        DEFAULT_REPO_TYPE recommended.
-    download_if_missing
-        If True, download missing data automatically.
-    max_retries
-        Number of attempts to load/download the network.
-
-    Returns
-    -------
-    EventBank
-        Local EventBank instance.
+    Ensure network data exists locally and return paths.
     """
+
     network = network.strip()
-    bank_path = get_eventbank_path(network)
 
-    for attempt in range(1, max_retries + 1):
-        exists = bank_path.exists() and any(bank_path.iterdir())
+    bank_path = get_root() / "bank" / network
+    parquets = {
+        "events": get_root() / HF_CONFIG["events"].path.format(network=network),
+        "stations": get_root() / HF_CONFIG["stations"].path.format(network=network),
+        "picks": get_root() / HF_CONFIG["picks"].path.format(network=network),
+    }
 
-        if not exists:
-            if not download_if_missing:
-                raise FileNotFoundError(
-                    f"UTDQuake network '{network}' not found locally at: {bank_path}"
-                )
+    flags = {
+        "events": include_events,
+        "stations": include_stations,
+        "picks": include_picks,
+    }
 
-            download_utdquake(
-                local_dir=get_root(),
-                networks=network,
-                repo_id=repo_id,
-                repo_type=repo_type,
-            )
+    for attempt in range(max_retries):
 
-        try:
-            return EventBank(str(bank_path))
-        except Exception:
-            logger.error(
-                "Failed to load EventBank for network '%s' (attempt %d/%d): Corrupted or incomplete data.",
-                network,
-                attempt,
-                max_retries,
-            )
+        missing = resolve_missing_components(
+            bank_path, parquets, flags, include_bank
+        )
 
-            if attempt >= max_retries:
-                raise RuntimeError(f"Failed to load network '{network}' after {max_retries} attempts.")
+        if not missing:
+            return {
+                **({"bank": bank_path} if include_bank else {}),
+                **{k: v for k, v in parquets.items() if flags[k]},
+            }
 
-            # Remove partial/corrupted folder and retry download
-            if bank_path.exists():
-                logger.info(
-                        "Removing partial/corrupted EventBank at '%s' and retrying download (attempt %d/%d)...",
-                        bank_path,
-                        attempt + 1,
-                        max_retries,
-                    )
-                shutil.rmtree(bank_path, ignore_errors=True)
+        logger.info(
+            "Resolving network '%s' (attempt %d/%d). Missing: %s",
+            network, attempt + 1, max_retries, missing
+        )
 
-    raise RuntimeError(f"Failed to load network '{network}' after {max_retries} attempts.")
+        cleanup_components(missing, bank_path, parquets)
 
-def tx(**kwargs) -> EventBank:
-    """Shortcut to load the TX EventBank."""
-    return load_network("tx", **kwargs)
+        download_snapshot(
+            local_dir=get_root(),
+            networks=network,
+            include_banks="banks" in missing,
+            include_events="events" in missing,
+            include_stations="stations" in missing,
+            include_picks="picks" in missing,
+            unzip_banks=True,
+        )
 
+    raise RuntimeError(
+        f"Could not resolve network '{network}' after {max_retries} attempts"
+    )
 
-if __name__ == "__main__":
-    # bank = load_network(network="tx")
-    bank = tx()
-    print(bank)
+                

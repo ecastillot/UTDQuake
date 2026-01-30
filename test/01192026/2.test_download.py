@@ -6,7 +6,7 @@ from obspy import UTCDateTime
 from utdquake.bank.bank import EventBank  
 import utdquake.bank.utils as fut
 
-from utdquake.core.download import download_utdquake
+from ecastillo.utdquake.utdquake.core.data import download_snapshot
 
 
 import utdquake as utdq
