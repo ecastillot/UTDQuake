@@ -1,3 +1,10 @@
+"""
+Setup script for the UTDQuake Python package.
+
+This script uses setuptools to define package metadata, dependencies,
+and other configuration needed to build and distribute the package.
+"""
+
 from setuptools import setup, find_packages
 import pathlib
 
@@ -12,6 +19,7 @@ VERSION = utdquake.__version__
 
 DESCRIPTION = 'University of Texas at Dallas Earthquake Dataset'
 
+# Read requirements.txt and parse them into a list for install_requires
 req_path = os.path.join(os.path.dirname(__file__),"requirements.txt")
 readme_path = os.path.join(os.path.dirname(__file__),"README.md")
 with pathlib.Path(req_path).open() as requirements_txt:

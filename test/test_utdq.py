@@ -12,20 +12,19 @@ print(dataset)
 network_data = dataset.networks
 print(network_data)
 
-dataset.plot_overview(savepath="utdquake.png")
+# dataset.plot_overview(savepath="utdquake.png")
 
 
 # load network 
 network = dataset.get_network(name="tx")
 print(network)
 
-network.plot_overview(savepath="overview.png")
-network.plot_uncertainty_boxplots(savepath="uncertainty_boxplots.png")
-network.plot_station_location_uncertainty(savepath="station_location_uncertainty.png")
-network.plot_stats(savepath="stats.png")
-network.plot_pick_histograms(savepath="histograms.png")
-network.plot_pick_stats(savepath="pick_stats.png")
-exit()
+# network.plot_overview(savepath="overview.png")
+# network.plot_uncertainty_boxplots(savepath="uncertainty_boxplots.png")
+# network.plot_station_location_uncertainty(savepath="station_location_uncertainty.png")
+# network.plot_stats(savepath="stats.png")
+# network.plot_pick_histograms(savepath="histograms.png")
+# network.plot_pick_stats(savepath="pick_stats.png")
 
 # events
 events = network.events

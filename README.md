@@ -19,6 +19,11 @@ The dataset is available on Hugging Face: **UTDQuake**
 
 [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
 
+## Installation
+```bash
+pip install utdquake==0.1
+```
+
 ## Why this dataset matters?
 
 Curated datasets of earthquake **events and phase picks** are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for **phase association** and **earthquake location**.  
@@ -37,7 +42,6 @@ This dataset offers structured event catalogs, station metadata, and phase picks
 For details on the contents and schema of each dataset, please refer to the [Hugging Face dataset viewer](https://huggingface.co/datasets/ecastillot/UTDQuake/viewer).
 
 To get started, see the [Quick Start](#quick-start) section below, or click **“Use this dataset”** on the Hugging Face dataset page for example loading code.
-
 
 ## Quick start
 
