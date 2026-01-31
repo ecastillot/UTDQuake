@@ -1,0 +1,11 @@
+datasets
+huggingface-hub
+obspy
+obsplus
+pandas
+pyarrow
+numpy
+matplotlib
+seaborn
+packaging
+scipy

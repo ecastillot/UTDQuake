@@ -7,12 +7,6 @@
 
 University of Texas at Dallas Earthquake Dataset
 
-## Authors
-- Emmanuel Castillo (emmanuel.castillotaborda@utdallas.edu)
-- Nadine Ushakov (nadine.igonin@utdallas.edu)
-- Marine Denolle (mdenolle@uw.edu)
-
-
 # Dataset
 
 The dataset is available on Hugging Face: **UTDQuake**  
@@ -117,3 +111,10 @@ Thanks to the [UT Dallas HPC team](https://hpc.utdallas.edu/) for providing the 
 We also thank the seismology and AI communities for their work in earthquake research, and Hugging Face for hosting and sharing open datasets.
 
 We welcome feedback and contributions!
+
+# Authors
+- Emmanuel Castillo (emmanuel.castillotaborda@utdallas.edu)
+- Nadine Ushakov (nadine.igonin@utdallas.edu)
+- Marine Denolle (mdenolle@uw.edu)
+
+
