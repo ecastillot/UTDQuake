@@ -19,7 +19,7 @@ The dataset is available on Hugging Face: **UTDQuake**
 
 [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
 
-## Installation
+## Installation ([utdquake](https://pypi.org/project/utdquake))
 ```bash
 pip install utdquake==0.1
 ```
@@ -34,14 +34,16 @@ This dataset offers structured event catalogs, station metadata, and phase picks
 
 | Directory   | Format        | Description |
 |------------|---------------|-------------|
-| `bank/`     | `*.zip`       | ObsPlus `EventBank` datasets, one per network. Can be read directly using [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html). |
+| `network/`   | `*.parquet`   | Network metadata. |
 | `events/`   | `*.parquet`   | Earthquake event catalogs per network. |
 | `stations/` | `*.parquet`   | Station metadata per network. |
 | `picks/`    | `*.parquet`   | Seismic phase pick datasets per network. |
+| `bank/`     | `*.zip`       | ObsPlus `EventBank` datasets, one per network. Can be read directly using [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html). |
 
 For details on the contents and schema of each dataset, please refer to the [Hugging Face dataset viewer](https://huggingface.co/datasets/ecastillot/UTDQuake/viewer).
 
 To get started, see the [Quick Start](#quick-start) section below, or click **“Use this dataset”** on the Hugging Face dataset page for example loading code.
+
 
 ## Quick start
 
