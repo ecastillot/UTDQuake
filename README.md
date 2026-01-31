@@ -7,12 +7,6 @@
 
 University of Texas at Dallas Earthquake Dataset
 
-# Dataset
-
-The dataset is available on Hugging Face: **UTDQuake**  
-
-[![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
-
 # Documentation
 
 Full documentation for UTDQuake is available here: 
@@ -24,6 +18,12 @@ You will see:
 - QuickStart guide to get you up and running  
 - Detailed API reference  
 - Tutorials and example workflows  
+
+# Dataset
+
+The dataset is available on Hugging Face: **UTDQuake**  
+
+[![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
 
 
 ## Installation ([utdquake](https://pypi.org/project/utdquake))
