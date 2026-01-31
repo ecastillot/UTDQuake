@@ -13,6 +13,19 @@ The dataset is available on Hugging Face: **UTDQuake**
 
 [![Hugging Face Dataset](https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/datasets/ecastillot/UTDQuake)
 
+# Documentation
+
+Full documentation for UTDQuake is available here: 
+
+ [![Read the Docs](https://img.shields.io/badge/Docs-Read%20the%20Docs-blue?style=for-the-badge&logo=read-the-docs)](https://utdquake.readthedocs.io/en/latest/index.html)
+
+You will see:
+
+- QuickStart guide to get you up and running  
+- Detailed API reference  
+- Tutorials and example workflows  
+
+
 ## Installation ([utdquake](https://pypi.org/project/utdquake))
 ```bash
 pip install utdquake==0.1
