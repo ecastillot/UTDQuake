@@ -1,3 +1,19 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath("../../"))
+
+# Mock heavy scientific packages for autodoc
+autodoc_mock_imports = [
+    "obsplus",
+    "obspy",
+    "datasets",
+    "huggingface_hub",
+    "pyarrow",
+    "matplotlib",
+    "seaborn",
+    "scipy",
+]
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
