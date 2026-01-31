@@ -9,7 +9,3 @@ matplotlib
 seaborn
 packaging
 scipy
-sphinx
-sphinx-rtd-theme
-
-
