@@ -109,5 +109,5 @@ Content
    quickstart
    examples
    api/index
+   authors
    contribution
-

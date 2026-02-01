@@ -3,6 +3,12 @@ Quickstart
 
 This guide provides a **basic overview of UTDQuake** and demonstrates how to access datasets, networks, events, and visualizations.
 
+.. raw:: html
+
+   <a href="https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/UTDQuake_Access.ipynb" target="_blank">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
+   </a>
+
 Access
 -------
 
