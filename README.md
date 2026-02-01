@@ -131,10 +131,52 @@ We welcome feedback and contributions!
 
 # Authors
 
-| Name | LinkedIn | Email |
-|------|----------|-------|
-| Emmanuel Castillo | <a href="https://www.linkedin.com/in/ecastillot/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:castillo.280997@gmail.com"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
-| Nadine Ushakov | <a href="https://www.linkedin.com/in/nadineushakov/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:nadine.igonin@utdallas.edu"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
-| Marine Denolle | <a href="https://www.linkedin.com/in/marine-denolle-b528144b/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:mdenolle@uw.edu"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
+<table>
+  <tr>
+    <td valign="middle">
+      <strong>Emmanuel Castillo</strong><br>
+      University of Texas at Dallas<br>
+      <a href="https://www.linkedin.com/in/ecastillot/" target="_blank">
+        <img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="20">
+      </a>
+      <a href="mailto:castillo.280997@gmail.com" target="_blank">
+        <img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="20">
+      </a>
+    </td>
+    <td width="100" align="center">
+      <img src="docs/source/_static/photos/emmanuel.jpg" alt="Emmanuel" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+    </td>
+  </tr>
+  <tr>
+    <td valign="middle">
+      <strong>Nadine Ushakov</strong><br>
+      University of Texas at Dallas<br>
+      <a href="https://www.linkedin.com/in/nadineushakov/" target="_blank">
+        <img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="20">
+      </a>
+      <a href="mailto:nadine.igonin@utdallas.edu" target="_blank">
+        <img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="20">
+      </a>
+    </td>
+    <td width="100" align="center">
+      <img src="docs/source/_static/photos/nadine.jpg" alt="Nadine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+    </td>
+  </tr>
+  <tr>
+    <td valign="middle">
+      <strong>Marine Denolle</strong><br>
+      University of Washington<br>
+      <a href="https://www.linkedin.com/in/marine-denolle-b528144b/" target="_blank">
+        <img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="20">
+      </a>
+      <a href="mailto:mdenolle@uw.edu" target="_blank">
+        <img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="20">
+      </a>
+    </td>
+    <td width="100" align="center">
+      <img src="docs/source/_static/photos/marine.jpg" alt="Marine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+    </td>
+  </tr>
+</table>
 
 
