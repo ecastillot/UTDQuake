@@ -2,6 +2,8 @@
 data/
 .bck/
 .test/
+#figures/networks/**/*.png 
+figures/networks/**/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

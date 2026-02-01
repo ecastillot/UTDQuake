@@ -23,7 +23,7 @@ Basic usage:
 
 Access a single network:
 
->>> net = ds.get_network("tx01")
+>>> net = ds.get_network("tx")
 >>> net.stations.head()
 >>> net.plot_overview()
 

@@ -7,9 +7,43 @@
 
    <h1>Welcome to <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake</h1>
 
-University of Texas at Dallas Earthquake Dataset
+.. image:: https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black
+   :target: https://huggingface.co/datasets/ecastillot/UTDQuake
+   :alt: Hugging Face Dataset
+.. image:: https://img.shields.io/badge/GitHub-UTDQuake-black?style=for-the-badge&logo=github
+   :target: https://github.com/ecastillot/UTDQuake
+   :alt: GitHub Repository
 
-Dataset
+.. raw:: html
+
+   <br><br>
+
+**University of Texas at Dallas Earthquake Dataset**
+
+A global earthquake dataset constructed from high-quality source and receiver metadata, including associated seismic phase picks across diverse station geometries.
+
+.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview.png
+   :width: 800px
+
+It contains multiple networks. See :ref:`dataset-section` section for details on how to access network data, events, stations, and picks.
+
+.. raw:: html
+
+   <iframe
+   src="https://huggingface.co/datasets/ecastillot/UTDQuake/embed/viewer/0_networks/metadata"
+   frameborder="0"
+   width="100%"
+   height="560px"
+   ></iframe>
+
+Why this dataset matters?
+--------------------------
+
+Curated datasets of earthquake events and phase picks are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for phase association and earthquake location.
+
+This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
+
+Access the Dataset
 --------------------------
 
 The dataset is available on Hugging Face: **UTDQuake**  
@@ -24,14 +58,47 @@ It is also hosted on GitHub:
    :target: https://github.com/ecastillot/UTDQuake
    :alt: GitHub Repository
 
-
-Why this dataset matters?
+Figures
 --------------------------
 
-Curated datasets of earthquake events and phase picks are essential for modern seismology, especially in the AI era. While waveform datasets have advanced earthquake detection, multistation picks provide complementary information crucial for phase association and earthquake location.
+See :ref:`figures-subsection`. We offer different type of figures for each network to help users better understand the data. 
 
-This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
+.. raw:: html
 
+   <div align="center">
+
+.. list-table:: UTDQuake analysis
+   :widths: 30 30 30
+   :header-rows: 1
+
+   * - Overview
+     - General Stats
+     - P & S Picks Analysis
+
+   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_overview.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_stats.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_histograms.png
+          :width: 200px
+
+   * - **Uncertainty in station location**
+     - **Uncertainty in EQ location**
+     - **Stats for Pick Times**
+       
+   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_station_location_uncertainty.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_uncertainty_boxplots.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_pick_stats.png
+          :width: 200px
+
+.. raw:: html
+
+   </div>
+
+Content
+--------------------------
 
 .. toctree::
    :maxdepth: 2
@@ -39,8 +106,8 @@ This dataset offers structured event catalogs, station metadata, and phase picks
    home
    installation
    dataset
-   figures
    quickstart
+   examples
+   api/index
    contribution
-   api/utdquake
 

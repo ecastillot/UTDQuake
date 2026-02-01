@@ -1,19 +1,11 @@
-API: UTDQuake
+Quick Overview
 ================
 
-Subpackages
------------
+This is UTDQuake in a nutsshell. This contains the main classes and functions to work with the UTDQuake dataset.
 
-.. toctree::
-   :maxdepth: 4
-
-   utdquake.core
-   utdquake.utils
-
-Module contents
----------------
+However, feel free to explore **Core** and **Utils** subpackages for more specialized functionalities.
 
 .. automodule:: utdquake
    :members:
-   :show-inheritance:
    :undoc-members:
+   :show-inheritance:

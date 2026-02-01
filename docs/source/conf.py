@@ -1,6 +1,10 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath("../../"))
+
+# Absolute path to the root of your project, relative to this conf.py
+conf_dir = os.path.dirname(os.path.abspath(__file__))  # docs/source
+project_root = os.path.abspath(os.path.join(conf_dir, "..", ".."))
+sys.path.insert(0, project_root)
 
 # Mock heavy scientific packages for autodoc
 autodoc_mock_imports = [
@@ -12,6 +16,8 @@ autodoc_mock_imports = [
     "matplotlib",
     "seaborn",
     "scipy",
+    "pyarrow",
+    "pandas"
 ]
 
 # Configuration file for the Sphinx documentation builder.

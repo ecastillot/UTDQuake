@@ -1,43 +1,5 @@
-Figures 
-=========================
-
-This section provides an overview of all networks included in UTDQuake.
-
-For each network:
-
-- An overview displayed for quick visualization.
-- A link is provided to access all individual PNG figures in detail.
-
-You can click on the network name to explore the full figure collection.
-
-Types of Figures Included
--------------------------
-
-.. list-table:: UTDQuake analysis
-   :widths: 30 30 30
-   :header-rows: 1
-
-   * - Overview
-     - Stats
-     - histograms
-
-   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/networks/tx/tx_overview.png
-          :width: 200px
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/networks/tx/tx_stats.png
-          :width: 200px
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/networks/tx/tx_histograms.png
-          :width: 200px
-
-   * - Overview
-     - Stats
-     - histograms
-
-
-Network Overview Table
-----------------------
-
 .. list-table:: Available Networks
-   :widths: 15 20 30
+   :widths: 15 25 30
    :header-rows: 1
 
    * - Network
@@ -453,7 +415,3 @@ Network Overview Table
      - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/main/figures/networks/uw>`_
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/networks/uw/uw_overview.png
           :width: 200px
-
-
-
-
