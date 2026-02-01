@@ -2,8 +2,11 @@
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) ![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)  ![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social)
 
 
+<img src="docs/source/_static/logo/utdquake_logo_ok.png" alt="seismonitor" width="150"> 
 
+<!--
 # <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
+-->
 
 **University of Texas at Dallas Earthquake Dataset**
 
