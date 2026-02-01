@@ -39,6 +39,7 @@ This dataset offers structured event catalogs, station metadata, and phase picks
    home
    installation
    dataset
+   figures
    quickstart
    contribution
    api/utdquake

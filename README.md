@@ -5,7 +5,11 @@
 
 # <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
 
-University of Texas at Dallas Earthquake Dataset
+**University of Texas at Dallas Earthquake Dataset**
+
+A global earthquake dataset constructed from high-quality source and receiver metadata, including associated seismic phase picks across diverse station geometries.
+
+![utdquake](figures/utdquake_overview.png)
 
 # Documentation
 
@@ -126,8 +130,11 @@ We also thank the seismology and AI communities for their work in earthquake res
 We welcome feedback and contributions!
 
 # Authors
-- Emmanuel Castillo (emmanuel.castillotaborda@utdallas.edu)
-- Nadine Ushakov (nadine.igonin@utdallas.edu)
-- Marine Denolle (mdenolle@uw.edu)
+
+| Name | LinkedIn | Email |
+|------|----------|-------|
+| Emmanuel Castillo | <a href="https://www.linkedin.com/in/ecastillot/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:castillo.280997@gmail.com"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
+| Nadine Ushakov | <a href="https://www.linkedin.com/in/nadineushakov/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:nadine.igonin@utdallas.edu"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
+| Marine Denolle | <a href="https://www.linkedin.com/in/marine-denolle-b528144b/"><img src="https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin&logoColor=white&style=flat" height="15"></a> | <a href="mailto:mdenolle@uw.edu"><img src="https://img.shields.io/badge/Email-Send-red?logo=gmail&logoColor=white&style=flat" height="15"></a> |
 
 

@@ -1,4 +1,10 @@
+import os 
+
+os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+
+from pathlib import Path
 import utdquake as utdq
+
 
 # import logging
 
@@ -10,21 +16,9 @@ print(dataset)
 
 # network level
 network_data = dataset.networks
-print(network_data)
+network_names = network_data["network"].tolist()
 
-# dataset.plot_overview(savepath="utdquake.png")
-
-
-# load network 
-network = dataset.get_network(name="tx")
-print(network)
-
-# network.plot_overview(savepath="overview.png")
-# network.plot_uncertainty_boxplots(savepath="uncertainty_boxplots.png")
-# network.plot_station_location_uncertainty(savepath="station_location_uncertainty.png")
-# network.plot_stats(savepath="stats.png")
-# network.plot_pick_histograms(savepath="histograms.png")
-# network.plot_pick_stats(savepath="pick_stats.png")
+network = dataset.get_network(name=network_names[0])
 
 # events
 events = network.events
