@@ -1,6 +1,6 @@
 /* Change the color of the top left panel */
 .wy-side-nav-search {
-    background-color: #2E7D32 !important;
+    background-color: rgba(158, 161, 163, 0.884) !important;
 }
 
 /* Make logo bigger in sidebar */
