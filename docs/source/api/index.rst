@@ -1,3 +1,4 @@
+.. _api-section:
 API Reference
 =============
 

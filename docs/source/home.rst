@@ -39,25 +39,50 @@ Curated datasets of earthquake events and phase picks are essential for modern s
 
 This dataset offers structured event catalogs, station metadata, and phase picks across networks, supporting reproducible research and the development of data-driven seismological methods.
 
+
 Access the Dataset
 --------------------------
 
-The dataset is available on Hugging Face: **UTDQuake**  
+Hugging Face Dataset
+^^^^^^^^^^^^^^^^^^^^^
+
+The complete UTDQuake dataset is publicly available on Hugging Face, where it can be easily explored and downloaded:
 
 .. image:: https://img.shields.io/badge/HuggingFace-Dataset-yellow?style=for-the-badge&logo=huggingface&logoColor=black
    :target: https://huggingface.co/datasets/ecastillot/UTDQuake
    :alt: Hugging Face Dataset
 
-It is also hosted on GitHub:
+
+GitHub Repository
+^^^^^^^^^^^^^^^^^^^^^
+
+The source code, documentation, and additional resources are hosted on GitHub:
 
 .. image:: https://img.shields.io/badge/GitHub-UTDQuake-black?style=for-the-badge&logo=github
    :target: https://github.com/ecastillot/UTDQuake
    :alt: GitHub Repository
 
-Figures
+
+Installation & Usage
+^^^^^^^^^^^^^^^^^^^^^^
+
+- To install the ``UTDQuake`` Python library and begin working with the dataset programmatically, follow the instructions in the :ref:`installation-section`.
+
+- A step-by-step quickstart guide, including examples for accessing, analyzing, and visualizing the data, can be found in the :ref:`quickstart-section`.
+
+- For complete technical details about all available modules, classes, and functions, see the :ref:`api-section`.
+
+
+Quick Overview
 --------------------------
 
-See :ref:`figures-subsection`. We offer different type of figures for each network to help users better understand the data. 
+The following animation summarizes the overview figure for some of all available networks. **All figures and analyses are available** in the :ref:`overview-section` section.
+
+.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/all_networks_overview.gif
+   :width: 700px
+   :align: center
+
+We offer different type of figures for each network to help users better understand the data. 
 
 .. raw:: html
 
@@ -92,4 +117,6 @@ See :ref:`figures-subsection`. We offer different type of figures for each netwo
 .. raw:: html
 
    </div>
+
+
 

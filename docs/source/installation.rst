@@ -1,3 +1,4 @@
+.. _installation-section:
 Installation & Configuration
 ============================
 

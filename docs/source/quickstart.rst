@@ -1,7 +1,10 @@
+.. _quickstart-section:
 Quickstart
-==========
+============
 
 This guide provides a **basic overview of UTDQuake** and demonstrates how to access datasets, networks, events, and visualizations.
+
+You can follow this guide interactively in Colab:
 
 .. raw:: html
 
@@ -10,9 +13,9 @@ This guide provides a **basic overview of UTDQuake** and demonstrates how to acc
    </a>
 
 Access
--------
+^^^^^^^
 
-First, import the package and load the dataset:
+To get started, import the package and load the dataset using the :class:`utdquake.Dataset` class:
 
 .. code-block:: python
 
@@ -26,10 +29,16 @@ First, import the package and load the dataset:
    network_data = dataset.networks
    print(network_data)
 
-Network Data
-------------
+In addition to network-level access, the dataset allows you to retrieve aggregated information across multiple networks. You can directly access events, stations, and picks using the following methods:
 
-You can access detailed information about a specific network:
+- :func:`utdquake.Dataset.get_events` – retrieve event information across networks  
+- :func:`utdquake.Dataset.get_stations` – retrieve station metadata  
+- :func:`utdquake.Dataset.get_picks` – retrieve seismic phase picks  
+
+Network Data
+^^^^^^^
+
+Detailed information for a specific seismic network can be accessed through the :class:`utdquake.Network` class:
 
 .. code-block:: python
 
@@ -50,7 +59,7 @@ You can access detailed information about a specific network:
    print(picks)
 
 Event Bank
-------------
+^^^^^^^
 UTDQuake integrates an **event bank**. Check `ObsPlus EventBank <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>`_ for more details.
 
 .. code-block:: python
@@ -68,9 +77,11 @@ UTDQuake integrates an **event bank**. Check `ObsPlus EventBank <https://niosh-m
    print(cat2)
 
 Visualization (Plots)
--------------
+^^^^^^^
 
-UTDQuake provides convenient plotting functions for quick data exploration:
+UTDQuake provides convenient plotting functions for quick data exploration. 
+Check the :func:`utdquake.Network` plotting functions for more details and examples.
+Or also check the :func:`utdquake.utils.plot` module for more flexibility to create your own custom plots.
 
 .. code-block:: python
 
@@ -92,8 +103,8 @@ UTDQuake provides convenient plotting functions for quick data exploration:
    All plotting functions accept a `savepath` argument. If omitted, the plot will be shown interactively.
 
 Further Reading
----------------
+^^^^^^^
 
-- Explore all dataset methods: `dataset.*`  
-- Explore all network methods: `network.*`  
-- Check the `obsplus.EventBank` documentation for advanced event filtering.
+- Explore all dataset methods:  :class:`utdquake.Dataset`
+- Explore all network methods: :class:`utdquake.Network`  
+- Check the `ObsPlus EventBank <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>`_ documentation for advanced event filtering.
