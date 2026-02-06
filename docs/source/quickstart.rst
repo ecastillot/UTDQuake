@@ -97,10 +97,11 @@ Or also check the :func:`utdquake.utils.plot` module for more flexibility to cre
    network.plot_stats(savepath="stats.png")
    network.plot_pick_histograms(savepath="histograms.png")
    network.plot_pick_stats(savepath="pick_stats.png")
-
+   
 .. note::
 
-   All plotting functions accept a `savepath` argument. If omitted, the plot will be shown interactively.
+   We need `Cartopy <https://cartopy.readthedocs.io/stable/>`_ to be able to plot most of the figures.
+
 
 Further Reading
 ^^^^^^^
