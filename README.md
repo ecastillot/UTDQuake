@@ -1,5 +1,5 @@
 
-![PyPI](https://img.shields.io/pypi/v/UTDQuake)![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) 
+[![PyPI](https://img.shields.io/pypi/v/utdquake?color=orange&label=PyPI&style=flat)](https://pypi.org/project/utdquake/) ![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social) ![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) 
 
 
 <img src="docs/source/_static/logo/utdquake_logo_ok.png" alt="seismonitor" width="150"> 
