@@ -21,7 +21,7 @@ A global earthquake dataset constructed from high-quality source and receiver me
 .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview.png
    :width: 800px
 
-It contains multiple networks. See :ref:`dataset-section` section for details on how to access network data, events, stations, and picks.
+See :ref:`dataset-section` section for details on how to access network data, events, stations, and picks. Next table shows the network data:
 
 .. raw:: html
 

@@ -104,7 +104,7 @@ for net_name in network_names:
         network = dataset.get_network(name=net_name)
 
         network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
-                              is_alaska=True if net_name in ["av", "ak"] else False)
+                              is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
         network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
         network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
         network.plot_pick_stats(savepath=str(figures_dict["pick_stats"]).format(network=net_name))

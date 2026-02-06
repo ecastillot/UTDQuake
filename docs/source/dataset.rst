@@ -103,7 +103,7 @@ The **Picks** dataset contains seismic phase picks associated with each event.
 Figures
 -------
 
-This section provides an overview of all networks included in UTDQuake.
+This section provides an overview of the figures included in UTDQuake.
 
 
 Types of Figures Included
@@ -143,8 +143,9 @@ Types of Figures Included
 
    </div>
 
+
 Network Overview Table
-^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 For each network:
 

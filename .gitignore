@@ -5,6 +5,7 @@ data/
 #figures/networks/**/*.png 
 figures/networks/**/*
 scripts/qc/check_*.out
+scripts/fig/*.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
