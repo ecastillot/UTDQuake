@@ -106,7 +106,7 @@ Content
    home
    installation
    dataset
-   quickstart
+   overview
    examples
    api/index
    authors
