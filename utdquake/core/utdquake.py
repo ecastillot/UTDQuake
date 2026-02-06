@@ -150,7 +150,8 @@ class Dataset:
         """Return a Network object for a given network name."""
         return Network(name)
     
-    def plot_overview(self, savepath=None, show=True):
+    def plot_overview(self, consider_calculated_stations: bool=True,
+                    savepath=None, show=True):
         """
         Plot a comprehensive overview of UTDQuake dataset.
 
@@ -158,6 +159,8 @@ class Dataset:
 
         Parameters
         ----------
+        consider_calculated_stations : bool, optional
+            If True, also plot calculated stations (if available). Defaults to True.
         savepath : str or None
             Path to save the figure. If None, figure is not saved.
         show : bool
@@ -167,6 +170,7 @@ class Dataset:
                             stations=self.stations,
                             analysis=self.description,
                             savepath=savepath,
+                            consider_calculated_stations=consider_calculated_stations,
                             show=show)
 
 class Network:

@@ -500,6 +500,7 @@ def plot_utdq_overview(
     events: pd.DataFrame,
     stations: pd.DataFrame,
     analysis: Dict[str, Any],
+    consider_calculated_stations: bool=True,
     region: Optional[Tuple[float, float, float, float]] = None,
     savepath: Optional[str] = None,
     show: bool = False,
@@ -517,6 +518,8 @@ def plot_utdq_overview(
         Must contain 'longitude' and 'latitude'.
     analysis : dict
         Summary statistics (events, arrivals, stations).
+    consider_calculated_stations : bool, optional
+        If True, also plot calculated stations (if available). Defaults to True.
     region : tuple or None, optional
         Map extent as (lon_min, lon_max, lat_min, lat_max).
         Defaults to global view.
@@ -582,16 +585,47 @@ def plot_utdq_overview(
     gl2.left_labels = True
     gl2.bottom_labels = True
 
+    # Mask for confirmed stations (valid official coordinates)
+    confirmed_mask = stations[['confirmed_longitude', 
+                               'confirmed_latitude']].notna().all(axis=1)
+    
+    # Plot optional calculated stations first (background layer)
+    if consider_calculated_stations and \
+       'calculated_latitude' in stations.columns and \
+       'calculated_longitude' in stations.columns:
+
+        # Only plot rows where calculated values exist
+        calculated_mask = (
+                            ~confirmed_mask &
+                            stations[['calculated_latitude', 
+                                    'calculated_longitude']].notna().all(axis=1)
+                        )
+        
+        ax2.scatter(
+                    stations.loc[calculated_mask, 
+                                 'calculated_longitude'],
+                    stations.loc[calculated_mask, 
+                                 'calculated_latitude'],
+                    marker="^",
+                    c="gray",
+                    s=40,
+                    alpha=0.6,
+                    transform=ccrs.PlateCarree(),
+                    label="Calc. Stations"
+                )
+
     ax2.scatter(
-        stations['calculated_longitude'],
-        stations['calculated_latitude'],
+        stations.loc[confirmed_mask, 'confirmed_longitude'],
+        stations.loc[confirmed_mask, 'confirmed_latitude'],
         marker="^",
         c="green",
         s=40,
         alpha=0.7,
         transform=ccrs.PlateCarree(),
-        label="Stations"
+        label="Conf. Stations"
     )
+
+    
     ax2.legend(loc="lower right", fontsize=12)
 
     ax2.text(

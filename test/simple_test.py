@@ -19,6 +19,8 @@ network_data = dataset.networks
 network_names = network_data["network"].tolist()
 
 network = dataset.get_network(name=network_names[0])
+# network = dataset.get_network(name="KRSZO")
+
 
 # events
 events = network.events
