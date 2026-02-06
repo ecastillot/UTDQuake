@@ -9,16 +9,16 @@ from typing import Iterable, Optional, Dict, List
 
 import pandas as pd
 
-from utdquake.bank.bank import EventBank
-from utdquake.core.cache import (
+from ..bank.bank import EventBank
+from ..core.cache import (
     get_root,
     list_local_networks,
     list_remote_networks,
     get_eventbank_path,
 )
-from utdquake.core.config import (PREF_PICKS_ORDER,PREF_EVENTS_ORDER,
+from ..core.config import (PREF_PICKS_ORDER,PREF_EVENTS_ORDER,
                                   PREF_STATIONS_ORDER,PREF_STATS_ORDER)
-from utdquake.core.download import download_utdquake
+from ..core.download import download_utdquake
 
 logger = logging.getLogger(__name__)
 

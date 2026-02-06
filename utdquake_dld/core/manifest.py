@@ -9,19 +9,19 @@ from typing import Iterable, Optional, Dict, List
 
 import pandas as pd
 
-from utdquake.bank.bank import EventBank
-from utdquake.core.cache import (
+from ..bank.bank import EventBank
+from ..core.cache import (
     get_root,
     list_local_networks,
     list_remote_networks,
     get_eventbank_path,
 )
-from utdquake.core.config import (PREF_PICKS_ORDER,PREF_EVENTS_ORDER,
+from ..core.config import (PREF_PICKS_ORDER,PREF_EVENTS_ORDER,
                                   PREF_STATIONS_ORDER,PREF_STATS_ORDER,
                                   PREF_PICKS_TYPES,PREF_EVENTS_TYPES,
                                   PREF_STATIONS_TYPES,PREF_STATS_TYPES)
 
-from utdquake.core.download import download_utdquake
+from ..core.download import download_utdquake
 
 logger = logging.getLogger(__name__)
 
@@ -408,8 +408,12 @@ def build_manifests(
     # -----------------------------------------------------------------
     # build loop
     # -----------------------------------------------------------------
+    print(networks)
     for net in networks:
         logger.info("Processing network: %s", net)
+        print(net)
+        # if net.strip() != "KRSZO":
+        #     continue
 
         bank = _load_eventbank(net, force_download=force_download)
 
@@ -447,6 +451,7 @@ def build_manifests(
         if include_stations and not progress.is_done("stations", net):
             logger.info("Building stations manifest for %s", net)
             df_sta = bank.get_stations().copy()
+            # print(df_sta)
             df_sta["network"] = net
 
             df_sta = sanitize_dataframe_for_parquet(df_sta,

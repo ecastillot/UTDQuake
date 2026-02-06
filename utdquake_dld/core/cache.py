@@ -21,14 +21,14 @@ def list_remote_networks(repo_id: str = DEFAULT_REPO_ID) -> list[str]:
 
 def list_local_networks() -> list[str]:
     """Return all networks available locally."""
-    root = get_root() / "events"
+    root = get_root() / "bank"
     if not root.exists():
         return []
     return sorted([p.name for p in root.iterdir() if p.is_dir() and any(p.iterdir())])
 
 def list_all_networks(repo_id: str = DEFAULT_REPO_ID) -> list[str]:
     # Check local first
-    root = get_root() / "events"
+    root = get_root() / "bank"
     local_networks = sorted([p.name for p in root.iterdir() if p.is_dir() and any(p.iterdir())])
     if local_networks:
         return local_networks

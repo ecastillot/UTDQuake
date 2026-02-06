@@ -42,7 +42,13 @@ PREF_STATIONS_ORDER = ["network",
                         "confirmed_elevation",
                         "calculated",
                         "calculated_latitude",
-                        "calculated_longitude"]
+                        "calculated_longitude",
+                        "calculated_latitude_std",
+                        "calculated_longitude_std",
+                        "calculated_num_entries"
+                        "db_path",
+                        "creation_time"
+                        ]
 
 PREF_STATS_ORDER = ["network",
                     "agency",
@@ -153,8 +159,11 @@ PREF_STATIONS_TYPES = {"network": "string",
                             "confirmed_longitude": "float",
                             "calculated": "boolean",
                             "calculated_latitude": "float",
+                            "calculated_latitude_std": "float",
                             "calculated_longitude": "float",
+                            "calculated_longitude_std": "float",
                             "confirmed_elevation": "float",
+                            "calculated_num_entries": "int64",
                             "db_path": "string",
                             "creation_time": "datetime"
                             }

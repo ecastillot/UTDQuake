@@ -6,7 +6,7 @@ import shutil
 import logging
 from .path import get_eventbank_path, get_root
 from .download import download_utdquake
-from utdquake.bank.bank import EventBank  
+from ..bank.bank import EventBank  
 from .config import DEFAULT_REPO_ID, DEFAULT_REPO_TYPE
 
 logger = logging.getLogger(__name__)

@@ -25,7 +25,7 @@ from scipy.stats import linregress
 
 
 from obspy.geodetics import locations2degrees, gps2dist_azimuth
-from utdquake.bank.utils import (merge_arrivals_and_picks, get_preferred_origins,
+from ..bank.utils import (merge_arrivals_and_picks, get_preferred_origins,
                                 get_nth_arrival_time)
 
 def compute_region(

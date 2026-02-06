@@ -1,4 +1,4 @@
-from utdquake.bank.bank import EventBank
+from ..bank.bank import EventBank
 import pandas as pd
 from .cache import get_root,list_local_networks,get_eventbank_path,list_remote_networks
 from .download import download_utdquake

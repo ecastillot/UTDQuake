@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from . import utils as fut
 
 import datetime
-from utdquake.core.path import get_manifest_path
-from utdquake.utils.plot import (plot_overview,plot_stats,
+from ..core.path import get_manifest_path
+from ..utils.plot import (plot_overview,plot_stats,
                                  plot_station_location_uncertainty,
                                  plot_pick_histograms,
                                  plot_uncertainty_boxplots,

@@ -43,4 +43,4 @@ def get_eventbank_path(network: str) -> Path:
     Return the expected local path for a network EventBank.
     """
     network = network.strip()
-    return get_root() / "events" / network
+    return get_root() / "bank" / network
