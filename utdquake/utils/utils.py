@@ -98,6 +98,8 @@ def compute_region(
     lat_min, lat_max = np.min(lats), np.max(lats)
     lon_min, lon_max = np.min(lons), np.max(lons)
 
+    # print(f"Initial region: lon_min={lon_min}, lon_max={lon_max}, lat_min={lat_min}, lat_max={lat_max}")
+
     # --- Add padding ---
     lon_distance = lon_max - lon_min
     lat_distance = lat_max - lat_min
@@ -105,6 +107,7 @@ def compute_region(
     lon_max += padding * lon_distance
     lat_min -= padding * lat_distance
     lat_max += padding * lat_distance
+    # print(f"region after: lon_min={lon_min}, lon_max={lon_max}, lat_min={lat_min}, lat_max={lat_max}")
 
     # --- Clamp to valid geographic coordinates ---
     if lon_min < -180:

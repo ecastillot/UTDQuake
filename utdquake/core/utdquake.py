@@ -256,29 +256,31 @@ class Network:
         paths = resolve_network_paths(self.name, include_stations=True)
         return pd.read_parquet(paths["stations"])
 
-    def plot_overview(self,savepath=None,
-                      stations_type="calculated",
+    def plot_overview(self,
+                      consider_calculated_stations: bool=True,
+                      is_alaska=False,
+                      savepath=None,
                       show=True):
         """
         Plot network map with events, stations, histograms, and region.
 
         Parameters
         ----------
+        consider_calculated_stations : bool, optional
+            If True, also plot calculated stations (if available). Defaults to True.
+        is_alaska : bool, optional
+            If True, use a projection suitable for Alaska. Default: True.
         savepath : str or None
             Path to save the figure. If None, figure is not saved.
-        stations_type : str
-            Column prefix for station coordinates ('calculated' or 'confirmed').
         show : bool
             Whether to display the figure.
         """
         
-        stations = self.stations.rename(columns={f"{stations_type}_longitude": "longitude",
-                                                f"{stations_type}_latitude": "latitude",
-                                                f"{stations_type}_elevation": "elevation"})
-
         plot_overview(events=self.events, 
-                      stations=stations,
+                      stations=self.stations,
                       analysis=self.description,
+                      consider_calculated_stations=consider_calculated_stations,
+                      is_alaska=is_alaska,
                       savepath=savepath,
                       show=show)
         

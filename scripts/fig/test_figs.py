@@ -68,7 +68,8 @@ print(f"Script started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 
-figures_path = Path(__file__).parent.parent / "figures"
+figures_path = Path(__file__).parent.parent.parent / "figures"
+print(f"Saving figures to {figures_path}")
 networks_path = figures_path / "networks"
 os.makedirs(networks_path, exist_ok=True)
 
@@ -88,9 +89,10 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
+# network_names = ["RSNC","AUST","av","ak"]
 
-dataset.plot_overview(savepath=figures_dict["overview"])
-print(f"Plotted dataset overview to {figures_dict['overview']}")
+# dataset.plot_overview(savepath=figures_dict["overview"])
+# print(f"Plotted dataset overview to {figures_dict['overview']}")
 
 for net_name in network_names:
     net_folder = networks_path / net_name
@@ -101,7 +103,8 @@ for net_name in network_names:
         # load network 
         network = dataset.get_network(name=net_name)
 
-        network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name))
+        network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
+                              is_alaska=True if net_name in ["av", "ak"] else False)
         network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
         network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
         network.plot_pick_stats(savepath=str(figures_dict["pick_stats"]).format(network=net_name))

@@ -155,7 +155,9 @@ def plot_overview(
     events: pd.DataFrame,
     stations: pd.DataFrame,
     analysis: Dict[str, Any],
+    consider_calculated_stations: bool=True,
     region: Optional[Tuple[float, float, float, float]] = None,
+    is_alaska: bool = True,
     savepath: Optional[str] = None,
     show: bool = True
 ) -> None:
@@ -170,8 +172,12 @@ def plot_overview(
         Station table with columns: ['longitude', 'latitude', 'calculated', 'confirmed'].
     analysis : dict
         Dictionary with network statistics (events, stations, picks, etc.).
+    consider_calculated_stations : bool, optional
+        If True, also plot calculated stations (if available). Defaults to True.
     region : tuple, optional
         Map extent (lon_min, lon_max, lat_min, lat_max). Default: None.
+    is_alaska : bool, optional
+        If True, use a projection suitable for Alaska. Default: True.
     savepath : str, optional
         Path to save the figure. Default: None.
     show : bool, optional
@@ -194,12 +200,25 @@ def plot_overview(
 
     if region is None:
         calculated_stations = stations[stations["calculated"]==True]
-        gd_stations = calculated_stations.rename(columns={"calculated_longitude": "longitude",
-                                                "calculated_latitude": "latitude",
-                                                "calculated_elevation": "elevation"})
+        calculated_stations = calculated_stations.rename(columns={"calculated_longitude": "longitude",
+                                                                "calculated_latitude": "latitude"})
+        confirmed_stations = stations[stations["confirmed"]==True]
+        confirmed_stations = confirmed_stations.rename(columns={"confirmed_longitude": "longitude",
+                                                                "confirmed_latitude": "latitude"})
+        if calculated_stations.empty and confirmed_stations.empty:
+            raise ValueError("No stations found for region calculation.")
+        elif calculated_stations.empty:
+            all_stations = confirmed_stations
+        elif confirmed_stations.empty:
+            all_stations = calculated_stations
+        else:
+            all_stations = pd.concat([calculated_stations, confirmed_stations], ignore_index=True)
+
+        all_stations = all_stations.drop_duplicates(subset=["network", "station"])
         region = compute_region(
-                    events, gd_stations, padding=0.2, 
+                    events, all_stations, padding=0.2, 
                     rm_outliers=True)
+        
 
     fig = plt.figure(figsize=(12, 6))
 
@@ -245,13 +264,25 @@ def plot_overview(
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', label='Earthquakes',
                markerfacecolor="#ec7524", markersize=8, markeredgecolor='orange'),
-        Line2D([0], [0], marker='^', color='w', label='Stations',
+        Line2D([0], [0], marker='^', color='w', label='Confirmed\nStations',
                markerfacecolor='green', markersize=8, markeredgecolor='green')
-    ]
+                ]
+    if consider_calculated_stations and \
+       'calculated_latitude' in stations.columns and \
+       'calculated_longitude' in stations.columns:
+        calc_label = Line2D([0], [0], marker='^', color='w', label='Calculated\nStations',
+               markerfacecolor='gray', markersize=8, markeredgecolor='gray')
+        legend_elements.append(calc_label)
+        
+    if len(legend_elements) ==3:
+        bbox_anchor = (0.05, 0.9)
+    else:
+        bbox_anchor = (0.05, 0.7)
+
     ax1.legend(handles=legend_elements,
                loc='upper left',
             #    fontsize='x-small',
-               bbox_to_anchor=(0.05, 0.7),
+               bbox_to_anchor=bbox_anchor,
                frameon=True,
                fancybox=True,
                fontsize=10,
@@ -278,15 +309,34 @@ def plot_overview(
     # ax1.coastlines()
 
     ax1.set_global()
+
+    # Mask for confirmed stations
+    confirmed_mask = stations[['confirmed_longitude', 'confirmed_latitude']].notna().all(axis=1)
+    # Plot calculated stations first (background layer)
+    if consider_calculated_stations and \
+       'calculated_latitude' in stations.columns and \
+       'calculated_longitude' in stations.columns:
+        calculated_mask = (~confirmed_mask) & stations[['calculated_longitude', 'calculated_latitude']].notna().all(axis=1)
+        ax1.scatter(
+            stations.loc[calculated_mask, 'calculated_longitude'],
+            stations.loc[calculated_mask, 'calculated_latitude'],
+            marker='^',
+            c='gray',
+            alpha=0.7,
+            transform=ccrs.PlateCarree(),
+            label='Calc. Stations'
+        )
+
     ax1.scatter(
-        stations['longitude'],
-        stations['latitude'],
+        stations.loc[confirmed_mask, 'confirmed_longitude'],
+        stations.loc[confirmed_mask, 'confirmed_latitude'],
         marker='^',
         c='green',
         alpha=0.7,
         edgecolor='green',
         transform=ccrs.PlateCarree()
     )
+
     ax1.scatter(
         events['longitude'],
         events['latitude'],
@@ -443,8 +493,19 @@ def plot_overview(
     
 
     # Region map
+    if is_alaska:
+        proj = ccrs.AlbersEqualArea(
+                            central_longitude=-154,
+                            central_latitude=50,
+                            standard_parallels=(55, 65)
+                        )
+        region =(-180, -130, 50, 72)
+    else:
+        proj = ccrs.PlateCarree()
+
+
     ax2 = fig.add_subplot(gs[1, 0],
-                        projection=ccrs.PlateCarree()
+                        projection=proj
                     )
     
     ax2.set_extent(region, crs=ccrs.PlateCarree())
@@ -463,15 +524,31 @@ def plot_overview(
         edgecolor="#ec7524",
         transform=ccrs.PlateCarree()
     )
+
+    if consider_calculated_stations and \
+       'calculated_latitude' in stations.columns and \
+       'calculated_longitude' in stations.columns:
+        calculated_mask = (~confirmed_mask) & stations[['calculated_longitude', 'calculated_latitude']].notna().all(axis=1)
+        ax2.scatter(
+            stations.loc[calculated_mask, 'calculated_longitude'],
+            stations.loc[calculated_mask, 'calculated_latitude'],
+            marker='^',
+            c='gray',
+            alpha=1,
+            transform=ccrs.PlateCarree(),
+            label='Calc. Stations'
+        )
+
     ax2.scatter(
-        stations['longitude'],
-        stations['latitude'],
+        stations.loc[confirmed_mask, 'confirmed_longitude'],
+        stations.loc[confirmed_mask, 'confirmed_latitude'],
         marker='^',
         c='green',
         alpha=1,
         edgecolor='green',
         transform=ccrs.PlateCarree()
     )
+
 
     gl = ax2.gridlines(draw_labels=True, linewidth=0.5, color='gray',
                        alpha=0.5, linestyle='--')
@@ -630,7 +707,7 @@ def plot_utdq_overview(
 
     ax2.text(
         0.02, 0.05,
-        f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
+        f"Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
         f"   Calculated: {human_format(analysis.get('calculated_stations', 'N/A'))}\n"
         f"   Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}",
         transform=ax2.transAxes,
