@@ -70,6 +70,86 @@ Click on any network name to explore its full figure collection.
    * - Network
      - Figures Folder
      - Preview
+   
+   * - ak
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ak>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ak/ak_overview.png
+          :width: 200px
+
+   * - at
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/at>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/at/at_overview.png
+          :width: 200px
+
+   * - av
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/av>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/av/av_overview.png
+          :width: 200px
+
+   * - hv
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/hv>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/hv/hv_overview.png
+          :width: 200px
+
+   * - mb
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/mb>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/mb/mb_overview.png
+          :width: 200px
+
+   * - nc
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nc>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nc/nc_overview.png
+          :width: 200px
+
+   * - nm
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nm>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nm/nm_overview.png
+          :width: 200px
+
+   * - nn
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nn>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nn/nn_overview.png
+          :width: 200px
+
+   * - ok
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ok>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ok/ok_overview.png
+          :width: 200px
+
+   * - pr
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/pr>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/pr/pr_overview.png
+          :width: 200px
+
+   * - se
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/se>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/se/se_overview.png
+          :width: 200px
+
+   * - tx
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/tx>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_overview.png
+          :width: 200px
+
+   * - us
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/us>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/us/us_overview.png
+          :width: 200px
+
+   * - uu
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/uu>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/uu/uu_overview.png
+          :width: 200px
+
+   * - uw
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/uw>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/uw/uw_overview.png
+          :width: 200px
+
+   * - admin
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/admin>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/admin/admin_overview.png
+          :width: 200px
 
    * - AEIC
      - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/AEIC>`_
@@ -399,86 +479,6 @@ Click on any network name to explore its full figure collection.
    * - ZUR
      - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ZUR>`_
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ZUR/ZUR_overview.png
-          :width: 200px
-
-   * - admin
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/admin>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/admin/admin_overview.png
-          :width: 200px
-
-   * - ak
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ak>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ak/ak_overview.png
-          :width: 200px
-
-   * - at
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/at>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/at/at_overview.png
-          :width: 200px
-
-   * - av
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/av>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/av/av_overview.png
-          :width: 200px
-
-   * - hv
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/hv>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/hv/hv_overview.png
-          :width: 200px
-
-   * - mb
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/mb>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/mb/mb_overview.png
-          :width: 200px
-
-   * - nc
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nc>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nc/nc_overview.png
-          :width: 200px
-
-   * - nm
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nm>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nm/nm_overview.png
-          :width: 200px
-
-   * - nn
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/nn>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/nn/nn_overview.png
-          :width: 200px
-
-   * - ok
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ok>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ok/ok_overview.png
-          :width: 200px
-
-   * - pr
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/pr>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/pr/pr_overview.png
-          :width: 200px
-
-   * - se
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/se>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/se/se_overview.png
-          :width: 200px
-
-   * - tx
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/tx>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_overview.png
-          :width: 200px
-
-   * - us
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/us>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/us/us_overview.png
-          :width: 200px
-
-   * - uu
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/uu>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/uu/uu_overview.png
-          :width: 200px
-
-   * - uw
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/uw>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/uw/uw_overview.png
           :width: 200px
 
 .. raw:: html
