@@ -1,5 +1,5 @@
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) ![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social)  ![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social)
+![PyPI](https://img.shields.io/pypi/v/UTDQuake)![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social)![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) 
 
 
 <img src="docs/source/_static/logo/utdquake_logo_ok.png" alt="seismonitor" width="150"> 
@@ -35,7 +35,7 @@ The dataset is available on Hugging Face: **UTDQuake**
 
 ## Installation ([utdquake](https://pypi.org/project/utdquake))
 ```bash
-pip install utdquake==0.1
+pip install utdquake
 ```
 
 ## Why this dataset matters?
