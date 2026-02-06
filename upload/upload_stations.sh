@@ -23,3 +23,5 @@ hf upload-large-folder ecastillot/UTDQuake "$STAGE" \
   --num-workers "$HF_WORKERS"
 
 echo "✅ DONE"
+
+#  hf upload-large-folder ecastillot/UTDQuake /groups/igonin/ecastillo/UTDQuake/manifests --include "network/*" --repo-type dataset --num-workers 4

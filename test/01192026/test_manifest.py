@@ -18,9 +18,9 @@ paths = build_manifests(
     force_download=False,
     overwrite=True,
     include_events = False,
-    include_stations = True,
+    include_stations = False,
     include_picks = False,
-    include_stats = False,
+    include_stats = True,
     per_network_shards=True,  # BEST for big datasets
     # networks=["RSNC"],
     # include_manual_network_info=manual_info
@@ -33,8 +33,9 @@ paths = build_manifests(
 # import pandas as pd
 
 # Replace with your e
-# df_events = pd.read_parquet(events_manifest)  # or pd.read_csv(events_manifest)
-# print(df_events.head())
+events_manifest = "/groups/igonin/ecastillo/UTDQuake/manifests/network/network.parquet"
+df_events = pd.read_parquet(events_manifest)  # or pd.read_csv(events_manifest)
+print(df_events.head())
 # # print(df_events["network"].value_counts())
 # # print(df_events.info())
 # # print(df_events["origin_id"])
