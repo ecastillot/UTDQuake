@@ -61,6 +61,8 @@ def create_gif_from_folder(folder: Path, net_name: str, gif_name: str = None, fp
 
     print(f"Looping GIF created: {gif_path}")
 
+
+
 print(f"Script started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
 # import logging
