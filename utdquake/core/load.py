@@ -12,7 +12,6 @@ from .config import get_root, HF_CONFIG
 
 logger = logging.getLogger(__name__)
 
-
 def validate_eventbank(path: Path) -> bool:
     """
     Validate that a path contains a readable ObsPlus EventBank.

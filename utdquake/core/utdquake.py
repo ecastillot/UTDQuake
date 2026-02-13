@@ -53,7 +53,10 @@ from ..utils.plot import (plot_overview,
                           plot_pick_stats,
                           plot_station_location_uncertainty,
                           plot_uncertainty_boxplots,
-                          plot_utdq_overview
+                          plot_utdq_overview,
+                          plot_network_station_density,
+                          plot_phase_count_radar_by_magnitude,
+                          plot_travel_time_vs_distance
                           )
 
 class Dataset:
@@ -102,7 +105,7 @@ class Dataset:
     
     def get_events(self,network="*",streaming=False,**kwargs):
         """Return events for a specific network."""
-        return load(key="networks",network=network,
+        return load(key="events",network=network,
                     streaming=streaming,**kwargs)
     
     def get_stations(self,network="*", streaming: bool=False,
@@ -172,6 +175,80 @@ class Dataset:
                             savepath=savepath,
                             consider_calculated_stations=consider_calculated_stations,
                             show=show)
+
+    def plot_network_station_density(self, savepath: str=None, show=True):
+        """
+        Plot station density maps for all networks.
+
+        Parameters:
+        ----------
+        savepath : str or None
+            Path to save the figure. If None, figure is not saved.
+        show : bool
+            Whether to display the figure.
+        """
+        plot_network_station_density(self.networks, 
+                                savepath=savepath, show=show)
+        
+    def plot_phase_count_radar_by_magnitude(self, savepath: str=None, show=True):
+        """
+        Create radar plots of phase and station counts binned by magnitude.
+
+        For each magnitude range, the function displays the mean values of
+        P phases, S phases, used phases, and station counts in a radar chart.
+        Variability is represented using interquartile range (IQR) and the
+        10–90 percentile envelope.
+
+        Parameters:
+        ----------
+        savepath : str or None
+            Path to save the figure. If None, figure is not saved.
+        show : bool
+            Whether to display the figure.
+        """
+        plot_phase_count_radar_by_magnitude(self.events,
+                                            savepath=savepath,
+                                            show=show)
+
+    def plot_travel_time_vs_distance(self, 
+                                     distance_unit="degrees",log_scale=False,
+                                     savepath: str=None, show=True
+                                     ):
+        """
+        Plot travel time versus distance for seismic picks.
+
+        Creates a scatter plot of travel time (y-axis) against distance (x-axis),
+        with points colored by seismic phase type.
+        
+        Parameters:
+        ----------
+        distance_unit : str, optional
+            Unit for the x-axis distance. Options are:
+            - "degrees" (default)
+            - "km"
+
+            If "km" is selected, the distance in degrees is converted
+            to kilometers using an approximate Earth conversion
+            (1 degree ≈ 111.19 km).
+
+        log_scale : bool, optional
+            Whether to use logarithmic scale on the x-axis
+            (default is False).
+
+        show : bool, optional
+            Whether to display the plot on screen (default is True).
+
+        savepath : str or None, optional
+            If provided, the figure will be saved to this path with
+            dpi=300 (default is None).
+        """
+        picks = self.get_picks(network="*", streaming=False).to_pandas()
+        picks = picks[picks["travel_time"] > 0]  # Filter out non-positive travel times
+        picks["travel_time"] = picks["travel_time"] / 60  # Convert to minutes
+        picks = picks[picks["travel_time"] < 100]  # Filter out non-positive travel times
+        plot_travel_time_vs_distance(picks, distance_unit=distance_unit,
+                                        log_scale=log_scale, savepath=savepath,
+                                        show=show)
 
 class Network:
 
@@ -353,6 +430,62 @@ class Network:
         """
         plot_pick_histograms(self.picks, savepath=savepath,show=show)
 
+
+    def plot_phase_count_radar_by_magnitude(self, savepath: str=None, show=True):
+        """
+        Create radar plots of phase and station counts binned by magnitude.
+
+        For each magnitude range, the function displays the mean values of
+        P phases, S phases, used phases, and station counts in a radar chart.
+        Variability is represented using interquartile range (IQR) and the
+        10–90 percentile envelope.
+
+        Parameters:
+        ----------
+        savepath : str or None
+            Path to save the figure. If None, figure is not saved.
+        show : bool
+            Whether to display the figure.
+        """
+        plot_phase_count_radar_by_magnitude(self.events,
+                                            savepath=savepath,
+                                            show=show)
+        
+    def plot_travel_time_vs_distance(self, 
+                                     distance_unit="degrees",log_scale=False,
+                                     savepath: str=None, show=True
+                                     ):
+        """
+        Plot travel time versus distance for seismic picks.
+
+        Creates a scatter plot of travel time (y-axis) against distance (x-axis),
+        with points colored by seismic phase type.
+        
+        Parameters:
+        ----------
+        distance_unit : str, optional
+            Unit for the x-axis distance. Options are:
+            - "degrees" (default)
+            - "km"
+
+            If "km" is selected, the distance in degrees is converted
+            to kilometers using an approximate Earth conversion
+            (1 degree ≈ 111.19 km).
+
+        log_scale : bool, optional
+            Whether to use logarithmic scale on the x-axis
+            (default is False).
+
+        show : bool, optional
+            Whether to display the plot on screen (default is True).
+
+        savepath : str or None, optional
+            If provided, the figure will be saved to this path with
+            dpi=300 (default is None).
+        """
+        plot_travel_time_vs_distance(self.picks, distance_unit=distance_unit,
+                                        log_scale=log_scale, savepath=savepath,
+                                        show=show)
 
     
 

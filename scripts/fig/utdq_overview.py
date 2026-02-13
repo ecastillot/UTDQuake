@@ -14,8 +14,11 @@ print(f"Saving figure to {figs_path}")
 
 # utdq_fig = utdq.Dataset().plot_overview(savepath=figs_path / "utdquake.png")
 dataset = utdq.Dataset()
-dataset.plot_overview(savepath=figs_path / "utdquake_overview.png",
-                    consider_calculated_stations= True)
+# dataset.plot_overview(savepath=figs_path / "utdquake_overview.png",
+#                     consider_calculated_stations= True)
+dataset.plot_travel_time_vs_distance(savepath=figs_path / "t.png")
+# dataset.plot_network_station_density(savepath=figs_path / "utdquake_network_station_density.png")
+# dataset.plot_phase_count_radar_by_magnitude(savepath=figs_path / "utdquake_phase_count_radar_by_magnitude.png")
 
 # if stations_type in ["calculated"]:
 #     #qc 

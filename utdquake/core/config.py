@@ -15,6 +15,8 @@ HF_REPO_TYPE: str = "dataset"
 CORE_DIR: Path = Path(__file__).resolve().parent
 """Path to the core directory of the UTDQuake package."""
 
+KM_PER_DEG = 111.19
+
 @dataclass(frozen=True)
 class HFEntry:
     """

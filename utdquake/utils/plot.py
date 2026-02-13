@@ -1763,3 +1763,411 @@ def plot_station_map(ax: "plt.Axes", df: "pd.DataFrame", region: list) -> "plt.A
     ax.legend(loc='upper right', title='Stations', fontsize=10)
     return ax
 
+def plot_network_station_density(
+    df: pd.DataFrame,
+    savepath: str = None,
+    show: bool = False,
+    dpi: int = 300
+):
+    """
+    Plot network station count vs geographic extent with event-based marker sizes.
+    Color points by continent.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Must contain the following columns:
+        - 'network': network name
+        - 'approx_lon_min', 'approx_lon_max', 'approx_lat_min', 'approx_lat_max'
+        - 'total_stations': number of stations in the network
+        - 'events': number of events in the network
+        - 'continent': continent of the network
+    savepath : str, optional
+        Path to save the figure. If None, figure is not saved.
+    show : bool, optional
+        If True, displays the figure.
+    dpi : int, optional
+        DPI for saving the figure. Default is 300.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The created figure object.
+    ax : matplotlib.axes.Axes
+        The created axes object.
+    """
+    df = df.copy()
+
+    # Compute geographic ranges
+    df["lon_range"] = df["approx_lon_max"] - df["approx_lon_min"]
+    df["lat_range"] = df["approx_lat_max"] - df["approx_lat_min"]
+
+    # Approximate area in square degrees
+    df["area_deg2"] = df["lon_range"] * df["lat_range"]
+
+    # Station and event densities (optional, not used for plotting here)
+    df["station_density"] = df["total_stations"] / df["area_deg2"]
+    df["event_density"] = df["events"] / df["area_deg2"]
+
+    # Create figure and axes
+    fig, ax = plt.subplots(figsize=(9, 7))
+
+    # Scatter plot, colored by continent
+    continents = df["continent"].unique()
+    colors = plt.cm.tab10.colors  # Up to 10 colors
+    continent_color_map = {cont: colors[i % len(colors)] for i, cont in enumerate(continents)}
+
+    for cont in continents:
+        subset = df[df["continent"] == cont]
+        ax.scatter(
+            subset["area_deg2"],
+            subset["total_stations"],
+            s=subset["events"] / 10,
+            alpha=0.7,
+            label=cont,
+            color=continent_color_map[cont]
+        )
+
+    # Add network labels
+    for i, net in enumerate(df["network"]):
+        ax.text(
+            df["area_deg2"][i],
+            df["total_stations"][i],
+            net,
+            fontsize=8
+        )
+
+    # Log scales
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+
+    # Labels and title
+    ax.set_xlabel("Network Area (deg²)")
+    ax.set_ylabel("Total Stations")
+    ax.set_title("Network Data Coverage")
+
+    # Legend
+    ax.legend(loc="upper left")
+
+    # Grid
+    ax.grid(True, which="both")
+
+    # Layout
+    plt.tight_layout()
+
+    # Save figure if requested
+    if savepath:
+        fig.savefig(savepath, dpi=dpi, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
+
+    # Show figure if requested
+    if show:
+        plt.show()
+
+    # Close figure to avoid memory issues
+    plt.close(fig)
+
+    return fig, ax
+
+def plot_phase_count_radar_by_magnitude(events, show=True, savepath=None):
+    """
+    Create radar plots of phase and station counts binned by magnitude.
+
+    For each magnitude range, the function displays the mean values of
+    P phases, S phases, used phases, and station counts in a radar chart.
+    Variability is represented using interquartile range (IQR) and the
+    10–90 percentile envelope.
+
+    Parameters
+    ----------
+    events : pandas.DataFrame
+        DataFrame containing at least the following columns:
+        'magnitude', 'p_phase_count', 's_phase_count',
+        'used_phase_count', and 'station_count'.
+
+    show : bool, optional
+        Whether to display the figure on screen (default is True).
+
+    savepath : str or None, optional
+        If provided, the figure will be saved to this path with dpi=300.
+
+    Returns
+    -------
+    None
+    """
+
+    # Columns to plot
+    cols = ["p_phase_count", "s_phase_count", "used_phase_count", "station_count"]
+
+    # Magnitude bins
+    bins = [0, 1, 2, 3, 4, 5, 6, np.inf]
+    labels = ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", ">6"]
+
+    # Angles for radar
+    angles = np.linspace(0, 2 * np.pi, len(cols), endpoint=False)
+
+    def close(arr):
+        """Close the radar plot loop."""
+        return np.concatenate([arr, [arr[0]]])
+
+    angles_closed = close(angles)
+
+    # Create subplots (2 rows x 3 columns)
+    fig, axes = plt.subplots(
+        2, 3,
+        figsize=(12, 8),
+        subplot_kw={"polar": True}
+    )
+    axes = axes.flatten()
+
+    dark_green = "#154734"   # UTD primary green
+    light_green = "#69BE28"  # UTD secondary green
+
+    valid_axes = 0
+
+    for i in range(6):
+        df_bin = events[
+            (events["magnitude"] >= bins[i]) &
+            (events["magnitude"] < bins[i + 1])
+        ]
+
+        if df_bin.empty:
+            continue
+
+        mean_vals = close(df_bin[cols].mean().values)
+        q1_vals = close(df_bin[cols].quantile(0.25).values)
+        q3_vals = close(df_bin[cols].quantile(0.75).values)
+        p10_vals = close(df_bin[cols].quantile(0.10).values)
+        p90_vals = close(df_bin[cols].quantile(0.90).values)
+
+        ax = axes[i]
+
+        # 10–90 percentile fill
+        ax.fill_between(
+            angles_closed,
+            p10_vals,
+            p90_vals,
+            color=light_green,
+            alpha=0.15,
+            label="10–90%"
+        )
+
+        # IQR fill
+        ax.fill_between(
+            angles_closed,
+            q1_vals,
+            q3_vals,
+            color=light_green,
+            alpha=0.35,
+            label="IQR (25–75%)"
+        )
+
+        # Mean line
+        ax.plot(
+            angles_closed,
+            mean_vals,
+            "o-",
+            color=dark_green,
+            linewidth=2,
+            label="Mean"
+        )
+
+        # Pretty labels
+        pretty_labels = ["P phase count", "S phase count", "Used phase count", "Station count"]
+
+        # Hide default labels
+        ax.set_xticks([])
+
+        # Place manual labels
+        for angle, label_text, idx in zip(angles, pretty_labels, range(len(pretty_labels))):
+            y = ax.get_rmax() + 0.05 * ax.get_rmax()  # slightly outside
+            rot = 90 if idx in [0, 2] else 0          # rotate P and Used phase count
+            ax.text(
+                angle,
+                y,
+                label_text,
+                rotation=rot,
+                rotation_mode="anchor",
+                ha="center",
+                va="center",
+                fontsize=10,
+                color="black"
+            )
+
+        # Title for each subplot
+        ax.set_title(f"M {labels[i]}", loc="left", pad=15, 
+                     color="orange", fontweight="bold",
+                     fontsize=16)
+
+        valid_axes = i
+
+    # Remove empty subplots
+    for j in range(valid_axes + 1, 6):
+        fig.delaxes(axes[j])
+
+    plt.tight_layout()
+
+    # Add a single legend below all subplots
+    handles, legend_labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        legend_labels,
+        loc="lower center",
+        ncol=3,
+        fontsize=16,
+        frameon=False,
+        bbox_to_anchor=(0.5, -0.07)
+    )
+
+    if savepath is not None:
+        plt.savefig(savepath, dpi=300, bbox_inches="tight")
+
+    if show:
+        plt.show()
+
+    plt.close(fig)
+
+def plot_travel_time_vs_distance(
+    picks,
+    distance_unit="degrees",
+    log_scale=False,
+    show=True,
+    savepath=None,
+    point_size=5,
+    chunk_size=50000
+):
+    """
+    Plot travel time versus distance for seismic picks.
+
+    Works with:
+    - pandas DataFrame
+    - streaming iterable datasets
+
+    Parameters
+    ----------
+    picks : pandas.DataFrame or iterable
+        Either a DataFrame with picks or a streaming iterator.
+
+    distance_unit : str, optional
+        "degrees" (default) or "km"
+
+    log_scale : bool, optional
+        Whether to use logarithmic scale on the x-axis.
+
+    show : bool, optional
+        Whether to display the plot.
+
+    savepath : str or None, optional
+        Path to save the figure.
+
+    point_size : int, optional
+        Size of scatter points.
+
+    chunk_size : int, optional
+        Number of records to accumulate before plotting
+        when using streaming input.
+    """
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Conversion factor
+    km_per_degree = 111.19
+
+    if distance_unit.lower() == "km":
+        xlabel = "Distance (km)"
+        convert = lambda d: d * km_per_degree
+    else:
+        xlabel = "Distance (degrees)"
+        convert = lambda d: d
+
+    # ----- CASE 1: Input is already a DataFrame -----
+    if isinstance(picks, pd.DataFrame):
+
+        required_cols = {"travel_time", "distance", "phase"}
+        if not required_cols.issubset(picks.columns):
+            raise ValueError(
+                f"Input DataFrame must contain columns: {required_cols}"
+            )
+
+        df = picks.copy()
+        df["distance_plot"] = convert(df["distance"])
+
+        unique_phases = sorted(df["phase"].unique())
+        n_phases = len(unique_phases)
+
+        cmap = plt.get_cmap("tab20" if n_phases > 10 else "tab10")
+        colors = cmap(np.linspace(0, 1, n_phases))
+
+        color_map = {phase: colors[i] for i, phase in enumerate(unique_phases)}
+
+        for phase in unique_phases:
+            sub = df[df["phase"] == phase]
+
+            ax.scatter(
+                sub["distance_plot"],
+                sub["travel_time"],
+                s=point_size,
+                alpha=1,
+                color=color_map[phase],
+                label=phase,
+                marker='x'
+            )
+
+    # ----- CASE 2: Streaming iterable input -----
+    else:
+
+        chunk = []
+        for i, pick in enumerate(picks):
+            chunk.append(pick)
+
+            if len(chunk) >= chunk_size:
+                df = pd.DataFrame(chunk)
+                df["distance_plot"] = convert(df["distance"])   # <-- add this!
+                print(f"Processing chunk {i // chunk_size + 1}, size={len(df)}")  # log info
+
+                for phase, sub in df.groupby("phase"):
+                    ax.scatter(
+                        sub["distance_plot"],
+                        sub["travel_time"],
+                        s=point_size,
+                        alpha=1,
+                        marker='x'
+                    )
+
+                chunk = []
+
+        # Plot remaining data
+        if chunk:
+            df = pd.DataFrame(chunk)
+            df["distance_plot"] = convert(df["distance"])  # <-- also here
+
+            for phase, sub in df.groupby("phase"):
+                ax.scatter(
+                    sub["distance_plot"],
+                    sub["travel_time"],
+                    s=point_size,
+                    alpha=1,
+                    marker='x'
+                )
+
+    # ----- Common plot formatting -----
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("Travel Time (s)")
+    ax.set_title("Travel Time vs Distance by Phase Type")
+
+    if log_scale:
+        ax.set_xscale("log")
+
+    ax.grid(True, alpha=0.3)
+    ax.legend(title="Phase Type")
+
+    plt.tight_layout()
+
+    if savepath is not None:
+        plt.savefig(savepath, dpi=300, bbox_inches="tight")
+
+    if show:
+        plt.show()
+
+    plt.close(fig)
