@@ -3,26 +3,20 @@ import os
 os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
 
 from utdquake.utils.cache import list_local_networks
-from obsplus import EventBank
-from utdquake.core.qc import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
-# from utdquake.core.parquet import PREF_PICKS_TYPES, sanitize_dataframe_for_parquet
+import concurrent.futures as cf
+from utdquake.core.obspy import EventBank
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+banks = list_local_networks("bank")
+
+tx = EventBank(banks["RSNC"])
+# path = "/groups/igonin/ecastillo/utdquake/scripts/export/test"
+# tx.to_parquet(path)
 
 
-
-# banks = list_local_networks("bank")
-
-# tx = EventBank(banks["uw"])
-tx = EventBank(banks["uw"])
-
-picks = tx.picks
-t = picks.query(
-    'resource_id_arrival in ["quakeml:uw.anss.org/AssocArO/UW/17409843", '
-    '"quakeml:uw.anss.org/AssocArO/UW/17409848"]'
-)
-print(t)
-
-exit()
-
+# exit()
 indices = tx.read_index()
 ev_id = indices["event_id"].unique()[0:100]
 # print(ev_id )
@@ -31,6 +25,8 @@ print(cat)
 # PICK_QC_DEFAULTS["sp_threshold"] = {("S", "P"): (20, 100)}
 cat.apply_utdq_qc(debug=True,inplace=True)
 print(cat)
+exit()
+
 
 events = cat.utdq_events_to_df()
 print(events.info())

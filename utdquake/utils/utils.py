@@ -282,7 +282,16 @@ def get_network_summary(
 
     n_total_stations = len(stations)
     n_confirmed_stations = int(stations["confirmed"].eq(True).sum())
-    n_calculated_stations = int(stations["calculated"].eq(True).sum())
+    # Only count as calculated if it's not also confirmed. 
+    # This avoids double-counting stations that are both confirmed and calculated.
+    n_calculated_stations = int(
+                                (
+                                    stations["calculated"].fillna(False) &
+                                    ~stations["confirmed"].fillna(False)
+                                ).sum()
+                            ) 
+    # Alternatively, if we want to count all calculated stations regardless of confirmed status, we could use:
+    # n_calculated_stations = int(stations["calculated"].eq(True).sum())
 
     # --- Filter events with valid coordinates ---
     events = events.dropna(subset=["latitude", "longitude"])

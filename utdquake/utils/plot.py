@@ -1276,45 +1276,71 @@ def plot_pick_histograms(
 
     return fig, axes
 
-def plot_pick_stats(df, savepath=None, show=True):
-
+def plot_pick_stats(df, distance_type="epicentral", savepath=None, show=True):
     """
     Plot summary statistics for seismic picks (P, S, and S-P) as jointplots.
 
-    This function computes:
-    - First/last P travel times per event
-    - First/last S travel times per event
-    - First/last S-P times for stations that have both P and S picks
-    - Corresponding epicentral distances (converted to km)
+    The function computes:
+    - First and last P travel times per event.
+    - First and last S travel times per event.
+    - First and last S-P times for stations with both P and S picks.
+    - Corresponding distances (either epicentral or hypocentral).
 
     It creates individual seaborn jointplots (scatter + marginal histograms),
-    saves them temporarily as PNGs, and then combines them into a single
-    multi-panel matplotlib figure.
+    saves them temporarily as PNGs, and combines them into a single multi-panel
+    matplotlib figure.
 
     Parameters
     ----------
     df : pandas.DataFrame
-        DataFrame containing pick information. Expected columns include:
+        DataFrame containing pick information. Expected columns:
         - "origin_id"
         - "origin_time"
         - "time"
         - "phase"
         - "distance" (in degrees)
+        - "linear_hyp_distance" (in km, optional)
         - "network"
         - "station"
+    distance_type : str, default "epicentral"
+        Which distance to use:
+        - "epicentral": horizontal distance from epicenter (converted from degrees to km).
+        - "hypocentral": approximate distance from hypocenter (linear approx.) (requires 'linear_hyp_distance').
     savepath : str or pathlib.Path, optional
-        If provided, the final combined figure is saved to this path.
+        Path to save the final figure.
+    show : bool, default True
+        Whether to display the figure.
 
     Returns
     -------
     matplotlib.figure.Figure
-        The combined multi-panel figure containing all jointplots.
+        Combined multi-panel figure of all jointplots.
     """
+
+    # Validate distance_type and compute 'distance_used'
+    if distance_type == "epicentral":
+        df["distance_used"] = df["distance"] * 111
+        distance_label = "Epicentral Distance (km)"
+    elif distance_type == "hypocentral":
+        if "linear_hyp_distance" not in df.columns:
+            raise ValueError(
+                "DataFrame must contain 'linear_hyp_distance' for distance_type='hypocentral'"
+            )
+        df["distance_used"] = df["linear_hyp_distance"]
+        distance_label = "Hypocentral Distance (km)"
+    else:
+        raise ValueError("distance_type must be 'epicentral' or 'hypocentral'")
     
     green = "#007A33"
     orange = "#ec7524"
 
-    df["distance_km"] = df['distance'] * 111
+    # remove nan with a logging warning
+    if df[['time','origin_time']].isnull().any().any():
+        how_many = df[['time','origin_time']].isnull().sum().sum()
+        warnings.warn(f"{how_many} rows have NaN in 'time' or 'origin_time' and will be dropped for pick statistics.")
+    
+    df = df.dropna(subset=['time','origin_time'])
+
 
     # Get first/last P/S arrivals
     first_p = df[df['phase'].str.upper() == 'P'].sort_values('time').groupby('origin_id').first()
@@ -1333,9 +1359,9 @@ def plot_pick_stats(df, savepath=None, show=True):
     s_group = df[df['phase'].str.upper() == 'S']
     # Find stations with both P and S picks
     common_stations = pd.merge(
-        s_group[['network','station',"origin_id","distance_km","time"]],
-        p_group[['network','station',"origin_id","distance_km","time"]],  
-        on=['network','station',"origin_id","distance_km"],
+        s_group[['network', 'station', 'origin_id', 'distance_used', 'time']],
+        p_group[['network', 'station', 'origin_id', 'distance_used', 'time']],
+        on=['network', 'station', 'origin_id', 'distance_used'],
         suffixes=('_S', '_P')
     )
     common_stations = common_stations.drop_duplicates(subset=['network','station',"origin_id"])
@@ -1345,12 +1371,12 @@ def plot_pick_stats(df, savepath=None, show=True):
     last_sp  = common_stations.sort_values('tt_SP').groupby('origin_id').last()
 
     datasets = [
-        (first_p, "tt_first_P", "distance_km", "First P Arrivals", "#ec7524", "#ec7524"),
-        (last_p,  "tt_last_P",  "distance_km", "Last P Arrivals", "#ec7524", "#ec7524"),
-        (first_s, "tt_first_S", "distance_km", "First S Arrivals", "green", "green"),
-        (last_s,  "tt_last_S",  "distance_km", "Last S Arrivals", "green", "green"),
-        (first_sp, "tt_SP", "distance_km", "First S-P Picks", "black", "black"),
-        (last_sp,  "tt_SP", "distance_km", "Last S-P Picks", "black", "black"),
+        (first_p, "tt_first_P", "distance_used", "First P Arrivals", orange, orange),
+        (last_p,  "tt_last_P",  "distance_used", "Last P Arrivals", orange, orange),
+        (first_s, "tt_first_S", "distance_used", "First S Arrivals", green, green),
+        (last_s,  "tt_last_S",  "distance_used", "Last S Arrivals", green, green),
+        (first_sp, "tt_SP", "distance_used", "First S-P Picks", "black", "black"),
+        (last_sp,  "tt_SP", "distance_used", "Last S-P Picks", "black", "black"),
     ]
 
     labels = {"tt_first_P": "First P Arrival Time (s)",
@@ -1358,7 +1384,7 @@ def plot_pick_stats(df, savepath=None, show=True):
               "tt_first_S": "First S Arrival Time (s)",
               "tt_last_S": "Last S Arrival Time (s)",
               "tt_SP": "S-P Time (s)",
-              "distance_km": "Epicentral Distance (km)"}
+              "distance_used": distance_label}
 
     temp_files = []
     # hist_range = (0, 50)  # pick a global range covering all datasets

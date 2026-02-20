@@ -45,7 +45,7 @@ import obsplus
 import pandas as pd
 from .data import download_snapshot,load
 from .load import resolve_network_paths
-from .config import HF_CONFIG, get_root
+from .config import HF_CONFIG, get_root, get_utdq_paths
 from ..utils.utils import get_network_summary
 from ..utils.plot import (plot_overview,
                           plot_stats,
@@ -333,6 +333,10 @@ class Network:
         paths = resolve_network_paths(self.name, include_stations=True)
         return pd.read_parquet(paths["stations"])
 
+    def get_paths(self):
+        """Return all local paths for this network's components."""
+        return get_utdq_paths(self.name)
+    
     def plot_overview(self,
                       consider_calculated_stations: bool=True,
                       is_alaska=False,
@@ -389,18 +393,32 @@ class Network:
         """
         plot_uncertainty_boxplots(self.events, savepath=savepath,show=show)
 
-    def plot_pick_stats(self, savepath: str=None,show=True) -> None:
+    def plot_pick_stats(self, distance_type="epicentral", savepath: str=None,show=True) -> None:
         """
         Plot summary statistics for seismic picks (P, S, S-P).
 
+        The function computes:
+        - First and last P travel times per event.
+        - First and last S travel times per event.
+        - First and last S-P times for stations with both P and S picks.
+        - Corresponding distances (either epicentral or hypocentral).
+
+        It creates individual seaborn jointplots (scatter + marginal histograms),
+        saves them temporarily as PNGs, and combines them into a single multi-panel
+        matplotlib figure.
+
         Parameters
         ----------
+        distance_type : str, default "epicentral"
+            Which distance to use:
+            - "epicentral": horizontal distance from epicenter.
+            - "hypocentral": approximate distance from hypocenter (linear approx.).
         savepath : str or None
             Path to save the figure. If None, figure is not saved.
         show : bool
             Whether to display the figure.
         """
-        plot_pick_stats(self.picks, savepath=savepath, show=show)
+        plot_pick_stats(self.picks, distance_type=distance_type, savepath=savepath, show=show)
 
     def plot_station_location_uncertainty(self, savepath: str=None, 
                                           show=True) -> None:
@@ -429,7 +447,6 @@ class Network:
             Whether to display the figure.
         """
         plot_pick_histograms(self.picks, savepath=savepath,show=show)
-
 
     def plot_phase_count_radar_by_magnitude(self, savepath: str=None, show=True):
         """

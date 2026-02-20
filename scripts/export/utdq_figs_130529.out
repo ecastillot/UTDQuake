@@ -1,0 +1,4 @@
+INFO:root:Exporting bank 'AEIC'...
+INFO:utdquake.export.parquet:Found 5000 events.
+INFO:utdquake.export.parquet:Processing chunk of 5000 events.
+slurmstepd-c-01-12: error: *** JOB 130529 ON c-01-12 CANCELLED AT 2026-02-18T18:08:17 ***

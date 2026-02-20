@@ -9,7 +9,7 @@ from obspy import Catalog
 #: ----
 #: - min_travel_time : float
 #:     Minimum allowed travel time (seconds).
-#: - min_hyp_distance : float
+#: - min_linear_hyp_distance : float
 #:     Minimum hypocentral distance (km).
 #: - min_epicentral_distance : float
 #:     Minimum epicentral distance (degrees).
@@ -22,7 +22,7 @@ from obspy import Catalog
 #:     If True, rows with NaNs in the QC columns are removed.
 PICK_QC_DEFAULTS = {
     "min_travel_time": 0,
-    "min_hyp_distance": 0,
+    "min_linear_hyp_distance": 0,
     "min_epicentral_distance": 0,
     "sp_threshold": {
         ("S", "P"): (0, np.inf),
@@ -354,8 +354,8 @@ def picks_qc(
     df,
     min_travel_time=0,
     max_travel_time=np.inf,
-    min_hyp_distance=0,
-    max_hyp_distance=np.inf,
+    min_linear_hyp_distance=0,
+    max_linear_hyp_distance=np.inf,
     min_epicentral_distance=0,
     max_epicentral_distance=np.inf,
     sp_threshold={
@@ -379,7 +379,7 @@ def picks_qc(
     Required Columns in `df`
     ------------------------
     - 'travel_time' : float (seconds)
-    - 'hyp_distance' : float (km)
+    - 'linear_hyp_distance' : float (km)
     - 'distance' : float (degrees)
     - 'phase' : str
     - 'event_id' : str or int
@@ -391,7 +391,7 @@ def picks_qc(
         DataFrame containing pick information.
     min_travel_time, max_travel_time : float
         Allowed travel time range (seconds).
-    min_hyp_distance, max_hyp_distance : float
+    min_linear_hyp_distance, max_linear_hyp_distance : float
         Allowed hypocentral distance range (km).
     min_epicentral_distance, max_epicentral_distance : float
         Allowed epicentral distance range (degrees).
@@ -402,7 +402,7 @@ def picks_qc(
     debug : bool, default False
         If True, prints information about why picks are removed.
     apply_to_nans : bool, default False
-        If True, rows with NaN in travel_time, hyp_distance,
+        If True, rows with NaN in travel_time, linear_hyp_distance,
         or distance will be removed. If False, NaNs are ignored.
 
     Returns
@@ -426,9 +426,9 @@ def picks_qc(
         print(f"Travel time filter - removed {step_removed} (Acum: {cumulative_removed}/{original_total})")
 
     # --- Hypocentral distance filter ---
-    mask = df_filtered["hyp_distance"].between(min_hyp_distance, max_hyp_distance)
+    mask = df_filtered["linear_hyp_distance"].between(min_linear_hyp_distance, max_linear_hyp_distance)
     if not apply_to_nans:
-        mask |= df_filtered["hyp_distance"].isna()
+        mask |= df_filtered["linear_hyp_distance"].isna()
     step_removed = (~mask).sum()
     cumulative_removed += step_removed
     df_filtered = df_filtered[mask]
@@ -482,11 +482,11 @@ def picks_qc(
         print(f"Remaining picks: {len(df_filtered)}")
 
         # Count NaNs in the QC columns
-        nan_counts = df_filtered[["travel_time", "hyp_distance", "distance"]].isna().sum()
+        nan_counts = df_filtered[["travel_time", "linear_hyp_distance", "distance"]].isna().sum()
         print(
             f"NaNs in remaining picks - travel_time: {nan_counts['travel_time']}, "
             f"distance: {nan_counts['distance']}, "
-            f"hyp_distance: {nan_counts['hyp_distance']}"
+            f"linear_hyp_distance: {nan_counts['linear_hyp_distance']}"
         )
 
     return df_filtered.reset_index(drop=True)

@@ -1,6 +1,7 @@
 import os 
 
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+# os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/bck_utdq/test_021926"
 
 from PIL import Image
 from pathlib import Path
@@ -70,7 +71,7 @@ print(f"Script started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 
-figures_path = Path(__file__).parent.parent.parent / "figures"
+figures_path = Path(__file__).parent.parent.parent / "figures_021926"
 print(f"Saving figures to {figures_path}")
 networks_path = figures_path / "networks"
 os.makedirs(networks_path, exist_ok=True)
@@ -79,7 +80,8 @@ figures_dict = {"overview": figures_path / "utdquake_overview.png",
                 "network_overview": figures_path/"networks"/"{network}"/ "{network}_overview.png",
                 "stats": figures_path/"networks"/"{network}"/ "{network}_stats.png",
                 "pick_histograms": figures_path/"networks"/"{network}"/ "{network}_histograms.png",
-                "pick_stats": figures_path/"networks"/"{network}"/ "{network}_pick_stats.png",
+                "epi_pick_stats": figures_path/"networks"/"{network}"/ "{network}_epi_pick_stats.png",
+                "hyp_pick_stats": figures_path/"networks"/"{network}"/ "{network}_hyp_pick_stats.png",
                 "station_location_uncertainty": figures_path/"networks"/"{network}"/ "{network}_station_location_uncertainty.png",
                 "uncertainty_boxplots": figures_path/"networks"/"{network}"/ "{network}_uncertainty_boxplots.png",
                 }
@@ -91,7 +93,7 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
-# network_names = ["RSNC","AUST","av","ak"]
+network_names = ["RSNC"]
 
 # dataset.plot_overview(savepath=figures_dict["overview"])
 # print(f"Plotted dataset overview to {figures_dict['overview']}")
@@ -107,14 +109,15 @@ for net_name in network_names:
 
         network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
                               is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
-        network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
-        network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
-        network.plot_pick_stats(savepath=str(figures_dict["pick_stats"]).format(network=net_name))
-        network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
-        network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
-        # ---- CREATE GIF FOR THIS NETWORK ----
-        create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
-                            net_name=net_name, fps=0.7)
+        # network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
+        # network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
+        # network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
+        # network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
+        # network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
+        # network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
+        # # ---- CREATE GIF FOR THIS NETWORK ----
+        # create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
+        #                     net_name=net_name, fps=0.7)
 
     except Exception as e:
         print(f"Error processing network {net_name}: {e}")

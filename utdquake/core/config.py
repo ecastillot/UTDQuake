@@ -95,3 +95,48 @@ def get_root() -> Path:
         root = os.path.join(Path.home(), ".utdquake")
 
     return Path(root).expanduser().resolve()
+
+def get_utdq_paths(network: str) -> Dict[str, Path]:
+    """
+    Return standardized UTDQuake directory paths for a given network.
+
+    This helper constructs the filesystem paths used by UTDQuake
+    for storing and accessing data products associated with a
+    seismic network.
+
+    Parameters
+    ----------
+    network : str
+        Network code (e.g., ``"tx"``, ``"AK"``, etc.).
+
+    Returns
+    -------
+    dict of str to pathlib.Path
+        Dictionary containing the following keys:
+
+        - ``"bank"``: Path to the EventBank directory.
+        - ``"events"``: Path to event files.
+        - ``"stations"``: Path to station metadata.
+        - ``"picks"``: Path to pick files.
+
+    Notes
+    -----
+    - Paths are constructed relative to the root directory
+      returned by :func:`get_root`.
+    - Subdirectory templates are defined in :data:`HF_CONFIG`.
+    """
+
+    root = get_root()
+
+    return {
+        "bank": root / "bank" / network,
+        "events": root / HF_CONFIG["events"].path.format(
+            network=network
+        ),
+        "stations": root / HF_CONFIG["stations"].path.format(
+            network=network
+        ),
+        "picks": root / HF_CONFIG["picks"].path.format(
+            network=network
+        ),
+    }

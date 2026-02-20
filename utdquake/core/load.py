@@ -8,7 +8,7 @@ from typing import Dict, Set
 import obsplus
 import pyarrow.parquet as pq
 from .data import download_snapshot
-from .config import get_root, HF_CONFIG
+from .config import get_root, get_utdq_paths
 
 logger = logging.getLogger(__name__)
 
@@ -168,11 +168,12 @@ def resolve_network_paths(
     network = network.strip()
 
     # Paths for EventBank and Parquet components
-    bank_path = get_root() / "bank" / network
+    utdq_paths = get_utdq_paths(network)
+    bank_path = utdq_paths["bank"] 
     parquets = {
-        "events": get_root() / HF_CONFIG["events"].path.format(network=network),
-        "stations": get_root() / HF_CONFIG["stations"].path.format(network=network),
-        "picks": get_root() / HF_CONFIG["picks"].path.format(network=network),
+        "events": utdq_paths["events"],
+        "stations": utdq_paths["stations"],
+        "picks": utdq_paths["picks"],
     }
 
     flags = {

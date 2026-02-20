@@ -18,6 +18,72 @@ from typing import  Optional, Dict, List
 from obsplus.constants import PICK_DTYPES,EVENT_DTYPES,ARRIVAL_DTYPES   
 import pandas as pd
 
+#to_parquet
+PREF_NETWORK_TYPES = {
+    "network": "string",
+    "continent": "string",
+    "provider": "string",
+    "provider_url": "string",
+    "country": "string",
+    "agency": "string",
+    "events": "int64",
+    "total_stations": "int64",
+    "confirmed_stations": "int64",
+    "calculated_stations": "int64",
+    "p_arrivals": "int64",
+    "s_arrivals": "int64",
+    "start_time": "datetime",
+    "end_time": "datetime",
+    "approx_lon_min": "float",
+    "approx_lon_max": "float",
+    "approx_lat_min": "float",
+    "approx_lat_max": "float",
+    "score": "float",
+}
+
+# -----------------------
+# Preferred types for Parquet storage
+# -----------------------
+PREF_STATIONS_TYPES = {"network": "string",
+                        "station": "string",
+                        "available": "boolean",
+                        "confirmed": "boolean",
+                        "confirmed_latitude": "float",
+                        "confirmed_longitude": "float",
+                        "calculated": "boolean",
+                        "calculated_latitude": "float",
+                        "calculated_latitude_std": "float",
+                        "calculated_longitude": "float",
+                        "calculated_longitude_std": "float",
+                        "confirmed_elevation": "float",
+                        "calculated_num_entries": "int64",
+                        "db_path": "string",
+                        "creation_time": "datetime"
+                        }
+
+PREF_EVENTS_ORDER = ["network",
+                     "time",
+                    "latitude",
+                    "longitude",
+                    "depth",
+                    "magnitude",
+                    "azimuthal_gap"]
+
+PREF_PICKS_ORDER = [
+                    "network",
+                    "station", 
+                    "phase",
+                    "time",
+                    "travel_time",
+                    "distance",
+                    "linear_hyp_distance",
+                    "azimuth",
+                    "evaluation_mode",
+                    "event_id",
+                    "origin_time",
+                    ]
+
+
 def columns_by_type(dtypes: Dict[str, object]) -> Dict[str, List[str]]:
     """
     Group column names by their data type.
@@ -144,12 +210,16 @@ def sanitize_dataframe_for_parquet(
         for c in datetime_cols:
             if c in df.columns:
                 df[c] = pd.to_datetime(df[c], errors="coerce")
-    else:
-        for c in df.select_dtypes(include=["object"]).columns:
-            try:
-                df[c] = pd.to_datetime(df[c], errors="ignore")
-            except Exception:
-                pass
+    # else:
+    #     for c in df.select_dtypes(include=["object"]).columns:
+    #         try:
+    #             df[c] = pd.to_datetime(df[c], errors="ignore")
+    #             msg = f"Auto-converted column '{c}' to datetime (if possible)"
+    #         except Exception:
+    #             msg = f"Column '{c}' could not be auto-converted to datetime"
+    #             pass
+    #         if debug:
+    #             print(msg)
     if debug:
         print("Step 2: After datetime conversion")
         print(df.head(), "\n")
@@ -219,69 +289,6 @@ def sanitize_dataframe_for_parquet(
 
     return df
 
-#to_parquet
-PREF_NETWORK_TYPES = {
-    "network": "string",
-    "continent": "string",
-    "provider": "string",
-    "provider_url": "string",
-    "country": "string",
-    "agency": "string",
-    "events": "int64",
-    "total_stations": "int64",
-    "confirmed_stations": "int64",
-    "calculated_stations": "int64",
-    "p_arrivals": "int64",
-    "s_arrivals": "int64",
-    "start_time": "datetime",
-    "end_time": "datetime",
-    "approx_lon_min": "float",
-    "approx_lon_max": "float",
-    "approx_lat_min": "float",
-    "approx_lat_max": "float",
-    "score": "float",
-}
-
-# -----------------------
-# Preferred types for Parquet storage
-# -----------------------
-PREF_STATIONS_TYPES = {"network": "string",
-                        "station": "string",
-                        "available": "boolean",
-                        "confirmed": "boolean",
-                        "confirmed_latitude": "float",
-                        "confirmed_longitude": "float",
-                        "calculated": "boolean",
-                        "calculated_latitude": "float",
-                        "calculated_latitude_std": "float",
-                        "calculated_longitude": "float",
-                        "calculated_longitude_std": "float",
-                        "confirmed_elevation": "float",
-                        "calculated_num_entries": "int64",
-                        "db_path": "string",
-                        "creation_time": "datetime"
-                        }
-
-PREF_EVENTS_ORDER = ["network",
-                     "time",
-                    "latitude",
-                    "longitude",
-                    "depth",
-                    "magnitude",
-                    "azimuthal_gap"]
-
-PREF_PICKS_ORDER = [
-                    "network",
-                    "station", 
-                    "phase",
-                    "travel_time",
-                    "azimuth",
-                    "distance",
-                    "time",
-                    "event_id",
-                    "origin_time",
-                    ]
-
 # Convert preferred types to grouped column lists
 PREF_NETWORK_TYPES = columns_by_type(PREF_NETWORK_TYPES)
 PREF_STATIONS_TYPES = columns_by_type(PREF_STATIONS_TYPES)
@@ -294,7 +301,7 @@ for k,v in PREF_ARRIVALS_TYPES.items():
 
 # Add extra columns to picks types
 PREF_PICKS_TYPES["string_cols"].extend(["network","event_id",])
-PREF_PICKS_TYPES["float_cols"].extend(["travel_time","hyp_distance"])
+PREF_PICKS_TYPES["float_cols"].extend(["travel_time","linear_hyp_distance"])
 
 # Preferred event types
 PREF_EVENTS_TYPES = columns_by_type(EVENT_DTYPES)
