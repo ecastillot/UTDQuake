@@ -3,9 +3,11 @@ import pandas as pd
 import numpy as np
 import sqlite3
 from typing import  Optional
-from .config import KM_PER_DEG
+
 from .qc import apply_utdq_qc
-from ..export.parquet import to_parquet
+from ..core.config import KM_PER_DEG
+from ..writers.parquet import to_parquet
+
 from obsplus import EventBank as ObsplusEventBank
 from obspy import Catalog
 

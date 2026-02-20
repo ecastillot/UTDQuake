@@ -24,7 +24,7 @@ __version__ = "0.1.1"
 
 from .core.utdquake import Dataset, Network
 from .core.data import download_snapshot, load
-from .core.obspy import utdquake_obspy_patch
+from .patch.obspy import utdquake_obspy_patch
 
 utdquake_obspy_patch()
 __all__ = ["Dataset", "Network", "download_snapshot", "load"]

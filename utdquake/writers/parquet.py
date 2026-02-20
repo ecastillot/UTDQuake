@@ -4,7 +4,7 @@ import pandas as pd
 from pathlib import Path
 from typing import Iterable, List
 
-from .config import (PREF_PICKS_ORDER,
+from .schema import (PREF_PICKS_ORDER,
                       PREF_PICKS_TYPES,
                       PREF_EVENTS_ORDER,
                       PREF_EVENTS_TYPES,
