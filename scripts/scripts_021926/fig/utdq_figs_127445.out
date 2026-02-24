@@ -1,8 +1,0 @@
-/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2165: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
-  plt.tight_layout()
-/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2165: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
-  plt.tight_layout()
-/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2168: UserWarning: Creating legend with loc="best" can be slow with large amounts of data.
-  plt.savefig(savepath, dpi=300, bbox_inches="tight")
-Saving figure to /groups/igonin/ecastillo/utdquake/figures
-✅ DONE
