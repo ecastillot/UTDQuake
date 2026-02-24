@@ -3,7 +3,7 @@ data/
 .bck/
 .test/
 #figures/networks/**/*.png 
-figures_021926
+figures_*/
 figures/networks/**/*
 scripts/qc/*/check_*.out
 scripts/fig/*.out

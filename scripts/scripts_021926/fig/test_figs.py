@@ -93,7 +93,7 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
-network_names = ["RSNC"]
+network_names = ["GFZ","us"]
 
 # dataset.plot_overview(savepath=figures_dict["overview"])
 # print(f"Plotted dataset overview to {figures_dict['overview']}")
@@ -109,12 +109,12 @@ for net_name in network_names:
 
         network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
                               is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
-        # network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
-        # network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
-        # network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
-        # network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
-        # network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
-        # network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
+        network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
+        network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
+        network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
+        network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
+        network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
+        network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
         # # ---- CREATE GIF FOR THIS NETWORK ----
         # create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
         #                     net_name=net_name, fps=0.7)

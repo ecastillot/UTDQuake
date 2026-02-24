@@ -18,7 +18,7 @@ from typing import  Optional, Dict, List
 from obsplus.constants import PICK_DTYPES,EVENT_DTYPES,ARRIVAL_DTYPES   
 import pandas as pd
 
-#to_parquet
+
 PREF_NETWORK_TYPES = {
     "network": "string",
     "continent": "string",
@@ -41,9 +41,9 @@ PREF_NETWORK_TYPES = {
     "score": "float",
 }
 
-# -----------------------
-# Preferred types for Parquet storage
-# -----------------------
+PREF_NETWORK_ORDER = list(PREF_NETWORK_TYPES.keys())
+
+
 PREF_STATIONS_TYPES = {"network": "string",
                         "station": "string",
                         "available": "boolean",
@@ -60,6 +60,7 @@ PREF_STATIONS_TYPES = {"network": "string",
                         "db_path": "string",
                         "creation_time": "datetime"
                         }
+PREF_STATIONS_ORDER = list(PREF_STATIONS_TYPES.keys())
 
 PREF_EVENTS_ORDER = ["network",
                      "time",

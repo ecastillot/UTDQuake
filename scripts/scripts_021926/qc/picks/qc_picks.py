@@ -1,15 +1,15 @@
 import os
 
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/bck_utdq/test_021926"
 
 from utdquake.utils.cache import list_local_networks
 from obsplus import EventBank
-from utdquake.core.qc import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
+# from utdquake.patch.qc import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
 # from utdquake.core.parquet import PREF_PICKS_TYPES, sanitize_dataframe_for_parquet
 
 
 
-# banks = list_local_networks("bank")
+banks = list_local_networks("bank")
 
 # tx = EventBank(banks["uw"])
 tx = EventBank(banks["uw"])
