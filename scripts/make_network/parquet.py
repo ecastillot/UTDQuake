@@ -9,11 +9,11 @@ from typing import Iterable, Optional, Dict, List
 
 import pandas as pd
 
-from ...core.config import get_utdq_paths,get_root
-from ...utils.cache import list_local_networks
-from ..manager.manager import UTDQBank
-from .manifest import ManifestPaths, ManifestProgress
-from .schema import (PREF_PICKS_ORDER,
+from utdquake.core.config import HF_CONFIG,get_root,get_utdq_paths
+from utdquake.utils.cache import list_local_networks
+from manager import UTDQBank
+from manifest import ManifestPaths, ManifestProgress
+from schema import (PREF_PICKS_ORDER,
                     PREF_PICKS_TYPES,
                     PREF_EVENTS_ORDER,
                     PREF_EVENTS_TYPES,
@@ -23,15 +23,8 @@ from .schema import (PREF_PICKS_ORDER,
                     PREF_STATIONS_TYPES,
                     sanitize_dataframe_for_parquet)
 
-logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------
-def _safe_concat(existing: Optional[pd.DataFrame], new: pd.DataFrame) -> pd.DataFrame:
-    if existing is None or existing.empty:
-        return new
-    return pd.concat([existing, new], ignore_index=True)
+logger = logging.getLogger(__name__)
 
 def _write_parquet_atomic(df: pd.DataFrame, out_path: Path) -> None:
     """
@@ -43,7 +36,6 @@ def _write_parquet_atomic(df: pd.DataFrame, out_path: Path) -> None:
     tmp_path = out_path.with_suffix(out_path.suffix + ".tmp")
     df.to_parquet(tmp_path, index=False)
     tmp_path.replace(out_path)
-
 
 def _append_parquet_dedup(
     out_path: Path,
@@ -70,7 +62,6 @@ def _append_parquet_dedup(
 
     _write_parquet_atomic(combined, out_path)
 
-
 def build_manifests(
     networks: Optional[Iterable[str]] = None,
     force_download: bool = False,
@@ -78,7 +69,7 @@ def build_manifests(
     include_events: bool = True,
     include_stations: bool = True,
     include_picks: bool = True,
-    include_stats: bool = True,
+    include_networks: bool = True,
     include_manual_network_info: pd.DataFrame = None
 ) -> ManifestPaths:
     """
@@ -100,7 +91,7 @@ def build_manifests(
         If True, download missing networks.
     overwrite
         If True, delete progress and rebuild from scratch.
-    include_events, include_stations, include_picks, include_stats
+    include_events, include_stations, include_picks, include_networks
         Which manifests to build.
 
     Returns
@@ -125,31 +116,67 @@ def build_manifests(
         #     if p.exists():
         #         p.unlink()
 
-    if networks is None:
-        networks = list_local_networks()
+    local_networks = list_local_networks(data_type="bank").keys()
+    local_networks = list(local_networks)
 
-    networks = list(networks)
-    if not networks:
+    logger.info("Found %d local networks: %s", len(local_networks), local_networks)
+
+    if not local_networks:
         raise ValueError("No networks found to build manifests.")
 
-    for net in networks:
+    if include_manual_network_info is None and include_networks:
+        path = root / HF_CONFIG["networks"].path
+        include_manual_network_info = pd.read_parquet(path )
+        logger.info("Loaded manual network info from %s with %d entries", path, len(include_manual_network_info))
+
+
+    for net in local_networks:
+
+        if networks is not None and net not in networks:
+            logger.info("Skipping network %s (not in specified networks)", net)
+            continue
+
         logger.info("Processing network: %s", net)
         print(net)
 
-        # paths.get_events(net).mkdir(parents=True, exist_ok=True)
-        # paths.get_stations(net).mkdir(parents=True, exist_ok=True)
-        # paths.get_picks(net).mkdir(parents=True, exist_ok=True)
-
         net_paths = get_utdq_paths(net)
         bank = UTDQBank(net_paths["bank"])
-        df_events = bank.read_index().copy()
 
-        # if apply_utd_qc:
-        #     logger.info("Applying UTD QC.")
-        #     cat = bank.get_events(event_id=chunk)
-        #     cat.apply_utdq_qc(debug=qc_debug, inplace=True)
+        if include_networks and not progress.is_done("stats", net):
+            logger.info("Building stats manifest for %s", net)
 
-        # if include_events and not progress.is_done("events", net):
-        #     logger.info("Building events manifest for %s", net)
-        #     df_events["network"] = net
+            manual_info = include_manual_network_info[include_manual_network_info["network"] == net]
+            
+            if "original_events" not in manual_info.columns:
+                for col in ["events","p_arrivals","s_arrivals"]:
+                    if col in manual_info.columns:
+                        manual_info.rename(columns={col: f"original_{col}"}, inplace=True)
+            elif "only_calculated_stations" in manual_info.columns:
+                #drop only_calculated_stations if original_events exists
+                manual_info.drop(columns=["only_calculated_stations"], inplace=True)
 
+
+            summary = bank.get_summary_from_parquets()
+
+
+            for key, value in summary.items():
+                manual_info[key] = value
+
+            df_summary = sanitize_dataframe_for_parquet(manual_info,
+                                                       string_cols=PREF_NETWORK_TYPES["string_cols"],
+                                                       float_cols=PREF_NETWORK_TYPES["float_cols"],
+                                                       int_cols=PREF_NETWORK_TYPES["int_cols"],
+                                                       datetime_cols=PREF_NETWORK_TYPES["datetime_cols"],
+                                                       bool_cols=PREF_NETWORK_TYPES["bool_cols"])
+
+            existing_pref = [c for c in PREF_NETWORK_ORDER if c in df_summary.columns]
+            remaining = [c for c in df_summary.columns if c not in existing_pref]
+            df_summary = df_summary[existing_pref + remaining]
+
+            
+            _append_parquet_dedup(paths.network, df_summary, subset_cols=["network"])
+
+            progress.mark_done("network", net)
+
+    logger.info("Manifest build complete.")
+    return paths

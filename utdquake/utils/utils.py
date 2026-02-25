@@ -262,10 +262,14 @@ def get_network_summary(
             Total S-phase picks
         - total_stations : int
             Number of stations
+        - located_stations : int
+            Number of stations that have their location either confirmed or calculated
         - confirmed_stations : int
             Number of confirmed stations
         - calculated_stations : int
             Number of calculated stations
+        - only_calculated_stations : int
+            Number of stations that are calculated but not confirmed
         - start_time : str
             Earliest event time
         - end_time : str
@@ -284,14 +288,15 @@ def get_network_summary(
     n_confirmed_stations = int(stations["confirmed"].eq(True).sum())
     # Only count as calculated if it's not also confirmed. 
     # This avoids double-counting stations that are both confirmed and calculated.
-    n_calculated_stations = int(
+    n_only_calculated_stations = int(
                                 (
                                     stations["calculated"].fillna(False) &
                                     ~stations["confirmed"].fillna(False)
                                 ).sum()
                             ) 
+
     # Alternatively, if we want to count all calculated stations regardless of confirmed status, we could use:
-    # n_calculated_stations = int(stations["calculated"].eq(True).sum())
+    n_calculated_stations = int(stations["calculated"].eq(True).sum())
 
     # --- Filter events with valid coordinates ---
     events = events.dropna(subset=["latitude", "longitude"])
@@ -308,8 +313,11 @@ def get_network_summary(
         "p_arrivals": n_p_picks,
         "s_arrivals": n_s_picks,
         "total_stations": n_total_stations,
+        "located_stations": n_confirmed_stations + n_only_calculated_stations,
         "confirmed_stations": n_confirmed_stations,
         "calculated_stations": n_calculated_stations,
+        # "unlocated_stations": n_total_stations - (n_confirmed_stations + n_only_calculated_stations),
+        # "only_calculated_stations": n_only_calculated_stations,
         "start_time": str(min_event_time),
         "end_time": str(max_event_time),
     }

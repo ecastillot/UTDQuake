@@ -5,10 +5,52 @@ import sqlite3
 from typing import  Optional
 from obsplus import EventBank as ObsplusEventBank
 
+
+from ...utils.utils import get_network_summary
+
 class UTDQBank(ObsplusEventBank):
     """
     Extended EventBank with safe event deletion utilities.
     """
+
+    def get_summary(self) -> pd.DataFrame:
+        """
+        Compute summary statistics for a seismic network.
+
+        Returns
+        -------
+        dict
+            Dictionary with summary statistics:
+            - events : int
+                Number of events
+            - p_arrivals : int
+                Total P-phase picks
+            - s_arrivals : int
+                Total S-phase picks
+            - total_stations : int
+                Number of stations
+            - confirmed_stations : int
+                Number of confirmed stations
+            - calculated_stations : int
+                Number of calculated stations
+            - start_time : str
+                Earliest event time
+            - end_time : str
+                Latest event time
+
+        Examples
+        --------
+        >>> get_network_summary(df_stations, df_events)
+        {'events': 10, 'p_arrivals': 30, ...}
+        """
+
+        stations = self.get_stations()
+        stations.drop_duplicates(subset=["network","station"], inplace=True)
+
+        events = self.read_index()
+        events = events.dropna(subset=["latitude","longitude"])
+
+        return get_network_summary(stations, events)
 
     def get_stations(self, query: Optional[str] = None) -> pd.DataFrame:
         """

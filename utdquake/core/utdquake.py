@@ -303,6 +303,10 @@ class Network:
         """
         networks_df = Dataset().get_local_networks(force_download=False)
         # networks_df = Dataset().networks.to_pandas()
+
+        networks_df["located_stations"] = networks_df["confirmed_stations"] + networks_df["only_calculated_stations"]
+        networks_df["unlocated_stations"] = networks_df["total_stations"] - networks_df["located_stations"]
+
         network_row = networks_df[networks_df["network"] == self.name]
         if network_row.empty:
             return f"Network '{self.name}' not found."
@@ -356,7 +360,6 @@ class Network:
         show : bool
             Whether to display the figure.
         """
-        
         plot_overview(events=self.events, 
                       stations=self.stations,
                       analysis=self.description,

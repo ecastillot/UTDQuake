@@ -244,12 +244,14 @@ def plot_overview(
 
     ax1.set_title(f"Contributor: {analysis.get('network', 'N/A')}",
                   fontsize=14, weight='bold',loc='left')
+    print(analysis)
+    print(analysis.get('located_stations', 'N/A'))
     ax1.text(
         0.70, 0.8,
         f"Events: {human_format(analysis.get('events', len(events)))}\n"
         f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
-        f"   Calculated: {human_format(analysis.get('calculated_stations', 'N/A'))}\n"
-        f"   Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"
+        f" -Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"
+        f" --Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"
         f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"
         f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}",
         transform=ax1.transAxes,
@@ -708,8 +710,8 @@ def plot_utdq_overview(
     ax2.text(
         0.02, 0.05,
         f"Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
-        f"   Calculated: {human_format(analysis.get('calculated_stations', 'N/A'))}\n"
-        f"   Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}",
+        f"-Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"
+        f"--Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}",
         transform=ax2.transAxes,
         ha="left",
         va="bottom",

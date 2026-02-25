@@ -44,12 +44,12 @@ class ManifestPaths:
         return self.root / self.manifest_dirname
 
     @property
-    def network(self) -> Path:
-        return self.manifest_dir / f"network.{self.ext}"
-
-    @property
     def progress_db(self) -> Path:
         return self.manifest_dir / self.progress_name
+    
+    @property
+    def network(self) -> Path:
+        return self.manifest_dir / "network" / f"network.{self.ext}"
 
     def ensure_dirs(self) -> None:
         self.manifest_dir.mkdir(parents=True, exist_ok=True)

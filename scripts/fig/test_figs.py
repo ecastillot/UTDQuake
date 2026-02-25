@@ -1,7 +1,7 @@
 import os 
 
-# os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/bck_utdq/test_021926"
+os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+# os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/bck_utdq/test_021926"
 
 from PIL import Image
 from pathlib import Path
@@ -71,7 +71,7 @@ print(f"Script started at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 # logging.basicConfig(level=logging.INFO)
 # logger = logging.getLogger(__name__)
 
-figures_path = Path(__file__).parent.parent.parent / "figures_021926"
+figures_path = Path(__file__).parent.parent.parent / "figures"
 print(f"Saving figures to {figures_path}")
 networks_path = figures_path / "networks"
 os.makedirs(networks_path, exist_ok=True)
@@ -93,10 +93,11 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
-network_names = ["GFZ","us"]
+# network_names = ["us","RSNC","uw"]
 
 # dataset.plot_overview(savepath=figures_dict["overview"])
 # print(f"Plotted dataset overview to {figures_dict['overview']}")
+# exit()
 
 for net_name in network_names:
     net_folder = networks_path / net_name
@@ -108,7 +109,7 @@ for net_name in network_names:
         network = dataset.get_network(name=net_name)
 
         network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
-                              is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
+                                is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
         network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
         network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
         network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
@@ -116,8 +117,8 @@ for net_name in network_names:
         network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
         network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
         # # ---- CREATE GIF FOR THIS NETWORK ----
-        # create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
-        #                     net_name=net_name, fps=0.7)
+        create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
+                            net_name=net_name, fps=0.7)
 
     except Exception as e:
         print(f"Error processing network {net_name}: {e}")
