@@ -1,65 +1,6 @@
 import numpy as np
 from obspy import Catalog
-
-#: Default QC parameters for pick-level filtering in UTDQuake.
-#: Passed to :func:`picks_qc` if `pick_qc_args=None` in
-#: :func:`apply_utdquake_qc_to_catalog`.
-#:
-#: Keys
-#: ----
-#: - min_travel_time : float
-#:     Minimum allowed travel time (seconds).
-#: - min_linear_hyp_distance : float
-#:     Minimum hypocentral distance (km).
-#: - min_epicentral_distance : float
-#:     Minimum epicentral distance (degrees).
-#: - sp_threshold : dict of tuple -> tuple
-#:     Phase pairs mapped to allowed S–P time difference ranges.
-#:     Example: {("S", "P"): (0, np.inf)}
-#: - debug : bool
-#:     If True, prints debug information.
-#: - apply_to_nans : bool
-#:     If True, rows with NaNs in the QC columns are removed.
-PICK_QC_DEFAULTS = {
-    "min_travel_time": 0,
-    "min_linear_hyp_distance": 0,
-    "min_epicentral_distance": 0,
-    "sp_threshold": {
-        ("S", "P"): (0, np.inf),
-        ("Sn", "Pn"): (0, np.inf),
-        ("Sg", "Pg"): (0, np.inf),
-    },
-    "debug": False,
-    "apply_to_nans": False,
-}
-
-
-#: Default QC parameters for event-level filtering in UTDQuake.
-#: Passed to :func:`events_qc` if `event_qc_args=None` in
-#: :func:`apply_utdquake_qc_to_catalog`.
-#:
-#: Keys
-#: ----
-#: - min_associated_phase_count : int
-#:     Minimum number of associated phases per event.
-#: - min_used_phase_count : int
-#:     Minimum number of used phases per event.
-#: - min_station_count : int
-#:     Minimum number of stations per event.
-#: - max_standard_error : float
-#:     Maximum allowed event location standard error.
-#: - debug : bool
-#:     If True, prints debug information.
-#: - apply_to_nans : bool
-#:     If True, rows with NaNs in QC columns are removed.
-EVENT_QC_DEFAULTS = {
-    "min_associated_phase_count": 4,
-    "min_used_phase_count": 4,
-    "min_station_count": 3,
-    "max_standard_error": 1.8,
-    "debug": False,
-    "apply_to_nans": False,
-}
+from .config import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
 
 
 def apply_utdq_qc(cat, debug=True, inplace=False):

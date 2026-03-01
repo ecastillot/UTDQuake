@@ -4,7 +4,7 @@ import numpy as np
 import sqlite3
 from typing import  Optional
 
-from .qc import apply_utdq_qc
+from ..qc.catalog import apply_utdq_qc
 from ..core.config import KM_PER_DEG
 
 from obspy import Catalog

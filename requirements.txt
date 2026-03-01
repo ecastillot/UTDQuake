@@ -6,6 +6,7 @@ pandas
 pyarrow
 numpy
 matplotlib
+scikit-learn
 seaborn
 packaging
 scipy
