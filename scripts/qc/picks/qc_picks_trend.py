@@ -1,37 +1,31 @@
 import pandas as pd
 from utdquake.qc.phase_trend import (
                                     PhaseTrendConfig,
-                                    GlobalTrendFilter, 
-                                    LocalTrendFilter, 
-                                    PhasePlotter)
+                                    apply_phase_trend_qc)
+from utdquake.qc.plot import plot_travel_time_qc
 
 
-df = pd.read_parquet("/groups/igonin/ecastillo/UTDQuake/picks/network=RSNC.parquet")
-
-# df = df.dropna(subset=["linear_hyp_distance", "travel_time", "phase"])
-
-print(df)
-gt = GlobalTrendFilter()
-df,rdf,log = gt.apply(df)
-print(df)
-
-config = PhaseTrendConfig()
-lt = LocalTrendFilter(config)
-df,r2df,log = lt.apply(df,log=log)
-print(df)
-
-#sum nan
-print(df[["travel_time","linear_hyp_distance","phase"]].isna().sum())
-
-# print(log)
-
-# config = PhaseTrendConfig(
-#     phase_order=["P", "Pn", "Pg", "S", "Sn", "Sg"],
-#     k_dict={"P": 5, "Pn": 5, "Pg": 5, "S": 5, "Sn": 5, "Sg": 5},
-#     degree=1,
-# )
-
-# plotter = PhasePlotter()
-# fig, axes = plotter.plot_all(df, filterer.models, config)
+df = pd.read_parquet("/groups/igonin/ecastillo/UTDQuake/picks/network=TAP.parquet")
 
 
+ptc = PhaseTrendConfig()
+gd_df,gt,lt,log = apply_phase_trend_qc(df.copy(), ptc,
+                                       apply_global=True,
+                                        apply_local=False,
+                                        debug=True)
+# bd_df by resource_id
+bd_df = df[~df["resource_id"].isin(gd_df["resource_id"])]
+
+# bd_df = pd.DataFrame(columns=["phase",
+#                               "linear_hyp_distance",
+#                               "travel_time"])  # Empty DataFrame for bad picks since we're not applying local QC
+# bd_df = df[~df.index.isin(gd_df.index)]
+
+# print(gd_df)
+# exit()
+# print(lt.models)
+
+
+save_path = "/groups/igonin/ecastillo/utdquake/scripts/qc/picks/3qc_picks.png"
+plot_travel_time_qc(gd_df,bd_df,save_path=save_path, 
+            global_models=gt.models, local_models=lt.models)

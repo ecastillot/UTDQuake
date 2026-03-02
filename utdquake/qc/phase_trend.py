@@ -108,6 +108,9 @@ class GlobalTrendFilter:
         # Loop over phases that have global trends
         for phase, model in self.models.items():
             df_phase = df[df[phase_col] == phase]
+            df_phase = df_phase[df_phase[x_col]>0]
+            df_phase = df_phase[df_phase[y_col]>0]
+            
             if df_phase.empty:
                 continue
 
@@ -326,6 +329,33 @@ class LocalTrendFilter:
         removed_df = pd.concat(removed_list, ignore_index=True)
 
         return cleaned_df, removed_df, log
+
+
+def apply_phase_trend_qc(df, config: PhaseTrendConfig, 
+                         apply_global=True, apply_local=True,
+                         log=None, debug=True):
+
+    cols = ["linear_hyp_distance", "travel_time", "phase"]
+
+    # Rows where ANY of those columns has NaN
+    df_nan = df[df[cols].isna().any(axis=1)].copy()
+
+    # Rows where NONE of those columns has NaN
+    df = df[df[cols].notna().all(axis=1)].copy()
+
+
+    gt = GlobalTrendFilter()
+
+    lt = LocalTrendFilter(config)
+
+    if apply_global:
+        df,rdf,log = gt.apply(df,log=log, debug=debug)
+    if apply_local:
+        df,r2df,log = lt.apply(df,log=log, debug=debug)
+
+    df = pd.concat([df, df_nan], ignore_index=True)
+
+    return df,gt,lt,log
 
 
 class PhasePlotter:
