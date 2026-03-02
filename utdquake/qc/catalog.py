@@ -1,7 +1,9 @@
 import numpy as np
 from obspy import Catalog
 from .config import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
-
+from .picks import basic_picks_qc
+from .events import events_qc
+from .log import QCLog
 
 def apply_utdq_qc(cat, debug=True, inplace=False):
     """
@@ -115,6 +117,7 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
     if pick_qc_args:
         pick_args.update(pick_qc_args)
     pick_args["debug"] = debug
+    pick_args["log"] = QCLog()
 
     # ---------------------------------------------------------------------
     # Default event QC parameters
@@ -124,6 +127,7 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
     if event_qc_args:
         event_args.update(event_qc_args)
     event_args["debug"] = debug
+    event_args["log"] = QCLog()
     
     # ---------------------------------------------------------------------
     # Pick-level QC
@@ -136,7 +140,8 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
         print(f"Initial catalog: {ini_picks_len} picks")
         print("Parameters:", pick_args, "\n")
 
-    picks = picks_qc(picks, **pick_args)
+    picks, picks_log = basic_picks_qc(picks, **pick_args)
+    pick_args["log"] = picks_log  # Update log with results from picks_qc
     cat = apply_picks_qc_to_catalog(cat, picks, debug=debug)
     
     if debug:
@@ -152,7 +157,8 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
         print(f"Initial catalog: {ini_events_len } events")
         print("Parameters:", event_args, "\n")
 
-    events = events_qc(events, **event_args)
+    events, events_log = events_qc(events, **event_args)
+    event_args["log"] = events_log  # Update log with results from events_qc
     cat = apply_events_qc_to_catalog(cat, events, debug=debug)
 
     if debug:
@@ -291,404 +297,3 @@ def apply_events_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
     return new_catalog
 
 
-def picks_qc(
-    df,
-    min_travel_time=0,
-    max_travel_time=np.inf,
-    min_linear_hyp_distance=0,
-    max_linear_hyp_distance=np.inf,
-    min_epicentral_distance=0,
-    max_epicentral_distance=np.inf,
-    sp_threshold={
-        ("S", "P"): (0, np.inf),
-        ("Sn", "Pn"): (0, np.inf),
-        ("Sg", "Pg"): (0, np.inf),
-    },
-    debug=False,
-    apply_to_nans=False,
-):
-    """
-    Apply quality-control filters to seismic picks.
-
-    Filters applied
-    ---------------
-    1. Travel time limits (seconds)
-    2. Hypocentral distance limits (km)
-    3. Epicentral distance limits (degrees)
-    4. S–P consistency threshold per event and station
-
-    Required Columns in `df`
-    ------------------------
-    - 'travel_time' : float (seconds)
-    - 'linear_hyp_distance' : float (km)
-    - 'distance' : float (degrees)
-    - 'phase' : str
-    - 'event_id' : str or int
-    - 'station' : str
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        DataFrame containing pick information.
-    min_travel_time, max_travel_time : float
-        Allowed travel time range (seconds).
-    min_linear_hyp_distance, max_linear_hyp_distance : float
-        Allowed hypocentral distance range (km).
-    min_epicentral_distance, max_epicentral_distance : float
-        Allowed epicentral distance range (degrees).
-    sp_threshold : dict
-        Dictionary mapping phase pairs to allowed S–P
-        time difference ranges in seconds.
-        Example: {("S", "P"): (10, np.inf)}
-    debug : bool, default False
-        If True, prints information about why picks are removed.
-    apply_to_nans : bool, default False
-        If True, rows with NaN in travel_time, linear_hyp_distance,
-        or distance will be removed. If False, NaNs are ignored.
-
-    Returns
-    -------
-    pandas.DataFrame
-        Filtered DataFrame after QC.
-    """
-
-    original_total = len(df)
-    cumulative_removed = 0
-    df_filtered = df.copy()
-
-    # --- Travel time filter ---
-    mask = df_filtered["travel_time"].between(min_travel_time, max_travel_time)
-    if not apply_to_nans:
-        mask |= df_filtered["travel_time"].isna()
-    step_removed = (~mask).sum()
-    cumulative_removed += step_removed
-    df_filtered = df_filtered[mask]
-    if debug:
-        print(f"Travel time filter - removed {step_removed} (Acum: {cumulative_removed}/{original_total})")
-
-    # --- Hypocentral distance filter ---
-    mask = df_filtered["linear_hyp_distance"].between(min_linear_hyp_distance, max_linear_hyp_distance)
-    if not apply_to_nans:
-        mask |= df_filtered["linear_hyp_distance"].isna()
-    step_removed = (~mask).sum()
-    cumulative_removed += step_removed
-    df_filtered = df_filtered[mask]
-    if debug:
-        print(f"Hypocentral distance filter - removed {step_removed} (Acum: {cumulative_removed}/{original_total})")
-
-    # --- Epicentral distance filter ---
-    mask = df_filtered["distance"].between(min_epicentral_distance, max_epicentral_distance)
-    if not apply_to_nans:
-        mask |= df_filtered["distance"].isna()
-    step_removed = (~mask).sum()
-    cumulative_removed += step_removed
-    df_filtered = df_filtered[mask]
-    if debug:
-        print(f"Epicentral distance filter - removed {step_removed} (Acum: {cumulative_removed}/{original_total})")
-
-    # --- S–P threshold filtering ---
-    remove_index = set()
-    grouped = df_filtered.groupby(["event_id", "station"])
-
-    if debug:
-        print(f"S–P QC filter - starting ...")
-
-    for (event_id, station), group in grouped:
-        for (s_phase, p_phase), (min_diff, max_diff) in sp_threshold.items():
-            phase_norm = df_filtered["phase"].str.strip().str.lower()
-            s_rows = group[phase_norm.loc[group.index] == s_phase.lower()]
-            p_rows = group[phase_norm.loc[group.index] == p_phase.lower()]
-
-            if s_rows.empty or p_rows.empty:
-                continue
-
-            for s_idx, s_row in s_rows.iterrows():
-                for p_idx, p_row in p_rows.iterrows():
-                    dt = s_row["travel_time"] - p_row["travel_time"]
-                    if not (min_diff <= dt <= max_diff):
-                        remove_index.update([s_idx, p_idx])
-                        if debug:
-                            print(
-                                f"\tRemoving picks for event {event_id}, station {station}: "
-                                f"S_phase {s_row['phase']} (idx={s_idx}) - "
-                                f"P_phase {p_row['phase']} (idx={p_idx}), "
-                                f"Δt={dt:.2f}s not in [{min_diff}, {max_diff}]"
-                            )
-
-    step_removed = len(remove_index)
-    cumulative_removed += step_removed
-    df_filtered = df_filtered.drop(index=remove_index)
-    if debug:
-        print(f"S–P QC filter - removed {step_removed} (Acum: {cumulative_removed}/{original_total})")
-        print(f"Remaining picks: {len(df_filtered)}")
-
-        # Count NaNs in the QC columns
-        nan_counts = df_filtered[["travel_time", "linear_hyp_distance", "distance"]].isna().sum()
-        print(
-            f"NaNs in remaining picks - travel_time: {nan_counts['travel_time']}, "
-            f"distance: {nan_counts['distance']}, "
-            f"linear_hyp_distance: {nan_counts['linear_hyp_distance']}"
-        )
-
-    return df_filtered.reset_index(drop=True)
-
-
-def events_qc(
-    df,
-    min_associated_phase_count=4,
-    max_associated_phase_count=None,
-    min_used_phase_count=4,
-    max_used_phase_count=None,
-    min_p_phase_count=0,
-    min_s_phase_count=0,
-    min_station_count=3,
-    max_station_count=None,
-    max_standard_error=1.8,
-    debug=False,
-    apply_to_nans=False,
-):
-    """
-    Apply sequential quality-control (QC) filters to an events DataFrame.
-
-    The following filters are applied in order:
-
-    1. Minimum associated phase count
-    2. Maximum associated phase count (optional)
-    3. Minimum used phase count
-    4. Maximum used phase count (optional)
-    5. Minimum P phase count
-    6. Minimum S phase count
-    7. Minimum station count
-    8. Maximum station count (optional)
-    9. Maximum standard error
-    """
-
-    original_total = len(df)
-    cumulative_removed = 0
-    df_filtered = df.copy()
-
-    # --- Associated phase count (min) ---
-    df_filtered, cumulative_removed = apply_min_filter(
-        df_filtered,
-        "associated_phase_count",
-        min_associated_phase_count,
-        "Associated phase count (min)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- Associated phase count (max) ---
-    if max_associated_phase_count is not None:
-        df_filtered, cumulative_removed = apply_max_filter(
-            df_filtered,
-            "associated_phase_count",
-            max_associated_phase_count,
-            "Associated phase count (max)",
-            original_total,
-            cumulative_removed,
-            debug,
-            apply_to_nans,
-        )
-
-    # --- Used phase count (min) ---
-    df_filtered, cumulative_removed = apply_min_filter(
-        df_filtered,
-        "used_phase_count",
-        min_used_phase_count,
-        "Used phase count (min)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- Used phase count (max) ---
-    if max_used_phase_count is not None:
-        df_filtered, cumulative_removed = apply_max_filter(
-            df_filtered,
-            "used_phase_count",
-            max_used_phase_count,
-            "Used phase count (max)",
-            original_total,
-            cumulative_removed,
-            debug,
-            apply_to_nans,
-        )
-
-    # --- P phase count ---
-    df_filtered, cumulative_removed = apply_min_filter(
-        df_filtered,
-        "p_phase_count",
-        min_p_phase_count,
-        "P phase count (min)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- S phase count ---
-    df_filtered, cumulative_removed = apply_min_filter(
-        df_filtered,
-        "s_phase_count",
-        min_s_phase_count,
-        "S phase count (min)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- Station count (min) ---
-    df_filtered, cumulative_removed = apply_min_filter(
-        df_filtered,
-        "station_count",
-        min_station_count,
-        "Station count (min)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- Station count (max) ---
-    if max_station_count is not None:
-        df_filtered, cumulative_removed = apply_max_filter(
-            df_filtered,
-            "station_count",
-            max_station_count,
-            "Station count (max)",
-            original_total,
-            cumulative_removed,
-            debug,
-            apply_to_nans,
-        )
-
-    # --- Standard error ---
-    df_filtered, cumulative_removed = apply_max_filter(
-        df_filtered,
-        "standard_error",
-        max_standard_error,
-        "Standard error (max)",
-        original_total,
-        cumulative_removed,
-        debug,
-        apply_to_nans,
-    )
-
-    # --- Final summary ---
-    if debug:
-        remaining = len(df_filtered)
-        removed_total = original_total - remaining
-        percentage = (
-            (removed_total / original_total) * 100
-            if original_total > 0
-            else 0
-        )
-
-        print("\nEvent QC completed:")
-        print(
-            f"Removed {removed_total}/{original_total} events "
-            f"({percentage:.2f}%)"
-        )
-        print(f"Remaining events: {remaining}")
-
-    return df_filtered.reset_index(drop=True)
-
-
-def apply_min_filter(df, column, min_value, label,
-                     original_total, cumulative_removed,
-                     debug=False, apply_to_nans=False):
-    """
-    Apply a minimum threshold filter to a DataFrame column.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Input DataFrame to filter.
-    column : str
-        Name of the column to apply the threshold to.
-    min_value : float or int
-        Minimum allowed value for the column.
-    label : str
-        Human-readable name of the filter (used in debug output).
-    original_total : int
-        Original number of rows before QC.
-    cumulative_removed : int
-        Current cumulative number of removed rows.
-    debug : bool, default False
-        If True, prints filtering information.
-    apply_to_nans : bool, default False
-        If True, rows containing NaN in `column` are removed.
-        If False, NaN values are ignored.
-
-    Returns
-    -------
-    df_filtered : pandas.DataFrame
-        Filtered DataFrame.
-    cumulative_removed : int
-        Updated cumulative number of removed rows.
-    """
-    mask = df[column] >= min_value
-    if not apply_to_nans:
-        mask |= df[column].isna()
-
-    step_removed = (~mask).sum()
-    cumulative_removed += step_removed
-    df = df[mask]
-
-    if debug:
-        print(f"{label} filter - removed {step_removed} "
-              f"(Acum: {cumulative_removed}/{original_total})")
-
-    return df, cumulative_removed
-
-
-def apply_max_filter(df, column, max_value, label,
-                     original_total, cumulative_removed,
-                     debug=False, apply_to_nans=False):
-    """
-    Apply a maximum threshold filter to a DataFrame column.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Input DataFrame to filter.
-    column : str
-        Name of the column to apply the threshold to.
-    max_value : float or int
-        Maximum allowed value for the column.
-    label : str
-        Human-readable name of the filter (used in debug output).
-    original_total : int
-        Original number of rows before QC.
-    cumulative_removed : int
-        Current cumulative number of removed rows.
-    debug : bool, default False
-        If True, prints filtering information.
-    apply_to_nans : bool, default False
-        If True, rows containing NaN in `column` are removed.
-        If False, NaN values are ignored.
-
-    Returns
-    -------
-    df_filtered : pandas.DataFrame
-        Filtered DataFrame.
-    cumulative_removed : int
-        Updated cumulative number of removed rows.
-    """
-    mask = df[column] <= max_value
-    if not apply_to_nans:
-        mask |= df[column].isna()
-
-    step_removed = (~mask).sum()
-    cumulative_removed += step_removed
-    df = df[mask]
-
-    if debug:
-        print(f"{label} filter - removed {step_removed} "
-              f"(Acum: {cumulative_removed}/{original_total})")
-
-    return df, cumulative_removed
