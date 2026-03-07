@@ -63,7 +63,91 @@ EVENT_QC_DEFAULTS = {
 
 #: Default parameters for global trend filtering in UTDQuake.
 #: P,Pn,Pg trend was obtained from us network, and S, Sn, Sg trend from AUST network.
-GLOBAL_TRENDS_DEFAULTS = {
+GLOBAL_TRENDS_DEFAULTS_DEG2 = {
+    "P": {
+            "degree": 2,
+            "coefficients": [
+                -4.588170034538625e-06,
+                0.1204498394083781,
+                9.425437905735034
+            ],
+            "sigma_median": 3.081852707836243,
+            "sigma_max": 18.122289219478738,
+            "k": 5,
+            "x_min": 0,
+            "x_max": 11062.643551617337
+        },
+        "Pn": {
+            "degree": 2,
+            "coefficients": [
+                -2.123100378455806e-06,
+                0.1266681522352577,
+                3.972939045543998
+            ],
+            "sigma_median": 2.3717707360038713,
+            "sigma_max": 3.1788006095243153,
+            "k": 5,
+            "x_min": 0,
+            "x_max": 1996.7077724459723
+        },
+        "Pg": {
+            "degree": 2,
+            "coefficients": [
+                -3.778958404297257e-05,
+                0.17071245733195828,
+                0.1353941601365633
+            ],
+            "sigma_median": 0.7664360582262733,
+            "sigma_max": 5.0462686049646654,
+            "k": 5,
+            "x_min": 0,
+            "x_max": 728.2027580903004
+        },
+        "S": {
+            "degree": 2,
+            "coefficients": [
+                -1.0258425351247499e-05,
+                0.23111502668199244,
+                6.210472294867918
+            ],
+            "sigma_median": 10.393477818397521,
+            "sigma_max": 256.35044260025336,
+            "k": 5,
+            "x_min": 0,
+            "x_max": 13506.250225497472
+        },
+        "Sn": {
+            "degree": 2,
+            "coefficients": [
+                -2.3558552586659218e-05,
+                0.2520839395599748,
+                1.0803011315793982
+            ],
+            "sigma_median": 3.053158871586068,
+            "sigma_max": 6.134819445258061,
+            "k": 5,
+            "x_min": 0,
+            "x_max": 10504.929615655545
+        },
+        "Sg": {
+            "degree": 2,
+            "coefficients": [
+                5.762396673402229e-06,
+                0.2814509339071347,
+                0.739648517284471
+            ],
+            "phase": "Sg",
+            "sigma_median": 0.3828498082403183,
+            "sigma_max": 0.965278331528081,
+            "k": 3,
+            "x_min": 0,
+            "x_max": 885.351256561625,
+        }
+    }
+
+#: Default parameters for global trend filtering in UTDQuake.
+#: P,Pn,Pg trend was obtained from us network, and S, Sn, Sg trend from AUST network.
+GLOBAL_TRENDS_DEFAULTS_DEG1 = {
     "P": {
         "coefficients": [
             0.07945741212769164,
@@ -75,6 +159,7 @@ GLOBAL_TRENDS_DEFAULTS = {
         "degree": 1,
         "x_min": 1.0754613852665544,
         "x_max": 11062.643551617337
+        
     },
     "Pn": {
         "coefficients": [

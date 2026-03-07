@@ -18,6 +18,7 @@ class QCLog:
 
         entry = {
             "name": name,
+            "phase": phase,
             "removed": removed,
             "cumulative_removed": self.cumulative_removed,
             "cumulative_phase_removed": self.cumulative_per_phase.get(phase, None),
@@ -37,6 +38,10 @@ class QCLog:
     def get_steps(self):
         """Return all steps."""
         return self.steps
+    
+    def get_steps_by_phase(self, phase):
+        """Return all QC steps related to a specific phase."""
+        return [step for step in self.steps if step.get("phase") == phase]
 
     def total_removed(self):
         """Return total removed across all steps."""
