@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 from typing import Dict, List
 from .config import GLOBAL_TRENDS_DEFAULTS_DEG2
 from .log import QCLog
+from scipy.interpolate import UnivariateSpline
+
 
 # ============================================================
 # CONFIGURATION
@@ -102,6 +104,23 @@ class GlobalTrendFilter:
             trends = json.load(f)
 
         return cls(global_trends=trends)
+    
+
+    @staticmethod
+    def remove_xy_outliers_mahalanobis(x, y, threshold=4.5):
+        """
+        Return a boolean mask indicating which (x,y) points are NOT Mahalanobis outliers.
+        """
+        xy = np.vstack([x, y]).T
+        cov = np.cov(xy, rowvar=False)
+        mean = np.mean(xy, axis=0)
+        
+        diff = xy - mean
+        inv_cov = np.linalg.pinv(cov)
+        md = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))  # Mahalanobis distance
+        
+        mask = md <= threshold
+        return mask
 
     # --------------------------------------------------
     # 1️⃣ Compute bounds for ONE phase (for plotting)
@@ -121,6 +140,7 @@ class GlobalTrendFilter:
         model = self.models[phase]
 
         y_pred = model["poly"](x)
+
         upper = y_pred + model["k"] * model["sigma"]
         lower = y_pred - model["k"] * model["sigma"]
 
@@ -135,6 +155,7 @@ class GlobalTrendFilter:
               phase_col="phase",
               x_col="linear_hyp_distance",
               y_col="travel_time",
+              remove_outliers=False,
               log=None,
               debug=True):
         """
@@ -159,6 +180,9 @@ class GlobalTrendFilter:
         for phase, model in self.models.items():
             df_phase = df[df[phase_col] == phase]
 
+            if df_phase.empty:
+                continue
+            
             #add zero bounds to avoid negative distances or times, which can cause issues with the model
             zero_row = {x_col: 0, y_col: 0, phase_col: phase}
             for col in df_phase.columns:
@@ -169,11 +193,22 @@ class GlobalTrendFilter:
             df_phase = df_phase[df_phase[x_col]>=0]
             df_phase = df_phase[df_phase[y_col]>=0]
             
-            if df_phase.empty:
-                continue
 
             x = df_phase[x_col].values
             y = df_phase[y_col].values
+
+            # get boolean mask for outliers
+            if remove_outliers:
+                if phase in ["P"]:
+                    outlier_mask = self.remove_xy_outliers_mahalanobis(x, y, threshold=5)
+                elif phase in ["S"]:
+                    outlier_mask = self.remove_xy_outliers_mahalanobis(x, y, threshold=5)
+                else:
+                    outlier_mask = self.remove_xy_outliers_mahalanobis(x, y, threshold=4.5)
+
+                x = x[outlier_mask]
+                y = y[outlier_mask]
+                df_phase = df_phase[outlier_mask]  # now lengths match
 
             y_pred, lower, upper = self.compute_bounds(x, phase)
 
@@ -258,24 +293,61 @@ class PhaseTrendModel:
 
         return x[mask], y[mask]
 
+
+    @staticmethod
+    def remove_xy_outliers_mahalanobis(x, y, threshold=2.0):
+        """
+        Remove (x,y) points that are outliers based on Mahalanobis distance.
+        threshold: number of standard deviations
+        """
+        xy = np.vstack([x, y]).T
+        cov = np.cov(xy, rowvar=False)
+        mean = np.mean(xy, axis=0)
+        
+        diff = xy - mean
+        inv_cov = np.linalg.pinv(cov)
+        md = np.sqrt(np.sum(diff @ inv_cov * diff, axis=1))  # Mahalanobis distance
+        
+        mask = md <= threshold
+        return mask
+
+
     # -----------------------------
     # Fit model
     # -----------------------------
-    def fit(self, x: np.ndarray, y: np.ndarray, scale=100,
-             remove_outliers=False):
+    def fit(self, x: np.ndarray, y: np.ndarray, scale=1,
+            threshold=4.5,
+        remove_outliers=True):
         if len(x) < self.config.min_points:
             return False
 
         if remove_outliers:
-            x,y = self._remove_super_outliers(x, y)
+            mask = self.remove_xy_outliers_mahalanobis(x, y, threshold=threshold)
+            x, y = x[mask], y[mask] 
+            # x, y = self._remove_super_outliers(x, y)
 
-        weights = 1 / (1 + x / scale)
+        # Bin x to reduce short-distance dominance
+        bins = np.linspace(x.min(), x.max(), int(x.max()))
+        x_bin, y_bin = [], []
 
-        # Polynomial fit
-        coeffs = np.polyfit(x, y, self.config.degree, w=weights)
+        for i in range(len(bins)-1):
+            mask = (x >= bins[i]) & (x < bins[i+1])
+            if np.any(mask):
+                x_bin.append(np.mean(x[mask]))
+                y_bin.append(np.mean(y[mask]))
+
+        x_bin = np.array(x_bin)
+        y_bin = np.array(y_bin)
+
+        # Weighted polynomial fit on binned data
+        weights = 1 / (1 + x_bin / scale)
+        coeffs = np.polyfit(x_bin, y_bin, self.config.degree, w=weights)
+
+        # Save as poly1d
         self.poly = np.poly1d(coeffs)
         self.predictor = lambda xx: self.poly(xx)
 
+        # Compute residuals for adaptive sigma
         residuals = y - self.predictor(x)
         self.sigma_function = self._compute_sigma_vs_distance(x, residuals)
         self.x_min = float(np.min(x))
@@ -299,7 +371,6 @@ class PhaseTrendModel:
                                           edges_100, 
                                           edges_1000]))
         edges = edges[edges <= x_max]
-        print(edges)
 
         centers = []
         sigmas = []
@@ -436,7 +507,15 @@ class LocalTrendFilter:
         config = self.config.for_phase(phase)
 
         model = PhaseTrendModel(config)
-        success = model.fit(x, y)
+
+        if phase == "P":
+            threshold = 2
+        elif phase == "S":
+            threshold = 5
+        else:
+            threshold = 4.5
+
+        success = model.fit(x, y,threshold=threshold,scale=1)
 
 
         if not success:

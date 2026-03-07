@@ -64,7 +64,9 @@ def plot_phase_travel_time_qc(gd_df,bd_df, phase, log=None,
         # ax.plot(x_global, y_model, color="black", label="Global Trend")
 
         ax.plot(lower_global, y_model, "--", color="black", lw=1, 
-                label=f"Global\n± {int(k)}σ")
+                # label=f"Global\n± {int(k)}σ"
+                label=f"GT"
+                )
         ax.plot(upper_global, y_model, "--", color="black", lw=1)
 
     if local_model is not None:
@@ -75,7 +77,7 @@ def plot_phase_travel_time_qc(gd_df,bd_df, phase, log=None,
 
         ax.plot(x_local, y_model, color="red", lw=1)
         ax.plot(lower_local, y_model, "--", color="red", lw=1, 
-                label=f"Local\n± {int(k)}σ")
+                label=f"LT: ±{int(k)}σ")
         ax.plot(upper_local, y_model, "--", color="red", lw=1)
 
     nan_counts = gd_df[[x_col, y_col]].isna().sum(axis=1).sum()
@@ -167,6 +169,7 @@ def plot_phase_travel_time_qc(gd_df,bd_df, phase, log=None,
     if legend:
         if text:
             ax.legend(
+                title="QC",
                 fontsize=8,
                 loc="lower right",
                 alignment="right",
@@ -174,6 +177,7 @@ def plot_phase_travel_time_qc(gd_df,bd_df, phase, log=None,
             )
         else:
             ax.legend(fontsize=8,
+                title="QC",
                       alignment="right",
                         loc="lower right")
 
@@ -219,14 +223,16 @@ def tune_zoomed_travel_time_qc(axins, xlim=(0,15), ylim=(0,50)):
     axins.set_title("")
     return axins
 
-def plot_travel_time_qc(gd_df,bd_df,figsize=(8, 12),
+def plot_travel_time_qc(gd_df,bd_df,
+                        network,
+                        figsize=(8, 12),
                         log=None, 
                         show_zoomed_inset=True,
                         local_models=None,
                         global_models=None,
                         fit_xy_limits=False,
                         xy_inset_limits=None,
-                        save_path=None
+                        save_path=None,
                         ):
 
     fig, axes = plt.subplots(2, 3, figsize=figsize)
@@ -292,8 +298,7 @@ def plot_travel_time_qc(gd_df,bd_df,figsize=(8, 12),
             if i != 1:
                 ax.set_xlabel("")
     
-    
-    
+    fig.suptitle(f"{network}", fontsize=16, fontweight='bold')
     fig.tight_layout()
 
     if save_path is not None:
