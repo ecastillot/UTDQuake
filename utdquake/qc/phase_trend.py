@@ -364,10 +364,12 @@ class PhaseTrendModel:
         x_min, x_max = x.min(), x.max()
 
         # build distance edges
-        edges_100 = np.arange(0, 1000 + 100, 100)
+        edges_10 = np.arange(0, min(100, x_max) + 10, 10)
+        edges_100 = np.arange(100, min(1000, x_max) + 100, 100)
         edges_1000 = np.arange(1000, x_max + 1000, 1000)
 
         edges = np.unique(np.concatenate([
+                                            edges_10,   
                                           edges_100, 
                                           edges_1000]))
         edges = edges[edges <= x_max]

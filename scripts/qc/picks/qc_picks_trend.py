@@ -29,7 +29,7 @@ for network in networks:
     bd_df = df[~df["resource_id"].isin(gd_df["resource_id"])]
 
 
-    save_path = f"/groups/igonin/ecastillo/utdquake/scripts/qc/picks/{network}.png"
+    save_path = f"/groups/igonin/ecastillo/utdquake/scripts/qc/picks/plots/{network}.png"
     plot_travel_time_qc(gd_df,bd_df,
                         network,
                         save_path=save_path, 
