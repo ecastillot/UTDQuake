@@ -84,6 +84,7 @@ class PhaseTravelTimeModel:
         percentile_cols = [col for col in self.model_df.columns if col.startswith("travel_time_p")]
         required_cols = ["travel_time_sigma"] + percentile_cols
         df_valid = self.model_df.dropna(subset=required_cols)
+        df_valid = df_valid.sort_values("distance_center").reset_index(drop=True)
 
         if len(df_valid) == 0:
             raise ValueError("No valid rows available to build interpolators.")
@@ -105,8 +106,15 @@ class PhaseTravelTimeModel:
             # fallback: just constant sigma
             self.std_func = lambda d: np.full_like(d, y_sigma[0] if len(y_sigma) > 0 else 0.0, dtype=float)
         else:
-            self.sigma_coeff = np.polyfit(x, y_sigma, deg_sigma)
-            self.std_func = np.poly1d(self.sigma_coeff)
+            # self.sigma_coeff = np.polyfit(x, y_sigma, deg_sigma)
+            # self.std_func = np.poly1d(self.sigma_coeff)
+            self.std_func = interp1d(
+                    x,
+                    y_sigma,
+                    kind="linear",           
+                    bounds_error=False,
+                    fill_value="extrapolate"
+                )
 
         # -------------------------
         # Percentiles
@@ -119,8 +127,15 @@ class PhaseTravelTimeModel:
                 # fallback: constant curve
                 self.p_funcs[col] = lambda d, val=y[0]: np.full_like(d, val, dtype=float)
             else:
-                coeff = np.polyfit(x, y, deg_col)
-                self.p_funcs[col] = np.poly1d(coeff)
+                # coeff = np.polyfit(x, y, deg_col)
+                # self.p_funcs[col] = np.poly1d(coeff)
+                self.p_funcs[col] = interp1d(
+                                        x,
+                                        y,
+                                        kind="linear",
+                                        bounds_error=False,
+                                        fill_value="extrapolate"
+                                    )
 
     def predict(self, distance: np.ndarray) -> pd.DataFrame:
         """
@@ -618,6 +633,7 @@ class PhaseTravelTime:
         pandas.DataFrame
         """
         df = self.df_full.copy()
+        df = df.sort_values(self.distance_col).reset_index(drop=True)
 
         valid_mask = (
             (~df[self.distance_col].isna()) &
@@ -630,6 +646,7 @@ class PhaseTravelTime:
 
         # Use model prediction (clean + consistent)
         preds = model.predict(x)
+        
 
         mu = preds["travel_time_p50"].values
         sigma = preds["travel_time_sigma"].values
@@ -638,6 +655,9 @@ class PhaseTravelTime:
         sigma = np.where(np.abs(sigma) < 1e-12, np.nan, np.abs(sigma))
 
         z = (y - mu) / sigma
+
+        # print(df[["phase","linear_hyp_distance","travel_time","travel_time_zscore"]].head())
+        # print(x[:5],y[:5], mu[:5], sigma[:5], z[:5])
 
         df.loc[valid_mask, "travel_time_zscore"] = abs(z)
 

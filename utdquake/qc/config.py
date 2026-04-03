@@ -73,7 +73,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             ],
             "sigma_median": 3.081852707836243,
             "sigma_max": 18.122289219478738,
-            "k": 10,
+            "k": 20,
             "x_min": 0,
             "x_max": 11062.643551617337
         },
@@ -86,7 +86,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             ],
             "sigma_median": 2.3717707360038713,
             "sigma_max": 3.1788006095243153,
-            "k": 10,
+            "k": 20,
             "x_min": 0,
             "x_max": 1996.7077724459723
         },
@@ -99,7 +99,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             ],
             "sigma_median": 0.7664360582262733,
             "sigma_max": 5.0462686049646654,
-            "k": 10,
+            "k": 20,
             "x_min": 0,
             "x_max": 728.2027580903004
         },
@@ -112,7 +112,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             ],
             "sigma_median": 10.393477818397521,
             "sigma_max": 256.35044260025336,
-            "k": 10,
+            "k": 20,
             "x_min": 0,
             "x_max": 13506.250225497472
         },
@@ -125,7 +125,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             ],
             "sigma_median": 3.053158871586068,
             "sigma_max": 6.134819445258061,
-            "k": 10,
+            "k": 20,
             "x_min": 0,
             "x_max": 10504.929615655545
         },
@@ -139,7 +139,7 @@ GLOBAL_TRENDS_DEFAULTS_DEG2 = {
             "phase": "Sg",
             "sigma_median": 0.3828498082403183,
             "sigma_max": 0.965278331528081,
-            "k": 3,
+            "k": 20,
             "x_min": 0,
             "x_max": 885.351256561625,
         }

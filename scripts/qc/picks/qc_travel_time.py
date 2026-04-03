@@ -10,13 +10,14 @@ import concurrent.futures as cf
 
 fit = True
 plot = True
-max_workers = min(8, len(networks))  # adjust as needed
 base_input = "/groups/igonin/ecastillo/UTDQuake/picks"
+# results_folder = f"/groups/igonin/ecastillo/UTDQuake"
 results_folder = f"/groups/igonin/ecastillo/UTDQuake/manifests/qc"
 
 networks = os.listdir(base_input)
 # networks = ["TAP","tx","uw","ok","nn","RSNC","nc","us"]
-# networks = ["uw"]
+# networks = ["network=TAP.parquet"]
+max_workers = min(8, len(networks))  # adjust as needed
 
 print("Networks to process:", networks)
 
@@ -26,7 +27,7 @@ def process_network(network: str):
 
     data_input = os.path.join(base_input, network)
     data_output = os.path.join(results_folder, "picks", network)
-    model_path = os.path.join(results_folder, "qc_pick_models", network)
+    model_path = os.path.join(results_folder, "qc","pick_models", network)
 
     # Ensure directories exist
     os.makedirs(os.path.dirname(data_output), exist_ok=True)
@@ -47,10 +48,15 @@ def process_network(network: str):
             df_qc_z = multi_qc.attach_zscore()
             sanitized_df = sanitize_dataframe(df_qc_z, order_cols="picks")
 
+
+            sanitized_df.sort_values("linear_hyp_distance", inplace=True)
+            # print(sanitized_df[["phase","linear_hyp_distance",
+            # "travel_time","travel_time_zscore"]].head())
+
             sanitized_df.to_parquet(data_output, index=False)
             multi_qc.save_models_combined(model_path)
 
-        return f"✅ Done: {network}"
+            return f"✅ Done: {network}"
 
     except Exception as e:
         return f"❌ Error in {network}: {e}"

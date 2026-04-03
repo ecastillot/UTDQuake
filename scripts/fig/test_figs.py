@@ -120,7 +120,7 @@ for net_name in network_names:
         # network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
         network.plot_travel_time_qc(savepath=str(figures_dict["travel_time_qc"]).format(network=net_name),
                                     show_models=["travel_time_p50"],show_global_model=False,
-                                    zscore_threshold=5
+                                    zscore_threshold=3
                                     )
 
         # # # ---- CREATE GIF FOR THIS NETWORK ----
