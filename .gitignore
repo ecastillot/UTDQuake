@@ -7,6 +7,7 @@ figures_*/
 figures/networks/**/*
 scripts/qc/*/check_*.out
 scripts/fig/*.out
+scripts/das/**/*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -43,9 +43,12 @@ Notes
 
 import obsplus
 import pandas as pd
+from typing import Optional, Tuple, List, Dict, Any
+
 from .data import download_snapshot,load
 from .load import resolve_network_paths
 from .config import HF_CONFIG, get_root, get_utdq_paths
+from ..qc.travel_time import TravelTimeModel
 from ..utils.utils import get_network_summary
 from ..utils.plot import (plot_overview,
                           plot_stats,
@@ -56,7 +59,8 @@ from ..utils.plot import (plot_overview,
                           plot_utdq_overview,
                           plot_network_station_density,
                           plot_phase_count_radar_by_magnitude,
-                          plot_travel_time_vs_distance
+                          plot_travel_time_vs_distance,
+                          plot_travel_time_qc
                           )
 
 class Dataset:
@@ -507,6 +511,66 @@ class Network:
                                         log_scale=log_scale, savepath=savepath,
                                         show=show)
 
-    
+    def plot_travel_time_qc(self,
+               add_inset: bool = True,
+               zscore_threshold: float = 2,
+               show_text: bool = True,
+               show_models: Optional[List[str]] = None,
+               show_global_model: bool = False,
+               distance_col: str = "linear_hyp_distance",
+               tt_col: str = "travel_time",
+               x_inset_limits: Tuple[float, float] = (0, 30),
+               y_inset_limits: Tuple[float, float] = (0, 10),
+               savepath: Optional[str] = None
+               ):
+        """
+        Plot multi-phase travel-time QC with optional inset zooms.
 
-    
+        Parameters
+        ----------
+        df : pd.DataFrame
+            Travel-time data with multiple phases.
+        add_inset : bool, optional
+            Add zoomed inset plots (default: True).
+        zscore_threshold : float, optional
+            Z-score threshold for outlier detection (default: 2).
+        show_text : bool, optional
+            Show text annotations on each subplot (default: True).
+        show_models : list of str, optional
+            Columns in model to plot (default: ["travel_time_p50"]).
+        show_global_model : bool, optional
+            Display global trend bounds (default: False).
+        distance_col : str, optional
+            Column name for distance (default: "linear_hyp_distance").
+        tt_col : str, optional
+            Column name for travel time (default: "travel_time").
+        x_inset_limits : tuple, optional
+            X-axis limits for inset (default: (0, 30)).
+        y_inset_limits : tuple, optional
+            Y-axis limits for inset (default: (0, 10)).
+        savepath : str, optional
+            Path to save figure (default: None).
+
+        Returns
+        -------
+        fig : plt.Figure
+            The created figure.
+        axes : np.ndarray
+            Array of axes for each phase subplot.
+        all_axins : list of plt.Axes
+            List of inset axes.
+        """
+        if show_models is not None:
+            model_path = f"/groups/igonin/ecastillo/UTDQuake/qc/pick_models/network={self.name}.parquet"
+            load = TravelTimeModel.load(model_path)
+            models = load.models
+        else:
+            models = None
+
+        plot_travel_time_qc(df=self.picks, add_inset=add_inset, zscore_threshold=zscore_threshold,
+                            models=models,
+                            show_text=show_text, show_models=show_models,
+                            show_global_model=show_global_model, distance_col=distance_col,
+                            tt_col=tt_col, x_inset_limits=x_inset_limits,
+                            y_inset_limits=y_inset_limits, savepath=savepath)
+        

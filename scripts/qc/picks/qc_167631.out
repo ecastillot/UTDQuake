@@ -1,0 +1,276 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Networks to process: ['network=us.parquet', 'network=GFZ.parquet', 'network=AEIC.parquet', 'network=GEOFON.parquet', 'network=ISC.parquet', 'network=tx.parquet', 'network=hv.parquet', 'network=TAP.parquet', 'network=admin.parquet', 'network=uw.parquet', 'network=nm.parquet', 'network=nn.parquet', 'network=THE.parquet', 'network=nc.parquet', 'network=ak.parquet', 'network=ok.parquet', 'network=uu.parquet', 'network=NOA.parquet', 'network=LDG.parquet', 'network=pr.parquet', 'network=USP.parquet', 'network=mb.parquet', 'network=UCR.parquet', 'network=at.parquet', 'network=ZUR.parquet', 'network=UPP.parquet', 'network=SJA.parquet', 'network=TIR.parquet', 'network=se.parquet', 'network=av.parquet', 'network=RSNC.parquet', 'network=MRB.parquet', 'network=RHSSO.parquet', 'network=RSPR.parquet', 'network=UPA.parquet', 'network=VIE.parquet', 'network=MDD.parquet', 'network=ATH.parquet', 'network=OTT.parquet', 'network=KRSC.parquet', 'network=VAO.parquet', 'network=OSPL.parquet', 'network=UCC.parquet', 'network=NIC.parquet', 'network=PDG.parquet', 'network=CATAC.parquet', 'network=DJA.parquet', 'network=PRE.parquet', 'network=BEO.parquet', 'network=AUST.parquet', 'network=NOU.parquet', 'network=AFAD.parquet', 'network=MEX.parquet', 'network=TUN.parquet', 'network=BUC.parquet', 'network=IDC.parquet', 'network=KRNET.parquet', 'network=ETH.parquet', 'network=INMG.parquet', 'network=ANF.parquet', 'network=JAPAN.parquet', 'network=NNC.parquet', 'network=HEL.parquet', 'network=ECX.parquet', 'network=KRSZO.parquet', 'network=GCG.parquet', 'network=ISK.parquet', 'network=GII.parquet', 'network=BYKL.parquet', 'network=IPGP.parquet', 'network=BER.parquet', 'network=CNRM.parquet', 'network=FUNV.parquet', 'network=KNET.parquet', 'network=KMA.parquet', 'network=IGQ.parquet', 'network=BGS.parquet', 'network=JSN.parquet', 'network=EAF.parquet', 'network=EST.parquet', 'network=INET.parquet', 'network=ISN.parquet']
+Networks to process: ['network=us.parquet', 'network=GFZ.parquet', 'network=AEIC.parquet', 'network=GEOFON.parquet', 'network=ISC.parquet', 'network=tx.parquet', 'network=hv.parquet', 'network=TAP.parquet', 'network=admin.parquet', 'network=uw.parquet', 'network=nm.parquet', 'network=nn.parquet', 'network=THE.parquet', 'network=nc.parquet', 'network=ak.parquet', 'network=ok.parquet', 'network=uu.parquet', 'network=NOA.parquet', 'network=LDG.parquet', 'network=pr.parquet', 'network=USP.parquet', 'network=mb.parquet', 'network=UCR.parquet', 'network=at.parquet', 'network=ZUR.parquet', 'network=UPP.parquet', 'network=SJA.parquet', 'network=TIR.parquet', 'network=se.parquet', 'network=av.parquet', 'network=RSNC.parquet', 'network=MRB.parquet', 'network=RHSSO.parquet', 'network=RSPR.parquet', 'network=UPA.parquet', 'network=VIE.parquet', 'network=MDD.parquet', 'network=ATH.parquet', 'network=OTT.parquet', 'network=KRSC.parquet', 'network=VAO.parquet', 'network=OSPL.parquet', 'network=UCC.parquet', 'network=NIC.parquet', 'network=PDG.parquet', 'network=CATAC.parquet', 'network=DJA.parquet', 'network=PRE.parquet', 'network=BEO.parquet', 'network=AUST.parquet', 'network=NOU.parquet', 'network=AFAD.parquet', 'network=MEX.parquet', 'network=TUN.parquet', 'network=BUC.parquet', 'network=IDC.parquet', 'network=KRNET.parquet', 'network=ETH.parquet', 'network=INMG.parquet', 'network=ANF.parquet', 'network=JAPAN.parquet', 'network=NNC.parquet', 'network=HEL.parquet', 'network=ECX.parquet', 'network=KRSZO.parquet', 'network=GCG.parquet', 'network=ISK.parquet', 'network=GII.parquet', 'network=BYKL.parquet', 'network=IPGP.parquet', 'network=BER.parquet', 'network=CNRM.parquet', 'network=FUNV.parquet', 'network=KNET.parquet', 'network=KMA.parquet', 'network=IGQ.parquet', 'network=BGS.parquet', 'network=JSN.parquet', 'network=EAF.parquet', 'network=EST.parquet', 'network=INET.parquet', 'network=ISN.parquet']
+Processing network: network=us.parquet
+Processing network: network=GFZ.parquet
+Processing network: network=AEIC.parquet
+Processing network: network=GEOFON.parquet
+Processing network: network=ISC.parquet
+Processing network: network=tx.parquet
+Processing network: network=hv.parquet
+Processing network: network=TAP.parquet
+Warning: Failed to build model for phase Pn. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Pg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=hv.parquet
+Processing network: network=admin.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=tx.parquet
+Processing network: network=uw.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=TAP.parquet
+Processing network: network=nm.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=AEIC.parquet
+Processing network: network=nn.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=uw.parquet
+Processing network: network=THE.parquet
+Warning: Failed to build model for phase Sn. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=GFZ.parquet
+Processing network: network=nc.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=us.parquet
+Processing network: network=ak.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=GEOFON.parquet
+Processing network: network=ok.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ISC.parquet
+Processing network: network=uu.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=nm.parquet
+Processing network: network=NOA.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=admin.parquet
+Processing network: network=LDG.parquet
+Warning: Failed to build model for phase Pg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=nn.parquet
+Processing network: network=pr.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=nc.parquet
+Processing network: network=USP.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=uu.parquet
+Processing network: network=mb.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ok.parquet
+Processing network: network=UCR.parquet
+Warning: Failed to build model for phase Pn. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Pg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ak.parquet
+Processing network: network=at.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=THE.parquet
+Processing network: network=ZUR.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=pr.parquet
+Processing network: network=UPP.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=NOA.parquet
+Processing network: network=SJA.parquet
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=USP.parquet
+Processing network: network=TIR.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=mb.parquet
+Processing network: network=se.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=LDG.parquet
+Processing network: network=av.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=UCR.parquet
+Processing network: network=RSNC.parquet
+Warning: Failed to build model for phase Sn. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=UPP.parquet
+Processing network: network=MRB.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=at.parquet
+Processing network: network=RHSSO.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=se.parquet
+Processing network: network=RSPR.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ZUR.parquet
+Processing network: network=UPA.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=SJA.parquet
+Processing network: network=VIE.parquet
+Warning: Failed to build model for phase Sn. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=RSNC.parquet
+Processing network: network=MDD.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=TIR.parquet
+Processing network: network=ATH.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=av.parquet
+Processing network: network=OTT.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=UPA.parquet
+Processing network: network=KRSC.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=VIE.parquet
+Processing network: network=VAO.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=RSPR.parquet
+Processing network: network=OSPL.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=RHSSO.parquet
+Processing network: network=UCC.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=MRB.parquet
+Processing network: network=NIC.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=OTT.parquet
+Processing network: network=PDG.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=VAO.parquet
+Processing network: network=CATAC.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=UCC.parquet
+Processing network: network=DJA.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ATH.parquet
+Processing network: network=PRE.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=OSPL.parquet
+Processing network: network=BEO.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=MDD.parquet
+Processing network: network=AUST.parquet
+Warning: Failed to build model for phase Pg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=NIC.parquet
+Processing network: network=NOU.parquet
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=KRSC.parquet
+Processing network: network=AFAD.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=PDG.parquet
+Processing network: network=MEX.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=PRE.parquet
+Processing network: network=TUN.parquet
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=TUN.parquet
+Processing network: network=BUC.parquet
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=NOU.parquet
+Processing network: network=IDC.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=MEX.parquet
+Processing network: network=KRNET.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=CATAC.parquet
+Processing network: network=ETH.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=DJA.parquet
+Processing network: network=INMG.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=AFAD.parquet
+Processing network: network=ANF.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=BEO.parquet
+Processing network: network=JAPAN.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=AUST.parquet
+Processing network: network=NNC.parquet
+Warning: Failed to build model for phase S. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=BUC.parquet
+Processing network: network=HEL.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=KRNET.parquet
+Processing network: network=ECX.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=JAPAN.parquet
+Processing network: network=KRSZO.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ETH.parquet
+Processing network: network=GCG.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=IDC.parquet
+Processing network: network=ISK.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=NNC.parquet
+Processing network: network=GII.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=HEL.parquet
+Processing network: network=BYKL.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ANF.parquet
+Processing network: network=IPGP.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=INMG.parquet
+Processing network: network=BER.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ECX.parquet
+Processing network: network=CNRM.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=KRSZO.parquet
+Processing network: network=FUNV.parquet
+Warning: Failed to build model for phase Pn. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Pg. Error: No valid rows available to build interpolators.
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=GII.parquet
+Processing network: network=KNET.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=GCG.parquet
+Processing network: network=KMA.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=IPGP.parquet
+Processing network: network=IGQ.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ISK.parquet
+Processing network: network=BGS.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=BYKL.parquet
+Processing network: network=JSN.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=BER.parquet
+Processing network: network=EAF.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=CNRM.parquet
+Processing network: network=EST.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=KMA.parquet
+Processing network: network=INET.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=KNET.parquet
+Processing network: network=ISN.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=FUNV.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=JSN.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=BGS.parquet
+Warning: Failed to build model for phase Sg. Error: No valid rows available to build interpolators.
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=EST.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=INET.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=IGQ.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=ISN.parquet
+Saved combined model to /groups/igonin/ecastillo/UTDQuake/manifests/qc/qc_picks/network=EAF.parquet
+✅ Done: network=us.parquet
+✅ Done: network=GFZ.parquet
+✅ Done: network=AEIC.parquet
+✅ Done: network=GEOFON.parquet
+✅ Done: network=ISC.parquet
+✅ Done: network=tx.parquet
+✅ Done: network=hv.parquet
+✅ Done: network=TAP.parquet
+✅ Done: network=admin.parquet
+✅ Done: network=uw.parquet
+✅ Done: network=nm.parquet
+✅ Done: network=nn.parquet
+✅ Done: network=THE.parquet
+✅ Done: network=nc.parquet
+✅ Done: network=ak.parquet
+✅ Done: network=ok.parquet
+✅ Done: network=uu.parquet
+✅ Done: network=NOA.parquet
+✅ Done: network=LDG.parquet
+✅ Done: network=pr.parquet
+✅ Done: network=USP.parquet
+✅ Done: network=mb.parquet
+✅ Done: network=UCR.parquet
+✅ Done: network=at.parquet
+✅ Done: network=ZUR.parquet
+✅ Done: network=UPP.parquet
+✅ Done: network=SJA.parquet
+✅ Done: network=TIR.parquet
+✅ Done: network=se.parquet
+✅ Done: network=av.parquet
+✅ Done: network=RSNC.parquet
+✅ Done: network=MRB.parquet
+✅ Done: network=RHSSO.parquet
+✅ Done: network=RSPR.parquet
+✅ Done: network=UPA.parquet
+✅ Done: network=VIE.parquet
+✅ Done: network=MDD.parquet
+✅ Done: network=ATH.parquet
+✅ Done: network=OTT.parquet
+✅ Done: network=KRSC.parquet
+✅ Done: network=VAO.parquet
+✅ Done: network=OSPL.parquet
+✅ Done: network=UCC.parquet
+✅ Done: network=NIC.parquet
+✅ Done: network=PDG.parquet
+✅ Done: network=CATAC.parquet
+✅ Done: network=DJA.parquet
+✅ Done: network=PRE.parquet
+✅ Done: network=BEO.parquet
+✅ Done: network=AUST.parquet
+✅ Done: network=NOU.parquet
+✅ Done: network=AFAD.parquet
+✅ Done: network=MEX.parquet
+✅ Done: network=TUN.parquet
+✅ Done: network=BUC.parquet
+✅ Done: network=IDC.parquet
+✅ Done: network=KRNET.parquet
+✅ Done: network=ETH.parquet
+✅ Done: network=INMG.parquet
+✅ Done: network=ANF.parquet
+✅ Done: network=JAPAN.parquet
+✅ Done: network=NNC.parquet
+✅ Done: network=HEL.parquet
+✅ Done: network=ECX.parquet
+✅ Done: network=KRSZO.parquet
+✅ Done: network=GCG.parquet
+✅ Done: network=ISK.parquet
+✅ Done: network=GII.parquet
+✅ Done: network=BYKL.parquet
+✅ Done: network=IPGP.parquet
+✅ Done: network=BER.parquet
+✅ Done: network=CNRM.parquet
+✅ Done: network=FUNV.parquet
+✅ Done: network=KNET.parquet
+✅ Done: network=KMA.parquet
+✅ Done: network=IGQ.parquet
+✅ Done: network=BGS.parquet
+✅ Done: network=JSN.parquet
+✅ Done: network=EAF.parquet
+✅ Done: network=EST.parquet
+✅ Done: network=INET.parquet
+✅ Done: network=ISN.parquet
+✅ DONE

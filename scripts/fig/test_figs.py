@@ -32,6 +32,7 @@ def create_gif_from_folder(folder: Path, net_name: str, gif_name: str = None, fp
             f"{net_name}_station_location_uncertainty.png",
             # f"{net_name}_station_location_uncertainty_map.png",   # extra figure
             f"{net_name}_uncertainty_boxplots.png",
+            f"{net_name}_travel_time_qc.png",  
         ]
 
     images = [folder / f for f in ordered_files if (folder / f).exists()]
@@ -84,6 +85,7 @@ figures_dict = {"overview": figures_path / "utdquake_overview.png",
                 "hyp_pick_stats": figures_path/"networks"/"{network}"/ "{network}_hyp_pick_stats.png",
                 "station_location_uncertainty": figures_path/"networks"/"{network}"/ "{network}_station_location_uncertainty.png",
                 "uncertainty_boxplots": figures_path/"networks"/"{network}"/ "{network}_uncertainty_boxplots.png",
+                "travel_time_qc": figures_path/"networks"/"{network}"/ "{network}_travel_time_qc.png",
                 }
 
 
@@ -93,7 +95,7 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
-# network_names = ["us","RSNC","uw"]
+# network_names = ["THE"]
 
 # dataset.plot_overview(savepath=figures_dict["overview"])
 # print(f"Plotted dataset overview to {figures_dict['overview']}")
@@ -108,17 +110,23 @@ for net_name in network_names:
         # load network 
         network = dataset.get_network(name=net_name)
 
-        network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
-                                is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
-        network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
-        network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
-        network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
-        network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
-        network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
-        network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
-        # # ---- CREATE GIF FOR THIS NETWORK ----
-        create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
-                            net_name=net_name, fps=0.7)
+        # network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
+        #                         is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
+        # network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
+        # network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
+        # network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
+        # network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
+        # network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
+        # network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
+        network.plot_travel_time_qc(savepath=str(figures_dict["travel_time_qc"]).format(network=net_name),
+                                    show_models=["travel_time_p50"],show_global_model=False,
+                                    zscore_threshold=5
+                                    )
+
+        # # # ---- CREATE GIF FOR THIS NETWORK ----
+        # create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
+        #                     net_name=net_name, fps=0.7)
+
 
     except Exception as e:
         print(f"Error processing network {net_name}: {e}")

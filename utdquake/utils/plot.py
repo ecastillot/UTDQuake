@@ -8,6 +8,7 @@ Functions for plotting seismic data, including:
 - Seismic statistics and histograms (plot_stats, plot_pick_histograms)
 - Uncertainty visualization (plot_uncertainty_boxplots)
 - Utility functions like add_scalebar
+- Multi-panel QC plot for multiple seismic phases.
 
 Dependencies:
 - numpy, pandas, matplotlib, seaborn, scipy
@@ -25,7 +26,7 @@ import tempfile
 import os
 import warnings
 import string
-from typing import Dict, Any, Tuple, Optional
+from typing import Optional, Tuple, List, Dict, Any
 
 # Matplotlib
 import matplotlib.pyplot as plt
@@ -38,13 +39,15 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.image as mpimg
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
+
 
 # Seaborn
 import seaborn as sns
 
 # SciPy
 from scipy.stats import linregress
-
+from ..qc.config import GLOBAL_TRENDS_DEFAULTS_DEG2
 from .utils import (compute_region, 
                     human_format, 
                     smart_date_formatter,
@@ -2199,3 +2202,322 @@ def plot_travel_time_vs_distance(
         plt.show()
 
     plt.close(fig)
+
+def tune_zoomed_travel_time_qc(axins: plt.Axes,
+                               xlim: Tuple[float, float] = (0, 15),
+                               ylim: Tuple[float, float] = (0, 50)) -> plt.Axes:
+    """
+    Configure a zoomed inset plot for travel-time QC.
+
+    Ensures proper limits, custom tick labels, minor adjustments,
+    and removes axis labels for the inset.
+
+    Parameters
+    ----------
+    axins : plt.Axes
+        Axes object for the inset plot.
+    xlim : tuple, optional
+        X-axis limits for the inset (default: (0, 15)).
+    ylim : tuple, optional
+        Y-axis limits for the inset (default: (0, 50)).
+
+    Returns
+    -------
+    plt.Axes
+        The configured inset axes.
+    """
+    ymax, xmax = ylim[1], xlim[1]
+
+    # Formatter to hide labels at the edges
+    def hide_edges_x(x, pos):
+        return "" if np.isclose(x, 0) or np.isclose(x, xmax) else f"{x:g}"
+
+    def hide_edges_y(y, pos):
+        return "" if np.isclose(y, 0) or np.isclose(y, ymax) else f"{y:g}"
+
+    x_multiplier = int(np.floor(xmax / 3))
+    y_multiplier = int(np.floor(ymax / 3))
+
+    axins.set_xlim(*xlim)
+    axins.set_ylim(*ylim)
+    axins.tick_params(labelsize=8)
+
+    # Configure major ticks
+    axins.xaxis.set_major_locator(MultipleLocator(x_multiplier))
+    axins.xaxis.set_major_formatter(FuncFormatter(hide_edges_x))
+    axins.yaxis.set_major_formatter(FuncFormatter(hide_edges_y))
+    axins.tick_params(axis='y', direction='in', pad=-12)
+
+    # Configure y-axis offset text
+    axins.yaxis.get_offset_text().set_fontsize(8)
+    axins.yaxis.get_offset_text().set_fontweight('bold')
+    axins.yaxis.get_offset_text().set_fontfamily('serif')
+
+    # Gridlines
+    axins.grid(True, which="both", axis="y", linestyle="--", linewidth=0.5, alpha=0.3)
+
+    # Remove labels and title for inset
+    axins.set_xlabel("")
+    axins.set_ylabel("")
+    axins.set_title("")
+
+    return axins
+
+
+def plot_single_tt_qc(df: pd.DataFrame,
+                      phase: str,
+                      model: Optional[Any] = None,
+                      zscore_threshold: float = 2,
+                      show_text: bool = True,
+                      show_models: Optional[List[str]] = None,
+                      show_global_model: bool = True,
+                      distance_col: str = "linear_hyp_distance",
+                      tt_col: str = "travel_time",
+                      x_limits: Optional[Tuple[float, float]] = None,
+                      y_limits: Optional[Tuple[float, float]] = None,
+                      ax: Optional[plt.Axes] = None) -> plt.Axes:
+    """
+    Plot travel-time QC for a single seismic phase.
+
+    Highlights outliers based on z-score, optionally overlays model predictions
+    and global trends.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Travel-time data containing distance, travel time, phase, and z-score.
+    phase : str
+        Seismic phase to plot (e.g., "P", "S").
+    model : optional
+        TravelTimeModel object containing model predictions.
+    zscore_threshold : float, optional
+        Z-score threshold to mark outliers (default: 2).
+    show_text : bool, optional
+        Display fraction of valid points inside z-score threshold (default: True).
+    show_models : list of str, optional
+        Columns in model to display (default: ["travel_time_p50"]).
+    show_global_model : bool, optional
+        Show global trend bounds (default: True).
+    distance_col : str, optional
+        Column name for distance (default: "linear_hyp_distance").
+    tt_col : str, optional
+        Column name for travel time (default: "travel_time").
+    x_limits : tuple, optional
+        X-axis limits (default: auto from data).
+    y_limits : tuple, optional
+        Y-axis limits (default: auto from data).
+    ax : plt.Axes, optional
+        Axes to plot on (default: creates new figure).
+
+    Returns
+    -------
+    plt.Axes
+        Axes object containing the plot.
+    """
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 4))
+
+    if show_models is None:
+        show_models = ["travel_time_p50"]
+
+    # Filter for phase and drop missing values
+    df = df[df["phase"] == phase].dropna(subset=[distance_col, tt_col]).sort_values(distance_col)
+
+    x, y = df[distance_col], df[tt_col]
+    outside = np.abs(df["travel_time_zscore"]) > zscore_threshold
+    inside = ~outside
+
+    # Plot inliers and outliers
+    ax.scatter(x[outside], y[outside], s=2, alpha=0.6, color="red",
+               label=f"> {zscore_threshold} Zscore")
+    ax.scatter(x[inside], y[inside], s=2, alpha=0.6, color="black",
+               label=f"< {zscore_threshold} Zscore")
+
+    # Display text annotation for fraction of points within z-score
+    if show_text:
+        n_total = len(x)
+        n_inside = len(x) - len(x[outside])
+        ax.text(
+            0.95, 0.1, f"{human_format(n_inside)}/{human_format(n_total)}",
+            transform=ax.transAxes,
+            bbox=dict(facecolor="white", edgecolor="black",
+                      boxstyle="round,pad=0.3", alpha=1),
+            fontsize=12,
+            ha="right",
+            va="bottom"
+        )
+
+    # Plot global model bounds if available
+    if show_global_model and phase in GLOBAL_TRENDS_DEFAULTS_DEG2:
+        info = GLOBAL_TRENDS_DEFAULTS_DEG2[phase]
+        poly = np.poly1d(info["coefficients"])
+        sigma = info.get("sigma_median", 0)
+        k = info.get("k", 5)
+
+        y_pred = poly(np.asarray(x))
+        lower_g = np.maximum(0, y_pred - k * sigma)
+        upper_g = y_pred + k * sigma
+
+        ax.plot(x, upper_g, color="blue", linestyle=":", linewidth=1, label="Global bounds")
+        ax.plot(x, lower_g, color="blue", linestyle=":", linewidth=1)
+
+    # Plot model curves if provided
+    if model is not None:
+        bins = np.unique(np.concatenate([model.model_df["distance_min"].values,
+                                         model.model_df["distance_max"].values]))
+        for col in show_models:
+            model_df = model.model_df.sort_values("distance_center").dropna(subset=[col]).drop_duplicates("distance_center")
+            dd, tt = model_df["distance_center"].values, model_df[col].values
+
+            if len(dd) < 3:  # Not enough points for polynomial
+                print(f"Skipping {col}: not enough points to fit polynomial")
+                continue
+
+            label = col.split("_")[-1].upper() if "_" in col else col
+            linestyle = "-" if col == "travel_time_p50" else ".."
+            color = "green" if col == "travel_time_p50" else None
+            ax.plot(dd, tt, label=label, linestyle=linestyle, color=color, linewidth=1)
+
+        # Add vertical lines for bin edges
+        for c in bins:
+            ax.axvline(c, color="black", linestyle="--", linewidth=0.5, alpha=0.2)
+
+    # Grid and axis limits
+    ax.grid(True, which="both", axis="y", linestyle="--", linewidth=0.5, alpha=0.3)
+    if x_limits: ax.set_xlim(*x_limits)
+    if y_limits: ax.set_ylim(*y_limits)
+
+    return ax
+
+def plot_travel_time_qc(df: pd.DataFrame,
+               add_inset: bool = True,
+               zscore_threshold: float = 2,
+               show_text: bool = True,
+               models: Optional[Dict[str, Any]] = None,
+               show_models: Optional[List[str]] = None,
+               show_global_model: bool = False,
+               distance_col: str = "linear_hyp_distance",
+               tt_col: str = "travel_time",
+               x_inset_limits: Tuple[float, float] = (0, 30),
+               y_inset_limits: Tuple[float, float] = (0, 10),
+               savepath: Optional[str] = None
+               ) -> Tuple[plt.Figure, np.ndarray, List[plt.Axes]]:
+    """
+    Plot multi-phase travel-time QC with optional inset zooms.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Travel-time data with multiple phases.
+    add_inset : bool, optional
+        Add zoomed inset plots (default: True).
+    zscore_threshold : float, optional
+        Z-score threshold for outlier detection (default: 2).
+    show_text : bool, optional
+        Show text annotations on each subplot (default: True).
+    models : dict, optional
+        Dictionary of TravelTimeModel objects keyed by phase.
+    show_models : list of str, optional
+        Columns in model to plot (default: ["travel_time_p50"]).
+    show_global_model : bool, optional
+        Display global trend bounds (default: False).
+    distance_col : str, optional
+        Column name for distance (default: "linear_hyp_distance").
+    tt_col : str, optional
+        Column name for travel time (default: "travel_time").
+    x_inset_limits : tuple, optional
+        X-axis limits for inset (default: (0, 30)).
+    y_inset_limits : tuple, optional
+        Y-axis limits for inset (default: (0, 10)).
+    savepath : str, optional
+        Path to save figure (default: None).
+
+    Returns
+    -------
+    fig : plt.Figure
+        The created figure.
+    axes : np.ndarray
+        Array of axes for each phase subplot.
+    all_axins : list of plt.Axes
+        List of inset axes.
+    """
+    phase_order = ("P", "Pn", "Pg", "S", "Sn", "Sg")
+    fig, axes = plt.subplots(2, 3, figsize=(12, 8))
+    axes = axes.flatten()
+
+    all_axins = []
+    legend_handles, legend_labels = [], []
+
+    for idx, phase in enumerate(phase_order):
+        ax = axes[idx]
+        phase_df = df[df["phase"] == phase].dropna(subset=[distance_col, tt_col])
+        model_obj = models.get(phase) if models else None
+
+        if phase_df.empty:
+            ax.set_title(f"{phase} (no data)", fontweight="bold")
+            ax.axis("off")
+            continue
+
+        ax.set_title(phase, fontweight="bold")
+        ax = plot_single_tt_qc(
+            phase_df, phase=phase,
+            zscore_threshold=zscore_threshold,
+            model=model_obj,
+            show_text=show_text,
+            show_models=show_models,
+            show_global_model=show_global_model,
+            ax=ax,
+            distance_col=distance_col,
+            tt_col=tt_col,
+            x_limits=(0, phase_df[distance_col].max()),
+            y_limits=(0, phase_df[tt_col].max())
+        )
+
+        # Conditional axis labels
+        ax.set_ylabel("Travel time (s)" if idx in [0, 3] else "")
+        ax.set_xlabel("Distance (km)" if idx in [3, 4, 5] else "")
+
+        # Collect legend only once
+        if not legend_handles:
+            handles, labels = ax.get_legend_handles_labels()
+            legend_handles.extend(handles)
+            legend_labels.extend(labels)
+
+        # Add inset if requested
+        if add_inset:
+            axins = inset_axes(ax, width="35%", height="35%", loc="upper left")
+            axins = plot_single_tt_qc(
+                phase_df, phase=phase,
+                zscore_threshold=zscore_threshold,
+                model=model_obj,
+                show_text=False,
+                show_models=show_models,
+                show_global_model=show_global_model,
+                ax=axins,
+                distance_col=distance_col,
+                tt_col=tt_col,
+                x_limits=x_inset_limits,
+                y_limits=y_inset_limits
+            )
+            tune_zoomed_travel_time_qc(axins, xlim=x_inset_limits, ylim=y_inset_limits)
+            mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+            all_axins.append(axins)
+
+    fig.tight_layout()
+
+    # Unified legend at bottom
+    fig.legend(
+        legend_handles, legend_labels,
+        loc='lower center',
+        bbox_to_anchor=(0.5, -0.05),
+        ncol=len(legend_labels),
+        markerscale=4,
+        frameon=True,
+        prop={'size': 12}
+    )
+
+    if savepath:
+        fig.savefig(savepath, dpi=300, bbox_inches='tight')
+        print(f"Saved figure to {savepath}")
+
+    return fig, axes, all_axins
