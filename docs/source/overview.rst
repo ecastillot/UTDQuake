@@ -31,7 +31,7 @@ These plots are designed to help users quickly evaluate data quality, spatial co
           :width: 200px
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_stats.png
           :width: 200px
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_histograms.png
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_pick_histograms.png
           :width: 200px
 
    * - **Uncertainty in station location**
