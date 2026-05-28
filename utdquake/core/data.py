@@ -5,13 +5,14 @@ from pathlib import Path
 from datasets import load_dataset, Dataset, IterableDataset
 from typing import Union, List, Optional
 from huggingface_hub import snapshot_download
-from .config import HF_REPO_ID, HF_REPO_TYPE,HF_CONFIG
+from .config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, HF_CONFIG
 
 logger = logging.getLogger(__name__)
 
 def download_snapshot(
     local_dir: Union[str, Path],
     networks: Union[str, List[str]],
+    das: bool = False,
     include_banks: bool = True,
     include_networks: bool = True,
     include_events: bool = True,
@@ -32,6 +33,8 @@ def download_snapshot(
         - "*" downloads all networks
         - "t*" downloads all networks starting with 't'
         - ["tx", "uw"] downloads only specified networks
+    das : bool, optional
+        If True, downloads from the DAS dataset paths. Default: False (standard paths).
     include_banks : bool, optional
         Whether to download the bank (synthetic) data. Default: True.
     include_networks : bool, optional
@@ -86,7 +89,7 @@ def download_snapshot(
         for key, enabled in include.items():
             if not enabled:
                 continue
-            cfg = HF_CONFIG[key]
+            cfg = get_hf_entry(key,das)
             path_to_check = Path(local_dir) / cfg.path.format(network=net)
 
             if overwrite or not path_to_check.exists():
@@ -94,10 +97,10 @@ def download_snapshot(
 
     # Always include networks metadata if requested
     if include_networks:
-        network_path = Path(local_dir) / HF_CONFIG["networks"].path
+        network_path = Path(local_dir) / get_hf_entry("networks",das).path
         # Only append if file does not exist, or overwrite is True
         if overwrite or not network_path.exists():
-            allow_patterns.append(HF_CONFIG["networks"].path)
+            allow_patterns.append(get_hf_entry("networks",das).path)
 
     # Logging for debug
     logger.info("Downloading data from: %s", repo_id)
@@ -118,7 +121,7 @@ def download_snapshot(
         if unzip_banks:
             for net in networks:
                 # Unzip downloaded files and remove .zip
-                zip_paths = HF_CONFIG["banks"].path.format(network=net)
+                zip_paths = get_hf_entry("banks",das).path.format(network=net)
                 for zip_file in Path(local_dir).glob(zip_paths):
                     logger.info("Unzipping %s...", zip_file)
                     with zipfile.ZipFile(zip_file, "r") as zip_ref:
@@ -135,6 +138,7 @@ def load(
     key: str,
     network: Optional[Union[str, List[str]]] = None,
     streaming: bool = False,
+    das: bool = False,
     **kwargs
 ) -> Union[Dataset, IterableDataset]:
     """
@@ -147,6 +151,8 @@ def load(
     network : str or list of str, optional
         Network code(s) to filter. Use "*" for all networks.
         Ignored if key == "networks".
+    das : bool, optional
+        if das is True, loads from the DAS cache root instead of the standard cache root.
     streaming : bool, optional
         If True, loads dataset in streaming mode (lazy iteration).
     **kwargs : dict
@@ -178,21 +184,21 @@ def load(
 
     # Handle data_files
     data_files = None
-    if key != "network" and network is not None:
+    if key != "networks" and network is not None:
         # Normalize network to list
         if isinstance(network, str):
             network = [network]
 
-        network_paths = [HF_CONFIG[key].path.format(network=net) for net in network] \
+        network_paths = [get_hf_entry(key,das).path.format(network=net) for net in network] \
                         if isinstance(network, list) \
-                        else [HF_CONFIG[key].path]
+                        else [get_hf_entry(key,das).path]
 
-        data_files = {HF_CONFIG[key].split: network_paths }
+        data_files = {get_hf_entry(key,das).split: network_paths }
 
     dataset = load_dataset(
         HF_REPO_ID,
-        name=HF_CONFIG[key].name,
-        split=HF_CONFIG[key].split,
+        name=get_hf_entry(key,das).name,
+        split=get_hf_entry(key,das).split,
         data_files=data_files,
         streaming=streaming,
         **kwargs

@@ -6,6 +6,12 @@ from typing import  Optional
 
 from ..qc.catalog import apply_utdq_qc
 from ..core.config import KM_PER_DEG
+from ..writers.schema import (sanitize_dataframe, 
+                              PREF_PICKS_ORDER, 
+                              PREF_PICKS_TYPES,
+                              PREF_EVENTS_ORDER,
+                              PREF_EVENTS_TYPES)
+
 
 from obspy import Catalog
 
@@ -83,6 +89,15 @@ def utdq_picks_to_df(self,phase=None):
     df.drop(columns=['depth'], inplace=True)
     df.reset_index(drop=True, inplace=True)
     df.sort_values(by='time', inplace=True,ignore_index=True)
+    
+    df = sanitize_dataframe(df,
+                            string_cols=PREF_PICKS_TYPES["string_cols"],
+                            float_cols=PREF_PICKS_TYPES["float_cols"],
+                            int_cols=PREF_PICKS_TYPES["int_cols"],
+                            datetime_cols=PREF_PICKS_TYPES["datetime_cols"],
+                            bool_cols=PREF_PICKS_TYPES["bool_cols"],
+                            order_cols=PREF_PICKS_ORDER)
+    
     return df
 
 
@@ -128,6 +143,15 @@ def utdq_events_to_df(self):
 
     events.drop_duplicates(subset='event_id', inplace=True,
                            ignore_index=True)
+
+
+    events = sanitize_dataframe(events,
+                            string_cols=PREF_EVENTS_TYPES["string_cols"],
+                            float_cols=PREF_EVENTS_TYPES["float_cols"],
+                            int_cols=PREF_EVENTS_TYPES["int_cols"],
+                            datetime_cols=PREF_EVENTS_TYPES["datetime_cols"],
+                            bool_cols=PREF_EVENTS_TYPES["bool_cols"],
+                            order_cols=PREF_EVENTS_ORDER)
 
     return events
 

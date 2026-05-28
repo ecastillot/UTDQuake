@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
+import logging
+import sys
 from .log import QCLog
+
+logger = logging.getLogger("utdquake.qc.picks")
 
 
 def basic_picks_qc(
@@ -54,7 +58,7 @@ def basic_picks_qc(
         time difference ranges in seconds.
         Example: {("S", "P"): (10, np.inf)}
     debug : bool, default False
-        If True, prints information about why picks are removed.
+        If True, logger.debugs information about why picks are removed.
     apply_to_nans : bool, default False
         If True, rows with NaN in travel_time, linear_hyp_distance,
         or distance will be removed. If False, NaNs are ignored.
@@ -79,7 +83,7 @@ def basic_picks_qc(
     df_filtered = df_filtered[mask]
     log.add_step("travel_time_filter", step_removed, thresholds={"min": min_travel_time, "max": max_travel_time})
     if debug:
-        print(f"Travel time filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
+        logger.debug(f"Travel time filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
 
 
     # --- Hypocentral distance filter ---
@@ -90,7 +94,7 @@ def basic_picks_qc(
     df_filtered = df_filtered[mask]
     log.add_step("hypocentral_distance_filter", step_removed, thresholds={"min": min_linear_hyp_distance, "max": max_linear_hyp_distance})
     if debug:
-        print(f"Hypocentral distance filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
+        logger.debug(f"Hypocentral distance filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
 
     # --- Epicentral distance filter ---
     mask = df_filtered["distance"].between(min_epicentral_distance, max_epicentral_distance)
@@ -100,14 +104,14 @@ def basic_picks_qc(
     df_filtered = df_filtered[mask]
     log.add_step("epicentral_distance_filter", step_removed, thresholds={"min": min_epicentral_distance, "max": max_epicentral_distance})
     if debug:
-        print(f"Epicentral distance filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
+        logger.debug(f"Epicentral distance filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
 
     # --- S–P threshold filtering ---
     remove_index = set()
     grouped = df_filtered.groupby(["event_id", "station"])
 
     if debug:
-        print(f"S–P QC filter - starting ...")
+        logger.debug(f"S–P QC filter - starting ...")
 
     for (event_id, station), group in grouped:
         for (s_phase, p_phase), (min_diff, max_diff) in sp_threshold.items():
@@ -124,7 +128,7 @@ def basic_picks_qc(
                     if not (min_diff <= dt <= max_diff):
                         remove_index.update([s_idx, p_idx])
                         if debug:
-                            print(
+                            logger.debug(
                                 f"\tRemoving picks for event {event_id}, station {station}: "
                                 f"S_phase {s_row['phase']} (idx={s_idx}) - "
                                 f"P_phase {p_row['phase']} (idx={p_idx}), "
@@ -135,12 +139,12 @@ def basic_picks_qc(
     df_filtered = df_filtered.drop(index=remove_index)
     log.add_step("sp_threshold_filter", step_removed, thresholds=sp_threshold)
     if debug:
-        print(f"S–P QC filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
-        print(f"Remaining picks: {len(df_filtered)}")
+        logger.debug(f"S–P QC filter - removed {step_removed} (Cumulative: {log.cumulative_removed}/{original_total})")
+        logger.debug(f"Remaining picks: {len(df_filtered)}")
 
         # Count NaNs in the QC columns
         nan_counts = df_filtered[["travel_time", "linear_hyp_distance", "distance"]].isna().sum()
-        print(
+        logger.debug(
             f"NaNs in remaining picks - travel_time: {nan_counts['travel_time']}, "
             f"distance: {nan_counts['distance']}, "
             f"linear_hyp_distance: {nan_counts['linear_hyp_distance']}"

@@ -48,8 +48,11 @@ PREF_NETWORK_TYPES = {
 PREF_NETWORK_ORDER = list(PREF_NETWORK_TYPES.keys())
 
 
-PREF_STATIONS_TYPES = {"network": "string",
+PREF_STATIONS_TYPES = {
+                        "network_type": "string",
+                        "network": "string",
                         "station": "string",
+                        "channel": "string",
                         "available": "boolean",
                         "confirmed": "boolean",
                         "confirmed_latitude": "float",

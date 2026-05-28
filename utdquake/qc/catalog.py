@@ -1,9 +1,14 @@
+import logging
 import numpy as np
 from obspy import Catalog
+import sys
 from .config import PICK_QC_DEFAULTS, EVENT_QC_DEFAULTS
 from .picks import basic_picks_qc
 from .events import events_qc
 from .log import QCLog
+
+logger = logging.getLogger("utdquake.qc.catalog")
+
 
 def apply_utdq_qc(cat, debug=True, inplace=False):
     """
@@ -136,16 +141,16 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
 
     if debug:
         ini_picks_len = len(picks)
-        print("\n#### Starting pick-level QC ####")
-        print(f"Initial catalog: {ini_picks_len} picks")
-        print("Parameters:", pick_args, "\n")
+        logger.debug("\n#### Starting pick-level QC ####")
+        logger.debug(f"Initial catalog: {ini_picks_len} picks")
+        logger.debug(f"Parameters: {pick_args}")
 
     picks, picks_log = basic_picks_qc(picks, **pick_args)
     pick_args["log"] = picks_log  # Update log with results from picks_qc
     cat = apply_picks_qc_to_catalog(cat, picks, debug=debug)
     
     if debug:
-        print("#### Pick-level QC complete ####")
+        logger.debug("#### Pick-level QC complete ####")
 
     # ---------------------------------------------------------------------
     # Event-level QC
@@ -153,16 +158,16 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
     events = cat.utdq_events_to_df()
     if debug:
         ini_events_len = len(events)
-        print("\n#### Starting event-level QC ####")
-        print(f"Initial catalog: {ini_events_len } events")
-        print("Parameters:", event_args, "\n")
+        logger.debug("\n#### Starting event-level QC ####")
+        logger.debug(f"Initial catalog: {ini_events_len } events")
+        logger.debug(f"Parameters: {event_args}")
 
     events, events_log = events_qc(events, **event_args)
     event_args["log"] = events_log  # Update log with results from events_qc
     cat = apply_events_qc_to_catalog(cat, events, debug=debug)
 
     if debug:
-        print("#### Event-level QC complete ####")
+        logger.debug("#### Event-level QC complete ####")
 
     return cat
 
@@ -181,7 +186,7 @@ def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
         QCed picks DataFrame (output of `qc_picks`).
         Must contain columns 'pick_id' and 'resource_id'.
     debug : bool, default False
-        If True, prints summary of removals per event and final QC totals.
+        If True, logger.debugs summary of removals per event and final QC totals.
 
     Returns
     -------
@@ -201,7 +206,7 @@ def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
     removed_picks_cum = 0
 
     if debug:
-        print(f"QC start: {total_arrivals} arrivals, {total_picks} picks in catalog.")
+        logger.debug(f"QC start: {total_arrivals} arrivals, {total_picks} picks in catalog.")
 
     # --- Loop over events ---
     for event in cat:
@@ -216,7 +221,7 @@ def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
         removed_arrivals_cum += removed_arrivals
 
         if debug and removed_arrivals > 0:
-            print(f"Event {event.resource_id}: removed {removed_arrivals} arrivals.")
+            logger.debug(f"Event {event.resource_id}: removed {removed_arrivals} arrivals.")
 
         # Filter picks
         if hasattr(event, "picks") and event.picks:
@@ -226,11 +231,11 @@ def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
             removed_picks_cum += removed_picks
 
             if debug and removed_picks > 0:
-                print(f"Event {event.resource_id}: removed {removed_picks} picks.")
+                logger.debug(f"Event {event.resource_id}: removed {removed_picks} picks.")
 
     # --- Final QC summary ---
     if debug:
-        print(
+        logger.debug(
             f"Final Summary:"
             f"QC completed: removed {removed_arrivals_cum}/{total_arrivals} arrivals, "
             f"{removed_picks_cum}/{total_picks} picks. "
@@ -255,7 +260,7 @@ def apply_events_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
         QCed events DataFrame (output of `events_qc`).
         Must contain column 'event_id'.
     debug : bool, default False
-        If True, prints summary of removals.
+        If True, logger.debugs summary of removals.
 
     Returns
     -------
@@ -270,7 +275,7 @@ def apply_events_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
     removed_events = 0
 
     if debug:
-        print(f"QC start: {total_events} events in catalog.")
+        logger.debug(f"QC start: {total_events} events in catalog.")
 
     filtered_events = []
 
@@ -282,12 +287,12 @@ def apply_events_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
         else:
             removed_events += 1
             if debug:
-                print(f"\tRemoved event {event_id}")
+                logger.debug(f"\tRemoved event {event_id}")
 
     new_catalog = Catalog(events=filtered_events)
 
     if debug:
-        print(
+        logger.debug(
             f"Final Summary:"
             f"QC completed: removed {removed_events}/{total_events} events "
             f"({(removed_events / total_events * 100):.2f}%). "

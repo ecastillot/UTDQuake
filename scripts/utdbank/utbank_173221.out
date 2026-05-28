@@ -1,0 +1,24 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+UTDQBank(base_path=/home/edc240000/scratch/utdbank, index_path=/home/edc240000/scratch/utdbank/.index.db)
+2026-04-17 03:40:24,831 [INFO:utdquake.bank] Total files found: 450 | Chunk size: 100 | Total chunks to process: 5
+2026-04-17 03:40:24,833 [INFO:utdquake.bank] Processing chunk 1/5 | Files in chunk: 100
+  0% (0 of 100) |                        | Elapsed Time: 0:00:00 ETA:  --:--:--
+ 50% (50 of 100) |###########            | Elapsed Time: 0:03:04 ETA:   0:03:04
+100% (100 of 100) |######################| Elapsed Time: 0:06:34 Time:  0:06:34
+2026-04-17 03:58:28,826 [INFO:utdquake.bank] Processing chunk 2/5 | Files in chunk: 100
+  0% (0 of 100) |                        | Elapsed Time: 0:00:00 ETA:  --:--:--
+ 50% (50 of 100) |###########            | Elapsed Time: 0:05:01 ETA:   0:05:01
+100% (100 of 100) |######################| Elapsed Time: 0:10:50 Time:  0:10:50
+2026-04-17 04:27:41,183 [INFO:utdquake.bank] Processing chunk 3/5 | Files in chunk: 100
+  0% (0 of 100) |                        | Elapsed Time: 0:00:00 ETA:  --:--:--
+ 50% (50 of 100) |###########            | Elapsed Time: 0:06:29 ETA:   0:06:29
+100% (100 of 100) |######################| Elapsed Time: 0:14:26 Time:  0:14:26
+2026-04-17 05:03:46,320 [INFO:utdquake.bank] Processing chunk 4/5 | Files in chunk: 100
+  0% (0 of 100) |                        | Elapsed Time: 0:00:00 ETA:  --:--:--
+ 50% (50 of 100) |###########            | Elapsed Time: 0:08:41 ETA:   0:08:41
+100% (100 of 100) |######################| Elapsed Time: 0:17:41 Time:  0:17:41
+2026-04-17 05:47:27,494 [INFO:utdquake.bank] Processing chunk 5/5 | Files in chunk: 50
+  0% (0 of 50) |                         | Elapsed Time: 0:00:00 ETA:  --:--:--
+100% (50 of 50) |########################| Elapsed Time: 0:10:48 Time:  0:10:48
+✅ DONE

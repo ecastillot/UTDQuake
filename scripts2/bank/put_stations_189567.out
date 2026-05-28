@@ -1,0 +1,25 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+      network network_type station  ...   latitude      depth  elevation
+139       GCI          DAS   KKFLS  ...  59.637590  -3.189611   3.189611
+140       GCI          DAS   KKFLS  ...  59.637518  -3.005778   3.005778
+141       GCI          DAS   KKFLS  ...  59.637446  -2.818813   2.818813
+142       GCI          DAS   KKFLS  ...  59.637375  -2.628761   2.628761
+143       GCI          DAS   KKFLS  ...  59.637303  -2.435684   2.435684
+...       ...          ...     ...  ...        ...        ...        ...
+27721     GCI          DAS   TERRA  ...  59.557653  40.000000 -40.000000
+27722     GCI          DAS   TERRA  ...  59.557651  40.000000 -40.000000
+27723     GCI          DAS   TERRA  ...  59.557650  40.000000 -40.000000
+27724     GCI          DAS   TERRA  ...  59.557649  40.000000 -40.000000
+27725     GCI          DAS   TERRA  ...  59.557647  40.000000 -40.000000
+
+[27413 rows x 8 columns]
+2026-05-05 08:56:30,836 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-10T04:43:30.917000Z to 2023-06-11T04:43:30.917000Z...
+2026-05-05 08:56:55,334 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-05-05 08:56:55,381 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-10 04:43:30.917000 - 2023-06-11 04:43:30.917000 | Chunk creation time: 2026-05-05 08:56:55.381448
+2026-05-05 08:56:55,382 [INFO:utdquake.bank.utils] Starting to process 3 events in catalog GihLBf9X. (This id is created just for logging purposes)
+2026-05-05 08:56:55,382 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11707348 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786
+2026-05-05 08:56:55,388 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-05-05 08:56:55,434 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-05-05 08:56:55,472 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+slurmstepd-c-02-08: error: *** JOB 189567 ON c-02-08 CANCELLED AT 2026-05-05T08:58:52 ***

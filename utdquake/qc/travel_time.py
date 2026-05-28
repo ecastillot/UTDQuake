@@ -17,6 +17,7 @@ Example
 """
 
 from __future__ import annotations
+from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -659,7 +660,7 @@ class PhaseTravelTime:
         # print(df[["phase","linear_hyp_distance","travel_time","travel_time_zscore"]].head())
         # print(x[:5],y[:5], mu[:5], sigma[:5], z[:5])
 
-        df.loc[valid_mask, "travel_time_zscore"] = abs(z)
+        df.loc[valid_mask, "travel_time_zscore"] = z
 
         return df
 
@@ -936,9 +937,11 @@ class TravelTimeModel:
         ValueError
             If file format is unsupported or missing ``phase`` column.
         """
-        if filepath.endswith(".csv"):
+        filepath = Path(filepath)  # ensure it's a Path object
+
+        if filepath.suffix == ".csv":
             df = pd.read_csv(filepath)
-        elif filepath.endswith(".parquet"):
+        elif filepath.suffix == ".parquet":
             df = pd.read_parquet(filepath)
         else:
             raise ValueError("Unsupported format. Use .parquet or .csv")
@@ -1148,9 +1151,9 @@ class TravelTime:
             df_all = sanitize_dataframe(df_all, 
                             float_cols=float_cols, 
                             string_cols=str_cols)
-            if filepath.endswith(".parquet"):
+            if str(filepath).endswith(".parquet"):
                 df_all.to_parquet(filepath, index=False)
-            elif filepath.endswith(".csv"):
+            elif str(filepath).endswith(".csv"):
                 df_all.to_csv(filepath, index=False)
             else:
                 raise ValueError("Unsupported format. Use .parquet or .csv")

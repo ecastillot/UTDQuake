@@ -12,11 +12,11 @@ fit = True
 plot = True
 base_input = "/groups/igonin/ecastillo/UTDQuake/picks"
 # results_folder = f"/groups/igonin/ecastillo/UTDQuake"
-results_folder = f"/groups/igonin/ecastillo/UTDQuake/manifests/qc"
+results_folder = f"/groups/igonin/ecastillo/UTDQuake/manifests2/qc"
 
 networks = os.listdir(base_input)
 # networks = ["TAP","tx","uw","ok","nn","RSNC","nc","us"]
-# networks = ["network=TAP.parquet"]
+# networks = ["network=tx.parquet"]
 max_workers = min(8, len(networks))  # adjust as needed
 
 print("Networks to process:", networks)
@@ -33,33 +33,33 @@ def process_network(network: str):
     os.makedirs(os.path.dirname(data_output), exist_ok=True)
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
 
-    try:
-        if fit:
-            df = pd.read_parquet(data_input)
+    # try:
+    if fit:
+        df = pd.read_parquet(data_input)
 
-            multi_qc = TravelTime(df)
-            multi_qc.clean_data(
-                use_global=True,
-                use_mahalanobis=False,
-            )
-            multi_qc.build_bins(n_bins=100, dmin=0, dmax=30e3, alpha=3.0)
-            multi_qc.build_models(min_points_per_bin=4)
+        multi_qc = TravelTime(df)
+        multi_qc.clean_data(
+            use_global=True,
+            use_mahalanobis=False,
+        )
+        multi_qc.build_bins(n_bins=100, dmin=0, dmax=30e3, alpha=3.0)
+        multi_qc.build_models(min_points_per_bin=4)
 
-            df_qc_z = multi_qc.attach_zscore()
-            sanitized_df = sanitize_dataframe(df_qc_z, order_cols="picks")
+        df_qc_z = multi_qc.attach_zscore()
+        sanitized_df = sanitize_dataframe(df_qc_z, order_cols="picks")
 
 
-            sanitized_df.sort_values("linear_hyp_distance", inplace=True)
-            # print(sanitized_df[["phase","linear_hyp_distance",
-            # "travel_time","travel_time_zscore"]].head())
+        sanitized_df.sort_values("linear_hyp_distance", inplace=True)
+        # print(sanitized_df[["phase","linear_hyp_distance",
+        # "travel_time","travel_time_zscore"]].head())
 
-            sanitized_df.to_parquet(data_output, index=False)
-            multi_qc.save_models_combined(model_path)
+        sanitized_df.to_parquet(data_output, index=False)
+        multi_qc.save_models_combined(model_path)
 
-            return f"✅ Done: {network}"
+        return f"✅ Done: {network}"
 
-    except Exception as e:
-        return f"❌ Error in {network}: {e}"
+    # except Exception as e:
+    #     return f"❌ Error in {network}: {e}"
 
 if max_workers == 1:
     for network in networks:

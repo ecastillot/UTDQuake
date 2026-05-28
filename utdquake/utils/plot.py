@@ -40,7 +40,7 @@ import matplotlib.colors as mcolors
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import matplotlib.image as mpimg
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
-
+from matplotlib.colors import Normalize
 
 # Seaborn
 import seaborn as sns
@@ -157,7 +157,8 @@ def add_scalebar(
 def plot_overview(
     events: pd.DataFrame,
     stations: pd.DataFrame,
-    analysis: Dict[str, Any],
+    analysis: Dict[str, Any] = None,
+    das: bool = False,
     consider_calculated_stations: bool=True,
     region: Optional[Tuple[float, float, float, float]] = None,
     is_alaska: bool = True,
@@ -175,6 +176,8 @@ def plot_overview(
         Station table with columns: ['longitude', 'latitude', 'calculated', 'confirmed'].
     analysis : dict
         Dictionary with network statistics (events, stations, picks, etc.).
+    das: bool, optional
+        If True, plot stations as a connected line (DAS-like). Defaults to False.
     consider_calculated_stations : bool, optional
         If True, also plot calculated stations (if available). Defaults to True.
     region : tuple, optional
@@ -188,7 +191,12 @@ def plot_overview(
 
     Returns
     -------
-    None
+    fig , (ax1, ax2, ax3, ax4, ax5) 
+        ax1: Global map with events and stations
+        ax2: Regional map with events and stations
+        ax3: Time vs Magnitude scatter + histogram
+        ax4: Depth histogram
+        ax5: Magnitude histogram
 
     Examples
     --------
@@ -245,39 +253,68 @@ def plot_overview(
     ax5 = fig.add_subplot(gs_right[2, 0])  # bottom histogram
 
 
-    ax1.set_title(f"Contributor: {analysis.get('network', 'N/A')}",
+    
+    if analysis is not None:
+        ax1.set_title(f"Contributor: {analysis.get('network', 'N/A')}",
                   fontsize=14, weight='bold',loc='left')
-    print(analysis)
-    print(analysis.get('located_stations', 'N/A'))
-    ax1.text(
-        0.70, 0.8,
-        f"Events: {human_format(analysis.get('events', len(events)))}\n"
-        f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
-        f" -Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"
-        f" --Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"
-        f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"
-        f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}",
-        transform=ax1.transAxes,
-        ha='left',
-        va='top',
-        fontsize=9,
-        bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
-    )
+        print(analysis)
+        print(analysis.get('located_stations', 'N/A'))
+
+        if das:
+            msg = f"Events: {human_format(analysis.get('events', len(events)))}\n"+\
+                f"Cables: {human_format(analysis.get('total_stations', 'N/A'))}\n"+\
+                f"Channels: {human_format(analysis.get('total_channels', 'N/A'))}\n"+\
+                f" -Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"+\
+                f" --Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"+\
+                f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"+\
+                f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}"
+        else:
+            msg = f"Events: {human_format(analysis.get('events', len(events)))}\n"+\
+                f"Total Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"+\
+                f" -Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"+\
+                f" --Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}\n"+\
+                f"P Arrivals: {human_format(analysis.get('p_arrivals', 'N/A'))}\n"+\
+                f"S Arrivals: {human_format(analysis.get('s_arrivals', 'N/A'))}"
+
+        ax1.text(
+            0.70, 0.8,
+            msg,
+            transform=ax1.transAxes,
+            ha='left',
+            va='top',
+            fontsize=9,
+            bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=1)
+        )
+    if analysis is None:
+        ax1.set_title(f"Contributor: 'N/A'",
+                  fontsize=14, weight='bold',loc='left')
+
     ax1.set_axis_off()
 
 
     legend_elements = [
         Line2D([0], [0], marker='o', color='w', label='Earthquakes',
                markerfacecolor="#ec7524", markersize=8, markeredgecolor='orange'),
-        Line2D([0], [0], marker='^', color='w', label='Confirmed\nStations',
-               markerfacecolor='green', markersize=8, markeredgecolor='green')
+        
                 ]
+    if das:
+        stations_leg = Line2D([0], [0], color='green', label='DAS Cable',
+               linestyle='-',
+                linewidth=2) 
+    else:
+        stations_leg = Line2D([0], [0], marker='^', color='w', label='Confirmed\nStations',
+               markerfacecolor='green', markersize=8, markeredgecolor='green')
+    
+    legend_elements.append(stations_leg)
+
     if consider_calculated_stations and \
        'calculated_latitude' in stations.columns and \
        'calculated_longitude' in stations.columns:
         calc_label = Line2D([0], [0], marker='^', color='w', label='Calculated\nStations',
                markerfacecolor='gray', markersize=8, markeredgecolor='gray')
-        legend_elements.append(calc_label)
+
+        if not das:
+            legend_elements.append(calc_label)
         
     if len(legend_elements) ==3:
         bbox_anchor = (0.05, 0.9)
@@ -332,15 +369,29 @@ def plot_overview(
             label='Calc. Stations'
         )
 
-    ax1.scatter(
-        stations.loc[confirmed_mask, 'confirmed_longitude'],
-        stations.loc[confirmed_mask, 'confirmed_latitude'],
-        marker='^',
-        c='green',
-        alpha=0.7,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
-    )
+    if das:
+        das_stations = stations.loc[confirmed_mask].sort_values(
+            ["confirmed_longitude", "confirmed_latitude"]
+        )
+
+        ax1.plot(
+            das_stations["confirmed_longitude"],
+            das_stations["confirmed_latitude"],
+            color="green",
+            linewidth=2,
+            alpha=0.8,
+            transform=ccrs.PlateCarree(),
+        )
+    else:
+        ax1.scatter(
+            stations.loc[confirmed_mask, 'confirmed_longitude'],
+            stations.loc[confirmed_mask, 'confirmed_latitude'],
+            marker='^',
+            c='green',
+            alpha=0.7,
+            edgecolor='green',
+            transform=ccrs.PlateCarree()
+        )
 
     ax1.scatter(
         events['longitude'],
@@ -544,15 +595,33 @@ def plot_overview(
             label='Calc. Stations'
         )
 
-    ax2.scatter(
-        stations.loc[confirmed_mask, 'confirmed_longitude'],
-        stations.loc[confirmed_mask, 'confirmed_latitude'],
-        marker='^',
-        c='green',
-        alpha=1,
-        edgecolor='green',
-        transform=ccrs.PlateCarree()
-    )
+    if das:
+        for c,cable in stations.groupby("station"):
+
+            #change channel to float and sort by it, then plot as a line
+            cable["channel"] = cable["channel"].astype(float)
+            cable = cable.sort_values("channel")
+
+            das_stations = cable.loc[confirmed_mask]
+
+            ax2.plot(
+                das_stations["confirmed_longitude"],
+                das_stations["confirmed_latitude"],
+                color="green",
+                linewidth=2,
+                alpha=1,
+                transform=ccrs.PlateCarree(),
+            )
+    else:
+        ax2.scatter(
+            stations.loc[confirmed_mask, 'confirmed_longitude'],
+            stations.loc[confirmed_mask, 'confirmed_latitude'],
+            marker='^',
+            c='green',
+            alpha=1,
+            edgecolor='green',
+            transform=ccrs.PlateCarree()
+        )
 
 
     gl = ax2.gridlines(draw_labels=True, linewidth=0.5, color='gray',
@@ -577,11 +646,14 @@ def plot_overview(
 
     plt.close(fig)
 
+    return fig, (ax1, ax2, ax3, ax4, ax5) 
+
 
 def plot_utdq_overview(
     events: pd.DataFrame,
     stations: pd.DataFrame,
     analysis: Dict[str, Any],
+    das: bool = False,
     consider_calculated_stations: bool=True,
     region: Optional[Tuple[float, float, float, float]] = None,
     savepath: Optional[str] = None,
@@ -600,6 +672,8 @@ def plot_utdq_overview(
         Must contain 'longitude' and 'latitude'.
     analysis : dict
         Summary statistics (events, arrivals, stations).
+    das : bool, optional
+        If True, plot stations as a connected line (DAS-like). Defaults to False.
     consider_calculated_stations : bool, optional
         If True, also plot calculated stations (if available). Defaults to True.
     region : tuple or None, optional
@@ -612,8 +686,7 @@ def plot_utdq_overview(
 
     Returns
     -------
-    output_path : str
-        Full path to the saved figure.
+    None
     """
 
     try:
@@ -696,25 +769,50 @@ def plot_utdq_overview(
                     label="Calc. Stations"
                 )
 
-    ax2.scatter(
-        stations.loc[confirmed_mask, 'confirmed_longitude'],
-        stations.loc[confirmed_mask, 'confirmed_latitude'],
-        marker="^",
-        c="green",
-        s=40,
-        alpha=0.7,
-        transform=ccrs.PlateCarree(),
-        label="Conf. Stations"
-    )
+    if das:
+        for c,cable in stations.groupby("station"):
+            #change channel to float and sort by it, then plot as a line
+            cable["channel"] = cable["channel"].astype(float)
+            cable = cable.sort_values("channel")
+
+            das_stations = cable.loc[confirmed_mask]
+
+            ax2.plot(
+                das_stations["confirmed_longitude"],
+                das_stations["confirmed_latitude"],
+                color="green",
+                linewidth=2,
+                alpha=0.8,
+                transform=ccrs.PlateCarree(),
+            )
+    else:
+        ax2.scatter(
+            stations.loc[confirmed_mask, 'confirmed_longitude'],
+            stations.loc[confirmed_mask, 'confirmed_latitude'],
+            marker="^",
+            c="green",
+            s=40,
+            alpha=0.7,
+            transform=ccrs.PlateCarree(),
+            label="Conf. Stations"
+        )
 
     
     ax2.legend(loc="lower right", fontsize=12)
 
+    if das:
+        msg = f"Cables: {human_format(analysis.get('total_stations', 'N/A'))}\n" +\
+        f"Channels: {human_format(analysis.get('total_channels', 'N/A'))}\n" +\
+        f"-Located: {human_format(analysis.get('located_stations', 'N/A'))}\n" +\
+        f"--Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}"
+    else:
+        msg = f"Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n" +\
+        f"-Located: {human_format(analysis.get('located_stations', 'N/A'))}\n" +\
+        f"--Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}"
+
     ax2.text(
         0.02, 0.05,
-        f"Stations: {human_format(analysis.get('total_stations', 'N/A'))}\n"
-        f"-Located: {human_format(analysis.get('located_stations', 'N/A'))}\n"
-        f"--Confirmed: {human_format(analysis.get('confirmed_stations', 'N/A'))}",
+        msg=msg,
         transform=ax2.transAxes,
         ha="left",
         va="bottom",
@@ -817,7 +915,7 @@ def plot_stats(
         ax3.set_title("Epicentral Distance")
     else:
         # Prepare bins and labels
-        bins = [0, 30, 60, 100, 150, 200, 300, np.inf]
+        bins = [0, 30, 60, 100, 150, 200, 300,500, np.inf]
         labels_dist = [
             f">{int(bins[i])}" if bins[i+1] == np.inf else f"{int(bins[i])}-{int(bins[i+1])}"
             for i in range(len(bins)-1)
@@ -833,9 +931,19 @@ def plot_stats(
         counts_P, _ = np.histogram(picks_P["distance_km"], bins=bins)
         counts_S, _ = np.histogram(picks_S["distance_km"], bins=bins)
 
-        # Percentages
-        pct_P = 100 * counts_P / counts_P.sum()
-        pct_S = 100 * counts_S / counts_S.sum()
+        # Total picks per distance bin
+        counts_total = counts_P + counts_S
+
+        # Avoid division by zero
+        counts_total_safe = np.where(counts_total == 0, 1, counts_total)
+
+        # Percentages per distance bin
+        pct_P = 100 * counts_P / counts_total_safe
+        pct_S = 100 * counts_S / counts_total_safe
+
+        # # Percentages
+        # pct_P = 100 * counts_P / counts_P.sum()
+        # pct_S = 100 * counts_S / counts_S.sum()
 
         # Plot
         y_pos = np.arange(len(labels_dist))
@@ -885,7 +993,7 @@ def plot_stats(
                     f"{pct_P[i]:.1f}%",
                     va="center",
                     ha="right",
-                    fontsize=9,
+                    fontsize=8,
                     color="black",
                     rotation=90
                 )
@@ -896,7 +1004,7 @@ def plot_stats(
                     f"{pct_S[i]:.1f}%",
                     va="center",
                     ha="left",
-                    fontsize=9,
+                    fontsize=8,
                     color="black",
                     rotation=-90
                 )
@@ -921,9 +1029,8 @@ def plot_stats(
     counts, bin_edges = np.histogram(azimuth_rad, bins=bins, range=(0, 2*np.pi))
     angles = (bin_edges[:-1] + bin_edges[1:]) / 2
     percentages = 100 * counts / counts.sum()
-    cmap = create_green_to_orange_cmap(n_colors=bins)
-    norm = mcolors.Normalize(vmin=percentages.min(), vmax=percentages.max())
-    colors = [(r, g, b, 0.7) for r, g, b, _ in cmap(norm(percentages))]
+    cmap = cm.get_cmap("Greens", len(counts))
+    colors = cmap(percentages / percentages.max())
     ax4.bar(angles, np.ones_like(counts), width=2*np.pi/bins, bottom=0,
             align="center", edgecolor="k", color=colors)
     ax4.plot(0, 0, marker="*", color="black", markersize=18, zorder=5)
@@ -934,7 +1041,10 @@ def plot_stats(
     ax4.set_title("Azimuthal Gap", pad=25)
 
     # --- Add colorbar for azimuthal gap ---
-    sm_gap = cm.ScalarMappable(cmap=cmap, norm=norm)
+    sm_gap = cm.ScalarMappable(cmap=cmap, 
+                                norm=mcolors.Normalize(vmin=percentages.min(), 
+                                                    vmax=percentages.max())
+                                    )
     sm_gap.set_array([])
     cax_gap = inset_axes(ax4, width="80%", height="10%", loc="lower center", borderpad=-3)
     cbar_gap = plt.colorbar(sm_gap, cax=cax_gap, orientation="horizontal")
@@ -955,18 +1065,21 @@ def plot_stats(
         counts, bin_edges = np.histogram(azimuth_rad, bins=bins, range=(0, 2*np.pi))
         angles = (bin_edges[:-1] + bin_edges[1:]) / 2
         percentages = 100 * counts / counts.sum()
-        cmap = create_green_to_orange_cmap(n_colors=bins)
-        colors = [(r, g, b, 0.7) for r, g, b, _ in cmap(norm(percentages))]
+        # cmap = create_green_to_orange_cmap(n_colors=bins)
+        cmap = cm.get_cmap("Greens", len(counts))
+        colors = cmap(percentages / percentages.max())
         ax5.bar(angles, np.ones_like(counts), width=2*np.pi/bins, bottom=0,
                 align="center", edgecolor="k", color=colors)
-        ax5.plot(0, 0, marker="^", color="black", markersize=14, zorder=5)
+        ax5.plot(0, 0, marker="*", color="black", markersize=14, zorder=5)
         ax5.set_theta_zero_location("N")
         ax5.set_theta_direction(-1)
         ax5.set_yticks([])
         ax5.set_thetagrids(np.arange(0, 360, 30))
-        ax5.set_title("Azimuth", pad=25)
+        ax5.set_title("Arrival Azimuth", pad=25)
 
-        sm = cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm = cm.ScalarMappable(cmap=cmap, 
+                            norm=mcolors.Normalize(vmin=percentages.min(), 
+                                                    vmax=percentages.max()))
         sm.set_array([])
         cax = inset_axes(ax5, width="80%", height="10%", loc="lower center", borderpad=-3) # tweak position/size
         cbar = plt.colorbar(sm, cax=cax, orientation="horizontal")
@@ -1000,6 +1113,254 @@ def plot_stats(
         'azimuth': ax5
     }
     return fig, axes_dict
+
+def plot_stats_from_stats(stats: dict,
+                    savepath: Optional[str] = None,
+                    show: bool = True) -> Tuple[plt.Figure, Dict[str, plt.Axes]]:
+    """
+    Plot a 5-panel figure using precomputed network stats.
+
+    Panels: depth, magnitude, epicentral distance, azimuthal gap, azimuth distribution.
+
+    Parameters
+    ----------
+    stats : dict
+        These keys are typically generated by `Network.compute_stats()`.
+        Precomputed statistics dictionary. Expected keys:
+
+        - 'depth_values' : np.ndarray
+            Depths of events in kilometers.
+        - 'magnitude_values' : np.ndarray
+            Magnitudes of events.
+        - 'distance_bins' : np.ndarray
+            Bin edges for epicentral distances [km].
+        - 'epi_dist_counts_P' : np.ndarray
+            Counts of P-phase picks in each distance bin.
+        - 'epi_dist_counts_S' : np.ndarray
+            Counts of S-phase picks in each distance bin.
+        - 'az_gap_counts' : np.ndarray
+            Counts per azimuthal gap bin (typically 12 bins around 360°).
+        - 'az_gap_bins' : np.ndarray
+            Bin edges for azimuthal gap (radians).
+        - 'azimuth_counts' : np.ndarray, optional
+            Counts per azimuth bin for station distribution or picks.
+        - 'azimuth_bins' : np.ndarray, optional
+            Bin edges for azimuth (radians).
+    savepath : str, optional
+        Path to save the figure. Default: None.
+    show : bool, optional
+        If True, display the figure. Default: True.
+
+    Returns
+    -------
+    fig : plt.Figure
+        The Matplotlib figure object containing the 5 panels.
+    axes_dict : dict
+        Dictionary of axes for each subplot:
+        {
+            'depth': ax1,
+            'magnitude': ax2,
+            'epicentral_distance': ax3,
+            'azimuthal_gap': ax4,
+            'azimuth': ax5
+        }
+
+    Notes
+    -----
+    - Depth and magnitude panels use log-scaled y-axis.
+    - Epicentral distance panel shows P and S phase counts mirrored around zero.
+    - Polar plots show the distribution of azimuthal gaps and azimuths with color-coded percentages.
+    - The function does not save or show the figure; use `plt.show()` or `fig.savefig()` externally.
+
+    Example
+    -------
+    >>> fig, axes = plot_stats_from_stats(stats)
+    >>> plt.show()
+    """
+
+    fig = plt.figure(figsize=(10, 8)) 
+    gs = gridspec.GridSpec(2, 4, figure=fig)
+    ax1 = fig.add_subplot(gs[0, 0:2])  # Depth 
+    ax2 = fig.add_subplot(gs[0, 2:4])  # Magnitude 
+    ax3 = fig.add_subplot(gs[1, 1:3])  # Epicentral distance (mirrored bars)
+    ax4 = fig.add_subplot(gs[1, 0], projection="polar")  # Azimuthal gap
+    ax5 = fig.add_subplot(gs[1, 3], projection="polar")  # Azimuth
+
+    axes = [ax1, ax2, ax4, ax3, ax5]
+    labels = ['(a)', '(b)', '(c)', '(d)', '(e)']
+    for ax, label in zip(axes, labels):
+        ax.text(-0.1, 1.05, label, transform=ax.transAxes,
+                fontsize=12, fontweight='bold', va='bottom', ha='right')
+
+    # --- Depth ---
+    depth_km = stats["depth_values"]
+    # lower, upper = np.percentile(depth_km, [1, 97])
+    lower, upper = depth_km.min(), depth_km.max()
+    depth_filtered = depth_km[(depth_km >= lower) & (depth_km <= upper)]
+    ax1.hist(depth_filtered, bins=20, color='#006400', alpha=0.7)
+    ax1.set_yscale("log")
+    ax1.set_xlabel('Depth [km]')
+    ax1.set_ylabel('Log Frequency')
+    ax1.set_title("Depth")
+    ax1.set_ylim(bottom=1)
+    ax1.grid(True, linestyle='--', alpha=0.5)
+
+    # --- Magnitude ---
+    mags = stats["magnitude_values"]
+    ax2.hist(mags, bins=20, color='#ec7524')
+    ax2.set_yscale("log")
+    ax2.set_title("Magnitude")
+    ax2.set_xlabel("Magnitude")
+    ax2.set_ylabel("Log Frequency")
+    ax2.grid(True, linestyle='--', alpha=0.5)
+    ax2.set_ylim(bottom=1)
+    ax2.annotate(f"Max: {mags.max():.2f}", xy=(0.98, 0.95), xycoords="axes fraction",
+                 ha="right", fontsize=9)
+    ax2.annotate(f"Min: {mags.min():.2f}", xy=(0.98, 0.88), xycoords="axes fraction",
+                 ha="right", fontsize=9)
+
+    # --- Epicentral distance (mirrored bars) ---
+    bins = stats["distance_bins"]
+    labels_dist = [
+        f">{int(bins[i])}" if bins[i+1] == np.inf else f"{int(bins[i])}-{int(bins[i+1])}"
+        for i in range(len(bins)-1)
+    ]
+    counts_P = stats["epi_dist_counts_P"]
+    counts_S = stats["epi_dist_counts_S"]
+
+    # pct_P = 100 * counts_P / counts_P.sum()
+    # pct_S = 100 * counts_S / counts_S.sum()
+
+    # Total picks per distance bin
+    counts_total = counts_P + counts_S
+
+    # Avoid division by zero
+    counts_total_safe = np.where(counts_total == 0, 1, counts_total)
+
+    # Percentages per distance bin
+    pct_P = 100 * counts_P / counts_total_safe
+    pct_S = 100 * counts_S / counts_total_safe
+
+
+    y_pos = np.arange(len(labels_dist))
+
+    ax3.barh(y_pos, -counts_P, color="#006400", 
+            alpha=0.7, edgecolor="k", label="P")
+    ax3.barh(y_pos, counts_S, color="#ec7524", 
+            alpha=0.7, edgecolor="k", label="S")
+
+    ax3.axvline(0, color='k', linewidth=1)
+
+    ax3.yaxis.set_ticks_position('both')
+    ax3.tick_params(axis='y', labelleft=True, labelright=False, pad=5)
+    ax3.set_yticks(y_pos)
+    ax3.set_yticklabels(labels_dist)
+
+    ax3.invert_yaxis()
+    ax3.set_xlabel("Counts")
+    ax3.set_ylabel("Distance (km)", rotation=90, 
+                    va='bottom', ha='center')
+    ax3.set_title("Epicentral Distance by Phase")
+
+    # Add percentages
+    for i in range(len(y_pos)):
+        if counts_P[i] > 0:
+            ax3.text(-counts_P[i]-1.5, i, 
+                            f"{pct_P[i]:.1f}%", 
+                            va="center", ha="right", 
+                            color="black",
+                            fontsize=8, rotation=90)
+        ax3.text(counts_S[i]+1.5, i, 
+                        f"{pct_S[i]:.1f}%", 
+                        va="center", ha="left", 
+                        color="black",
+                        fontsize=8, rotation=-90)
+    
+    max_val = max(counts_P.max(), counts_S.max())
+    ax3.set_xlim(-(max_val * 1.15), max_val * 1.15)
+
+    ax3.grid(True, axis="both", linestyle="--", color="gray", alpha=0.5)
+    ax3.ticklabel_format(style="sci", axis="x", scilimits=(0,0))
+    ax3.legend(loc="lower right")
+
+
+    # --- Azimuthal gap ---
+    az_counts = stats["az_gap_counts"]
+    az_bins = stats["az_gap_bins"]
+    angles = (az_bins[:-1] + az_bins[1:]) / 2
+    percentages = 100 * az_counts / az_counts.sum()
+    cmap = cm.get_cmap("Greens", len(az_counts))
+    colors = cmap(percentages / percentages.max())
+    ax4.bar(angles, np.ones_like(az_counts), width=2*np.pi/len(az_counts),
+            bottom=0, align="center", edgecolor="k", color=colors)
+    ax4.plot(0, 0, marker="*", color="black", markersize=18, zorder=5)
+    ax4.set_theta_zero_location("N")
+    ax4.set_theta_direction(-1)
+    ax4.set_yticks([])
+    ax4.set_thetagrids(np.arange(0, 360, 30))
+    ax4.set_title("Azimuthal Gap", pad=25)
+
+    # Colorbar for azimuthal gap
+    sm_gap = cm.ScalarMappable(cmap=cmap, norm=mcolors.Normalize(vmin=percentages.min(), vmax=percentages.max()))
+    sm_gap.set_array([])
+    cax_gap = inset_axes(ax4, width="80%", height="10%", loc="lower center", borderpad=-3)
+    plt.colorbar(sm_gap, cax=cax_gap, orientation="horizontal", label="Percentage [%]")
+
+    # --- Azimuth ---
+    if stats.get("azimuth_counts") is not None:
+        az_counts = stats["azimuth_counts"]
+        az_bins = stats["azimuth_bins"]
+        angles = (az_bins[:-1] + az_bins[1:]) / 2
+        percentages = 100 * az_counts / az_counts.sum()
+        cmap = cm.get_cmap("Greens", len(az_counts))
+        colors = cmap(percentages / percentages.max())
+        ax5.bar(angles, np.ones_like(az_counts), width=2*np.pi/len(az_counts),
+                bottom=0, align="center", edgecolor="k", color=colors)
+        ax5.plot(0, 0, marker="*", color="black", markersize=14, zorder=5)
+        ax5.set_theta_zero_location("N")
+        ax5.set_theta_direction(-1)
+        ax5.set_yticks([])
+        ax5.set_thetagrids(np.arange(0, 360, 30))
+        ax5.set_title("Arrival Azimuth", pad=25)
+
+        sm = cm.ScalarMappable(cmap=cmap, 
+                             norm=mcolors.Normalize(vmin=percentages.min(), 
+                                                    vmax=percentages.max())
+                                )
+        sm.set_array([])
+        cax = inset_axes(ax5, width="80%", height="10%", loc="lower center", borderpad=-3)
+        plt.colorbar(sm, cax=cax, orientation="horizontal", label="Percentage [%]")
+    else:
+        ax5.text(0.5, 0.5, "No picks available", ha='center', va='center', transform=ax5.transAxes)
+        ax5.set_title("Azimuth")
+
+    fig.tight_layout()
+    pos = ax5.get_position()  # get current position: Bbox(x0, y0, x1, y1)
+    # adjust position: (x0, y0, width, height)
+    ax5.set_position([pos.x0 - 0.05, pos.y0, 
+                      pos.width, pos.height])  # move slightly right
+    
+    pos = ax3.get_position()  # get current position: Bbox(x0, y0, x1, y1)
+    ax3.set_position([pos.x0 + 0.02, pos.y0, 
+                      pos.width, pos.height])  # move slightly right
+
+
+    if savepath:
+        fig.savefig(savepath, dpi=300, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
+
+    if show:
+        plt.show()
+
+    plt.close(fig)
+
+    return fig, {
+        'depth': ax1,
+        'magnitude': ax2,
+        'epicentral_distance': ax3,
+        'azimuthal_gap': ax4,
+        'azimuth': ax5
+    }
 
 def plot_uncertainty_boxplots(
     df: pd.DataFrame,
@@ -1146,13 +1507,22 @@ def plot_pick_histograms(
             ps_counts.append(len(p_group)/len(s_group))
 
 
-        # Merge S and P by seed_id to find S-P pairs
-        merged = pd.merge(
-            s_group[['network','station', 'time']], 
-            p_group[['network','station', 'time']], 
-            on=['network','station'], 
-            suffixes=('_S', '_P')
-        )
+        if "channel" in group.columns:
+            # Merge S and P by seed_id to find S-P pairs
+            merged = pd.merge(
+                s_group[['network','station','channel', 'time']], 
+                p_group[['network','station','channel', 'time']], 
+                on=['network','station','channel'], 
+                suffixes=('_S', '_P')
+            )
+        else:
+            # Merge S and P by seed_id to find S-P pairs
+            merged = pd.merge(
+                s_group[['network','station', 'time']], 
+                p_group[['network','station', 'time']], 
+                on=['network','station'], 
+                suffixes=('_S', '_P')
+            )
 
         merged = merged.drop_duplicates()
         if len(merged) < 2:
@@ -1163,6 +1533,8 @@ def plot_pick_histograms(
         merged["tt_SP"] = merged["S_minus_P"].dt.total_seconds()
         merged["tt_P"] = (merged["time_P"] - group['origin_time'].iloc[0]).dt.total_seconds()
 
+
+        merged = merged[merged['tt_SP'] > 0]  # Keep only valid S-P pairs
         merged = merged.dropna(subset=['tt_P', 'tt_SP'])
 
         if len(merged) < 2 or merged.empty or\
@@ -1176,6 +1548,12 @@ def plot_pick_histograms(
         
         slope = lr.slope
         vp_vs_ratio = 1 + slope  # Wadati relation
+
+        # Filter out unrealistic Vp/Vs ratios 
+        if abs(lr.rvalue) < 0.8 or slope < 0:  # Vp/Vs typically between ~1.5 and ~2.0
+            warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+            continue
+
         # print(f"Origin ID: {origin_id}, Vp/Vs Ratio: {vp_vs_ratio}")
         vp_vs_ratios.append(vp_vs_ratio)
 
@@ -1201,20 +1579,92 @@ def plot_pick_histograms(
     ax3 = fig.add_subplot(gs[1, 1])  # big bottom-left
 
 
-    step=5
-    picks_max = max(p_counts.max(), s_counts.max())
-    closest = step * round(picks_max / step)
-    # print(closest)
+    # step=5
+    # picks_max = max(p_counts.max(), s_counts.max())
+    # closest = step * round(picks_max / step)
+    # # print(closest)
+
+    # # P picks
+    # bins = int(closest)
+    # counts_p, bin_edges_p, patches_p = ax1.hist(p_counts.values, range=(0,closest),
+    #              bins=bins, color='green', edgecolor='black',
+    #              linewidth=0.5, label = 'P',align="mid")
+    # counts_s, bin_edges_s, patches_s = ax1.hist(s_counts.values, range=(0,closest),
+    #              bins=bins, color='lightgreen', edgecolor='black',
+    #              weights=np.ones_like(s_counts.values)*-1,
+    #              linewidth=0.5, label = 'S',align="mid")
+
+    all_counts = np.concatenate([p_counts.values, s_counts.values])
+
+    # Use percentile instead of absolute max
+    percentile = 98
+    robust_max = np.percentile(all_counts, percentile)
+
+    # Round nicely
+    robust_max = int(np.ceil(robust_max))
+
+    # Events excluded from plotting range
+    excluded = np.sum(all_counts > robust_max)
+    excluded_pct = excluded / len(all_counts) * 100
+
+    # Dynamic bin width
+    bin_width = max(1, int(np.ceil(robust_max / 50)))
+
+    closest = bin_width * np.ceil(robust_max / bin_width)
+    bins = np.arange(0, closest + bin_width, bin_width)
+
+    p_values = p_counts.values[p_counts.values <= robust_max]
+    s_values = s_counts.values[s_counts.values <= robust_max]
 
     # P picks
-    bins = int(closest)
-    counts_p, bin_edges_p, patches_p = ax1.hist(p_counts.values, range=(0,closest),
-                 bins=bins, color='green', edgecolor='black',
-                 linewidth=0.5, label = 'P',align="mid")
-    counts_s, bin_edges_s, patches_s = ax1.hist(s_counts.values, range=(0,closest),
-                 bins=bins, color='lightgreen', edgecolor='black',
-                 weights=np.ones_like(s_counts.values)*-1,
-                 linewidth=0.5, label = 'S',align="mid")
+    counts_p, bin_edges_p, patches_p = ax1.hist(
+        p_values,
+        bins=bins,
+        color='green',
+        edgecolor='black',
+        linewidth=0.5,
+        label='P',
+        align="left"
+    )
+
+    # S picks
+    counts_s, bin_edges_s, patches_s = ax1.hist(
+        s_values,
+        bins=bins,
+        color='lightgreen',
+        edgecolor='black',
+        weights=np.ones_like(s_values) * -1,
+        linewidth=0.5,
+        label='S',
+        align="left"
+    )
+
+    # ax1.text(
+    #     0.98, 0.02,
+    #     f"Excluded > P{percentile}\n"
+    #     f"max available = {int(all_counts.max())}\n"
+    #     f"max shown = {robust_max}\n"
+    #     f"{excluded} values excluded ({excluded_pct:.1f}%)",
+    #     transform=ax1.transAxes,
+    #     ha='right',
+    #     va='bottom',
+    #     fontsize=9,
+    #     bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray')
+    # )
+
+    ax1.text(
+        0.08, 0.02,
+        f"Excluded > P{percentile}\n"
+        f"max available = {int(all_counts.max())}\n"
+        f"max shown = {robust_max}\n"
+        f"{excluded} values excluded ({excluded_pct:.1f}%)",
+        transform=ax1.transAxes,
+        ha='left',
+        va='bottom',
+        fontsize=9,
+        bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray')
+    )
+
     ax1.set_title('Number of Picks per Event')
     ax1.set_xlabel('Number of Picks')
     ax1.set_ylabel('Frequency')
@@ -1873,9 +2323,14 @@ def plot_network_station_density(
     ax.set_yscale("log")
 
     # Labels and title
-    ax.set_xlabel("Network Area (deg²)")
-    ax.set_ylabel("Total Stations")
-    ax.set_title("Network Data Coverage")
+    ax.set_xlabel("Network Interest Area (deg²)",fontsize=12)
+    ax.set_ylabel("Total Stations",fontsize=12)
+    ax.set_title("Network Data Coverage",fontsize=12)
+
+    # increase font size of ticks
+    ax.tick_params(axis='both', which='major', labelsize=12,width=2)
+    ax.tick_params(axis='both', which='minor', width=1)
+
 
     # Legend
     ax.legend(loc="upper left")
@@ -2027,7 +2482,7 @@ def plot_phase_count_radar_by_magnitude(events, show=True, savepath=None):
 
         # Title for each subplot
         ax.set_title(f"M {labels[i]}", loc="left", pad=15, 
-                     color="orange", fontweight="bold",
+                     color="#ec7524", fontweight="bold",
                      fontsize=16)
 
         valid_axes = i
@@ -2203,6 +2658,317 @@ def plot_travel_time_vs_distance(
 
     plt.close(fig)
 
+def plot_travel_time_vs_distance_zscore(
+    picks,
+    phase=None,
+    distance_unit="degrees",
+    log_scale=False,
+    show=True,
+    savepath=None,
+    point_size=5,
+    zmax=3.0,  
+    x_lim=None,
+    y_lim=None,
+    add_inset=True,
+    x_axins_limits=(0, 30),
+    y_axins_limits=(0, 10),
+):
+    """
+    Plot travel time versus distance colored by z-score values.
+
+    This function visualizes seismic travel times and highlights
+    anomalous picks using z-score statistics. Picks classified as
+    inliers are colored according to their absolute z-score values,
+    while outliers are displayed in gray.
+
+    Optionally, a zoomed inset can be added to highlight near-source
+    arrivals.
+
+    Parameters
+    ----------
+    picks : pandas.DataFrame
+        Input DataFrame containing seismic pick information.
+
+        Required columns depend on the selected ``distance_unit``:
+
+        Common required columns:
+
+        - ``travel_time``
+        - ``phase``
+        - ``travel_time_zscore``
+
+        Additional distance column:
+
+        - ``distance`` for ``"degrees"`` or ``"km"``
+        - ``linear_hyp_distance`` for ``"hypo_km"``
+
+    phase : str or None, default=None
+        Seismic phase to plot. If ``None``, all phases are included.
+
+    distance_unit : str, default="degrees"
+        Distance representation used for the x-axis.
+
+        Supported options are:
+
+        - ``"degrees"``
+        - ``"km"``
+        - ``"hypo_km"``
+
+    log_scale : bool, default=False
+        If ``True``, apply logarithmic scaling to the x-axis.
+
+    show : bool, default=True
+        If ``True``, display the figure.
+
+    savepath : str or None, default=None
+        Output path used to save the generated figure.
+
+    point_size : int, default=5
+        Marker size used in scatter plots.
+
+    zmax : float, default=3.0
+        Maximum z-score value used for color normalization.
+
+        Picks with absolute z-score values larger than ``zmax`` are
+        classified as outliers.
+
+    x_lim : tuple or None, default=None
+        X-axis limits in the form ``(xmin, xmax)``.
+
+    y_lim : tuple or None, default=None
+        Y-axis limits in the form ``(ymin, ymax)``.
+
+    add_inset : bool, default=True
+        If ``True``, add a zoomed inset axis.
+
+    x_axins_limits : tuple, default=(0, 30)
+        X-axis limits for the inset axes.
+
+    y_axins_limits : tuple, default=(0, 10)
+        Y-axis limits for the inset axes.
+
+    Raises
+    ------
+    ValueError
+        If ``picks`` is not a pandas DataFrame.
+
+    ValueError
+        If required columns are missing.
+
+    ValueError
+        If no picks are available for the selected phase.
+
+    Notes
+    -----
+    - Absolute z-score values are used for thresholding.
+    - Outliers are plotted in gray.
+    - A colorbar indicates z-score magnitude.
+    - Approximate conversion factor:
+      ``1 degree = 111.19 km``.
+
+    Examples
+    --------
+    Plot all phases:
+
+    >>> plot_travel_time_vs_distance_zscore(df)
+
+    Plot only P-phase arrivals:
+
+    >>> plot_travel_time_vs_distance_zscore(
+    ...     df,
+    ...     phase="P",
+    ... )
+
+    Plot using hypocentral distance in kilometers:
+
+    >>> plot_travel_time_vs_distance_zscore(
+    ...     df,
+    ...     distance_unit="hypo_km",
+    ... )
+    """
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    km_per_degree = 111.19
+
+    if distance_unit.lower() == "km":
+        xlabel = "Distance (km)"
+        distance_col = "distance"
+        convert = lambda d: d * km_per_degree
+    elif distance_unit.lower() == "hypo_km":
+        xlabel = "Distance (km)"
+        distance_col = "linear_hyp_distance"
+        convert = lambda d: d
+    else:
+        xlabel = "Distance (degrees)"
+        distance_col = "distance"
+        convert = lambda d: d
+
+    if not isinstance(picks, pd.DataFrame):
+        raise ValueError("Input must be a pandas DataFrame.")
+
+    required_cols = {"travel_time", distance_col, "phase", "travel_time_zscore"}
+    if not required_cols.issubset(picks.columns):
+        raise ValueError(f"Missing columns: {required_cols}")
+
+    df = picks.copy()
+
+    if phase is not None:
+        df = df[df["phase"] == phase]
+
+    if df.empty:
+        raise ValueError("No data for selected phase.")
+
+    df["distance_plot"] = convert(df[distance_col])
+
+    # -----------------------------
+    # Split inliers / outliers
+    # -----------------------------
+    df["travel_time_zscore"] = df["travel_time_zscore"].abs()  # Use absolute z-score for thresholding
+    inliers = df[(df["travel_time_zscore"] >= 0) & (df["travel_time_zscore"] <= zmax)]
+    outliers = df[(df["travel_time_zscore"] < 0) | (df["travel_time_zscore"] > zmax)]
+
+    norm = Normalize(vmin=0, vmax=zmax)
+
+    # -----------------------------
+    # Inliers colored by z-score
+    # -----------------------------
+    sc = ax.scatter(
+        inliers["distance_plot"],
+        inliers["travel_time"],
+        c=inliers["travel_time_zscore"],
+        cmap="viridis",
+        norm=norm,
+        s=point_size,
+        alpha=0.9
+    )
+
+    # -----------------------------
+    # Outliers in gray
+    # -----------------------------
+    if len(outliers) > 0:
+        ax.scatter(
+            outliers["distance_plot"],
+            outliers["travel_time"],
+            color="lightgray",
+            s=point_size,
+            alpha=0.6,
+            label="Outliers"
+        )
+
+    # -----------------------------
+    # Colorbar with triangle extension
+    # -----------------------------
+    cbar = plt.colorbar(sc, ax=ax, extend="max", pad=0.01)
+    cbar.set_label(f"|Z-score|", fontsize=12)
+
+    ax.set_xlabel(xlabel, fontsize=12)
+    ax.set_ylabel("Travel Time (s)", fontsize=12)
+
+    title = "Travel Time vs Distance"
+    if phase is not None:
+        title += f" (Phase: {phase})"
+    ax.set_title(title)
+
+    if log_scale:
+        ax.set_xscale("log")
+
+    ax.grid(True, alpha=0.3)
+
+    if len(outliers) > 0:
+        #fontsize of legend
+        ax.legend(fontsize=12,markerscale=4.0, frameon=True,
+        loc="lower right")
+        # ax.legend()
+    
+    if x_lim is not None:
+        ax.set_xlim(x_lim)
+    if y_lim is not None:
+        ax.set_ylim(y_lim)
+
+    #change font size of ticks
+    ax.tick_params(axis='both', which='major', 
+                    labelsize=12,width=2)
+    
+
+    if add_inset:
+
+        axins = inset_axes(
+            ax,
+            width="35%",
+            height="35%",
+            loc="upper left"
+        )
+
+        # Inliers
+        axins.scatter(
+            inliers["distance_plot"],
+            inliers["travel_time"],
+            c=inliers["travel_time_zscore"],
+            cmap="viridis",
+            norm=norm,
+            s=point_size,
+            alpha=0.9
+        )
+
+        # Outliers
+        if len(outliers) > 0:
+            axins.scatter(
+                outliers["distance_plot"],
+                outliers["travel_time"],
+                color="lightgray",
+                s=point_size,
+                alpha=0.6
+            )
+
+        # Zoom limits
+        axins.set_xlim(x_axins_limits)
+        axins.set_ylim(y_axins_limits)
+
+        # Move y-axis to right
+        axins.yaxis.tick_right()
+        axins.yaxis.set_label_position("right")
+
+        # Styling
+        axins.grid(True, alpha=0.2)
+
+        # Orange zoom box
+        mark_inset(
+            ax,
+            axins,
+            loc1=2,
+            loc2=4,
+            fc="none",
+            ec="#ec7524"
+        )
+
+        # Orange inset border
+        for spine in axins.spines.values():
+            spine.set_edgecolor("#ec7524")
+            spine.set_linewidth(1.5)
+
+        # Orange ticks
+        axins.tick_params(
+            axis='both',
+            colors="#ec7524",
+            labelsize=9,
+            width=1.5
+        )
+
+        # Bold tick labels
+        for label in axins.get_xticklabels() + axins.get_yticklabels():
+            label.set_fontweight("bold")
+
+    plt.tight_layout()
+
+    if savepath:
+        plt.savefig(savepath, dpi=300, bbox_inches="tight")
+        print(f"Saved plot to {savepath}")
+
+    if show:
+        plt.show()
+
+    plt.close(fig)
+
 def tune_zoomed_travel_time_qc(axins: plt.Axes,
                                xlim: Tuple[float, float] = (0, 15),
                                ylim: Tuple[float, float] = (0, 50)) -> plt.Axes:
@@ -2268,6 +3034,7 @@ def plot_single_tt_qc(df: pd.DataFrame,
                       phase: str,
                       model: Optional[Any] = None,
                       zscore_threshold: float = 2,
+                      show_outliers: bool = True,
                       show_text: bool = True,
                       show_models: Optional[List[str]] = None,
                       show_global_model: bool = True,
@@ -2275,7 +3042,9 @@ def plot_single_tt_qc(df: pd.DataFrame,
                       tt_col: str = "travel_time",
                       x_limits: Optional[Tuple[float, float]] = None,
                       y_limits: Optional[Tuple[float, float]] = None,
-                      ax: Optional[plt.Axes] = None) -> plt.Axes:
+                      ax: Optional[plt.Axes] = None,
+                      scatter_args: Optional[dict] = None
+                      ) -> plt.Axes:
     """
     Plot travel-time QC for a single seismic phase.
 
@@ -2292,10 +3061,12 @@ def plot_single_tt_qc(df: pd.DataFrame,
         TravelTimeModel object containing model predictions.
     zscore_threshold : float, optional
         Z-score threshold to mark outliers (default: 2).
+    show_outliers : bool, optional
+        Whether to highlight outliers (default: True).
     show_text : bool, optional
         Display fraction of valid points inside z-score threshold (default: True).
     show_models : list of str, optional
-        Columns in model to display (default: ["travel_time_p50"]).
+        Columns in model to display (example: ["travel_time_p50"]). See in qc/pick_models
     show_global_model : bool, optional
         Show global trend bounds (default: True).
     distance_col : str, optional
@@ -2308,6 +3079,8 @@ def plot_single_tt_qc(df: pd.DataFrame,
         Y-axis limits (default: auto from data).
     ax : plt.Axes, optional
         Axes to plot on (default: creates new figure).
+    scatter_args : dict, optional
+        Additional arguments for scatter plot (default: None).
 
     Returns
     -------
@@ -2318,7 +3091,8 @@ def plot_single_tt_qc(df: pd.DataFrame,
         fig, ax = plt.subplots(figsize=(6, 4))
 
     if show_models is None:
-        show_models = ["travel_time_p50"]
+        # show_models = ["travel_time_p50"]
+        show_models = []
 
     # Filter for phase and drop missing values
     df = df[df["phase"] == phase].dropna(subset=[distance_col, tt_col]).sort_values(distance_col)
@@ -2328,10 +3102,15 @@ def plot_single_tt_qc(df: pd.DataFrame,
     inside = ~outside
 
     # Plot inliers and outliers
-    ax.scatter(x[outside], y[outside], s=2, alpha=0.6, color="red",
-               label=f"> {zscore_threshold} Zscore")
-    ax.scatter(x[inside], y[inside], s=2, alpha=0.6, color="black",
-               label=f"< {zscore_threshold} Zscore")
+
+    if scatter_args is None:
+        scatter_args = {"s": 2, "alpha": 0.6}
+
+    if show_outliers:
+        ax.scatter(x[outside], y[outside], color="red",
+                label=f"> {zscore_threshold} Zscore", **scatter_args)
+    ax.scatter(x[inside], y[inside], color="black",
+               label=f"< {zscore_threshold} Zscore", **scatter_args)
 
     # Display text annotation for fraction of points within z-score
     if show_text:
@@ -2365,6 +3144,13 @@ def plot_single_tt_qc(df: pd.DataFrame,
     if model is not None:
         bins = np.unique(np.concatenate([model.model_df["distance_min"].values,
                                          model.model_df["distance_max"].values]))
+
+        # remove bins greater than max distance in data
+        if show_outliers:
+            bins = bins[bins <= x.max()]
+        else:
+            bins = bins[bins <= x[inside].max()]
+
         for col in show_models:
             model_df = model.model_df.sort_values("distance_center").dropna(subset=[col]).drop_duplicates("distance_center")
             dd, tt = model_df["distance_center"].values, model_df[col].values
@@ -2380,7 +3166,7 @@ def plot_single_tt_qc(df: pd.DataFrame,
 
         # Add vertical lines for bin edges
         for c in bins:
-            ax.axvline(c, color="black", linestyle="--", linewidth=0.5, alpha=0.2)
+            ax.axvline(c, color="gray", linestyle="--", linewidth=0.5, alpha=0.3)
 
     # Grid and axis limits
     ax.grid(True, which="both", axis="y", linestyle="--", linewidth=0.5, alpha=0.3)
@@ -2389,17 +3175,32 @@ def plot_single_tt_qc(df: pd.DataFrame,
 
     return ax
 
+def _get_limits(limits, phase):
+    if limits is None:
+        return None
+    if isinstance(limits, dict):
+        return limits.get(phase, None)
+    return limits  # assume tuple
+
 def plot_travel_time_qc(df: pd.DataFrame,
                add_inset: bool = True,
                zscore_threshold: float = 2,
+               show_outliers: bool = True,
                show_text: bool = True,
                models: Optional[Dict[str, Any]] = None,
                show_models: Optional[List[str]] = None,
                show_global_model: bool = False,
+               show_legend: bool = True,
                distance_col: str = "linear_hyp_distance",
                tt_col: str = "travel_time",
-               x_inset_limits: Tuple[float, float] = (0, 30),
-               y_inset_limits: Tuple[float, float] = (0, 10),
+               x_limits: Optional[Tuple[float, float]] = None,
+               y_limits: Optional[Tuple[float, float]] = None, 
+               x_axins_limits: Tuple[float, float] = (0, 30),
+               y_axins_limits: Tuple[float, float] = (0, 10),
+               axes: Optional[np.ndarray] = None,
+               axins: Optional[List[plt.Axes]] = None,
+               turn_off_empty_axes: bool = True,
+               scatter_args: Optional[dict] = None,
                savepath: Optional[str] = None
                ) -> Tuple[plt.Figure, np.ndarray, List[plt.Axes]]:
     """
@@ -2413,6 +3214,8 @@ def plot_travel_time_qc(df: pd.DataFrame,
         Add zoomed inset plots (default: True).
     zscore_threshold : float, optional
         Z-score threshold for outlier detection (default: 2).
+    show_outliers : bool, optional
+        Whether to highlight outliers (default: True).
     show_text : bool, optional
         Show text annotations on each subplot (default: True).
     models : dict, optional
@@ -2421,14 +3224,30 @@ def plot_travel_time_qc(df: pd.DataFrame,
         Columns in model to plot (default: ["travel_time_p50"]).
     show_global_model : bool, optional
         Display global trend bounds (default: False).
+    show_legend : bool, optional
+        Whether to show a unified legend (default: True).
     distance_col : str, optional
         Column name for distance (default: "linear_hyp_distance").
     tt_col : str, optional
         Column name for travel time (default: "travel_time").
-    x_inset_limits : tuple, optional
+    x_limits : tuple,dict, optional
+        X-axis limits for main plots (default: auto from data).
+        If it is a dict, it should be keyed by phase name (e.g., {"P": (0, 100), "S": (0, 200)}).
+    y_limits : tuple,dict optional
+        Y-axis limits for main plots (default: auto from data).
+        If it is a dict, it should be keyed by phase name (e.g., {"P": (0, 100), "S": (0, 200)}).
+    x_axins_limits : tuple, optional
         X-axis limits for inset (default: (0, 30)).
-    y_inset_limits : tuple, optional
+        If it is a dict, it should be keyed by phase name (e.g., {"P": (0, 100), "S": (0, 200)}).
+    y_axins_limits : tuple, optional
         Y-axis limits for inset (default: (0, 10)).
+        If it is a dict, it should be keyed by phase name (e.g., {"P": (0, 100), "S": (0, 200)}).
+    axes : np.ndarray, optional
+        Pre-existing axes array to plot on (default: None, creates new).
+        The order of phases is always P, Pn, Pg, S, Sn, Sg.
+        Therefore, if providing axes, ensure they are in this order and have at least 6 axes.
+    scatter_args : dict, optional
+        Additional arguments for scatter plots (default: None).
     savepath : str, optional
         Path to save figure (default: None).
 
@@ -2440,12 +3259,24 @@ def plot_travel_time_qc(df: pd.DataFrame,
         Array of axes for each phase subplot.
     all_axins : list of plt.Axes
         List of inset axes.
+    legend_info : tuple
+        (legend_handles, legend_labels) for the unified legend.
     """
     phase_order = ("P", "Pn", "Pg", "S", "Sn", "Sg")
-    fig, axes = plt.subplots(2, 3, figsize=(12, 8))
-    axes = axes.flatten()
+    if axes is None:
+        fig, axes = plt.subplots(2, 3, figsize=(12, 8))
+        axes = axes.flatten()
+    else:
+        fig = axes[0].figure
+        if len(axes) != 6:
+            raise ValueError("Provided axes array must have 6 axes for phases P, Pn, Pg, S, Sn, Sg")
 
-    all_axins = []
+        if axes is not None and add_inset and axins is None:
+            raise ValueError("If add_inset is True and axes are provided, axins must also be provided with the same length as axes")
+
+    if axins is None:
+        axins = []
+
     legend_handles, legend_labels = [], []
 
     for idx, phase in enumerate(phase_order):
@@ -2454,14 +3285,19 @@ def plot_travel_time_qc(df: pd.DataFrame,
         model_obj = models.get(phase) if models else None
 
         if phase_df.empty:
-            ax.set_title(f"{phase} (no data)", fontweight="bold")
-            ax.axis("off")
+            if turn_off_empty_axes:
+                ax.set_title(f"{phase} (no data)", fontweight="bold")
+                inset_ax = inset_axes(ax, width="35%", height="35%", loc="upper left")
+                inset_ax.axis("off")
+                axins.append(inset_ax)
+                ax.axis("off")
             continue
 
         ax.set_title(phase, fontweight="bold")
         ax = plot_single_tt_qc(
             phase_df, phase=phase,
             zscore_threshold=zscore_threshold,
+            show_outliers=show_outliers,
             model=model_obj,
             show_text=show_text,
             show_models=show_models,
@@ -2469,8 +3305,9 @@ def plot_travel_time_qc(df: pd.DataFrame,
             ax=ax,
             distance_col=distance_col,
             tt_col=tt_col,
-            x_limits=(0, phase_df[distance_col].max()),
-            y_limits=(0, phase_df[tt_col].max())
+            x_limits=_get_limits(x_limits, phase),
+            y_limits=_get_limits(y_limits, phase),
+            scatter_args=scatter_args
         )
 
         # Conditional axis labels
@@ -2485,39 +3322,67 @@ def plot_travel_time_qc(df: pd.DataFrame,
 
         # Add inset if requested
         if add_inset:
-            axins = inset_axes(ax, width="35%", height="35%", loc="upper left")
-            axins = plot_single_tt_qc(
+            # print(idx, phase, axins)
+            if len(axins) == idx:  # Only add inset if it doesn't already exist
+                inset_ax = inset_axes(ax, width="35%", height="35%", loc="upper left")
+            else:
+                inset_ax = axins[idx]
+
+            inset_ax = plot_single_tt_qc(
                 phase_df, phase=phase,
                 zscore_threshold=zscore_threshold,
+                show_outliers=show_outliers,
                 model=model_obj,
                 show_text=False,
                 show_models=show_models,
                 show_global_model=show_global_model,
-                ax=axins,
+                ax=inset_ax,
                 distance_col=distance_col,
                 tt_col=tt_col,
-                x_limits=x_inset_limits,
-                y_limits=y_inset_limits
+                x_limits=_get_limits(x_axins_limits, phase),
+                y_limits=_get_limits(y_axins_limits, phase),
+                scatter_args=scatter_args
             )
-            tune_zoomed_travel_time_qc(axins, xlim=x_inset_limits, ylim=y_inset_limits)
-            mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
-            all_axins.append(axins)
+
+            tune_zoomed_travel_time_qc(inset_ax, xlim=x_axins_limits, ylim=y_axins_limits)
+            mark_inset(ax, inset_ax, loc1=2, loc2=4, fc="none", ec="#ec7524")
+            for spine in inset_ax.spines.values():
+                spine.set_edgecolor("#ec7524")
+                spine.set_linewidth(1.5)
+                
+            # Set tick color
+            inset_ax.tick_params(colors="#ec7524")  # ticks and tick labels
+
+            # Optional: set axis label colors if there are labels
+            inset_ax.xaxis.label.set_color("#ec7524")
+            inset_ax.yaxis.label.set_color("#ec7524")
+
+            for label in inset_ax.get_xticklabels() + inset_ax.get_yticklabels():
+                label.set_fontweight("bold")
+            inset_ax.tick_params(colors="#ec7524", width=1.5)  # thicker ticks
+
+            if len(axins) == idx:
+                axins.append(inset_ax)
 
     fig.tight_layout()
 
-    # Unified legend at bottom
-    fig.legend(
-        legend_handles, legend_labels,
-        loc='lower center',
-        bbox_to_anchor=(0.5, -0.05),
-        ncol=len(legend_labels),
-        markerscale=4,
-        frameon=True,
-        prop={'size': 12}
-    )
+    if show_legend:
+        # Unified legend at bottom
+        fig.legend(
+            legend_handles, legend_labels,
+            loc='lower center',
+            bbox_to_anchor=(0.5, -0.05),
+            ncol=len(legend_labels),
+            markerscale=4,
+            frameon=True,
+            prop={'size': 12}
+        )
+        
 
     if savepath:
         fig.savefig(savepath, dpi=300, bbox_inches='tight')
         print(f"Saved figure to {savepath}")
 
-    return fig, axes, all_axins
+    return fig, axes, axins, (legend_handles, legend_labels)
+
+

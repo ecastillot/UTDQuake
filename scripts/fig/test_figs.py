@@ -36,7 +36,6 @@ def create_gif_from_folder(folder: Path, net_name: str, gif_name: str = None, fp
         ]
 
     images = [folder / f for f in ordered_files if (folder / f).exists()]
-
     if not images:
         print(f"No images found in {folder}, skipping GIF creation.")
         return
@@ -78,14 +77,18 @@ networks_path = figures_path / "networks"
 os.makedirs(networks_path, exist_ok=True)
 
 figures_dict = {"overview": figures_path / "utdquake_overview.png",
-                "network_overview": figures_path/"networks"/"{network}"/ "{network}_overview.png",
-                "stats": figures_path/"networks"/"{network}"/ "{network}_stats.png",
-                "pick_histograms": figures_path/"networks"/"{network}"/ "{network}_histograms.png",
-                "epi_pick_stats": figures_path/"networks"/"{network}"/ "{network}_epi_pick_stats.png",
-                "hyp_pick_stats": figures_path/"networks"/"{network}"/ "{network}_hyp_pick_stats.png",
-                "station_location_uncertainty": figures_path/"networks"/"{network}"/ "{network}_station_location_uncertainty.png",
-                "uncertainty_boxplots": figures_path/"networks"/"{network}"/ "{network}_uncertainty_boxplots.png",
-                "travel_time_qc": figures_path/"networks"/"{network}"/ "{network}_travel_time_qc.png",
+                "network_overview": networks_path/"{network}"/ "{network}_overview.png",
+                "stats": networks_path/"{network}"/ "{network}_stats.png",
+                "pick_histograms": networks_path/"{network}"/ "{network}_pick_histograms.png",
+                "epi_pick_stats": networks_path/"{network}"/ "{network}_epi_pick_stats.png",
+                "hyp_pick_stats": networks_path/"{network}"/ "{network}_hyp_pick_stats.png",
+                "phase_count_radar": networks_path/"{network}"/ "{network}_phase_count_radar.png",
+                "station_location_uncertainty": networks_path/"{network}"/ "{network}_station_location_uncertainty.png",
+                "uncertainty_boxplots": networks_path/"{network}"/ "{network}_uncertainty_boxplots.png",
+                "travel_time_qc": networks_path/"{network}"/ "{network}_travel_time_qc.png",
+                "travel_time_vs_distance": networks_path/"{network}"/ "{network}_travel_time_vs_distance",
+                "travel_time_vs_distance_P_zscore": networks_path/"{network}"/ "{network}_travel_time_vs_distance_P_zscore",
+                "travel_time_vs_distance_S_zscore": networks_path/"{network}"/ "{network}_travel_time_vs_distance_S_zscore",
                 }
 
 
@@ -95,10 +98,12 @@ print(dataset)
 # network level
 network_data = dataset.networks
 network_names = network_data["network"].tolist()
-# network_names = ["THE"]
+# network_names = ["tx"]
+# network_names = ["uw","ak","RSNC","tx"]
 
 # dataset.plot_overview(savepath=figures_dict["overview"])
 # print(f"Plotted dataset overview to {figures_dict['overview']}")
+# print(network_names)
 # exit()
 
 for net_name in network_names:
@@ -110,22 +115,34 @@ for net_name in network_names:
         # load network 
         network = dataset.get_network(name=net_name)
 
-        # network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
-        #                         is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
-        # network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
-        # network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
-        # network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
-        # network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
-        # network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
-        # network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
+        network.plot_overview(savepath=str(figures_dict["network_overview"]).format(network=net_name),
+                                is_alaska=True if net_name in ["av", "ak","AEIC"] else False)
+        network.plot_stats(savepath=str(figures_dict["stats"]).format(network=net_name))
+        network.plot_pick_histograms(savepath=str(figures_dict["pick_histograms"]).format(network=net_name))
+        network.plot_phase_count_radar_by_magnitude(savepath=str(figures_dict["phase_count_radar"]).format(network=net_name))
+        network.plot_pick_stats(distance_type="epicentral",savepath=str(figures_dict["epi_pick_stats"]).format(network=net_name))
+        network.plot_pick_stats(distance_type="hypocentral",savepath=str(figures_dict["hyp_pick_stats"]).format(network=net_name))
+        network.plot_station_location_uncertainty(savepath=str(figures_dict["station_location_uncertainty"]).format(network=net_name))
+        network.plot_uncertainty_boxplots(savepath=str(figures_dict["uncertainty_boxplots"]).format(network=net_name))
+        network.plot_travel_time_vs_distance(
+                                        savepath=str(figures_dict["travel_time_vs_distance"]).format(network=net_name),
+                                            distance_unit="km")
+        network.plot_travel_time_vs_distance_zscore(phase="P",
+                                        savepath=str(figures_dict["travel_time_vs_distance_P_zscore"]).format(network=net_name),
+                                        )
+        network.plot_travel_time_vs_distance_zscore(phase="S",
+                                        savepath=str(figures_dict["travel_time_vs_distance_S_zscore"]).format(network=net_name),
+                                        )
         network.plot_travel_time_qc(savepath=str(figures_dict["travel_time_qc"]).format(network=net_name),
                                     show_models=["travel_time_p50"],show_global_model=False,
                                     zscore_threshold=3
                                     )
 
-        # # # ---- CREATE GIF FOR THIS NETWORK ----
-        # create_gif_from_folder(net_folder, gif_name=f"{net_name}_summary.gif",
-        #                     net_name=net_name, fps=0.7)
+        # ---- CREATE GIF FOR THIS NETWORK ----
+        ordered_files = [ f"{net_name}_{x}.png" for x in list(figures_dict.keys()) ] 
+        create_gif_from_folder(net_folder, gif_name=f"0.{net_name}.gif",
+                               ordered_files= ordered_files ,
+                            net_name=net_name, fps=0.7)
 
 
     except Exception as e:

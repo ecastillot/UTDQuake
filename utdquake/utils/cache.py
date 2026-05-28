@@ -1,7 +1,7 @@
 from pathlib import Path
 from ..core.config import get_root
 
-def list_local_networks(data_type: str) -> dict[str, Path]:
+def list_local_networks(data_type: str, das: bool = False) -> dict[str, Path]:
     """
     Return all networks available locally as a dictionary.
 
@@ -13,6 +13,8 @@ def list_local_networks(data_type: str) -> dict[str, Path]:
     ----------
     data_type : str
         Type of data to check for ('bank', 'events', 'stations', 'picks').
+    das: bool, optional
+        Whether to use the DAS dataset paths. Default is False.
 
     Returns
     -------
@@ -21,7 +23,7 @@ def list_local_networks(data_type: str) -> dict[str, Path]:
         - For 'bank', the folder Path
         - For other data types, the Path to the parquet file
     """
-    root = get_root() / data_type
+    root = get_root(das=das) / data_type
     if not root.exists():
         return {}
 

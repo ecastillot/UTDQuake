@@ -12,6 +12,6 @@ conda activate utdq
 
 UTDQ="/groups/igonin/ecastillo/UTDQuake"
 
-INCLUDE="qc/pick_models/*"
+INCLUDE="picks/*"
 
 hf upload-large-folder ecastillot/UTDQuake "$UTDQ" --include "$INCLUDE" --repo-type dataset --num-workers 4

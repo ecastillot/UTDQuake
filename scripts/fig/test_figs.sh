@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1                
-#SBATCH -n 64              
+#SBATCH -n 20              
 #SBATCH -p normal            
 #SBATCH -J utdq_figs      
 #SBATCH -o /groups/igonin/ecastillo/utdquake/scripts/fig/%x_%j.out

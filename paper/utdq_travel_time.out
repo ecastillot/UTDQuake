@@ -1,0 +1,169 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:2841: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  fig.tight_layout()
+Saving figure to /groups/igonin/ecastillo/utdquake/paper/utdq_travel_time.png
+Saved figure to /groups/igonin/ecastillo/utdquake/paper/utdq_travel_time.png
+✅ DONE

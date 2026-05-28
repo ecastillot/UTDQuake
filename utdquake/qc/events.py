@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
+import logging
+import sys
 from .log import QCLog
+
+logger = logging.getLogger("utdquake.qc.events")
+
 
 def events_qc(
     df,
@@ -48,7 +53,7 @@ def events_qc(
         df_filtered_step = df[mask]
         log.add_step(label, removed, thresholds={"min": value})
         if debug:
-            print(f"{label} filter - removed {removed} "
+            logger.debug(f"{label} filter - removed {removed} "
                   f"(Cumulative: {log.cumulative_removed}/{original_total})")
         return df_filtered_step
 
@@ -61,7 +66,7 @@ def events_qc(
         df_filtered_step = df[mask]
         log.add_step(label, removed, thresholds={"max": value})
         if debug:
-            print(f"{label} filter - removed {removed} "
+            logger.debug(f"{label} filter - removed {removed} "
                   f"(Cumulative: {log.cumulative_removed}/{original_total})")
         return df_filtered_step
 
@@ -92,9 +97,9 @@ def events_qc(
         remaining = len(df_filtered)
         removed_total = original_total - remaining
         percentage = (removed_total / original_total) * 100 if original_total > 0 else 0
-        print("\nEvent QC completed:")
-        print(f"Removed {removed_total}/{original_total} events ({percentage:.2f}%)")
-        print(f"Remaining events: {remaining}")
+        logger.debug("\nEvent QC completed:")
+        logger.debug(f"Removed {removed_total}/{original_total} events ({percentage:.2f}%)")
+        logger.debug(f"Remaining events: {remaining}")
 
     return df_filtered.reset_index(drop=True), log
 
@@ -120,7 +125,7 @@ def apply_min_filter(df, column, min_value, label,
     cumulative_removed : int
         Current cumulative number of removed rows.
     debug : bool, default False
-        If True, prints filtering information.
+        If True, logger.debugs filtering information.
     apply_to_nans : bool, default False
         If True, rows containing NaN in `column` are removed.
         If False, NaN values are ignored.
@@ -141,7 +146,7 @@ def apply_min_filter(df, column, min_value, label,
     df = df[mask]
 
     if debug:
-        print(f"{label} filter - removed {step_removed} "
+        logger.debug(f"{label} filter - removed {step_removed} "
               f"(Acum: {cumulative_removed}/{original_total})")
 
     return df, cumulative_removed
@@ -168,7 +173,7 @@ def apply_max_filter(df, column, max_value, label,
     cumulative_removed : int
         Current cumulative number of removed rows.
     debug : bool, default False
-        If True, prints filtering information.
+        If True, logger.debugs filtering information.
     apply_to_nans : bool, default False
         If True, rows containing NaN in `column` are removed.
         If False, NaN values are ignored.
@@ -189,7 +194,7 @@ def apply_max_filter(df, column, max_value, label,
     df = df[mask]
 
     if debug:
-        print(f"{label} filter - removed {step_removed} "
+        logger.debug(f"{label} filter - removed {step_removed} "
               f"(Acum: {cumulative_removed}/{original_total})")
 
     return df, cumulative_removed

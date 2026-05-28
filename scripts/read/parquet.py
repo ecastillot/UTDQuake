@@ -1,14 +1,16 @@
 import pandas as pd
 # read the parquet file
 
-path = "/groups/igonin/ecastillo/UTDQuake/manifests/network/network.parquet"
+# path = "/home/edc240000/.utdquake/picks/network=tx.parquet"
+path = "/groups/igonin/ecastillo/UTDQuake_DAS/stations/network=GCI.parquet"
 df_ori = pd.read_parquet(path)
-print(df_ori)
+# print(df_ori[["travel_time_zscore"]].describe())
 print(df_ori.info())
-print(df_ori[["network","agency","original_events","original_p_arrivals",
-                    "original_s_arrivals",
-                    "events","p_arrivals",
-                    "s_arrivals"]])
+# print(df_ori.info())
+# print(df_ori[["network","agency","original_events","original_p_arrivals",
+#                     "original_s_arrivals",
+#                     "events","p_arrivals",
+#                     "s_arrivals"]])
 exit()
 
 path = "/groups/igonin/ecastillo/bck_utdq/test_021926/picks/network=uw.parquet"

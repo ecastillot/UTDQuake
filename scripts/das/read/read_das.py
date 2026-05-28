@@ -3,7 +3,7 @@ from obspy import read_events
 import utdquake
 
 
-path = "/groups/igonin/ecastillo/DAS_uw_data/test_alex/11707158.qml"
+path = "/groups/igonin/ecastillo/DAS_uw_data/GCI_QuakeML_Picks_16042026/04012026/11707158.qml"
 catalog = read_events(path)
 
 print(catalog)

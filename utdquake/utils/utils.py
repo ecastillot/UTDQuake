@@ -145,9 +145,9 @@ def human_format(num: float) -> str:
     '1.5M'
     """
     if abs(num) >= 1_000_000:
-        return f"{num/1_000_000:.1f}M"
+        return f"{num/1_000_000:.1f} M"
     elif abs(num) >= 1_000:
-        return f"{num/1_000:.1f}K"
+        return f"{num/1_000:.1f} K"
     else:
         return f"{num}"
 
@@ -236,7 +236,8 @@ def create_green_to_orange_cmap(name: str = 'green_to_orange', n_colors: int = 2
 
 def get_network_summary(
     stations: pd.DataFrame,
-    events: pd.DataFrame
+    events: pd.DataFrame,
+    das: bool = False
 ) -> Dict[str, Any]:
     """
     Compute summary statistics for a seismic network.
@@ -249,6 +250,8 @@ def get_network_summary(
     events : pd.DataFrame
         Events table. Must contain columns:
         ['latitude', 'longitude', 'time', 'p_phase_count', 's_phase_count'].
+    das : bool, optional
+        Whether to use DAS dataset. Default is False.
 
     Returns
     -------
@@ -280,11 +283,14 @@ def get_network_summary(
     >>> get_network_summary(df_stations, df_events)
     {'events': 10, 'p_arrivals': 30, ...}
     """
-
     # --- Deduplicate stations ---
-    stations = stations.drop_duplicates(subset=["network", "station"])
+    if das:
+        stations = stations.drop_duplicates(subset=["network", "station", "channel"])
+        n_total_stations = len(stations["station"].unique())
+    else:
+        stations = stations.drop_duplicates(subset=["network", "station"])
+        n_total_stations = len(stations)
 
-    n_total_stations = len(stations)
     n_confirmed_stations = int(stations["confirmed"].eq(True).sum())
     # Only count as calculated if it's not also confirmed. 
     # This avoids double-counting stations that are both confirmed and calculated.
@@ -308,7 +314,7 @@ def get_network_summary(
     n_p_picks = int(events["p_phase_count"].sum())
     n_s_picks = int(events["s_phase_count"].sum())
 
-    return {
+    data =  {
         "events": n_events,
         "p_arrivals": n_p_picks,
         "s_arrivals": n_s_picks,
@@ -321,3 +327,8 @@ def get_network_summary(
         "start_time": str(min_event_time),
         "end_time": str(max_event_time),
     }
+
+    if das:
+        data["total_channels"] = len(stations["channel"])
+
+    return data

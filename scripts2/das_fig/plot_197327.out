@@ -1,0 +1,799 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48495688 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186 (Vp/Vs=1.43, r=0.48). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192 (Vp/Vs=1.39, r=0.48). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786 (Vp/Vs=1.19, r=0.22). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887 (Vp/Vs=1.34, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586 (Vp/Vs=1.34, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138 (Vp/Vs=1.52, r=0.73). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240 (Vp/Vs=0.30, r=-0.70). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48522038 (Vp/Vs=1.26, r=0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48523493 (Vp/Vs=1.66, r=0.73). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48537086 (Vp/Vs=0.44, r=-0.64). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48547388 (Vp/Vs=0.45, r=-0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48548537 (Vp/Vs=1.23, r=0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48549693 (Vp/Vs=1.14, r=0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48549887 (Vp/Vs=0.65, r=-0.32). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48550287 (Vp/Vs=0.43, r=-0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48562086 (Vp/Vs=0.88, r=-0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48563387 (Vp/Vs=1.60, r=0.69). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48565187 (Vp/Vs=1.19, r=0.24). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48565436 (Vp/Vs=1.26, r=0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48566288 (Vp/Vs=0.14, r=-0.80). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48566787 (Vp/Vs=1.43, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48569538 (Vp/Vs=0.65, r=-0.28). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48569539 (Vp/Vs=1.27, r=0.26). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48570488 (Vp/Vs=1.62, r=0.73). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48571288 (Vp/Vs=1.32, r=0.42). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48577087 (Vp/Vs=0.68, r=-0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48580841 (Vp/Vs=1.10, r=0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48585193 (Vp/Vs=0.64, r=-0.30). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48585436 (Vp/Vs=0.97, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48597641 (Vp/Vs=0.48, r=-0.49). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48599791 (Vp/Vs=0.48, r=-0.56). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48603588 (Vp/Vs=0.89, r=-0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48604136 (Vp/Vs=1.30, r=0.35). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48607988 (Vp/Vs=0.75, r=-0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48614536 (Vp/Vs=0.29, r=-0.65). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48617090 (Vp/Vs=1.16, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48626536 (Vp/Vs=1.13, r=0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48626690 (Vp/Vs=1.02, r=0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48628137 (Vp/Vs=1.50, r=0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48629536 (Vp/Vs=1.17, r=0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48629736 (Vp/Vs=1.44, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48629738 (Vp/Vs=0.76, r=-0.27). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48633387 (Vp/Vs=0.61, r=-0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48636742 (Vp/Vs=1.35, r=0.51). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48638546 (Vp/Vs=0.59, r=-0.36). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48642137 (Vp/Vs=1.10, r=0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48647089 (Vp/Vs=0.67, r=-0.32). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48665786 (Vp/Vs=1.07, r=0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48671937 (Vp/Vs=1.41, r=0.61). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48674190 (Vp/Vs=1.28, r=0.31). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48681792 (Vp/Vs=1.63, r=0.66). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48682536 (Vp/Vs=0.42, r=-0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48685791 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48705487 (Vp/Vs=0.38, r=-0.47). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48710288 (Vp/Vs=1.31, r=0.35). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48711392 (Vp/Vs=1.31, r=0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48716436 (Vp/Vs=0.95, r=-0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48717587 (Vp/Vs=0.49, r=-0.49). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48723389 (Vp/Vs=1.74, r=0.74). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48724188 (Vp/Vs=0.60, r=-0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48724440 (Vp/Vs=1.42, r=0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48724736 (Vp/Vs=1.62, r=0.61). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48740236 (Vp/Vs=1.44, r=0.53). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48746237 (Vp/Vs=0.80, r=-0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48746637 (Vp/Vs=0.77, r=-0.21). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48750187 (Vp/Vs=1.07, r=0.06). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48751037 (Vp/Vs=1.64, r=0.78). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48752687 (Vp/Vs=1.18, r=0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48770336 (Vp/Vs=0.95, r=-0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48771636 (Vp/Vs=1.48, r=0.70). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48778086 (Vp/Vs=0.44, r=-0.48). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48778090 (Vp/Vs=1.18, r=0.25). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48779686 (Vp/Vs=1.29, r=0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48787237 (Vp/Vs=1.43, r=0.51). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48788936 (Vp/Vs=0.30, r=-0.58). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48794836 (Vp/Vs=1.60, r=0.69). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48801789 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48807438 (Vp/Vs=1.49, r=0.69). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48809637 (Vp/Vs=1.49, r=0.51). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48824936 (Vp/Vs=1.49, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48830989 (Vp/Vs=1.07, r=0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48831686 (Vp/Vs=1.54, r=0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48838843 (Vp/Vs=1.36, r=0.39). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48844686 (Vp/Vs=1.55, r=0.62). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48845293 (Vp/Vs=1.02, r=0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48845895 (Vp/Vs=1.27, r=0.25). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48848086 (Vp/Vs=0.61, r=-0.39). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48854588 (Vp/Vs=1.38, r=0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48855736 (Vp/Vs=0.96, r=-0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48889290 (Vp/Vs=0.56, r=-0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48889336 (Vp/Vs=1.22, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48891086 (Vp/Vs=1.02, r=0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48898387 (Vp/Vs=1.48, r=0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48902187 (Vp/Vs=1.08, r=0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48903241 (Vp/Vs=1.36, r=0.45). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48912936 (Vp/Vs=0.86, r=-0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48913036 (Vp/Vs=0.25, r=-0.70). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48914237 (Vp/Vs=1.38, r=0.34). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48917287 (Vp/Vs=1.31, r=0.36). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48920790 (Vp/Vs=1.30, r=0.26). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48922786 (Vp/Vs=0.64, r=-0.36). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48931986 (Vp/Vs=0.82, r=-0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48932439 (Vp/Vs=1.09, r=0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48940137 (Vp/Vs=0.43, r=-0.49). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48941287 (Vp/Vs=1.57, r=0.70). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48951787 (Vp/Vs=0.90, r=-0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48956687 (Vp/Vs=1.53, r=0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48964144 (Vp/Vs=0.83, r=-0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48965336 (Vp/Vs=0.25, r=-0.74). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48967237 (Vp/Vs=1.30, r=0.32). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48970186 (Vp/Vs=0.87, r=-0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48971038 (Vp/Vs=1.29, r=0.32). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48980736 (Vp/Vs=0.65, r=-0.39). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48983887 (Vp/Vs=1.49, r=0.52). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48990988 (Vp/Vs=0.98, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48999438 (Vp/Vs=1.43, r=0.48). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49000137 (Vp/Vs=0.96, r=-0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49003038 (Vp/Vs=0.85, r=-0.18). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49011966 (Vp/Vs=1.56, r=0.56). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49012686 (Vp/Vs=0.95, r=-0.06). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49013937 (Vp/Vs=1.50, r=0.53). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49017688 (Vp/Vs=1.41, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49023444 (Vp/Vs=1.26, r=0.28). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49025386 (Vp/Vs=0.97, r=-0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49027786 (Vp/Vs=0.93, r=-0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49038937 (Vp/Vs=0.97, r=-0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49049090 (Vp/Vs=1.27, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49050791 (Vp/Vs=0.21, r=-0.73). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49054241 (Vp/Vs=1.76, r=0.76). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49054940 (Vp/Vs=1.63, r=0.77). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49055336 (Vp/Vs=1.38, r=0.42). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49055390 (Vp/Vs=1.20, r=0.28). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49055644 (Vp/Vs=1.38, r=0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49067839 (Vp/Vs=0.37, r=-0.67). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49067938 (Vp/Vs=0.50, r=-0.45). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49080786 (Vp/Vs=1.59, r=0.75). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49080787 (Vp/Vs=1.58, r=0.76). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49082388 (Vp/Vs=1.32, r=0.39). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49083440 (Vp/Vs=1.27, r=0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49084255 (Vp/Vs=0.44, r=-0.55). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49084788 (Vp/Vs=1.20, r=0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49085492 (Vp/Vs=0.12, r=-0.47). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49095087 (Vp/Vs=1.61, r=0.62). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49102742 (Vp/Vs=1.37, r=0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49104187 (Vp/Vs=1.47, r=0.58). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49106539 (Vp/Vs=1.48, r=0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49110342 (Vp/Vs=0.99, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49112536 (Vp/Vs=1.44, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49112986 (Vp/Vs=1.33, r=0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49114686 (Vp/Vs=1.52, r=0.58). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49115536 (Vp/Vs=1.22, r=0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49115588 (Vp/Vs=1.29, r=0.30). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49123088 (Vp/Vs=1.08, r=0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49126941 (Vp/Vs=0.93, r=-0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49128944 (Vp/Vs=0.52, r=-0.42). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49132644 (Vp/Vs=0.48, r=-0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49137106 (Vp/Vs=1.56, r=0.76). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49138588 (Vp/Vs=1.54, r=0.58). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49142287 (Vp/Vs=1.21, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49142590 (Vp/Vs=1.49, r=0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49143295 (Vp/Vs=0.68, r=-0.31). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49144788 (Vp/Vs=0.41, r=-0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49162586 (Vp/Vs=1.58, r=0.71). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49163345 (Vp/Vs=0.40, r=-0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49180536 (Vp/Vs=1.40, r=0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49181237 (Vp/Vs=1.59, r=0.67). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49195172 (Vp/Vs=1.69, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49195570 (Vp/Vs=1.14, r=0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49199479 (Vp/Vs=1.34, r=0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49200423 (Vp/Vs=0.93, r=-0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49204769 (Vp/Vs=1.44, r=0.51). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49204971 (Vp/Vs=1.21, r=0.21). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49206078 (Vp/Vs=0.60, r=-0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49212418 (Vp/Vs=1.34, r=0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49216268 (Vp/Vs=1.34, r=0.36). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49219719 (Vp/Vs=1.06, r=0.06). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49221320 (Vp/Vs=0.68, r=-0.35). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49221870 (Vp/Vs=0.44, r=-0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49222819 (Vp/Vs=1.55, r=0.67). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49227018 (Vp/Vs=0.78, r=-0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49242622 (Vp/Vs=1.56, r=0.61). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49244118 (Vp/Vs=0.98, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49246922 (Vp/Vs=1.10, r=0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49257269 (Vp/Vs=1.37, r=0.47). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49261768 (Vp/Vs=0.99, r=-0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49266719 (Vp/Vs=1.17, r=0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49269320 (Vp/Vs=1.38, r=0.50). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49277719 (Vp/Vs=0.40, r=-0.64). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49289868 (Vp/Vs=1.86, r=0.78). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49292764 (Vp/Vs=0.50, r=-0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49293871 (Vp/Vs=1.19, r=0.30). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49297120 (Vp/Vs=1.46, r=0.71). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49297768 (Vp/Vs=1.15, r=0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49305971 (Vp/Vs=1.10, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49306370 (Vp/Vs=0.96, r=-0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49316021 (Vp/Vs=1.56, r=0.68). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49329068 (Vp/Vs=0.86, r=-0.18). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49334568 (Vp/Vs=0.76, r=-0.27). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49352318 (Vp/Vs=0.64, r=-0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49357720 (Vp/Vs=1.20, r=0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49362871 (Vp/Vs=1.43, r=0.55). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49367169 (Vp/Vs=1.45, r=0.65). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49367718 (Vp/Vs=1.37, r=0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49370718 (Vp/Vs=0.51, r=-0.52). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49371022 (Vp/Vs=1.52, r=0.77). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49373719 (Vp/Vs=0.81, r=-0.25). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49392019 (Vp/Vs=0.78, r=-0.21). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49392918 (Vp/Vs=1.08, r=0.07). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49398168 (Vp/Vs=0.87, r=-0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49399869 (Vp/Vs=1.53, r=0.65). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49402020 (Vp/Vs=0.58, r=-0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49408320 (Vp/Vs=1.54, r=0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49414419 (Vp/Vs=0.65, r=-0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49423820 (Vp/Vs=0.77, r=-0.18). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49432118 (Vp/Vs=0.85, r=-0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49444222 (Vp/Vs=1.49, r=0.57). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49455819 (Vp/Vs=1.42, r=0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49458518 (Vp/Vs=1.32, r=0.29). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49486948 (Vp/Vs=0.44, r=-0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49487320 (Vp/Vs=0.80, r=-0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49492168 (Vp/Vs=1.30, r=0.52). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49504419 (Vp/Vs=0.61, r=-0.42). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49512869 (Vp/Vs=0.07, r=-0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49524318 (Vp/Vs=0.55, r=-0.52). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49539169 (Vp/Vs=0.92, r=-0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49540821 (Vp/Vs=1.10, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49543469 (Vp/Vs=0.88, r=-0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49543518 (Vp/Vs=0.49, r=-0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49545579 (Vp/Vs=0.07, r=-0.89). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49549821 (Vp/Vs=0.67, r=-0.33). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49570768 (Vp/Vs=0.43, r=-0.74). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49583718 (Vp/Vs=1.13, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1526: UserWarning: No Vp/Vs calculation for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49591674. Not enough valid points for linear regression. 
+  warnings.warn(f"No Vp/Vs calculation for origin {origin_id}. Not enough valid points for linear regression. ")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49608419 (Vp/Vs=0.93, r=-0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49614621 (Vp/Vs=1.37, r=0.34). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49615519 (Vp/Vs=0.85, r=-0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49638818 (Vp/Vs=1.29, r=0.31). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49646619 (Vp/Vs=1.12, r=0.16). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49646869 (Vp/Vs=0.67, r=-0.35). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49662920 (Vp/Vs=1.10, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49680818 (Vp/Vs=1.16, r=0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49681472 (Vp/Vs=1.40, r=0.49). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49682468 (Vp/Vs=1.29, r=0.31). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49688521 (Vp/Vs=0.71, r=-0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49700124 (Vp/Vs=0.85, r=-0.20). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49702418 (Vp/Vs=1.28, r=0.24). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49708830 (Vp/Vs=1.07, r=0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49725720 (Vp/Vs=0.66, r=-0.36). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49726419 (Vp/Vs=1.29, r=0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49735818 (Vp/Vs=0.25, r=-0.61). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49745627 (Vp/Vs=0.76, r=-0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49746620 (Vp/Vs=0.25, r=-0.62). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49749673 (Vp/Vs=1.27, r=0.34). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49756869 (Vp/Vs=0.25, r=-0.63). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49759969 (Vp/Vs=1.34, r=0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49768172 (Vp/Vs=0.41, r=-0.67). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49777121 (Vp/Vs=0.42, r=-0.63). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49787218 (Vp/Vs=0.85, r=-0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49791669 (Vp/Vs=1.07, r=0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49793118 (Vp/Vs=1.33, r=0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49800371 (Vp/Vs=0.15, r=-0.88). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49803170 (Vp/Vs=0.51, r=-0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49820774 (Vp/Vs=0.66, r=-0.45). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49836026 (Vp/Vs=1.09, r=0.09). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49845469 (Vp/Vs=0.96, r=-0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49851319 (Vp/Vs=1.41, r=0.49). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49853570 (Vp/Vs=0.42, r=-0.66). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49862070 (Vp/Vs=0.70, r=-0.33). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49949170 (Vp/Vs=1.47, r=0.57). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=49949522 (Vp/Vs=0.11, r=-0.75). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50026522 (Vp/Vs=0.88, r=-0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50035724 (Vp/Vs=0.98, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50044568 (Vp/Vs=0.86, r=-0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50045018 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50047519 (Vp/Vs=1.44, r=0.52). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50050723 (Vp/Vs=1.58, r=0.77). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50053170 (Vp/Vs=1.00, r=-0.00). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50054520 (Vp/Vs=1.14, r=0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50065419 (Vp/Vs=0.53, r=-0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50065619 (Vp/Vs=1.06, r=0.06). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50068818 (Vp/Vs=1.51, r=0.64). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50081868 (Vp/Vs=1.55, r=0.67). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50085820 (Vp/Vs=1.54, r=0.56). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50088869 (Vp/Vs=0.60, r=-0.21). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50091772 (Vp/Vs=1.27, r=0.28). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50110521 (Vp/Vs=1.25, r=0.28). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50115918 (Vp/Vs=1.10, r=0.08). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50116669 (Vp/Vs=0.79, r=-0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50119118 (Vp/Vs=1.39, r=0.62). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50124319 (Vp/Vs=1.58, r=0.68). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50137918 (Vp/Vs=1.43, r=0.61). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50141019 (Vp/Vs=1.20, r=0.22). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50144919 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50147818 (Vp/Vs=1.54, r=0.55). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50149461 (Vp/Vs=0.74, r=-0.34). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50149719 (Vp/Vs=0.95, r=-0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50150470 (Vp/Vs=0.23, r=-0.66). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50160518 (Vp/Vs=0.93, r=-0.07). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50163976 (Vp/Vs=1.05, r=0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50164669 (Vp/Vs=1.42, r=0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50168372 (Vp/Vs=0.91, r=-0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50188321 (Vp/Vs=0.61, r=-0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50195918 (Vp/Vs=1.24, r=0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50198120 (Vp/Vs=0.71, r=-0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50199071 (Vp/Vs=0.81, r=-0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50211968 (Vp/Vs=1.41, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50226518 (Vp/Vs=0.89, r=-0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50228502 (Vp/Vs=1.03, r=0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50234971 (Vp/Vs=0.73, r=-0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50243168 (Vp/Vs=0.64, r=-0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50248422 (Vp/Vs=1.44, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50258622 (Vp/Vs=1.15, r=0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50265968 (Vp/Vs=1.30, r=0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50271968 (Vp/Vs=0.98, r=-0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50280469 (Vp/Vs=0.92, r=-0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50290171 (Vp/Vs=1.60, r=0.75). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50290318 (Vp/Vs=1.50, r=0.60). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50295920 (Vp/Vs=0.63, r=-0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50296278 (Vp/Vs=0.26, r=-0.77). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50296871 (Vp/Vs=1.42, r=0.53). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50301668 (Vp/Vs=1.02, r=0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50301820 (Vp/Vs=0.44, r=-0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50305219 (Vp/Vs=0.87, r=-0.15). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50306618 (Vp/Vs=0.83, r=-0.24). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50307120 (Vp/Vs=0.62, r=-0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50310821 (Vp/Vs=0.46, r=-0.46). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50315322 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50327269 (Vp/Vs=1.42, r=0.45). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50327518 (Vp/Vs=0.76, r=-0.20). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50344920 (Vp/Vs=1.07, r=0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50422821 (Vp/Vs=0.98, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50423018 (Vp/Vs=1.05, r=0.04). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50423976 (Vp/Vs=1.43, r=0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50431471 (Vp/Vs=1.15, r=0.18). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50431969 (Vp/Vs=0.61, r=-0.38). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50433119 (Vp/Vs=1.01, r=0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50436868 (Vp/Vs=1.59, r=0.79). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50441768 (Vp/Vs=1.22, r=0.37). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50441868 (Vp/Vs=0.51, r=-0.48). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50450571 (Vp/Vs=0.97, r=-0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50463570 (Vp/Vs=1.37, r=0.53). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50464068 (Vp/Vs=0.60, r=-0.43). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50464519 (Vp/Vs=0.85, r=-0.18). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50465468 (Vp/Vs=1.19, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50494119 (Vp/Vs=1.30, r=0.39). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50494720 (Vp/Vs=0.68, r=-0.31). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50501520 (Vp/Vs=1.57, r=0.57). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50503768 (Vp/Vs=1.24, r=0.33). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50528273 (Vp/Vs=1.57, r=0.68). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50532674 (Vp/Vs=1.14, r=0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50534368 (Vp/Vs=0.72, r=-0.35). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50547019 (Vp/Vs=1.13, r=0.19). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50563521 (Vp/Vs=0.29, r=-0.75). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50573971 (Vp/Vs=1.44, r=0.65). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50603321 (Vp/Vs=0.88, r=-0.14). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50604568 (Vp/Vs=0.96, r=-0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50617722 (Vp/Vs=1.14, r=0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50620519 (Vp/Vs=0.90, r=-0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50623172 (Vp/Vs=1.45, r=0.63). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50631871 (Vp/Vs=1.19, r=0.22). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50640272 (Vp/Vs=1.15, r=0.17). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50652268 (Vp/Vs=1.20, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50652623 (Vp/Vs=1.51, r=0.59). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50660425 (Vp/Vs=0.49, r=-0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50667771 (Vp/Vs=0.99, r=-0.01). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50673369 (Vp/Vs=0.11, r=-0.76). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50675468 (Vp/Vs=-0.01, r=-0.90). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50680318 (Vp/Vs=1.04, r=0.05). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50684619 (Vp/Vs=0.44, r=-0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50705738 (Vp/Vs=0.68, r=-0.44). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50707969 (Vp/Vs=0.88, r=-0.13). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50709620 (Vp/Vs=0.98, r=-0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50709976 (Vp/Vs=0.86, r=-0.11). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50710468 (Vp/Vs=0.49, r=-0.34). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50720922 (Vp/Vs=1.34, r=0.41). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50728823 (Vp/Vs=0.76, r=-0.26). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50803368 (Vp/Vs=1.38, r=0.47). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50805676 (Vp/Vs=1.62, r=0.79). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50807568 (Vp/Vs=1.42, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50820271 (Vp/Vs=1.35, r=0.54). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50835768 (Vp/Vs=1.03, r=0.03). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50872921 (Vp/Vs=0.84, r=-0.16). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50877669 (Vp/Vs=1.07, r=0.07). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50946218 (Vp/Vs=1.10, r=0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50948119 (Vp/Vs=1.25, r=0.21). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50950268 (Vp/Vs=0.98, r=-0.02). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50972218 (Vp/Vs=0.94, r=-0.06). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50980819 (Vp/Vs=0.88, r=-0.10). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50981975 (Vp/Vs=1.09, r=0.12). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50982168 (Vp/Vs=1.08, r=0.07). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50988019 (Vp/Vs=0.72, r=-0.24). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=50988820 (Vp/Vs=1.15, r=0.16). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1537: UserWarning: Unrealistic Vp/Vs ratio for origin smi:service.iris.edu/fdsnws/event/1/query?originid=51015368 (Vp/Vs=1.21, r=0.23). Skipping.
+  warnings.warn(f"Unrealistic Vp/Vs ratio for origin {origin_id} (Vp/Vs={vp_vs_ratio:.2f}, r={lr.rvalue:.2f}). Skipping.")
+/groups/igonin/ecastillo/utdquake/utdquake/utils/plot.py:1643: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.
+  ax1.set_yticklabels([abs(int(y)) for y in yticks])
+Saving figure to /groups/igonin/ecastillo/utdquake/scripts2/das_fig/figures
+UTDQuake(DAS root=/groups/igonin/ecastillo/UTDQuake_DAS)
+Network(DAS: GCI) | Events: 448, Stations: 3, Channels: 22.5 K
+Saved plot to /groups/igonin/ecastillo/utdquake/scripts2/das_fig/figures/GCI_histogram.png
+✅ DONE

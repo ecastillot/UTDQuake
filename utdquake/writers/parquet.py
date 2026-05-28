@@ -9,9 +9,9 @@ from typing import Iterable, Optional, Dict, List
 
 import pandas as pd
 
-from ..core.config import HF_CONFIG,get_root,get_utdq_paths
+from ..core.config import get_hf_entry,get_root,get_utdq_paths
 from ..utils.cache import list_local_networks
-from ..manager.manager import UTDQBank
+from ..bank.bank import UTDQBank
 from .manifest import ManifestPaths, ManifestProgress
 from .schema import (PREF_PICKS_ORDER,
                     PREF_PICKS_TYPES,
@@ -73,14 +73,16 @@ def _append_parquet_dedup(
 
 def build_manifests(
     networks: Optional[Iterable[str]] = None,
-    force_download: bool = False,
-    overwrite: bool = False,
-    include_events: bool = True,
-    include_stations: bool = True,
-    include_picks: bool = True,
+    das: bool = False,
+    # force_download: bool = False,
+    include_events: bool = False,
+    include_stations: bool = False,
+    include_picks: bool = False,
     include_networks: bool = True,
+    overwrite: bool = False,
+    per_network_shards: bool = True,
     include_manual_network_info: pd.DataFrame = None
-) -> ManifestPaths:
+    ) -> ManifestPaths:
     """
     Build UTDQuake manifest files incrementally, resume-safe.
 
@@ -102,13 +104,20 @@ def build_manifests(
         If True, delete progress and rebuild from scratch.
     include_events, include_stations, include_picks, include_networks
         Which manifests to build.
+    per_network_shards
+        If True, saves one parquet per network per manifest type, e.g.
+        manifests/events/network=tx.parquet
+        manifests/picks/network=tx.parquet
+
+        This is the best option for very large datasets.
+        You can still combine later if you want.
 
     Returns
     -------
     ManifestPaths
     """
 
-    root = get_root()
+    root = get_root(das=das)
     paths = ManifestPaths(root=root)
     paths.ensure_dirs()
 
@@ -125,7 +134,7 @@ def build_manifests(
         #     if p.exists():
         #         p.unlink()
 
-    local_networks = list_local_networks(data_type="bank").keys()
+    local_networks = list_local_networks(data_type="bank",das=das).keys()
     local_networks = list(local_networks)
 
     logger.info("Found %d local networks: %s", len(local_networks), local_networks)
@@ -134,8 +143,22 @@ def build_manifests(
         raise ValueError("No networks found to build manifests.")
 
     if include_manual_network_info is None and include_networks:
-        path = root / HF_CONFIG["networks"].path
-        include_manual_network_info = pd.read_parquet(path )
+        try:
+            path = root / get_hf_entry("networks", das=das).path
+            include_manual_network_info = pd.read_parquet(path )
+        except Exception as e:
+            logger.warning("Could not load manual network info from %s: %s", path, e)
+            include_manual_network_info = None
+
+    shard_dirs: Dict[str, Path] = {
+        "events": paths.manifest_dir / "events",
+        "stations": paths.manifest_dir / "stations",
+        "picks": paths.manifest_dir / "picks",
+        "networks": paths.manifest_dir / "network",
+    }
+
+    for d in shard_dirs.values():
+        d.mkdir(parents=True, exist_ok=True)
 
 
     for net in local_networks:
@@ -145,32 +168,132 @@ def build_manifests(
             continue
 
         logger.info("Processing network: %s", net)
-        print(net)
 
-        net_paths = get_utdq_paths(net)
-        bank = UTDQBank(net_paths["bank"])
+        net_paths = get_utdq_paths(net,das=das)
+        # print(net_paths)
+        logger.info("Loading bank for network %s from %s", net, net_paths["banks"])
+        bank = UTDQBank(net_paths["banks"],
+                        path_structure='{year}/{month}/{day}',
+                        name_structure='{event_id_end}',
+                        format='quakeml',
+                        das=das)
+        
 
-        if include_networks and not progress.is_done("stats", net):
-            logger.info("Building stats manifest for %s", net)
+        #Events
+        if include_events and not progress.is_done("events", net):
+            logger.info("Building events manifest for %s", net)
+            df_events = bank.read_index().copy()
+            df_events["network"] = net
 
-            manual_info = include_manual_network_info[include_manual_network_info["network"] == net]
+            df_events = sanitize_dataframe(df_events,
+                                            string_cols=PREF_EVENTS_TYPES["string_cols"],
+                                            float_cols=PREF_EVENTS_TYPES["float_cols"],
+                                            int_cols=PREF_EVENTS_TYPES["int_cols"],
+                                            datetime_cols=PREF_EVENTS_TYPES["datetime_cols"],
+                                            bool_cols=PREF_EVENTS_TYPES["bool_cols"],
+                                            order_cols=PREF_EVENTS_ORDER
+                                            )
+
+            if per_network_shards:
+                out = shard_dirs["events"] / f"network={net}.parquet"
+                _write_parquet_atomic(df_events, out)
+            else:
+                # combined file (can become heavy)
+                path = shard_dirs["events"] / f"events.parquet"
+                _append_parquet_dedup(
+                    path,
+                    df_events,
+                    subset_cols=["network", "event_id"] if "event_id" in df_events.columns else ["network"],
+                )
+
+            progress.mark_done("events", net)
+        
+        # Stations
+        if include_stations and not progress.is_done("stations", net):
+            logger.info("Building stations manifest for %s", net)
+            df_stations = bank.load_stations().copy()
+            df_stations["network"] = net
+
+            df_stations = sanitize_dataframe(df_stations,
+                                            string_cols=PREF_STATIONS_TYPES["string_cols"],
+                                            float_cols=PREF_STATIONS_TYPES["float_cols"],
+                                            int_cols=PREF_STATIONS_TYPES["int_cols"],
+                                            datetime_cols=PREF_STATIONS_TYPES["datetime_cols"],
+                                            bool_cols=PREF_STATIONS_TYPES["bool_cols"],
+                                            order_cols=PREF_STATIONS_ORDER)
+
+            if per_network_shards:
+                out = shard_dirs["stations"] / f"network={net}.parquet"
+                _write_parquet_atomic(df_stations, out)
+            else:
+                path = shard_dirs["events"] / f"stations.parquet"
+                subset = ["network"]
+                for c in ["station", "station_code", "id", "seed_id"]:
+                    if c in df_stations.columns:
+                        subset.append(c)
+                        break
+                _append_parquet_dedup(path, df_stations, subset_cols=subset)
+
+            progress.mark_done("stations", net)   
+            
+
+        # Picks
+        if include_picks and not progress.is_done("picks", net):
+            logger.info("Building picks manifest for %s", net)
+            
+            df_picks = bank.load_picks().copy()
+            df_picks["network"] = net
+
+            df_picks = sanitize_dataframe(df_picks,
+                                    string_cols=PREF_PICKS_TYPES["string_cols"],
+                                    float_cols=PREF_PICKS_TYPES["float_cols"],
+                                    int_cols=PREF_PICKS_TYPES["int_cols"],
+                                    datetime_cols=PREF_PICKS_TYPES["datetime_cols"],
+                                    bool_cols=PREF_PICKS_TYPES["bool_cols"],
+                                    order_cols=PREF_PICKS_ORDER)
+            
+            if per_network_shards:
+                out = shard_dirs["picks"] / f"network={net}.parquet"
+
+                _write_parquet_atomic(df_picks, out)
+            else:
+                path = shard_dirs["events"] / f"picks.parquet"
+                subset = ["network"]
+                # typical unique pick keys (best-effort)
+                for c in ["pick_id", "id", "resource_id"]:
+                    if c in df_picks.columns:
+                        subset.append(c)
+                        break
+                _append_parquet_dedup(path, df_picks, subset_cols=subset)
+
+            progress.mark_done("picks", net)
+
+        
+
+        if include_networks and not progress.is_done("networks", net):
+            logger.info("Building networks manifest for %s", net)
+
+            if include_manual_network_info is not None:
+                manual_info = include_manual_network_info[include_manual_network_info["network"] == net]
+            else:
+                manual_info = pd.DataFrame({"network": [net]})
+
             summary = bank.get_summary()
 
             for key, value in summary.items():
                 manual_info[key] = value
 
             df_summary = sanitize_dataframe(manual_info,
-                                                       string_cols=PREF_NETWORK_TYPES["string_cols"],
-                                                       float_cols=PREF_NETWORK_TYPES["float_cols"],
-                                                       int_cols=PREF_NETWORK_TYPES["int_cols"],
-                                                       datetime_cols=PREF_NETWORK_TYPES["datetime_cols"],
-                                                       bool_cols=PREF_NETWORK_TYPES["bool_cols"])
+                                            string_cols=PREF_NETWORK_TYPES["string_cols"],
+                                            float_cols=PREF_NETWORK_TYPES["float_cols"],
+                                            int_cols=PREF_NETWORK_TYPES["int_cols"],
+                                            datetime_cols=PREF_NETWORK_TYPES["datetime_cols"],
+                                            bool_cols=PREF_NETWORK_TYPES["bool_cols"],
+                                            order_cols=PREF_NETWORK_ORDER)
 
-            existing_pref = [c for c in PREF_NETWORK_ORDER if c in df_summary.columns]
-            remaining = [c for c in df_summary.columns if c not in existing_pref]
-            df_summary = df_summary[existing_pref + remaining]
 
-            _append_parquet_dedup(paths.network, df_summary, subset_cols=["network"])
+            path = shard_dirs["networks"] / f"network.parquet"
+            _append_parquet_dedup(path, df_summary, subset_cols=["network"])
 
             progress.mark_done("network", net)
 
@@ -184,8 +307,8 @@ def build_manifests(
         # paths.get_stations(net).mkdir(parents=True, exist_ok=True)
         # paths.get_picks(net).mkdir(parents=True, exist_ok=True)
 
-        # net_paths = get_utdq_paths(net)
-        # bank = UTDQBank(net_paths["bank"])
+        # net_paths = get_utdq_paths(net,das=das)
+        # bank = UTDQBank(net_paths["bank"],das=das)
         # df_events = bank.read_index().copy()
 
         # if apply_utd_qc:

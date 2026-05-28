@@ -1,0 +1,9 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+Saving figure to /groups/igonin/ecastillo/utdquake/scripts2/das_fig/figures
+UTDQuake(DAS root=/groups/igonin/ecastillo/UTDQuake_DAS)
+Network(DAS: GCI) | Events: 448, Stations: 3, Channels: 22.5 K
+{'network': 'GCI', 'total_stations': 3, 'confirmed_stations': 22461, 'calculated_stations': 22500, 'events': 448, 'p_arrivals': 2923134, 's_arrivals': 4882979, 'start_time': Timestamp('2023-06-10 04:43:30.917000'), 'end_time': Timestamp('2024-11-18 10:22:06.876000'), 'located_stations': 22500, 'total_channels': 22500}
+22500
+Saved plot to /groups/igonin/ecastillo/utdquake/scripts2/das_fig/figures/overview.png
+✅ DONE

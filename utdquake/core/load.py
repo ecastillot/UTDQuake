@@ -128,6 +128,7 @@ def cleanup_components(to_download: Set[str], bank_path: Path, parquets: Dict[st
 
 def resolve_network_paths(
     network: str,
+    das: bool = False,
     include_bank: bool = True,
     include_events: bool = True,
     include_stations: bool = True,
@@ -144,6 +145,8 @@ def resolve_network_paths(
     ----------
     network : str
         Network code to resolve.
+    das : bool, optional
+        If True, resolves paths from the DAS dataset. Default is False (standard paths).
     include_bank : bool, optional
         Whether to include EventBank. Default is True.
     include_events : bool, optional
@@ -168,8 +171,8 @@ def resolve_network_paths(
     network = network.strip()
 
     # Paths for EventBank and Parquet components
-    utdq_paths = get_utdq_paths(network)
-    bank_path = utdq_paths["bank"] 
+    utdq_paths = get_utdq_paths(network,das)
+    bank_path = utdq_paths["banks"] 
     parquets = {
         "events": utdq_paths["events"],
         "stations": utdq_paths["stations"],
@@ -204,8 +207,9 @@ def resolve_network_paths(
 
         # Download missing components
         download_snapshot(
-            local_dir=get_root(),
+            local_dir=get_root(das),
             networks=network,
+            das=das,
             include_banks="banks" in missing,
             include_events="events" in missing,
             include_stations="stations" in missing,

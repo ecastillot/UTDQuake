@@ -1,0 +1,87 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+UTDQBank(base_path=/groups/igonin/ecastillo/UTDQuake/bank/tx, index_path=/groups/igonin/ecastillo/UTDQuake/bank/tx/.index.db)
+2026-04-29 18:55:26,417 [INFO:utdquake.bank] Total events: 5000, Already processed: 0, To process: 5000
+2026-04-29 18:55:35,550 [INFO:utdquake.bank] Chunk 1/50 saved: 100 events
+2026-04-29 18:55:44,589 [INFO:utdquake.bank] Chunk 2/50 saved: 100 events
+2026-04-29 18:55:52,734 [INFO:utdquake.bank] Chunk 3/50 saved: 100 events
+2026-04-29 18:56:00,819 [INFO:utdquake.bank] Chunk 4/50 saved: 100 events
+2026-04-29 18:56:08,935 [INFO:utdquake.bank] Chunk 5/50 saved: 100 events
+2026-04-29 18:56:17,132 [INFO:utdquake.bank] Chunk 6/50 saved: 100 events
+2026-04-29 18:56:25,285 [INFO:utdquake.bank] Chunk 7/50 saved: 100 events
+2026-04-29 18:56:34,029 [INFO:utdquake.bank] Chunk 8/50 saved: 100 events
+2026-04-29 18:56:40,934 [INFO:utdquake.bank] Chunk 9/50 saved: 100 events
+2026-04-29 18:56:47,970 [INFO:utdquake.bank] Chunk 10/50 saved: 100 events
+2026-04-29 18:56:55,846 [INFO:utdquake.bank] Chunk 11/50 saved: 100 events
+2026-04-29 18:57:03,607 [INFO:utdquake.bank] Chunk 12/50 saved: 100 events
+2026-04-29 18:57:12,008 [INFO:utdquake.bank] Chunk 13/50 saved: 100 events
+2026-04-29 18:57:19,910 [INFO:utdquake.bank] Chunk 14/50 saved: 100 events
+2026-04-29 18:57:28,048 [INFO:utdquake.bank] Chunk 15/50 saved: 100 events
+2026-04-29 18:57:36,248 [INFO:utdquake.bank] Chunk 16/50 saved: 100 events
+2026-04-29 18:57:44,486 [INFO:utdquake.bank] Chunk 17/50 saved: 100 events
+2026-04-29 18:57:52,627 [INFO:utdquake.bank] Chunk 18/50 saved: 100 events
+2026-04-29 18:58:01,542 [INFO:utdquake.bank] Chunk 19/50 saved: 100 events
+2026-04-29 18:58:10,425 [INFO:utdquake.bank] Chunk 20/50 saved: 100 events
+2026-04-29 18:58:19,193 [INFO:utdquake.bank] Chunk 21/50 saved: 100 events
+2026-04-29 18:58:28,343 [INFO:utdquake.bank] Chunk 22/50 saved: 100 events
+2026-04-29 18:58:36,360 [INFO:utdquake.bank] Chunk 23/50 saved: 100 events
+2026-04-29 18:58:44,119 [INFO:utdquake.bank] Chunk 24/50 saved: 100 events
+2026-04-29 18:58:52,128 [INFO:utdquake.bank] Chunk 25/50 saved: 100 events
+2026-04-29 18:59:00,644 [INFO:utdquake.bank] Chunk 26/50 saved: 100 events
+2026-04-29 18:59:08,525 [INFO:utdquake.bank] Chunk 27/50 saved: 100 events
+2026-04-29 18:59:17,567 [INFO:utdquake.bank] Chunk 28/50 saved: 100 events
+2026-04-29 18:59:26,648 [INFO:utdquake.bank] Chunk 29/50 saved: 100 events
+2026-04-29 18:59:34,525 [INFO:utdquake.bank] Chunk 30/50 saved: 100 events
+2026-04-29 18:59:43,850 [INFO:utdquake.bank] Chunk 31/50 saved: 100 events
+2026-04-29 18:59:52,641 [INFO:utdquake.bank] Chunk 32/50 saved: 100 events
+2026-04-29 19:00:02,627 [INFO:utdquake.bank] Chunk 33/50 saved: 100 events
+2026-04-29 19:00:11,555 [INFO:utdquake.bank] Chunk 34/50 saved: 100 events
+2026-04-29 19:00:20,390 [INFO:utdquake.bank] Chunk 35/50 saved: 100 events
+2026-04-29 19:00:29,108 [INFO:utdquake.bank] Chunk 36/50 saved: 100 events
+2026-04-29 19:00:38,561 [INFO:utdquake.bank] Chunk 37/50 saved: 100 events
+2026-04-29 19:00:48,257 [INFO:utdquake.bank] Chunk 38/50 saved: 100 events
+2026-04-29 19:00:56,898 [INFO:utdquake.bank] Chunk 39/50 saved: 100 events
+2026-04-29 19:01:05,920 [INFO:utdquake.bank] Chunk 40/50 saved: 100 events
+2026-04-29 19:01:14,308 [INFO:utdquake.bank] Chunk 41/50 saved: 100 events
+2026-04-29 19:01:22,758 [INFO:utdquake.bank] Chunk 42/50 saved: 100 events
+2026-04-29 19:01:31,457 [INFO:utdquake.bank] Chunk 43/50 saved: 100 events
+2026-04-29 19:01:40,059 [INFO:utdquake.bank] Chunk 44/50 saved: 100 events
+2026-04-29 19:01:48,444 [INFO:utdquake.bank] Chunk 45/50 saved: 100 events
+2026-04-29 19:01:56,652 [INFO:utdquake.bank] Chunk 46/50 saved: 100 events
+2026-04-29 19:02:05,482 [INFO:utdquake.bank] Chunk 47/50 saved: 100 events
+2026-04-29 19:02:14,619 [INFO:utdquake.bank] Chunk 48/50 saved: 100 events
+2026-04-29 19:02:22,977 [INFO:utdquake.bank] Chunk 49/50 saved: 100 events
+2026-04-29 19:02:31,923 [INFO:utdquake.bank] Chunk 50/50 saved: 100 events
+2026-04-29 19:02:31,929 [INFO:utdquake.bank] Saving picks completed in 426.67 seconds
+2026-04-29 19:02:31,930 [INFO:utdquake.bank] Applying travel time QC to picks...
+Traceback (most recent call last):
+  File "/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/pandas/core/indexes/base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'linear_hyp_distance'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/groups/igonin/ecastillo/utdquake/scripts/utdbank/u_put_picks.py", line 15, in <module>
+    ebank.put_picks(chunk_size=100,
+  File "/groups/igonin/ecastillo/utdquake/utdquake/bank/bank.py", line 529, in put_picks
+    multi_qc = TravelTime(df)
+               ^^^^^^^^^^^^^^
+  File "/groups/igonin/ecastillo/utdquake/utdquake/qc/travel_time.py", line 1001, in __init__
+    self.qc_objects[phase] = PhaseTravelTime(df_phase, distance_col, tt_col, phase)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/groups/igonin/ecastillo/utdquake/utdquake/qc/travel_time.py", line 394, in __init__
+    (~self.df_full[distance_col].isna()) &
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/pandas/core/frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/pandas/core/indexes/base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'linear_hyp_distance'
+✅ DONE

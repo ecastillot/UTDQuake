@@ -1,0 +1,429 @@
+/groups/igonin/ecastillo/anaconda3/envs/utdq/lib/python3.11/site-packages/obspy/core/util/base.py:26: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+      network network_type station  ...   latitude      depth  elevation
+139       GCI          DAS   KKFLS  ...  59.637590  -3.189611   3.189611
+140       GCI          DAS   KKFLS  ...  59.637518  -3.005778   3.005778
+141       GCI          DAS   KKFLS  ...  59.637446  -2.818813   2.818813
+142       GCI          DAS   KKFLS  ...  59.637375  -2.628761   2.628761
+143       GCI          DAS   KKFLS  ...  59.637303  -2.435684   2.435684
+...       ...          ...     ...  ...        ...        ...        ...
+27721     GCI          DAS   TERRA  ...  59.557653  40.000000 -40.000000
+27722     GCI          DAS   TERRA  ...  59.557651  40.000000 -40.000000
+27723     GCI          DAS   TERRA  ...  59.557650  40.000000 -40.000000
+27724     GCI          DAS   TERRA  ...  59.557649  40.000000 -40.000000
+27725     GCI          DAS   TERRA  ...  59.557647  40.000000 -40.000000
+
+[27413 rows x 8 columns]
+2026-04-20 21:38:46,058 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-10T04:43:30.917000Z to 2023-06-11T04:43:30.917000Z...
+2026-04-20 21:39:11,272 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 21:39:11,328 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-10 04:43:30.917000 - 2023-06-11 04:43:30.917000 | Chunk creation time: 2026-04-20 21:39:11.328759
+2026-04-20 21:39:11,329 [INFO:utdquake.bank.utils] Starting to process 3 events in catalog AMRtSQc5. (This id is created just for logging purposes)
+2026-04-20 21:39:11,331 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11707348 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786
+2026-04-20 21:39:11,337 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:39:11,354 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:39:11,366 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:41:20,415 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786. Ready to update quality metrics.
+2026-04-20 21:41:20,419 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786.
+2026-04-20 21:41:20,447 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786.
+2026-04-20 21:41:20,448 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498786.
+2026-04-20 21:41:20,449 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11707192 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186
+2026-04-20 21:41:20,453 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 21:41:20,465 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 21:41:20,478 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.105 not found in station metadata.
+2026-04-20 21:41:20,489 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.106 not found in station metadata.
+2026-04-20 21:41:20,500 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.107 not found in station metadata.
+2026-04-20 21:41:20,519 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 21:41:20,532 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 21:41:20,544 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:41:20,555 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:41:20,568 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:41:20,578 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:41:20,591 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:41:20,601 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:41:20,623 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:41:20,635 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:41:20,646 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:41:20,657 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:41:20,666 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:41:20,677 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:41:20,689 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:41:20,699 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:41:20,718 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:41:20,729 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:41:20,741 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:41:20,752 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:41:20,764 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:41:20,778 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:41:20,790 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:41:20,806 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:41:20,818 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:41:20,833 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:41:20,844 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:41:20,854 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:41:20,868 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:41:20,881 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:41:20,893 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:41:20,906 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:41:20,919 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 21:41:20,930 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 21:41:20,940 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 21:41:20,950 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 21:41:20,963 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 21:41:20,974 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:41:20,984 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:41:20,995 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 21:41:21,005 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 21:41:21,020 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 21:41:21,031 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 21:41:21,041 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:41:21,052 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:41:21,064 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:41:21,075 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:41:21,088 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 21:41:21,099 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 21:41:21,118 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:41:21,129 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:41:21,139 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:41:21,151 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:41:21,163 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.136 not found in station metadata.
+2026-04-20 21:41:21,175 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:41:21,185 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:41:21,198 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:41:21,216 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:45:42,875 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186. Ready to update quality metrics.
+2026-04-20 21:45:42,877 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186.
+2026-04-20 21:45:42,885 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186.
+2026-04-20 21:45:42,887 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48496186.
+2026-04-20 21:45:42,888 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11707305 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192
+2026-04-20 21:45:42,892 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.100 not found in station metadata.
+2026-04-20 21:45:42,904 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.102 not found in station metadata.
+2026-04-20 21:45:42,919 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.103 not found in station metadata.
+2026-04-20 21:45:42,931 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 21:45:42,941 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.107 not found in station metadata.
+2026-04-20 21:45:42,953 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 21:45:42,966 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:45:42,977 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:45:42,988 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:45:42,999 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:45:43,018 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:45:43,030 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:45:43,043 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:45:43,054 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:45:43,068 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:45:43,086 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:45:43,097 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:45:43,116 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:45:43,128 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:45:43,139 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:45:43,151 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 21:45:43,162 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 21:45:43,173 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 21:45:43,186 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:45:43,199 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 21:45:43,219 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 21:45:43,231 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 21:45:43,249 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:45:43,263 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:45:43,277 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 21:45:43,290 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:45:43,303 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:45:43,321 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:45:43,333 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.136 not found in station metadata.
+2026-04-20 21:45:43,345 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:45:43,356 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:50:22,235 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192. Ready to update quality metrics.
+2026-04-20 21:50:22,237 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192.
+2026-04-20 21:50:22,246 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192.
+2026-04-20 21:50:22,247 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48498192.
+2026-04-20 21:50:22,248 [INFO:utdquake.bank.utils] Finishing to process 3 events in catalog AMRtSQc5.
+2026-04-20 21:50:54,955 [INFO:utdquake.bank] Saved 3 events of 3 possible in chunk id 0   from 2023-06-10 04:43:30.917000 to 2023-06-11 04:43:30.917000 in /home/edc240000/scratch/utdbank
+2026-04-20 21:50:54,957 [INFO:utdquake.bank] Creating stations summary based on the events in the event bank at /home/edc240000/scratch/utdbank/.stations
+2026-04-20 21:50:54,960 [INFO:utdquake.bank.utils] Found 2 station databases in /home/edc240000/scratch/utdbank/.stations.
+2026-04-20 21:50:55,491 [INFO:utdquake.bank] Updating stations summary in the event bank at /home/edc240000/scratch/utdbank
+2026-04-20 21:50:55,502 [INFO:utdquake.bank] Stations summary updated successfully.
+2026-04-20 21:50:55,508 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-11T04:43:30.917000Z to 2023-06-12T04:43:30.917000Z...
+2026-04-20 21:51:02,943 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 21:51:03,423 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-11 04:43:30.917000 - 2023-06-12 04:43:30.917000 | Chunk creation time: 2026-04-20 21:51:03.423924
+2026-04-20 21:51:03,425 [INFO:utdquake.bank.utils] Starting to process 1 events in catalog HugC9gmu. (This id is created just for logging purposes)
+2026-04-20 21:51:03,426 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11707495 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887
+2026-04-20 21:51:03,431 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.100 not found in station metadata.
+2026-04-20 21:51:03,445 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.101 not found in station metadata.
+2026-04-20 21:51:03,455 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.102 not found in station metadata.
+2026-04-20 21:51:03,465 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.103 not found in station metadata.
+2026-04-20 21:51:03,475 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 21:51:03,485 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.105 not found in station metadata.
+2026-04-20 21:51:03,496 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.106 not found in station metadata.
+2026-04-20 21:51:03,514 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.107 not found in station metadata.
+2026-04-20 21:51:03,524 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 21:51:03,534 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:51:03,545 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:51:03,554 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:51:03,565 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:51:03,576 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:51:03,588 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:51:03,598 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:51:03,616 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:51:03,627 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:51:03,641 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:51:03,654 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:51:03,665 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:51:03,675 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:51:03,685 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:51:03,695 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:51:03,704 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:51:03,718 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:51:03,733 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:51:03,743 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:51:03,754 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:51:03,764 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:51:03,774 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:51:03,786 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:51:03,796 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:51:03,815 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:51:03,826 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:51:03,836 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:51:03,847 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 21:51:03,859 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 21:51:03,869 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 21:51:03,880 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 21:51:03,890 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:51:03,900 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 21:51:03,918 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 21:51:03,929 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 21:51:03,940 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 21:51:03,950 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:51:03,960 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:51:03,970 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:51:03,980 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 21:51:03,990 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:51:04,000 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:51:04,019 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:51:04,030 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:51:04,039 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:51:04,049 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:54:40,703 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887. Ready to update quality metrics.
+2026-04-20 21:54:40,709 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887.
+2026-04-20 21:54:40,717 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887.
+2026-04-20 21:54:40,717 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48500887.
+2026-04-20 21:54:40,718 [INFO:utdquake.bank.utils] Finishing to process 1 events in catalog HugC9gmu.
+2026-04-20 21:54:52,266 [INFO:utdquake.bank] Saved 1 events of 1 possible in chunk id 0   from 2023-06-11 04:43:30.917000 to 2023-06-12 04:43:30.917000 in /home/edc240000/scratch/utdbank
+2026-04-20 21:54:52,267 [INFO:utdquake.bank] Creating stations summary based on the events in the event bank at /home/edc240000/scratch/utdbank/.stations
+2026-04-20 21:54:52,270 [INFO:utdquake.bank.utils] Found 2 station databases in /home/edc240000/scratch/utdbank/.stations.
+2026-04-20 21:54:52,967 [INFO:utdquake.bank] Updating stations summary in the event bank at /home/edc240000/scratch/utdbank
+2026-04-20 21:54:52,977 [INFO:utdquake.bank] Stations summary updated successfully.
+2026-04-20 21:54:52,978 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-12T04:43:30.917000Z to 2023-06-13T04:43:30.917000Z...
+2026-04-20 21:54:52,990 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 21:54:53,128 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-12 04:43:30.917000 - 2023-06-13 04:43:30.917000 | Chunk creation time: 2026-04-20 21:54:53.128174
+2026-04-20 21:54:53,128 [INFO:utdquake.bank.utils] Starting to process 0 events in catalog kfrpz9wt. (This id is created just for logging purposes)
+2026-04-20 21:54:53,130 [INFO:utdquake.bank.utils] Finishing to process 0 events in catalog kfrpz9wt.
+2026-04-20 21:54:54,424 [INFO:utdquake.bank] Saved 0 events of 0 possible in chunk id 0   from 2023-06-12 04:43:30.917000 to 2023-06-13 04:43:30.917000 in /home/edc240000/scratch/utdbank
+2026-04-20 21:54:54,424 [INFO:utdquake.bank] Creating stations summary based on the events in the event bank at /home/edc240000/scratch/utdbank/.stations
+2026-04-20 21:54:54,425 [INFO:utdquake.bank.utils] Found 2 station databases in /home/edc240000/scratch/utdbank/.stations.
+2026-04-20 21:54:55,150 [INFO:utdquake.bank] Updating stations summary in the event bank at /home/edc240000/scratch/utdbank
+2026-04-20 21:54:55,167 [INFO:utdquake.bank] Stations summary updated successfully.
+2026-04-20 21:54:55,168 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-13T04:43:30.917000Z to 2023-06-14T04:43:30.917000Z...
+2026-04-20 21:55:05,502 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 21:55:05,528 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-13 04:43:30.917000 - 2023-06-14 04:43:30.917000 | Chunk creation time: 2026-04-20 21:55:05.528460
+2026-04-20 21:55:05,528 [INFO:utdquake.bank.utils] Starting to process 2 events in catalog DZZ1J4Du. (This id is created just for logging purposes)
+2026-04-20 21:55:05,529 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11708139 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586
+2026-04-20 21:55:05,534 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:55:05,546 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:55:05,557 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:55:05,567 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:55:05,578 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:55:05,589 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:55:05,599 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:55:05,616 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:55:05,630 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:55:05,640 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:55:05,651 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:55:05,662 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:55:05,672 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:55:05,682 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:55:05,692 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:55:05,702 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:55:05,717 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:55:05,727 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:55:05,738 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:55:05,748 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:55:05,759 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 21:55:05,770 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 21:55:05,780 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 21:55:05,790 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:55:05,800 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:55:05,819 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:56:50,547 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586. Ready to update quality metrics.
+2026-04-20 21:56:50,549 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586.
+2026-04-20 21:56:50,553 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586.
+2026-04-20 21:56:50,554 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48510586.
+2026-04-20 21:56:50,556 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11708402 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941
+2026-04-20 21:56:50,559 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.107 not found in station metadata.
+2026-04-20 21:56:50,570 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 21:56:50,585 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:56:50,596 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:56:50,611 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 21:56:50,622 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:56:50,634 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:56:50,647 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:56:50,657 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:56:50,669 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:56:50,681 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:56:50,691 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:56:50,701 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 21:56:50,718 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.136 not found in station metadata.
+2026-04-20 21:56:50,729 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:56:50,739 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:59:26,715 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941. Ready to update quality metrics.
+2026-04-20 21:59:26,717 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941.
+2026-04-20 21:59:26,723 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941.
+2026-04-20 21:59:26,723 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48513941.
+2026-04-20 21:59:26,724 [INFO:utdquake.bank.utils] Finishing to process 2 events in catalog DZZ1J4Du.
+2026-04-20 21:59:40,350 [INFO:utdquake.bank] Saved 2 events of 2 possible in chunk id 0   from 2023-06-13 04:43:30.917000 to 2023-06-14 04:43:30.917000 in /home/edc240000/scratch/utdbank
+2026-04-20 21:59:40,351 [INFO:utdquake.bank] Creating stations summary based on the events in the event bank at /home/edc240000/scratch/utdbank/.stations
+2026-04-20 21:59:40,353 [INFO:utdquake.bank.utils] Found 2 station databases in /home/edc240000/scratch/utdbank/.stations.
+2026-04-20 21:59:41,261 [INFO:utdquake.bank] Updating stations summary in the event bank at /home/edc240000/scratch/utdbank
+2026-04-20 21:59:41,273 [INFO:utdquake.bank] Stations summary updated successfully.
+2026-04-20 21:59:41,274 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-14T04:43:30.917000Z to 2023-06-15T04:43:30.917000Z...
+2026-04-20 21:59:58,213 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 21:59:58,442 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-14 04:43:30.917000 - 2023-06-15 04:43:30.917000 | Chunk creation time: 2026-04-20 21:59:58.442934
+2026-04-20 21:59:58,444 [INFO:utdquake.bank.utils] Starting to process 2 events in catalog p20i65zx. (This id is created just for logging purposes)
+2026-04-20 21:59:58,445 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11708849 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240
+2026-04-20 21:59:58,451 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 21:59:58,466 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 21:59:58,476 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:59:58,488 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 21:59:58,499 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 21:59:58,518 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:59:58,528 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 21:59:58,538 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:59:58,548 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 21:59:58,560 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:59:58,573 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 21:59:58,587 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:59:58,598 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 21:59:58,617 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:59:58,626 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 21:59:58,637 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:59:58,647 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 21:59:58,658 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:59:58,668 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 21:59:58,678 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:59:58,689 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 21:59:58,699 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 21:59:58,718 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 21:59:58,730 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 21:59:58,740 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 21:59:58,750 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 21:59:58,761 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 21:59:58,771 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 21:59:58,781 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 21:59:58,791 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:59:58,800 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 21:59:58,819 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:59:58,829 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 21:59:58,840 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 21:59:58,852 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 21:59:58,863 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:59:58,873 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 21:59:58,885 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 21:59:58,895 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 22:02:51,171 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240. Ready to update quality metrics.
+2026-04-20 22:02:51,172 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240.
+2026-04-20 22:02:51,178 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240.
+2026-04-20 22:02:51,179 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520240.
+2026-04-20 22:02:51,180 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11708843 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138
+2026-04-20 22:02:51,184 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.103 not found in station metadata.
+2026-04-20 22:02:51,194 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.104 not found in station metadata.
+2026-04-20 22:02:51,204 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.105 not found in station metadata.
+2026-04-20 22:02:51,218 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.106 not found in station metadata.
+2026-04-20 22:02:51,230 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.107 not found in station metadata.
+2026-04-20 22:02:51,239 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.108 not found in station metadata.
+2026-04-20 22:02:51,249 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 22:02:51,259 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 22:02:51,268 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 22:02:51,278 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 22:02:51,290 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 22:02:51,299 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 22:02:51,316 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 22:02:51,330 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 22:02:51,341 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 22:02:51,350 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 22:02:51,363 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 22:02:51,375 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 22:02:51,385 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 22:02:51,396 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 22:02:51,407 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 22:02:51,429 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 22:02:51,439 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 22:02:51,451 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 22:02:51,461 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 22:02:51,475 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 22:02:51,486 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 22:02:51,498 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 22:02:51,516 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 22:02:51,530 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 22:02:51,541 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 22:02:51,553 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 22:02:51,662 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.133 not found in station metadata.
+2026-04-20 22:02:51,672 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.134 not found in station metadata.
+2026-04-20 22:02:51,682 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.135 not found in station metadata.
+2026-04-20 22:02:51,696 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.136 not found in station metadata.
+2026-04-20 22:02:51,708 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 22:02:51,718 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 22:06:54,381 [INFO:utdquake.bank.utils] Processed origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138. Ready to update quality metrics.
+2026-04-20 22:06:54,383 [INFO:utdquake.bank.utils] Updating quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138.
+2026-04-20 22:06:54,390 [INFO:utdquake.bank.utils] Quality metrics updated for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138.
+2026-04-20 22:06:54,391 [INFO:utdquake.bank.utils] Updated quality metrics for origin smi:service.iris.edu/fdsnws/event/1/query?originid=48520138.
+2026-04-20 22:06:54,392 [INFO:utdquake.bank.utils] Finishing to process 2 events in catalog p20i65zx.
+2026-04-20 22:07:15,729 [INFO:utdquake.bank] Saved 2 events of 2 possible in chunk id 0   from 2023-06-14 04:43:30.917000 to 2023-06-15 04:43:30.917000 in /home/edc240000/scratch/utdbank
+2026-04-20 22:07:15,730 [INFO:utdquake.bank] Creating stations summary based on the events in the event bank at /home/edc240000/scratch/utdbank/.stations
+2026-04-20 22:07:15,732 [INFO:utdquake.bank.utils] Found 2 station databases in /home/edc240000/scratch/utdbank/.stations.
+2026-04-20 22:07:16,822 [INFO:utdquake.bank] Updating stations summary in the event bank at /home/edc240000/scratch/utdbank
+2026-04-20 22:07:16,833 [INFO:utdquake.bank] Stations summary updated successfully.
+2026-04-20 22:07:16,834 [INFO:utdquake.bank.utils] [1/10] Fetching events forward 2023-06-15T04:43:30.917000Z to 2023-06-16T04:43:30.917000Z...
+2026-04-20 22:07:33,710 [INFO:utdquake.bank.utils] Restarting patience counter after successful fetch.
+2026-04-20 22:07:34,040 [INFO:utdquake.bank] Chunk id: 0   initiated | Time range: 2023-06-15 04:43:30.917000 - 2023-06-16 04:43:30.917000 | Chunk creation time: 2026-04-20 22:07:34.040038
+2026-04-20 22:07:34,041 [INFO:utdquake.bank.utils] Starting to process 2 events in catalog JGfg5Vug. (This id is created just for logging purposes)
+2026-04-20 22:07:34,042 [INFO:utdquake.bank.utils] Processing event smi:service.iris.edu/fdsnws/event/1/query?eventid=11708963 with origin smi:service.iris.edu/fdsnws/event/1/query?originid=48522038
+2026-04-20 22:07:34,048 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.101 not found in station metadata.
+2026-04-20 22:07:34,061 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.109 not found in station metadata.
+2026-04-20 22:07:34,070 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 22:07:34,083 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.110 not found in station metadata.
+2026-04-20 22:07:34,093 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 22:07:34,104 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.111 not found in station metadata.
+2026-04-20 22:07:34,117 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 22:07:34,127 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.112 not found in station metadata.
+2026-04-20 22:07:34,136 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 22:07:34,146 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.113 not found in station metadata.
+2026-04-20 22:07:34,155 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 22:07:34,166 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.114 not found in station metadata.
+2026-04-20 22:07:34,175 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 22:07:34,186 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.115 not found in station metadata.
+2026-04-20 22:07:34,196 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.116 not found in station metadata.
+2026-04-20 22:07:34,205 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 22:07:34,217 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.117 not found in station metadata.
+2026-04-20 22:07:34,229 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.118 not found in station metadata.
+2026-04-20 22:07:34,240 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 22:07:34,250 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.119 not found in station metadata.
+2026-04-20 22:07:34,261 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 22:07:34,271 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.120 not found in station metadata.
+2026-04-20 22:07:34,281 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.121 not found in station metadata.
+2026-04-20 22:07:34,293 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 22:07:34,304 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.122 not found in station metadata.
+2026-04-20 22:07:34,317 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 22:07:34,328 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.123 not found in station metadata.
+2026-04-20 22:07:34,338 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.124 not found in station metadata.
+2026-04-20 22:07:34,348 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.125 not found in station metadata.
+2026-04-20 22:07:34,359 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.126 not found in station metadata.
+2026-04-20 22:07:34,369 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.127 not found in station metadata.
+2026-04-20 22:07:34,378 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.128 not found in station metadata.
+2026-04-20 22:07:34,389 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 22:07:34,399 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.129 not found in station metadata.
+2026-04-20 22:07:34,417 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 22:07:34,429 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.130 not found in station metadata.
+2026-04-20 22:07:34,440 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.131 not found in station metadata.
+2026-04-20 22:07:34,450 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.132 not found in station metadata.
+2026-04-20 22:07:34,459 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.137 not found in station metadata.
+2026-04-20 22:07:34,469 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+2026-04-20 22:07:34,479 [WARNING:utdquake.bank.utils] Station GCI.KKFLS.138 not found in station metadata.
+slurmstepd-c-05-04: error: *** JOB 174588 ON c-05-04 CANCELLED AT 2026-04-20T22:08:13 ***

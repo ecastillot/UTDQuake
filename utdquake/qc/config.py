@@ -61,6 +61,21 @@ EVENT_QC_DEFAULTS = {
 }
 
 
+PICK_TT_QC_DEFAULTS = {
+    "clean_data": {"use_global": True, 
+                   "use_mahalanobis": False,
+                   "mahalanobis_threshold": 3.0},
+    "build_bins": {"n_bins": 100,
+                    "dmin": 0, 
+                    "dmax": 30e3, 
+                    "alpha": 3.0},
+    "build_bins_das": {"n_bins": 100,
+                        "dmin": 0, 
+                        "dmax": 10e3, 
+                        "alpha": 3.0},
+    "build_models": {"min_points_per_bin": 4},
+}
+
 #: Default parameters for global trend filtering in UTDQuake.
 #: P,Pn,Pg trend was obtained from us network, and S, Sn, Sg trend from AUST network.
 GLOBAL_TRENDS_DEFAULTS_DEG2 = {
