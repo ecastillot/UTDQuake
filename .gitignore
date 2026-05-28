@@ -11,6 +11,9 @@ __pycache__/
 # C extensions
 *.so
 
+upload/*.out
+scripts/**
+
 # Distribution / packaging
 .Python
 build/
