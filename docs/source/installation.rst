@@ -23,3 +23,4 @@ but you can set a custom path using an environment variable.
 
    import os
    os.environ["UTDQUAKE_ROOT"] = "/my/custom/path/for/utdquake_data"
+   os.environ["UTDQUAKE_DAS_ROOT"] = "/my/custom/path/for/utdquake_DAS_data"
