@@ -93,30 +93,42 @@ We offer different type of figures for each network to help users better underst
    :header-rows: 1
 
    * - Overview
-     - General Stats
+     - Stats
      - P & S Picks Analysis
 
    * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_overview.png
           :width: 200px
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_stats.png
           :width: 200px
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_histograms.png
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_pick_histograms.png
           :width: 200px
 
-   * - **Uncertainty in station location**
+   * - **Magnitude & Phases Analysis**
+     - **Uncertainty in station location**
      - **Uncertainty in EQ location**
-     - **Stats for Pick Times**
        
-   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_station_location_uncertainty.png
+   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_phase_count_radar.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_station_location_uncertainty.png
           :width: 200px
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_uncertainty_boxplots.png
           :width: 200px
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_pick_stats.png
+     
+
+   * - **General Travel Time Overview**
+     - **Travel Time**
+     - **Travel Time Zscore**
+         
+   * - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_travel_time_qc.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_travel_time_vs_distance.png
+          :width: 200px
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx/tx_travel_time_vs_distance_P_zscore.png
           :width: 200px
 
 .. raw:: html
 
    </div>
 
-
+**All figures and analyses are available** in the :ref:`overview-section` section.
 
