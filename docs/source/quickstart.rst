@@ -104,7 +104,7 @@ Or also check the :func:`utdquake.utils.plot` module for more flexibility to cre
 
 .. note::
 
-   We need `Cartopy <https://cartopy.readthedocs.io/stable/>`_ to be able to plot most of the figures.
+   We need `Cartopy <https://cartopy.readthedocs.io/stable/>`_ to be able to plot figures with maps.
 
 
 Available Figures 
