@@ -1,1509 +1,0 @@
-Repo created: https://huggingface.co/datasets/ecastillot/UTDQuake
-Found 82 candidate files to upload
-Running validation checks on files to upload...
-Validation checks complete.
-Starting upload...
-[33mYou are about to upload a large folder to the Hub using `hf upload-large-folder`. This is a new feature so feedback is very welcome!
-
-A few things to keep in mind:
-  - Repository limits still apply: https://huggingface.co/docs/hub/repositories-recommendations
-  - Do not start several processes in parallel.
-  - You can interrupt and resume the process at any time. The script will pick up where it left off except for partially uploaded files that would have to be entirely reuploaded.
-  - Do not upload the same folder to several repositories. If you need to do so, you must delete the `./.cache/huggingface/` folder first.
-
-Some temporary metadata will be stored under `/groups/igonin/ecastillo/UTDQuake/.cache/huggingface`.
-  - You must not modify those files manually.
-  - You must not delete the `./.cache/huggingface/` folder while a process is running.
-  - You can delete the `./.cache/huggingface/` folder to reinitialize the upload state when process is not running. Files will have to be hashed and preuploaded again, except for already committed files.
-
-If the process output is too verbose, you can disable the progress bars with `--no-bars`. You can also entirely disable the status report with `--no-report`.
-
-For more details, run `hf upload-large-folder --help` or check the documentation at https://huggingface.co/docs/huggingface_hub/guides/upload#upload-a-large-folder.[0m
-Recovering from metadata files:   0%|          | 0/82 [00:00<?, ?it/s]Recovering from metadata files:   9%|▊         | 7/82 [00:00<00:01, 66.90it/s]Recovering from metadata files:  17%|█▋        | 14/82 [00:00<00:01, 65.56it/s]Recovering from metadata files:  26%|██▌       | 21/82 [00:00<00:00, 65.44it/s]Recovering from metadata files:  34%|███▍      | 28/82 [00:00<00:00, 64.93it/s]Recovering from metadata files:  43%|████▎     | 35/82 [00:00<00:00, 64.92it/s]Recovering from metadata files:  51%|█████     | 42/82 [00:00<00:00, 64.79it/s]Recovering from metadata files:  60%|█████▉    | 49/82 [00:00<00:00, 65.31it/s]Recovering from metadata files:  68%|██████▊   | 56/82 [00:00<00:00, 65.53it/s]Recovering from metadata files:  77%|███████▋  | 63/82 [00:00<00:00, 63.89it/s]Recovering from metadata files:  85%|████████▌ | 70/82 [00:01<00:00, 64.03it/s]Recovering from metadata files:  94%|█████████▍| 77/82 [00:01<00:00, 63.43it/s]Recovering from metadata files: 100%|██████████| 82/82 [00:01<00:00, 64.17it/s]
-
-
-
----------- 2026-04-02 21:58:28 (0:00:00) ----------
-Files:   hashed 0/82 (0.0/1.4M) | pre-uploaded: 0/0 (0.0/1.4M) (+82 unsure) | committed: 0/82 (0.0/1.4M) | ignored: 0
-Workers: hashing: 4 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-  ...models/network=nc.parquet: 100%|██████████| 13.8kB / 13.8kB            [A[AProcessing Files (1 / 1)      : 100%|██████████| 15.8kB / 15.8kB, 78.9kB/s  
-
-  ...models/network=nc.parquet: 100%|██████████| 13.8kB / 13.8kB            [A[A
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[AProcessing Files (1 / 1)      :   5%|▍         | 13.8kB /  286kB, 68.9kB/s  
-New Data Upload               : 100%|██████████| 15.8kB / 15.8kB, 78.9kB/s  [AProcessing Files (1 / 1)      :   2%|▏         | 14.0kB /  688kB, 70.3kB/s  
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-  ...models/network=nc.parquet: 100%|██████████| 13.8kB / 13.8kB            [A[A
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[AProcessing Files (1 / 1)      : 100%|██████████| 15.8kB / 15.8kB, 39.4kB/s  
-New Data Upload               : 100%|██████████| 15.8kB / 15.8kB, 39.4kB/s  
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            
-
-
-
-  ...ls/network=GEOFON.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A
-
-
-
-  ...models/network=uw.parquet: 100%|██████████| 15.2kB / 15.2kB            [A[A[A[A
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A
-
-
-
-
-  ...odels/network=GFZ.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=us.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...dels/network=AEIC.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=hv.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...els/network=admin.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...models/network=nc.parquet: 100%|██████████| 13.8kB / 13.8kB            [A[A
-
-
-  ...ls/network=GEOFON.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A
-
-
-
-  ...models/network=uw.parquet: 100%|██████████| 15.2kB / 15.2kB            [A[A[A[A
-
-
-
-
-  ...odels/network=GFZ.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=us.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...dels/network=AEIC.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=hv.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 7 files]                 : 100%|██████████|  131kB /  131kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (17 / 17)    : 100%|██████████|  286kB /  286kB,  476kB/s  
-New Data Upload               : 100%|██████████|  272kB /  272kB,  453kB/s  [A
-
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            [A[A
-
-
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            [A[A[A
-
-
-
-  ...els/network=admin.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A
-
-
-
-
-  ...models/network=tx.parquet: 100%|██████████| 12.3kB / 12.3kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=nm.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=THE.parquet: 100%|██████████| 20.4kB / 20.4kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=ak.parquet: 100%|██████████| 19.9kB / 19.9kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOA.parquet: 100%|██████████| 12.5kB / 12.5kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...models/network=nn.parquet: 100%|██████████| 15.1kB / 15.1kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...dels/network=INET.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            [A[A
-
-
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            [A[A[A
-
-
-
-  ...els/network=admin.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A
-
-
-
-
-  ...models/network=tx.parquet: 100%|██████████| 12.3kB / 12.3kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=nm.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=THE.parquet: 100%|██████████| 20.4kB / 20.4kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=ak.parquet: 100%|██████████| 19.9kB / 19.9kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOA.parquet: 100%|██████████| 12.5kB / 12.5kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...models/network=nn.parquet: 100%|██████████| 15.1kB / 15.1kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...dels/network=INET.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A[A[A[A[A[A[A[A[A[A
-
-
-  ...models/network=uu.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A
-
-  ...odels/network=IDC.parquet: 100%|██████████| 22.3kB / 22.3kB            [A[A
-
-
-
-  ...models/network=ok.parquet: 100%|██████████| 12.0kB / 12.0kB            [A[A[A[AProcessing Files (17 / 17)    : 100%|██████████|  286kB /  286kB,  357kB/s  
-
-
-
-  ...els/network=KRNET.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[ANew Data Upload               : 100%|██████████|  272kB /  272kB,  340kB/s  
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            
-  ...els/network=admin.parquet: 100%|██████████| 23.0kB / 23.0kB            
-  ...models/network=tx.parquet: 100%|██████████| 12.3kB / 12.3kB            
-  ...models/network=nm.parquet: 100%|██████████| 13.6kB / 13.6kB            
-  ...odels/network=THE.parquet: 100%|██████████| 20.4kB / 20.4kB            
-  ...models/network=ak.parquet: 100%|██████████| 19.9kB / 19.9kB            
-  ...odels/network=NOA.parquet: 100%|██████████| 12.5kB / 12.5kB            
-  ...models/network=nn.parquet: 100%|██████████| 15.1kB / 15.1kB            
-  ...dels/network=INET.parquet: 100%|██████████| 14.0kB / 14.0kB            
-
-
-
-
-
-  ...odels/network=LDG.parquet: 100%|██████████| 19.2kB / 19.2kB            [A[A[A[A[A
-
-
-
-  ...odels/network=ETH.parquet: 100%|██████████| 14.1kB / 14.1kB            [A[A[A[A
-
-
-
-
-
-  ...odels/network=USP.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A[A[A[A[A
-
-
-
-
-  ...els/network=JAPAN.parquet: 100%|██████████| 12.7kB / 12.7kB            [A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=UCR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A
-
-
-
-
-
-  ...odels/network=ANF.parquet: 100%|██████████| 18.1kB / 18.1kB            [A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=mb.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-  ...dels/network=INMG.parquet: 100%|██████████| 19.1kB / 19.1kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ZUR.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=HEL.parquet: 100%|██████████| 17.1kB / 17.1kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...models/network=at.parquet: 100%|██████████| 21.5kB / 21.5kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NNC.parquet: 100%|██████████| 16.1kB / 16.1kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=SJA.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A
-
-
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            [A[A[A
-
-
-
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            [A[A[A[A
-
-
-
-
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=ECX.parquet: 100%|██████████| 16.4kB / 16.4kB            [A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A
-
-
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            [A[A[A
-
-
-
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            [A[A[A[A
-
-
-
-
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (39 / 39)    : 100%|██████████|  688kB /  688kB,  746kB/s  Processing Files (39 / 39)    : 100%|██████████|  688kB /  688kB,  746kB/s  
-New Data Upload               : 100%|██████████|  674kB /  674kB,  731kB/s  [A
-New Data Upload               : 100%|██████████|  674kB /  674kB,  731kB/s  [A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=GII.parquet: 100%|██████████| 15.9kB / 15.9kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A
-
-
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            [A[A[A
-
-
-
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            [A[A[A[A
-
-
-
-
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=IDC.parquet: 100%|██████████| 22.3kB / 22.3kB            [A[A
-
-
-  ...els/network=KRNET.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A
-
-
-
-  ...odels/network=ETH.parquet: 100%|██████████| 14.1kB / 14.1kB            [A[A[A[A
-
-
-
-
-  ...els/network=JAPAN.parquet: 100%|██████████| 12.7kB / 12.7kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=ANF.parquet: 100%|██████████| 18.1kB / 18.1kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...dels/network=INMG.parquet: 100%|██████████| 19.1kB / 19.1kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=HEL.parquet: 100%|██████████| 17.1kB / 17.1kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NNC.parquet: 100%|██████████| 16.1kB / 16.1kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=ECX.parquet: 100%|██████████| 16.4kB / 16.4kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 15 files]                : 100%|██████████|  276kB /  276kB            [A[A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=GII.parquet: 100%|██████████| 15.9kB / 15.9kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (25 / 25)    : 100%|██████████|  431kB /  431kB,  718kB/s  
-New Data Upload               : 100%|██████████|  431kB /  431kB,  718kB/s  [A  [+ 15 files]                : 100%|██████████|  276kB /  276kB            
-
-
-  ...dels/network=IPGP.parquet: 100%|██████████| 13.0kB / 13.0kB            [A[A
-
-
-  ...dels/network=CNRM.parquet: 100%|██████████| 18.0kB / 18.0kB            [A[A[A
-
-
-
-  ...odels/network=KMA.parquet: 100%|██████████| 16.0kB / 16.0kB            [A[A[A[A
-
-
-
-
-  ...dels/network=KNET.parquet: 100%|██████████| 16.5kB / 16.5kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=IGQ.parquet: 100%|██████████| 19.7kB / 19.7kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=BGS.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...dels/network=FUNV.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A
-
-
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            [A[A[A
-
-
-
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            [A[A[A[A
-
-
-
-
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...dels/network=IPGP.parquet: 100%|██████████| 13.0kB / 13.0kB            [A[A
-
-
-  ...dels/network=CNRM.parquet: 100%|██████████| 18.0kB / 18.0kB            [A[A[A
-
-
-
-  ...odels/network=KMA.parquet: 100%|██████████| 16.0kB / 16.0kB            [A[A[A[A
-
-
-
-
-  ...dels/network=KNET.parquet: 100%|██████████| 16.5kB / 16.5kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=IGQ.parquet: 100%|██████████| 19.7kB / 19.7kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=BGS.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...dels/network=FUNV.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (39 / 39)    : 100%|██████████|  688kB /  688kB,  573kB/s  
-New Data Upload               : 100%|██████████|  674kB /  674kB,  561kB/s  
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            
-Processing Files (25 / 25)    : 100%|██████████|  431kB /  431kB,  431kB/s  
-New Data Upload               : 100%|██████████|  431kB /  431kB,  431kB/s  
-  ...dels/network=IPGP.parquet: 100%|██████████| 13.0kB / 13.0kB            
-  ...dels/network=CNRM.parquet: 100%|██████████| 18.0kB / 18.0kB            
-  ...odels/network=KMA.parquet: 100%|██████████| 16.0kB / 16.0kB            
-  ...dels/network=KNET.parquet: 100%|██████████| 16.5kB / 16.5kB            
-  ...odels/network=IGQ.parquet: 100%|██████████| 19.7kB / 19.7kB            
-  ...odels/network=BGS.parquet: 100%|██████████| 17.8kB / 17.8kB            
-  ...dels/network=FUNV.parquet: 100%|██████████| 17.8kB / 17.8kB            
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-
-  ...ls/network=GEOFON.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A
-
-
-
-  ...models/network=uw.parquet: 100%|██████████| 15.2kB / 15.2kB            [A[A[A[A
-
-
-
-
-  ...odels/network=GFZ.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=us.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...dels/network=AEIC.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...models/network=hv.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=ISC.parquet: 100%|██████████| 22.8kB / 22.8kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=TAP.parquet: 100%|██████████| 17.5kB / 17.5kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...els/network=admin.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=JSN.parquet: 100%|██████████| 15.8kB / 15.8kB            [A[A
-
-
-  ...ls/network=GEOFON.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A
-
-
-
-  ...models/network=uw.parquet: 100%|██████████| 15.2kB / 15.2kB            [A[A[A[A
-
-
-
-
-  ...odels/network=GFZ.parquet: 100%|██████████| 15.7kB / 15.7kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=ok.parquet: 100%|██████████| 12.0kB / 12.0kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=LDG.parquet: 100%|██████████| 19.2kB / 19.2kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=USP.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=UCR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...models/network=mb.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            [A[A
-
-
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A
-
-
-
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            [A[A[A[A
-
-
-
-
-  ...models/network=uu.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=ok.parquet: 100%|██████████| 12.0kB / 12.0kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=LDG.parquet: 100%|██████████| 19.2kB / 19.2kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=USP.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=UCR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...models/network=mb.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████|  848kB /  848kB,  0.00B/s  Processing Files (50 / 50)    : 100%|██████████|  848kB /  848kB,  0.00B/s  
-
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            [A[A
-
-
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A
-
-
-
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            [A[A[A[A
-
-
-
-
-  ...models/network=uu.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=ok.parquet: 100%|██████████| 12.0kB / 12.0kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=LDG.parquet: 100%|██████████| 19.2kB / 19.2kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=USP.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=UCR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...models/network=mb.parquet: 100%|██████████| 17.9kB / 17.9kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████|  848kB /  848kB,  0.00B/s  
-New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
-  ...odels/network=ISN.parquet: 100%|██████████| 17.0kB / 17.0kB            
-  ...odels/network=EAF.parquet: 100%|██████████| 17.9kB / 17.9kB            
-  ...odels/network=EST.parquet: 100%|██████████| 15.3kB / 15.3kB            
-  ...models/network=uu.parquet: 100%|██████████| 14.3kB / 14.3kB            
-  ...models/network=ok.parquet: 100%|██████████| 12.0kB / 12.0kB            
-  ...odels/network=LDG.parquet: 100%|██████████| 19.2kB / 19.2kB            
-  ...odels/network=USP.parquet: 100%|██████████| 18.3kB / 18.3kB            
-  ...models/network=pr.parquet: 100%|██████████| 14.0kB / 14.0kB            
-  ...odels/network=UCR.parquet: 100%|██████████| 19.8kB / 19.8kB            
-  ...models/network=mb.parquet: 100%|██████████| 17.9kB / 17.9kB            
-Removing 2 file(s) from commit that have not changed.
-Successfully committed 50 at once. Increasing the limit for next batch.
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
-New Data Upload               : |          |  0.00B /  0.00B            [A
-
-  ...odels/network=ZUR.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A
-
-
-  ...models/network=at.parquet: 100%|██████████| 21.5kB / 21.5kB            [A[A[A
-
-
-
-  ...odels/network=SJA.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A
-
-
-
-
-  ...odels/network=UPP.parquet: 100%|██████████| 17.1kB / 17.1kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=se.parquet: 100%|██████████| 13.5kB / 13.5kB            [A[A[A[A[A[A
-
-
-
-
-
-  ...models/network=se.parquet: 100%|██████████| 13.5kB / 13.5kB            [A[A[A[A[A[A  ...models/network=se.parquet: 100%|██████████| 13.5kB / 13.5kB            
-
-
-
-
-
-
-
-  ...odels/network=TIR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TIR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A  ...odels/network=TIR.parquet: 100%|██████████| 19.8kB / 19.8kB            
-
-
-
-
-
-
-
-
-  ...els/network=RHSSO.parquet: 100%|██████████| 17.6kB / 17.6kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...els/network=RHSSO.parquet: 100%|██████████| 17.6kB / 17.6kB            [A[A[A[A[A[A[A[A  ...els/network=RHSSO.parquet: 100%|██████████| 17.6kB / 17.6kB            
-
-
-
-
-
-
-
-
-
-  ...models/network=av.parquet: 100%|██████████| 18.0kB / 18.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...models/network=av.parquet: 100%|██████████| 18.0kB / 18.0kB            [A[A[A[A[A[A[A[A[A  ...models/network=av.parquet: 100%|██████████| 18.0kB / 18.0kB            
-
-
-
-
-
-
-
-
-
-
-  ...odels/network=MRB.parquet: 100%|██████████| 17.4kB / 17.4kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=MRB.parquet: 100%|██████████| 17.4kB / 17.4kB            [A[A[A[A[A[A[A[A[A[A  ...odels/network=MRB.parquet: 100%|██████████| 17.4kB / 17.4kB            
-
-
-
-
-
-
-
-
-
-
-
-  ...dels/network=RSNC.parquet: 100%|██████████| 14.4kB / 14.4kB            [A[A[A[A[A[A[A[A[A[A[A
-
-  ...odels/network=ZUR.parquet: 100%|██████████| 18.3kB / 18.3kB            [A[A
-
-
-  ...models/network=at.parquet: 100%|██████████| 21.5kB / 21.5kB            [A[A[A
-
-
-
-  ...odels/network=SJA.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A
-
-
-
-
-  ...odels/network=UPP.parquet: 100%|██████████| 17.1kB / 17.1kB            [A[A[A[A[A
-
-
-
-
-
-  ...models/network=se.parquet: 100%|██████████| 13.5kB / 13.5kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TIR.parquet: 100%|██████████| 19.8kB / 19.8kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...els/network=RHSSO.parquet: 100%|██████████| 17.6kB / 17.6kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...models/network=av.parquet: 100%|██████████| 18.0kB / 18.0kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=MRB.parquet: 100%|██████████| 17.4kB / 17.4kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  [+ 22 files]                : 100%|██████████|  409kB /  409kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████|  572kB /  572kB,   ???B/s  
-
-
-
-
-
-
-
-
-
-
-  ...dels/network=RSNC.parquet: 100%|██████████| 14.4kB / 14.4kB            [A[A[A[A[A[A[A[A[A[A[A  [+ 22 files]                : 100%|██████████|  409kB /  409kB            
-
-
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            [A[A
-
-
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            [A[A[A
-
-
-
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            [A[A[A[A
-
-
-
-
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            [A[A[A[A[A
-
-
-
-
-
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            [A[A[A[A[A[A
-
-
-
-
-
-
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            [A[A[A[A[A[A[A
-
-
-
-
-
-
-
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            [A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            [A[A[A[A[A[A[A[A[A[A
-
-
-
-
-
-
-
-
-
-
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████|  572kB /  572kB,  0.00B/s  
-New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
-  ...odels/network=PRE.parquet: 100%|██████████| 14.3kB / 14.3kB            
-  ...els/network=CATAC.parquet: 100%|██████████| 18.2kB / 18.2kB            
-  ...odels/network=DJA.parquet: 100%|██████████| 21.1kB / 21.1kB            
-  ...dels/network=AUST.parquet: 100%|██████████| 23.0kB / 23.0kB            
-  ...odels/network=BEO.parquet: 100%|██████████| 17.8kB / 17.8kB            
-  ...odels/network=TUN.parquet: 100%|██████████| 13.6kB / 13.6kB            
-  ...odels/network=BUC.parquet: 100%|██████████| 21.3kB / 21.3kB            
-  ...odels/network=NOU.parquet: 100%|██████████| 16.6kB / 16.6kB            
-  ...odels/network=MEX.parquet: 100%|██████████| 16.6kB / 16.6kB            
-  ...dels/network=AFAD.parquet: 100%|██████████| 19.0kB / 19.0kB            
-All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
-All files have been processed! Exiting worker.
-INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
-
----------- 2026-04-02 21:58:42 (0:00:14) ----------
-Files:   hashed 82/82 (1.4M/1.4M) | pre-uploaded: 82/82 (1.4M/1.4M) | committed: 82/82 (1.4M/1.4M) | ignored: 0
-Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------
-INFO:huggingface_hub._upload_large_folder:
----------- 2026-04-02 21:58:42 (0:00:14) ----------
-Files:   hashed 82/82 (1.4M/1.4M) | pre-uploaded: 82/82 (1.4M/1.4M) | committed: 82/82 (1.4M/1.4M) | ignored: 0
-Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
----------------------------------------------------

@@ -5,10 +5,11 @@ data/
 #figures/networks/**/*.png 
 figures_*/
 figures/networks/**/*
-scripts/qc/*/check_*.out
-scripts/fig/*.out
-scripts/das/**/*.csv
-upload/*.out
+test/scripts/qc/*/check_*.out
+test/scripts/fig/*.out
+test/scripts/das/**/*.csv
+test/upload/*.out
+test/**/*.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

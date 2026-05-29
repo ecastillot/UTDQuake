@@ -1,1 +1,0 @@
-resource_id,seed_id,pick_id,phase,time_correction,azimuth,distance,takeoff_angle,time_residual,horizontal_slowness_residual,backazimuth_residual,time_weight,horizontal_slowness_weight,backazimuth_weight,earth_model_id,creation_time,author,agency_id,network,station,location,channel,origin_id,origin_time
