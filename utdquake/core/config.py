@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Optional
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 UTDQUAKE_ROOT: str = "UTDQUAKE_ROOT"
 """Environment variable name for UTDQuake cache root."""
@@ -68,30 +68,50 @@ HF_CONFIG: Dict[str, HFEntry] = {
 
 def get_hf_entry(key: str, das: bool = False) -> HFEntry:
     """
-    Return a Hugging Face configuration entry.
+    Retrieve a Hugging Face dataset configuration entry.
 
     Parameters
     ----------
     key : str
-        Configuration key.
-    das : bool, optional
-        If True, use DAS dataset names.
+        Configuration key defined in ``HF_CONFIG``.
+    das : bool, default=False
+        If ``True``, return the corresponding DAS-specific entry by
+        modifying the dataset name and path as required.
 
     Returns
     -------
     HFEntry
-    """
+        Configuration entry containing the dataset name, split, and
+        relative file path.
 
+    Notes
+    -----
+    For DAS datasets:
+
+    - ``banks`` entries keep the same filename but are stored under a
+      ``bank_DAS`` directory.
+    - All other entries use a ``{key}_DAS`` directory and a dataset
+      name suffixed with ``"_DAS"``.
+    """
     entry = HF_CONFIG[key]
 
-    if das and entry.name is not None:
-        return HFEntry(
-            name=f"{entry.name}_DAS",
-            split=entry.split,
-            path=entry.path,
-        )
+    if not das:
+        return entry
 
-    return entry
+    if key == "banks":
+        # Replace "bank" with "bank_DAS" while preserving the filename.
+        path = Path(entry.path)
+        das_path = path.parent.with_name(f"{path.parent.name}_DAS") / path.name
+
+        return replace(entry, path=str(das_path))
+
+    # Store DAS files in a dedicated directory and append "_DAS"
+    # to the dataset name when one exists.
+    return replace(
+        entry,
+        name=f"{entry.name}_DAS" if entry.name else None,
+        path=f"{key}_DAS/{Path(entry.path).name}",
+    )
 
 def get_root(das: bool = False) -> Path:
     """
@@ -182,7 +202,7 @@ def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
     root = get_root(das=das)
 
     utdq_paths = {
-        "banks": root / "bank" / network,
+        "banks": root / get_hf_entry("banks",das).path.format(network=network).split(".zip")[0],
         "events": root / get_hf_entry("events",das).path.format(
             network=network
         ),
@@ -202,6 +222,7 @@ def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
         "utdq/db/.stations": root / ".utdquake"  / "db" / "stations" / f".{network}",
         "utdq/db/picks": root / ".utdquake"  / "db" / "picks" / f"{network}.db",
     }
+
 
     # Ensure directories exist
     for key, path in utdq_paths.items():

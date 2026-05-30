@@ -549,8 +549,8 @@ class Network:
         dict
             Keys include 'events', 'total_stations', and metadata fields.
         """
-        networks_df =  Dataset(self.das).local_networks
-        # networks_df = Dataset(das=self.das).networks
+        # networks_df =  Dataset(self.das).local_networks
+        networks_df = Dataset(das=self.das).networks
         # print(networks_df)
 
         network_row = networks_df[networks_df["network"] == self.name]

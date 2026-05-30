@@ -30,7 +30,9 @@ def validate_eventbank(path: Path) -> bool:
         return False
     try:
         bank = obsplus.EventBank(str(path))
-        bank.read_index()
+        index = bank.read_index()
+        event_id = bank.read_index().event_id.iloc[0]
+        event = bank.get_events(event_id=event_id)
         return True
     except Exception:
         return False
@@ -89,6 +91,7 @@ def resolve_missing_components(
         if flags[key] and not validate_parquet(path):
             missing.add(key)
 
+
     if include_bank:
         #  DEBUG HERE
         logger.debug("bank_path = %s", bank_path)
@@ -133,7 +136,7 @@ def resolve_network_paths(
     include_events: bool = True,
     include_stations: bool = True,
     include_picks: bool = True,
-    max_retries: int = 2,
+    max_retries: int = 3,
 ) -> Dict[str, Path]:
     """
     Ensure that all network data components exist locally and return their paths.
