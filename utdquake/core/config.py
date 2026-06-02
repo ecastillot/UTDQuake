@@ -42,7 +42,7 @@ HF_CONFIG: Dict[str, HFEntry] = {
     "banks": HFEntry(
         name=None,
         split=None,
-        path="bank/{network}.zip",
+        path="banks/{network}.zip",
     ),
     "networks": HFEntry(
         name="0_networks",
@@ -63,6 +63,26 @@ HF_CONFIG: Dict[str, HFEntry] = {
         name="3_picks",
         split="metadata",
         path="picks/network={network}.parquet",
+    ),
+    ".utdquake/travel_time": HFEntry(
+        name=None,
+        split=None,
+        path=".utdquake/travel_time/{network}.parquet",
+    ),
+    ".utdquake/stats": HFEntry(
+        name=None,
+        split=None,
+        path=".utdquake/stats/{network}.npz",
+    ),
+    ".utdquake/export": HFEntry(
+        name=None,
+        split=None,
+        path=".utdquake/export",
+    ),
+    ".utdquake/logs": HFEntry(
+        name=None,
+        split=None,
+        path=".utdquake/logs",
     ),
 }
 
@@ -102,9 +122,15 @@ def get_hf_entry(key: str, das: bool = False) -> HFEntry:
         # Replace "bank" with "bank_DAS" while preserving the filename.
         path = Path(entry.path)
         das_path = path.parent.with_name(f"{path.parent.name}_DAS") / path.name
-
         return replace(entry, path=str(das_path))
 
+    elif ".utdquake" in key:
+        path = Path(entry.path)
+        first_part = path.parts[0]
+        rest_parts = path.parts[1:]
+        das_path = Path(f"{first_part}_DAS", *rest_parts)
+        return replace(entry, path=str(das_path))
+    
     # Store DAS files in a dedicated directory and append "_DAS"
     # to the dataset name when one exists.
     return replace(
@@ -187,7 +213,7 @@ def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
     dict of str to pathlib.Path
         Dictionary containing the following keys:
 
-        - ``"bank"``: Path to the EventBank directory.
+        - ``"banks"``: Path to the EventBank directory.
         - ``"events"``: Path to event files.
         - ``"stations"``: Path to station metadata.
         - ``"picks"``: Path to pick files.
@@ -213,22 +239,20 @@ def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
             network=network
         ),
 
+        ".utdquake/travel_time": root / get_hf_entry(".utdquake/travel_time",das).path.format(network=network),
+        ".utdquake/stats": root / get_hf_entry(".utdquake/stats",das).path.format(network=network),
 
-        "utdq/models/picks": root / ".utdquake" / "models" / "picks"/  f"{network}.parquet",
-        "utdq/stats": root / ".utdquake" / "stats" / f"{network}.npz",
-
-        "utdq/db/events": root / ".utdquake" / "db" / "events" / f"{network}.db",
-        "utdq/db/stations": root / ".utdquake"  / "db" / "stations" / f"{network}.db",
-        "utdq/db/.stations": root / ".utdquake"  / "db" / "stations" / f".{network}",
-        "utdq/db/picks": root / ".utdquake"  / "db" / "picks" / f"{network}.db",
+        # not for the public API
+        ".utdquake/export/db": root / get_hf_entry(".utdquake/export",das).path / "db",
+        ".utdquake/logs/banks": root / get_hf_entry(".utdquake/logs",das).path / f"{network}" / "banks",
     }
 
 
     # Ensure directories exist
-    for key, path in utdq_paths.items():
-        if key == "banks" or key=="utdq/db/.stations":
-            path.mkdir(parents=True, exist_ok=True)
-        else:
+    for path in utdq_paths.values():
+        if path.suffix:
             path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            path.mkdir(parents=True, exist_ok=True)
 
     return utdq_paths

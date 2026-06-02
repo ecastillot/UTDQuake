@@ -11,7 +11,3 @@ source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
 
 UTDQ="/groups/igonin/ecastillo/UTDQuake_DAS_upload"
-
-INCLUDE="bank_DAS/*.zip"
-
-hf upload-large-folder ecastillot/UTDQuake "$UTDQ" --include "$INCLUDE" --repo-type dataset --num-workers 4

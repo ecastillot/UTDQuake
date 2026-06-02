@@ -1395,7 +1395,7 @@ def process_arrival(arrival, source_loc,
     #finding the corresponding stations folder for the network
     network_name = os.path.basename(os.path.dirname(ebank_index_path))
     utdq_paths = get_utdq_paths(network_name)
-    stations_folder = utdq_paths["utdq/db/.stations"]
+    stations_folder = utdq_paths[".utdquake/export/db/stations/.stations"]
 
     # stations_folder = os.path.join( stations_folder,".stations")
 

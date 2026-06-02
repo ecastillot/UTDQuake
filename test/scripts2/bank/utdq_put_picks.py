@@ -2,7 +2,7 @@ import os
 os.environ["HF_DATASETS_PARALLELISM"] = "false"
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake_test"
+os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
 
 from pathlib import Path
 import utdquake as utdq
@@ -15,12 +15,12 @@ import pandas as pd
 bank_path = "/groups/igonin/ecastillo/UTDQuake_test/bank/GCI"
 bank = UTDQBank(bank_path)
 
-# print(bank)
+print(bank.db_paths)
 # ev_id = bank.read_index()[["event_id"]].loc[0:10,"event_id"].to_list()
-bank.put_utdq_picks(chunk_size=1,
-            apply_utdq_qc=True,
-            # event_id=ev_id,
-            )
+# bank.put_utdq_picks(chunk_size=1,
+#             apply_utdq_qc=True,
+#             # event_id=ev_id,
+#             )
 
 # stations_path = "/groups/igonin/ecastillo/DAS_uw_data/GCI_QuakeML_Picks_16042026/04012026/metadata/cable_metadata_04172026_utdq.csv"
 # stations_df = pd.read_csv(stations_path)

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional, Dict, List
 import pandas as pd
-
+from ..core.config import get_utdq_paths
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ class ManifestPaths:
 
     @property
     def manifest_dir(self) -> Path:
-        return self.root / self.manifest_dirname
+        return self.root / ".utdquake" / "export" / self.manifest_dirname
 
     @property
     def progress_db(self) -> Path:

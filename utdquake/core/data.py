@@ -18,6 +18,7 @@ def download_snapshot(
     include_events: bool = True,
     include_stations: bool = True,
     include_picks: bool = True,
+    include_travel_time: bool = False,
     overwrite: bool = True,
     unzip_banks: bool = True
 ) -> Path:
@@ -81,6 +82,7 @@ def download_snapshot(
             "events": include_events,
             "stations": include_stations,
             "picks": include_picks,
+            ".utdquake/travel_time": include_travel_time
         }
 
     # Build allow_patterns for snapshot_download

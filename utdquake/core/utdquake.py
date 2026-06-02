@@ -294,7 +294,7 @@ class Dataset:
         for name in net_names:
             net = self.get_network(name)
 
-            model_path = net.paths["utdq/models/picks"]
+            model_path = net.paths["utdq/travel_time"]
 
             if not model_path.exists():
                 raise FileNotFoundError(f"Travel time model not found for network {name} at {model_path}.")
@@ -611,7 +611,7 @@ class Network:
             - az_gap_hist
             - azimuth_hist
         """
-        cache_file = self.paths["utdq/stats"]
+        cache_file = self.paths[".utdquake/stats"]
 
         if use_cache and os.path.exists(cache_file):
             data = np.load(cache_file, allow_pickle=True)
@@ -1023,6 +1023,8 @@ class Network:
         ``1 degree = 111.19 km``.
 
         """
+        if self.das:
+            raise NotImplementedError("Travel time QC plotting is not currently implemented for DAS networks.")
         return plot_travel_time_vs_distance_zscore(self.picks,
                                     phase=phase,
                                     distance_unit=distance_unit,
@@ -1080,7 +1082,20 @@ class Network:
         -------
         Same as :func:`utdquake.utils.plot.plot_travel_time_qc`.
         """
-        model_path = self.paths["utdq/models/picks"]
+        if self.das:
+            raise NotImplementedError("Travel time QC plotting is not currently implemented for DAS networks.")
+
+        model_path = self.paths[".utdquake/travel_time"]
+        
+        if not model_path.exists():
+            resolve_network_paths(self.name,das=False,
+                      include_bank=False,
+                      include_events=False,
+                        include_stations=False,
+                        include_picks=False,
+                        include_travel_time=True,
+                      )
+            
         load = TravelTimeModel.load(model_path)
         models = load.models
 

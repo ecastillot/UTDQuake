@@ -136,6 +136,7 @@ def resolve_network_paths(
     include_events: bool = True,
     include_stations: bool = True,
     include_picks: bool = True,
+    include_travel_time: bool = False,
     max_retries: int = 3,
 ) -> Dict[str, Path]:
     """
@@ -158,6 +159,8 @@ def resolve_network_paths(
         Whether to include stations Parquet. Default is True.
     include_picks : bool, optional
         Whether to include picks Parquet. Default is True.
+    include_travel_time : bool, optional
+        Whether to include travel time model. Default is False (not currently implemented for DAS).
     max_retries : int, optional
         Maximum number of download attempts. Default is 2.
 
@@ -180,12 +183,14 @@ def resolve_network_paths(
         "events": utdq_paths["events"],
         "stations": utdq_paths["stations"],
         "picks": utdq_paths["picks"],
+        "travel_time": utdq_paths[".utdquake/travel_time"],
     }
 
     flags = {
         "events": include_events,
         "stations": include_stations,
         "picks": include_picks,
+        "travel_time": include_travel_time,
     }
 
     for attempt in range(max_retries):
@@ -217,6 +222,7 @@ def resolve_network_paths(
             include_events="events" in missing,
             include_stations="stations" in missing,
             include_picks="picks" in missing,
+            include_travel_time="travel_time" in missing,
             unzip_banks=True,
         )
 

@@ -72,7 +72,52 @@ class UTDQBank(obsplus.EventBank):
         super().__init__(*args, **kwargs)
         self.das = das
         self.contributor = os.path.basename(self.bank_path)
-        self.utdq_paths = get_utdq_paths(self.contributor, das=self.das)
+        self.db_paths = self.__prepare_paths()
+
+    def __prepare_paths(self) -> None:
+        """
+        Create the directory structure required for UTDQ exports.
+
+        The following export directories are created if they do not
+        already exist:
+
+        - events
+        - stations
+        - picks
+
+        Additionally, an auxiliary hidden directory is created inside
+        the stations export directory for station-related metadata.
+
+        Returns
+        -------
+        dict[str, pathlib.Path]
+            Mapping between UTDQ path keys and their corresponding
+            database or directory paths.
+        """
+        paths = get_utdq_paths(self.contributor, das=self.das)
+
+        key_export_path = ".utdquake/export/db"
+        export_path = paths[key_export_path]
+
+        folders_to_create = ["events","stations","picks"]
+        utdq_db_paths = {}
+
+        for folder in folders_to_create:
+            key_path = "/".join([key_export_path, folder])
+            path = export_path / folder
+            db_path = path / f"{self.contributor}.db"
+
+            utdq_db_paths[key_path] = db_path
+            path.mkdir(parents=True, exist_ok=True)
+
+            if folder == "stations":
+                add_path = path / f".{self.contributor}"
+                key_add_path = "/".join([key_path, ".stations"])
+                utdq_db_paths[key_add_path] = add_path
+                add_path.mkdir(parents=True, exist_ok=True)
+        
+        return utdq_db_paths
+        
 
     @property
     def index_table_names(self) -> List[str]:
@@ -82,12 +127,12 @@ class UTDQBank(obsplus.EventBank):
     @property
     def picks_table_names(self) -> List[str]:
         """Return all table names in the picks bank index."""
-        if not os.path.exists(self.utdq_paths["utdq/db/picks"]):
+        if not os.path.exists(self.utdq_paths[".utdquake/export/db/picks"]):
             raise FileNotFoundError(
-                f'Picks database not found at {self.utdq_paths["utdq/db/picks"]}. '
+                f'Picks database not found at {self.utdq_paths[".utdquake/export/db/picks"]}. '
                 "Please run 'save_picks()' to create it."
             )
-        return ut.get_table_names(self.utdq_paths["utdq/db/picks"])
+        return ut.get_table_names(self.utdq_paths[".utdquake/export/db/picks"])
 
     def get_summary(self) -> dict:
         """Return a summary of the event bank contents."""
@@ -322,8 +367,8 @@ class UTDQBank(obsplus.EventBank):
             logger.info(f"Creating stations summary based on the events in the event bank at {self.bank_path}")
             # stations_folder = os.path.join( self.bank_path,".stations")
 
-            stations_folder = self.utdq_paths["utdq/db/.stations"]
-            stations_db = self.utdq_paths["utdq/db/stations"]
+            stations_folder = self.utdq_paths[".utdquake/export/db/stations/.stations"]
+            stations_db = self.utdq_paths[".utdquake/export/db/stations"]
             logger.info(f"Loading station details from {stations_folder} to create summary.")
             summary = ut.get_stations_summary(stations_folder=stations_folder)
             if summary is not None:
@@ -348,7 +393,7 @@ class UTDQBank(obsplus.EventBank):
             
     def __stations_sanity_check(self) -> bool:
         """ Check if station details path exists."""
-        if not os.path.isdir(self.utdq_paths["utdq/db/.stations"]):
+        if not os.path.isdir(self.utdq_paths[".utdquake/export/db/stations/.stations"]):
             logger.warning("Station details path does not exist.")
             return False
         return True
@@ -400,7 +445,7 @@ class UTDQBank(obsplus.EventBank):
 
     def put_utdq_events(self):
         """Lazy implementation"""
-        shutil.copy(self._index_path, self.utdq_paths["utdq/db/events"])
+        shutil.copy(self._index_path, self.utdq_paths[".utdquake/export/db/events"])
 
 
     def put_utdq_picks(
@@ -433,12 +478,12 @@ class UTDQBank(obsplus.EventBank):
 
         # --- Reset DBs if requested ---
         if replace:
-            if os.path.exists(self.utdq_paths["utdq/db/picks"]):
-                logger.warning("Deleting picks DB: %s", self.utdq_paths["utdq/db/picks"])
-                os.remove(self.utdq_paths["utdq/db/picks"])
-            if os.path.exists(self.utdq_paths["utdq/db/events"]):
-                logger.warning("Deleting events DB: %s", self.utdq_paths["utdq/db/events"])
-                os.remove(self.utdq_paths["utdq/db/events"])
+            if os.path.exists(self.utdq_paths[".utdquake/export/db/picks"]):
+                logger.warning("Deleting picks DB: %s", self.utdq_paths[".utdquake/export/db/picks"])
+                os.remove(self.utdq_paths[".utdquake/export/db/picks"])
+            if os.path.exists(self.utdq_paths[".utdquake/export/db/events"]):
+                logger.warning("Deleting events DB: %s", self.utdq_paths[".utdquake/export/db/events"])
+                os.remove(self.utdq_paths[".utdquake/export/db/events"])
 
         # --- Determine event IDs ---
         if event_id is None:
@@ -450,8 +495,8 @@ class UTDQBank(obsplus.EventBank):
             all_ids = event_id
 
         # --- Open DB connections ---
-        picks_conn = sqlite3.connect(self.utdq_paths["utdq/db/picks"])
-        events_conn = sqlite3.connect(self.utdq_paths["utdq/db/events"])
+        picks_conn = sqlite3.connect(self.utdq_paths[".utdquake/export/db/picks"])
+        events_conn = sqlite3.connect(self.utdq_paths[".utdquake/export/db/events"])
 
         try:
             # --- SQLite performance tuning ---
@@ -479,8 +524,8 @@ class UTDQBank(obsplus.EventBank):
             total_chunks = (len(to_process_ids) + chunk_size - 1) // chunk_size
 
             # --- Check if tables already exist ---
-            picks_table_exists = picks_table_name in ut.get_table_names(self.utdq_paths["utdq/db/picks"])
-            events_table_exists = events_table_name in ut.get_table_names(self.utdq_paths["utdq/db/events"])
+            picks_table_exists = picks_table_name in ut.get_table_names(self.utdq_paths[".utdquake/export/db/picks"])
+            events_table_exists = events_table_name in ut.get_table_names(self.utdq_paths[".utdquake/export/db/events"])
 
             # --- Process chunks ---
             for i, ev_chunk_ids in enumerate(self._chunk_list(to_process_ids, chunk_size), start=1):
@@ -554,39 +599,6 @@ class UTDQBank(obsplus.EventBank):
             picks_conn.close()
             events_conn.close()
 
-        # if apply_travel_time_qc:
-        #     logger.info("Applying travel time QC to picks...")
-
-        #     df = self.load_picks()
-        #     multi_qc = TravelTime(df)
-
-
-        #     if picks_qc_args is None:
-        #         picks_qc_args = PICK_TT_QC_DEFAULTS
-                
-
-        #     multi_qc.clean_data(
-        #         **picks_qc_args["clean_data"],
-        #     )
-
-        #     multi_qc.build_bins(**picks_qc_args["build_bins"])
-        #     multi_qc.build_models(**picks_qc_args["build_models"])
-
-        #     df_qc_z = multi_qc.attach_zscore()
-        #     df = sanitize_dataframe(df_qc_z, order_cols=PREF_PICKS_ORDER)
-
-
-        #     df.sort_values("linear_hyp_distance", inplace=True)
-
-        #     # Re-save the QCed picks back to the DB
-        #     logger.info(f"Travel time QC applied. Updating picks in DB at {self.utdq_paths["utdq/db/picks"]}...")
-        #     conn = sqlite3.connect(self.utdq_paths["utdq/db/picks"])
-        #     df.to_sql(picks_table_name, conn, index=False, if_exists="replace")
-
-
-        #     logger.info(f"QCed picks saved to DB. Saving travel time QC models to {self.utdq_paths['pick_models']}...")
-        #     multi_qc.save_models_combined(self.utdq_paths["pick_models"])
-        #     logger.info("Travel time QC applied and picks updated in DB.")
 
     def load_stations(self, query: Optional[str] = None) -> pd.DataFrame:
         """
@@ -649,9 +661,9 @@ class UTDQBank(obsplus.EventBank):
             pd.DataFrame: DataFrame of picks.
         """
         
-        if not os.path.exists(self.utdq_paths["utdq/db/picks"]):
+        if not os.path.exists(self.utdq_paths[".utdquake/export/db/picks"]):
             raise FileNotFoundError(
-                f'Events database not found at {self.utdq_paths["utdq/db/picks"]}. '
+                f'Events database not found at {self.utdq_paths[".utdquake/export/db/picks"]}. '
                 "Please run 'put_events()' to create it."
             )
 
@@ -666,7 +678,7 @@ class UTDQBank(obsplus.EventBank):
                     HAVING COUNT(*) = 1
                 )
             """
-        df = ut._read_table(self.utdq_paths["utdq/db/events"], query)
+        df = ut._read_table(self.utdq_paths[".utdquake/export/db/events"], query)
 
         df = sanitize_dataframe(df, 
                                 order_cols=PREF_EVENTS_ORDER, 
@@ -689,9 +701,9 @@ class UTDQBank(obsplus.EventBank):
             pd.DataFrame: DataFrame of picks.
         """
         
-        if not os.path.exists(self.utdq_paths["utdq/db/picks"]):
+        if not os.path.exists(self.utdq_paths[".utdquake/export/db/picks"]):
             raise FileNotFoundError(
-                f'Picks database not found at {self.utdq_paths["utdq/db/picks"]}. '
+                f'Picks database not found at {self.utdq_paths[".utdquake/export/db/picks"]}. '
                 "Please run 'put_picks()' to create it."
             )
 
@@ -706,7 +718,7 @@ class UTDQBank(obsplus.EventBank):
                     HAVING COUNT(*) = 1
                 )
             """
-        df = ut._read_table(self.utdq_paths["utdq/db/picks"], query)
+        df = ut._read_table(self.utdq_paths[".utdquake/export/db/picks"], query)
 
         df = sanitize_dataframe(df, 
                                 order_cols=PREF_PICKS_ORDER, 
