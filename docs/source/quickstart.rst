@@ -84,6 +84,103 @@ UTDQuake integrates an **event bank**. Check `ObsPlus EventBank <https://niosh-m
    cat2 = ebank.get_events(minmagnitude=4.3)
    print(cat2)
 
+Catalogs to UTDQuake
+^^^^^^^
+UTDQuake provides a convenient function to convert catalogs to UTDQuake format.
+.. code-block:: python
+   import utdquake as utdq # This is just to make sure we have the package imported
+   print("Events")
+   display(cat.utdq_events_to_df())
+   print("Picks")
+   display(cat.utdq_picks_to_df())
+
+.. list-table::
+   :header-rows: 1
+
+   * - time
+     - latitude
+     - longitude
+     - depth
+     - magnitude
+     - event_id
+     - ...
+   * - 2025-01-14 10:18:25
+     - 31.962
+     - -102.990
+     - 8618.2
+     - 1.8
+     - texnet2025aynz
+     - ...
+   * - 2025-01-14 12:19:34
+     - 31.731
+     - -104.092
+     - 6574.1
+     - 1.6
+     - texnet2025aysb
+     - ...
+
+Travel Time Model
+^^^^^^^
+
+UTDQuake creates a travel time model for each network based on the information provided by the catalog.
+
+.. code-block:: python
+   
+   tt = network.travel_time
+   predictions = tt.predict(phase="P", distance=[2,3,4,5,10,20,30,40,50,60]) #in km
+   display(predictions)
+
+.. list-table::
+   :header-rows: 1
+
+   * - distance (km)
+     - sigma (s)
+     - p1 (s)
+     - p25 (s)
+     - p50 (s)
+     - p75 (s)
+     - p99 (s)
+   * - 2
+     - 0.138
+     - 0.360
+     - 0.578
+     - 0.661
+     - 0.768
+     - 0.924
+   * - 3
+     - 0.285
+     - 0.160
+     - 0.694
+     - 0.896
+     - 1.077
+     - 1.468
+   * - 4
+     - 0.295
+     - 0.254
+     - 0.888
+     - 1.155
+     - 1.331
+     - 1.717
+   * - 5
+     - 0.304
+     - 0.349
+     - 1.083
+     - 1.414
+     - 1.584
+     - 1.966
+   * - 10
+     - 0.411
+     - 1.154
+     - 1.907
+     - 2.220
+     - 2.479
+     - 3.241
+
+.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/travel_time_model.png
+   :width: 200px
+   :alt: UTDQuake Travel Time Model
+
+
 Visualization (Plots)
 ^^^^^^^
 
