@@ -10,6 +10,7 @@ import utdquake as utdq
 from utdquake.bank.bank import UTDQBank
 from utdquake.core.config import get_utdq_paths
 from utdquake.core.load import resolve_network_paths
+from utdquake.bank.bank import UTDQBank
 # fig_path = Path(__file__).parent / "utdq_density.png"
 # print(f"Saving figure to {fig_path}")
 import logging
@@ -24,10 +25,14 @@ import logging
 #                       )
 
 
-dataset = utdq.Dataset(das=True)
-network = dataset.get_network(name="GCI")
-network.plot_travel_time_qc(savepath=str(Path(__file__).parent / "GCI_travel_time_qc.png"),
-                            show_models=["travel_time_p50"])
+dataset = utdq.Dataset(das=False)
+network = dataset.get_network(name="nc")
+# print(network.events)
+print(network.picks)
+
+# network = dataset.get_network(name="GCI")
+# network.plot_travel_time_qc(savepath=str(Path(__file__).parent / "GCI_travel_time_qc.png"),
+#                             show_models=["travel_time_p50"])
 
 # print(get_utdq_paths("GCI", das=True))
 

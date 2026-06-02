@@ -56,18 +56,18 @@ class UTDQBank(obsplus.EventBank):
     -----
     - put_utdq_stations() is designed to process events in time chunks, appending station
     - put_utdq_picks() saves picks in chunks to a separate SQLite DB, tracking progress to avoid duplicates.
+
+    Args:
+        bank_path (str): Path to the event bank.
+        das (bool): Whether to use the DAS dataset paths. Default is False.
+        *args
+            Positional arguments passed to :class:`obsplus.EventBank`.
+        **kwargs
+            Keyword arguments passed to :class:`obsplus.EventBank`.
     """
     def __init__(self, *args, das: bool = False, **kwargs) -> None:
         """
         Initialize EventBank.
-
-        Args:
-            bank_path (str): Path to the event bank.
-            das (bool): Whether to use the DAS dataset paths. Default is False.
-            *args
-                Positional arguments passed to :class:`obsplus.EventBank`.
-            **kwargs
-                Keyword arguments passed to :class:`obsplus.EventBank`.
         """
         super().__init__(*args, **kwargs)
         self.das = das
@@ -141,13 +141,130 @@ class UTDQBank(obsplus.EventBank):
         return get_network_summary(stations=stations,events=events,
                                     das=self.das)
     
+    @staticmethod
+    def _read_events_parallel(
+        files: Iterable[str],
+        max_workers: int = 4,
+    ) -> List[Event]:
+        """
+        Read multiple event files in parallel.
+
+        Parameters
+        ----------
+        files : Iterable[str]
+            List or iterable of file paths.
+        max_workers : int, optional
+            Number of threads to use. Default is 4.
+
+        Returns
+        -------
+        list of obspy.core.event.Event
+            Flattened list of events read from all files.
+
+        Notes
+        -----
+        This function avoids shared mutable state across threads by returning
+        results from each worker and combining them afterward.
+        """
+
+        def _process_file(file_path: str) -> List[Event]:
+            """
+            Read a single file and return its events.
+
+            Parameters
+            ----------
+            file_path : str
+                Path to the event file.
+
+            Returns
+            -------
+            list of Event
+                Events contained in the file.
+            """
+            try:
+                catalog = read_events(file_path)
+                return list(catalog)
+            except Exception as exc:  # noqa: BLE001
+                # Log and skip problematic files
+                # print(f"Error reading {file_path}: {exc}")
+                logger.error(f"Error reading {file_path}: {exc}")
+                return []
+
+        # Execute file reading in parallel
+        with cf.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            results = executor.map(_process_file, files)
+
+        # Flatten list of lists into a single list of events
+        events: List[Event] = [
+            event for sublist in results for event in sublist
+        ]
+
+        return events
+
+    def __stations_sanity_check(self) -> bool:
+        """ Check if station details path exists."""
+        if not os.path.isdir(self.utdq_paths[".utdquake/export/db/stations/.stations"]):
+            logger.warning("Station details path does not exist.")
+            return False
+        return True
+
+    @staticmethod
+    def _chunk_list(lst: List[str], n: int):
+        """Yield successive n-sized chunks from a list."""
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
+
+    @staticmethod
+    def _initialize_progress_table(conn: sqlite3.Connection, table_name: str) -> None:
+        """Create progress table if it does not exist."""
+        conn.execute(f"""
+            CREATE TABLE IF NOT EXISTS '{table_name}' (
+                event_id TEXT PRIMARY KEY
+            )
+        """)
+        conn.commit()
+
+    @staticmethod
+    def _get_processed_event_ids(conn: sqlite3.Connection, table_name: str) -> set:
+        """Return a set of already processed event IDs."""
+        df = pd.read_sql_query(f"SELECT event_id FROM '{table_name}'", conn)
+        return set(df["event_id"].values)
+
+    @staticmethod
+    def _save_chunk_to_db(df: pd.DataFrame, table_name: str, conn: sqlite3.Connection, table_exists: bool) -> None:
+        """Save a chunk of picks to the database."""
+        if not table_exists:
+            df.to_sql(table_name, conn, if_exists="replace", index=False)
+        else:
+            df.to_sql(
+                        table_name,
+                        conn,
+                        if_exists="append",
+                        index=False,
+                        method="multi",
+                        chunksize=80,
+                    )
+        conn.commit()
+
+    @staticmethod
+    def _update_progress_table(event_ids: List[str], table_name: str, conn: sqlite3.Connection) -> None:
+        """Update the progress table with processed event IDs."""
+        progress_df = pd.DataFrame({"event_id": event_ids})
+        progress_df.to_sql(table_name, conn, if_exists="append", index=False, method="multi")
+        conn.commit()
+
+    def put_utdq_events(self):
+        """Lazy implementation"""
+        shutil.copy(self._index_path, self.utdq_paths[".utdquake/export/db/events"])
+
+
     def put_utdq_events_from_folder(
         self,
         folder_path: str,
         file_extension: str = "*.xml",
         chunk_size: int = 100,
         max_workers: int = 4,
-    ) -> None:
+        ) -> None:
         """
         Load and store events from files in a folder.
 
@@ -222,69 +339,6 @@ class UTDQBank(obsplus.EventBank):
             # Store events in the EventBank
             self.put_events(catalog)
 
-    
-
-
-
-    @staticmethod
-    def _read_events_parallel(
-        files: Iterable[str],
-        max_workers: int = 4,
-    ) -> List[Event]:
-        """
-        Read multiple event files in parallel.
-
-        Parameters
-        ----------
-        files : Iterable[str]
-            List or iterable of file paths.
-        max_workers : int, optional
-            Number of threads to use. Default is 4.
-
-        Returns
-        -------
-        list of obspy.core.event.Event
-            Flattened list of events read from all files.
-
-        Notes
-        -----
-        This function avoids shared mutable state across threads by returning
-        results from each worker and combining them afterward.
-        """
-
-        def _process_file(file_path: str) -> List[Event]:
-            """
-            Read a single file and return its events.
-
-            Parameters
-            ----------
-            file_path : str
-                Path to the event file.
-
-            Returns
-            -------
-            list of Event
-                Events contained in the file.
-            """
-            try:
-                catalog = read_events(file_path)
-                return list(catalog)
-            except Exception as exc:  # noqa: BLE001
-                # Log and skip problematic files
-                # print(f"Error reading {file_path}: {exc}")
-                logger.error(f"Error reading {file_path}: {exc}")
-                return []
-
-        # Execute file reading in parallel
-        with cf.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            results = executor.map(_process_file, files)
-
-        # Flatten list of lists into a single list of events
-        events: List[Event] = [
-            event for sublist in results for event in sublist
-        ]
-
-        return events
 
     def put_utdq_stations(self, stations, starttime=None, endtime=None,
                         chunk_seconds=86400,
@@ -389,64 +443,6 @@ class UTDQBank(obsplus.EventBank):
                             if_exists="replace", index=False
                         )
                 logger.info(f"Stations summary updated successfully.")
-
-            
-    def __stations_sanity_check(self) -> bool:
-        """ Check if station details path exists."""
-        if not os.path.isdir(self.utdq_paths[".utdquake/export/db/stations/.stations"]):
-            logger.warning("Station details path does not exist.")
-            return False
-        return True
-
-    @staticmethod
-    def _chunk_list(lst: List[str], n: int):
-        """Yield successive n-sized chunks from a list."""
-        for i in range(0, len(lst), n):
-            yield lst[i:i + n]
-
-    @staticmethod
-    def _initialize_progress_table(conn: sqlite3.Connection, table_name: str) -> None:
-        """Create progress table if it does not exist."""
-        conn.execute(f"""
-            CREATE TABLE IF NOT EXISTS '{table_name}' (
-                event_id TEXT PRIMARY KEY
-            )
-        """)
-        conn.commit()
-
-    @staticmethod
-    def _get_processed_event_ids(conn: sqlite3.Connection, table_name: str) -> set:
-        """Return a set of already processed event IDs."""
-        df = pd.read_sql_query(f"SELECT event_id FROM '{table_name}'", conn)
-        return set(df["event_id"].values)
-
-    @staticmethod
-    def _save_chunk_to_db(df: pd.DataFrame, table_name: str, conn: sqlite3.Connection, table_exists: bool) -> None:
-        """Save a chunk of picks to the database."""
-        if not table_exists:
-            df.to_sql(table_name, conn, if_exists="replace", index=False)
-        else:
-            df.to_sql(
-                        table_name,
-                        conn,
-                        if_exists="append",
-                        index=False,
-                        method="multi",
-                        chunksize=80,
-                    )
-        conn.commit()
-
-    @staticmethod
-    def _update_progress_table(event_ids: List[str], table_name: str, conn: sqlite3.Connection) -> None:
-        """Update the progress table with processed event IDs."""
-        progress_df = pd.DataFrame({"event_id": event_ids})
-        progress_df.to_sql(table_name, conn, if_exists="append", index=False, method="multi")
-        conn.commit()
-
-    def put_utdq_events(self):
-        """Lazy implementation"""
-        shutil.copy(self._index_path, self.utdq_paths[".utdquake/export/db/events"])
-
 
     def put_utdq_picks(
         self,

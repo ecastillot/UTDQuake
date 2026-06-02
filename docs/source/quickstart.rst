@@ -4,6 +4,14 @@ Quickstart
 
 This guide provides a **basic overview of UTDQuake** and demonstrates how to access datasets, networks, events, and visualizations.
 
+.. warning::
+
+   Make sure to use the latest stable version of UTDQuake.
+
+   .. image:: https://img.shields.io/pypi/v/UTDQuake?label=pypi
+      :target: https://pypi.org/project/UTDQuake/
+      :alt: PyPI version
+
 You can follow this guide interactively in Colab:
 
 .. raw:: html

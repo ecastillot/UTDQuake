@@ -75,17 +75,16 @@ class Dataset:
 
     Provides access to networks, stations, events, and picks.
     Allows plotting and summary analysis of the dataset.
+
+    Parameters
+    ----------
+    das : bool, optional
+        If True, use the DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
+        Otherwise use the standard cache root (`UTDQUAKE_ROOT`). Default is False.
     """
 
     def __init__(self, das: bool = False):
         """Initialize Dataset with root cache directory.
-        
-        Parameters
-        ----------
-        das : bool, optional
-            If True, use the DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
-            Otherwise use the standard cache root (`UTDQUAKE_ROOT`). Default is False.
-        
         """
         self.das = das
         self.root = get_root(das=das)
@@ -491,14 +490,22 @@ class Dataset:
                                         show=show)
 
 class Network:
+    """
+    Represents a single network in UTDQuake.
+
+    Provides access to network-specific events, stations, picks,
+    EventBank, and plotting utilities.
+
+    Parameters
+    ----------
+    name : str
+        Network name (e.g. "tx", "uw", "GCI").
+    das : bool, optional
+        Whether to use the DAS or not. If so, tou may define DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
+    """
 
     def __init__(self, name: str, das: bool = False):
-        """
-        Represents a single network in UTDQuake.
-
-        Provides access to network-specific events, stations, picks,
-        EventBank, and plotting utilities.
-        """
+        """Initialize Network with name and DAS flag."""
         self.name = name.strip() 
         self.das = das
         self.paths = get_utdq_paths(name,das)
