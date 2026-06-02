@@ -107,8 +107,8 @@ class Dataset:
         str
             Summary of networks, stations, and events.
         """
-        return get_network_summary(stations=self.get_stations(), 
-                                    events= self.get_events())
+        return get_network_summary(stations=self.stations, 
+                                    events= self.events)
 
     @property
     def networks(self):
@@ -160,6 +160,7 @@ class Dataset:
                     include_stations: bool = False,
                     include_picks: bool = False,
                     include_banks: bool = False,
+                    include_travel_time: bool = False,
                     unzip_banks: bool = True,
                     overwrite: bool = False,
                 ) -> Path:
@@ -183,6 +184,8 @@ class Dataset:
             Whether to download seismic picks. Default: False.
         include_banks : bool, optional
             Whether to download the bank (synthetic) data. Default: False.
+        include_travel_time : bool, optional
+            Whether to download the travel time models. Default: False.
         overwrite : bool, optional
             If True, existing files will be re-downloaded. Default: False.
         unzip_banks : bool, optional
@@ -211,6 +214,7 @@ class Dataset:
             include_stations=include_stations,
             include_picks=include_picks,
             include_banks=include_banks,
+            include_travel_time=include_travel_time,
             overwrite=overwrite,
             unzip_banks=unzip_banks
         )
@@ -590,7 +594,12 @@ class Network:
         paths = resolve_network_paths(self.name,das=self.das, include_stations=True)
         return pd.read_parquet(paths["stations"])
 
-    
+    @property
+    def travel_time(self) -> TravelTimeModel:
+        """Return the TravelTimeModel for this network."""
+        paths = resolve_network_paths(self.name,das=self.das, include_travel_time=True)
+        return TravelTimeModel.load(paths["travel_time"])
+
     def compute_stats(
                     self,
                     use_cache=True,

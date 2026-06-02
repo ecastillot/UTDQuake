@@ -26,9 +26,11 @@ import logging
 
 
 dataset = utdq.Dataset(das=False)
-network = dataset.get_network(name="nc")
+network = dataset.get_network(name="av")
+tt = network.travel_time
 # print(network.events)
-print(network.picks)
+print(tt)
+print(tt.predict(phase="P",distance= 30))
 
 # network = dataset.get_network(name="GCI")
 # network.plot_travel_time_qc(savepath=str(Path(__file__).parent / "GCI_travel_time_qc.png"),

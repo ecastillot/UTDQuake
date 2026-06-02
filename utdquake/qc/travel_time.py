@@ -775,14 +775,16 @@ class TravelTimeModel:
         ----------
         phase : str
             Phase name.
-        distance : numpy.ndarray
-            Distances.
+        distance : int, float or numpy.ndarray
+            Distances at which to predict.
 
         Returns
         -------
         pandas.DataFrame
             Predicted sigma and percentile curves.
         """
+        if isinstance(distance, (int, float)):
+            distance = np.array([distance])
         return self.get_model(phase).predict(distance)
 
     # ---------------------------------------------------------------------

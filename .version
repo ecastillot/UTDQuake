@@ -1,0 +1,4 @@
+0.1:    First Version of UTDQuake
+0.2:    DAS Inclusion + Travel TIME QC
+0.2.1:  Fixing bugs in Dataset.description
+        Adding Network.travel_time
