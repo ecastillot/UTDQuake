@@ -8,3 +8,23 @@
     max-width: 240px !important;
     width: 240px !important;
 }
+
+table.compact-table {
+    font-size: 0.9em;
+}
+
+table.centered-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.scroll-table {
+    overflow-x: auto;
+    display: block;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+.scroll-table table {
+    display: block;
+    overflow-x: auto;
+}

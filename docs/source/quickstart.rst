@@ -20,7 +20,7 @@ You can follow this guide interactively in Colab:
       <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
    </a>
 
-Access
+Dataset Overview
 ^^^^^^^
 
 To get started, import the package and load the dataset using the :class:`utdquake.Dataset` class:
@@ -35,7 +35,7 @@ To get started, import the package and load the dataset using the :class:`utdqua
 
    # network level
    network_data = dataset.networks
-   print(network_data)
+   display(network_data)
 
 In addition to network-level access, the dataset allows you to retrieve aggregated information across multiple networks. You can directly access events, stations, and picks using the following methods:
 
@@ -52,19 +52,19 @@ Detailed information for a specific seismic network can be accessed through the 
 
    # load network 
    network = dataset.get_network(name="tx")
-   print(network)
+   display(network)
 
    # events
    events = network.events
-   print(events)
+   display(events)
 
    # stations
    stations = network.stations
-   print(stations)
+   display(stations)
 
    # picks
    picks = network.picks
-   print(picks)
+   display(picks)
 
 Event Bank
 ^^^^^^^
@@ -86,15 +86,66 @@ UTDQuake integrates an **event bank**. Check `ObsPlus EventBank <https://niosh-m
 
 Catalogs to UTDQuake
 ^^^^^^^
-UTDQuake provides a convenient function to convert catalogs to UTDQuake format.
+UTDQuake provides convenient functions to convert catalogs to UTDQuake format.
+
+Apply QC
+"""""""""""""
+
 .. code-block:: python
-   import utdquake as utdq # This is just to make sure we have the package imported
+
+   import utdquake as utdq # Make sure we have the package imported to access the conversion functions
+   import logging # use logging to see the QC process in the console
+   logging.basicConfig(level=logging.DEBUG)
+
+   cat.apply_utdq_qc(debug=True, inplace=True) 
+   print(cat)
+
+.. list-table:: Minimum QC criteria applied to events and picks.
+   :class: compact-table centered-table
+   :name: event_pick_qc
+   :header-rows: 1
+
+   * - Category
+     - Parameter
+     - Value
+   * - Event
+     - Minimum associated phase count
+     - 4
+   * - Event
+     - Minimum used phase count
+     - 4
+   * - Event
+     - Minimum station count
+     - 3
+   * - Event
+     - Maximum standard error
+     - 1.8
+   * - Pick
+     - Minimum travel time
+     - 0
+   * - Pick
+     - Minimum hypocentral distance
+     - 0
+   * - Pick
+     - Minimum epicentral distance
+     - 0
+   * - Pick
+     - Minimum S-P time difference (including ``Sn-Pn`` and ``Sg-Pg``)
+     - > 0
+
+Convert to UTDQuake Format
+"""""""""""""
+
+.. code-block:: python
+
+   import utdquake as utdq # Make sure we have the package imported to access the conversion functions
    print("Events")
    display(cat.utdq_events_to_df())
    print("Picks")
    display(cat.utdq_picks_to_df())
 
-.. list-table::
+.. list-table:: Events
+   :class: compact-table centered-table
    :header-rows: 1
 
    * - time
@@ -119,6 +170,39 @@ UTDQuake provides a convenient function to convert catalogs to UTDQuake format.
      - texnet2025aysb
      - ...
 
+.. list-table:: Picks
+   :class: compact-table centered-table
+   :header-rows: 1
+
+   * - network
+     - station
+     - phase
+     - time
+     - travel_time (s)
+     - distance (deg)
+     - ...
+   * - 2T
+     - EF73
+     - P
+     - 2025-01-30 03:26:40.660782
+     - 3.782
+     - 0.087
+     - ...
+   * - 2T
+     - EF61
+     - P
+     - 2025-01-30 03:26:41.636254
+     - 4.757
+     - 0.138
+     - ...
+   * - TX
+     - EF04
+     - P
+     - 2025-01-30 03:26:41.924392
+     - 5.045
+     - 0.159
+     - ...
+
 Travel Time Model
 ^^^^^^^
 
@@ -131,6 +215,7 @@ UTDQuake creates a travel time model for each network based on the information p
    display(predictions)
 
 .. list-table::
+   :class: compact-table centered-table
    :header-rows: 1
 
    * - distance (km)
@@ -177,7 +262,8 @@ UTDQuake creates a travel time model for each network based on the information p
      - 3.241
 
 .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/travel_time_model.png
-   :width: 200px
+   :width: 600px
+   :align: center
    :alt: UTDQuake Travel Time Model
 
 

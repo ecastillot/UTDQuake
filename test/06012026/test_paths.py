@@ -15,7 +15,7 @@ from utdquake.bank.bank import UTDQBank
 # print(f"Saving figure to {fig_path}")
 import logging
 
-# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 # resolve_network_paths("tx",das=False,
 #                       include_bank=False,
 #                       include_events=False,
@@ -26,11 +26,21 @@ import logging
 
 
 dataset = utdq.Dataset(das=False)
-network = dataset.get_network(name="av")
-tt = network.travel_time
+network = dataset.get_network(name="tx")
+events = network.events
+ebank = network.bank
+ev_ids = events["event_id"].iloc[:5].tolist()
+cat = ebank.get_events(event_id=ev_ids)
+
+print(cat)
+cat.apply_utdq_qc(debug=True,inplace=True)
+print(cat)
+
+
+# tt = network.travel_time
 # print(network.events)
-print(tt)
-print(tt.predict(phase="P",distance= 30))
+# print(tt)
+# print(tt.predict(phase="P",distance= 30))
 
 # network = dataset.get_network(name="GCI")
 # network.plot_travel_time_qc(savepath=str(Path(__file__).parent / "GCI_travel_time_qc.png"),
