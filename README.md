@@ -8,6 +8,8 @@
 # <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
 -->
 
+ [![Read the Docs](https://img.shields.io/badge/Docs-Read%20the%20Docs-blue?style=for-the-badge&logo=read-the-docs)](https://utdquake.readthedocs.io/en/latest/index.html)
+
 **University of Texas at Dallas Earthquake Dataset**
 
 A global earthquake dataset constructed from high-quality source and receiver metadata, including associated seismic phase picks across diverse station geometries.
