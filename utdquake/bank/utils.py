@@ -1721,6 +1721,10 @@ def destination_point(lat1_deg, lon1_deg, azimuth_deg, distance_deg):
     spherical forward problem
     Compute destination lat/lon given a starting point, azimuth, and distance in degrees.
 
+    see here: 
+    - https://edwilliams.org/avform147.htm#LL
+    - Snyder, J. P. 1926-1997. (1987). Map projections--a working manual. Washington: U.S. G.P.O. . Page 31 (page 45-scanned version)
+
     Args:
         lat1_deg: Latitude of starting point (degrees)
         lon1_deg: Longitude of starting point (degrees)
