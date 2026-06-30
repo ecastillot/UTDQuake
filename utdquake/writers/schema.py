@@ -70,7 +70,7 @@ PREF_STATIONS_TYPES = {
 PREF_STATIONS_ORDER = list(PREF_STATIONS_TYPES.keys())
 
 PREF_EVENTS_ORDER = ["network",
-                     "time",
+                    "time",
                     "latitude",
                     "longitude",
                     "depth",
@@ -89,6 +89,7 @@ PREF_PICKS_ORDER = [
                     "azimuth",
                     "evaluation_mode",
                     "event_id",
+                    "pick_agency",
                     "origin_time",
                     ]
 
@@ -172,7 +173,7 @@ for k,v in PREF_PICKS_QC_TYPES.items():
     PREF_PICKS_TYPES[k].extend(v)
 
 # Add extra columns to picks types
-PREF_PICKS_TYPES["string_cols"].extend(["network","event_id",])
+PREF_PICKS_TYPES["string_cols"].extend(["network","event_id","pick_agency"])
 PREF_PICKS_TYPES["float_cols"].extend(["travel_time","linear_hyp_distance"])
 
 # Preferred event types
@@ -356,7 +357,7 @@ def sanitize_dataframe(
         print(f"Step 6: Forced boolean columns: {bool_cols}")
     
     # ---- 7. Auto-handle remaining object columns ----
-    for c in df.select_dtypes(include=["object"]).columns:
+    for c in df.select_dtypes(include=["object","string"]).columns:
         df[c] = df[c].astype("string")
     
     # ---- 8. Numeric columns → float64 for Arrow safety ----

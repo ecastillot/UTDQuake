@@ -250,6 +250,9 @@ The **Events** dataset contains earthquake catalogs for each network.
    * - Column
      - Type
      - Description
+   * - network
+     - string
+     - Network identifier
    * - time
      - timestamp[ns]
      - Origin time of the event
@@ -407,6 +410,9 @@ The **Picks** dataset contains seismic phase picks associated with each event.
    * - event_id
      - string
      - Associated event identifier
+   * - pick_agency
+     - string
+     - Agency that provided the pick
    * - origin_time
      - timestamp[ns]
      - Origin time of associated event

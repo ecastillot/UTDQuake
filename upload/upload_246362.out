@@ -1,0 +1,3207 @@
+Repo created: https://huggingface.co/datasets/ecastillot/UTDQuake
+Found 82 candidate files to upload
+Running validation checks on files to upload...
+Validation checks complete.
+Starting upload...
+[33mYou are about to upload a large folder to the Hub using `hf upload-large-folder`. This is a new feature so feedback is very welcome!
+
+A few things to keep in mind:
+  - Repository limits still apply: https://huggingface.co/docs/hub/repositories-recommendations
+  - Do not start several processes in parallel.
+  - You can interrupt and resume the process at any time. The script will pick up where it left off except for partially uploaded files that would have to be entirely reuploaded.
+  - Do not upload the same folder to several repositories. If you need to do so, you must delete the `./.cache/huggingface/` folder first.
+
+Some temporary metadata will be stored under `/groups/igonin/ecastillo/UTDQuake/.cache/huggingface`.
+  - You must not modify those files manually.
+  - You must not delete the `./.cache/huggingface/` folder while a process is running.
+  - You can delete the `./.cache/huggingface/` folder to reinitialize the upload state when process is not running. Files will have to be hashed and preuploaded again, except for already committed files.
+
+If the process output is too verbose, you can disable the progress bars with `--no-bars`. You can also entirely disable the status report with `--no-report`.
+
+For more details, run `hf upload-large-folder --help` or check the documentation at https://huggingface.co/docs/huggingface_hub/guides/upload#upload-a-large-folder.[0m
+Recovering from metadata files:   0%|          | 0/82 [00:00<?, ?it/s]Ignored metadata for 'picks/network=uw.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=hv.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:   2%|▏         | 2/82 [00:00<00:04, 18.74it/s]Ignored metadata for 'picks/network=TAP.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=GEOFON.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:   5%|▍         | 4/82 [00:00<00:04, 16.61it/s]Ignored metadata for 'picks/network=GFZ.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=AEIC.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:   7%|▋         | 6/82 [00:00<00:04, 16.83it/s]Ignored metadata for 'picks/network=us.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=tx.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  10%|▉         | 8/82 [00:00<00:04, 17.71it/s]Ignored metadata for 'picks/network=ISC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=admin.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=nm.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  13%|█▎        | 11/82 [00:00<00:03, 18.59it/s]Ignored metadata for 'picks/network=ak.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=nc.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  16%|█▌        | 13/82 [00:00<00:03, 18.86it/s]Ignored metadata for 'picks/network=ok.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=nn.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  18%|█▊        | 15/82 [00:00<00:03, 19.11it/s]Ignored metadata for 'picks/network=uu.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=THE.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  21%|██        | 17/82 [00:00<00:03, 17.54it/s]Ignored metadata for 'picks/network=pr.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=USP.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  23%|██▎       | 19/82 [00:01<00:03, 17.92it/s]Ignored metadata for 'picks/network=LDG.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=mb.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  26%|██▌       | 21/82 [00:01<00:03, 17.31it/s]Ignored metadata for 'picks/network=UCR.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=at.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  28%|██▊       | 23/82 [00:01<00:03, 17.98it/s]Ignored metadata for 'picks/network=NOA.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=ZUR.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  30%|███       | 25/82 [00:01<00:03, 18.40it/s]Ignored metadata for 'picks/network=SJA.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=UPP.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  33%|███▎      | 27/82 [00:01<00:02, 18.80it/s]Ignored metadata for 'picks/network=se.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=RSNC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=TIR.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  37%|███▋      | 30/82 [00:01<00:02, 19.46it/s]Ignored metadata for 'picks/network=av.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=UPA.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  39%|███▉      | 32/82 [00:01<00:02, 18.87it/s]Ignored metadata for 'picks/network=RHSSO.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=RSPR.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=VIE.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  43%|████▎     | 35/82 [00:01<00:02, 19.80it/s]Ignored metadata for 'picks/network=MRB.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=ATH.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=UCC.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  46%|████▋     | 38/82 [00:02<00:02, 20.84it/s]Ignored metadata for 'picks/network=OTT.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=MDD.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=KRSC.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  50%|█████     | 41/82 [00:02<00:01, 20.95it/s]Ignored metadata for 'picks/network=OSPL.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=VAO.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=PRE.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  54%|█████▎    | 44/82 [00:02<00:01, 21.70it/s]Ignored metadata for 'picks/network=NIC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=TUN.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=PDG.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  57%|█████▋    | 47/82 [00:02<00:01, 21.60it/s]Ignored metadata for 'picks/network=CATAC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=NOU.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=MEX.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  61%|██████    | 50/82 [00:02<00:01, 22.27it/s]Ignored metadata for 'picks/network=DJA.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=BEO.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=AUST.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  65%|██████▍   | 53/82 [00:02<00:01, 19.47it/s]Ignored metadata for 'picks/network=BUC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=KRNET.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=AFAD.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  68%|██████▊   | 56/82 [00:02<00:01, 18.53it/s]Ignored metadata for 'picks/network=ANF.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=IDC.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  71%|███████   | 58/82 [00:03<00:01, 18.67it/s]Ignored metadata for 'picks/network=ETH.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=HEL.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=JAPAN.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  74%|███████▍  | 61/82 [00:03<00:01, 18.96it/s]Ignored metadata for 'picks/network=NNC.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=ECX.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  77%|███████▋  | 63/82 [00:03<00:01, 18.63it/s]Ignored metadata for 'picks/network=KRSZO.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=INMG.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  79%|███████▉  | 65/82 [00:03<00:00, 18.85it/s]Ignored metadata for 'picks/network=GII.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=GCG.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=ISK.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  83%|████████▎ | 68/82 [00:03<00:00, 20.69it/s]Ignored metadata for 'picks/network=BYKL.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=IPGP.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=BER.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  87%|████████▋ | 71/82 [00:03<00:00, 19.70it/s]Ignored metadata for 'picks/network=KMA.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=KNET.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=CNRM.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  90%|█████████ | 74/82 [00:03<00:00, 20.20it/s]Ignored metadata for 'picks/network=JSN.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=ISN.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=EST.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  94%|█████████▍| 77/82 [00:03<00:00, 19.80it/s]Ignored metadata for 'picks/network=INET.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=FUNV.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=EAF.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files:  98%|█████████▊| 80/82 [00:04<00:00, 19.79it/s]Ignored metadata for 'picks/network=IGQ.parquet' (outdated). Will re-compute hash.
+Ignored metadata for 'picks/network=BGS.parquet' (outdated). Will re-compute hash.
+Recovering from metadata files: 100%|██████████| 82/82 [00:04<00:00, 19.80it/s]Recovering from metadata files: 100%|██████████| 82/82 [00:04<00:00, 19.35it/s]
+
+
+
+---------- 2026-06-29 15:15:09 (0:00:00) ----------
+Files:   hashed 0/82 (0.0/790.6M) | pre-uploaded: 0/0 (0.0/790.6M) (+82 unsure) | committed: 0/82 (0.0/790.6M) | ignored: 0
+Workers: hashing: 4 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
+---------------------------------------------------
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            Processing Files (0 / 0)      : |          |  0.00B /  0.00B            Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+New Data Upload               : |          |  0.00B /  0.00B            [A
+New Data Upload               : |          |  0.00B /  0.00B            [AProcessing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...picks/network=EAF.parquet:  93%|█████████▎| 1.64MB / 1.76MB            [A[A
+
+  ...picks/network=EAF.parquet:  93%|█████████▎| 1.64MB / 1.76MB            [A[A
+
+  ...picks/network=BGS.parquet:  20%|██        |  528kB / 2.63MB            [A[A
+
+  .../picks/network=uw.parquet:  54%|█████▍    | 5.20MB / 9.60MB            [A[AProcessing Files (0 / 1)      :  93%|█████████▎| 1.64MB / 1.76MB, 1.17MB/s  
+
+  ...picks/network=BGS.parquet:  20%|██        |  528kB / 2.63MB            [A[A
+
+  .../picks/network=uw.parquet:  54%|█████▍    | 5.20MB / 9.60MB            [A[A
+New Data Upload               :  93%|█████████▎| 1.64MB / 1.76MB, 1.17MB/s  [AProcessing Files (0 / 1)      :  20%|██        |  528kB / 2.63MB,  377kB/s  Processing Files (0 / 1)      :   1%|          | 5.20MB /  690MB, 3.71MB/s  
+New Data Upload               :  20%|██        |  528kB / 2.63MB,  377kB/s  [A
+
+  ...picks/network=BGS.parquet:  80%|████████  | 2.11MB / 2.63MB            [A[A
+
+  ...picks/network=EAF.parquet:  93%|█████████▎| 1.64MB / 1.76MB            [A[AProcessing Files (0 / 1)      :  80%|████████  | 2.11MB / 2.63MB, 1.32MB/s  
+New Data Upload               :  80%|████████  | 2.11MB / 2.63MB, 1.32MB/s  [A
+
+
+  .../picks/network=hv.parquet:   1%|          |  153kB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:   1%|          |  137kB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:   1%|          |  216kB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet:   1%|          |  534kB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:   1%|          |  241kB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet:   1%|          |  324kB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet:   1%|          |  213kB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+  .../picks/network=uw.parquet:  55%|█████▍    | 5.24MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:   1%|          |  153kB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:   1%|          |  137kB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:   1%|          |  216kB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet:   1%|          |  534kB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:   1%|          |  241kB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet:   1%|          |  324kB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet:   1%|          |  213kB / 18.8MB            [A[A[A[A[A[A[A[A[AProcessing Files (0 / 8)      :   1%|          | 7.05MB /  690MB, 4.41MB/s  
+New Data Upload               :   1%|          | 1.59MB /  208MB,  994kB/s  [A
+
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            [A[A
+
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            [A[AProcessing Files (1 / 1)      : 100%|██████████| 2.63MB / 2.63MB, 1.46MB/s  Processing Files (1 / 1)      : 100%|██████████| 1.76MB / 1.76MB,  980kB/s  
+New Data Upload               : 100%|██████████| 2.63MB / 2.63MB, 1.46MB/s  [A
+New Data Upload               : 100%|██████████| 1.76MB / 1.76MB,  980kB/s  [A
+
+  ...cks/network=JAPAN.parquet:  60%|██████    | 5.02MB / 8.30MB            [A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet:   5%|▍         | 1.43MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+  ...picks/network=ETH.parquet:  28%|██▊       | 4.21MB / 15.2MB            [A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=nn.parquet:  19%|█▉        | 2.42MB / 12.8MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            [A[A
+
+  .../picks/network=uw.parquet:  60%|█████▉    | 5.72MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  12%|█▏        | 2.14MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  12%|█▏        | 1.92MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  12%|█▏        | 3.03MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet:  16%|█▋        | 7.47MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:  10%|█         | 4.63MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet:   9%|▉         | 2.60MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet:   9%|▉         | 1.70MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet:   5%|▍         | 1.43MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 5 files]                 :  32%|███▏      | 19.6MB / 60.3MB            [A[A[A[A[A[A[A[A[A[A[A
+
+
+
+  ...picks/network=NNC.parquet:  15%|█▍        |  103kB /  695kB            [A[A[A[A
+
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            [A[AProcessing Files (0 / 15)     :   7%|▋         | 50.2MB /  690MB, 27.9MB/s  
+New Data Upload               :   8%|▊         | 21.7MB /  274MB, 12.1MB/s  [A
+
+
+
+
+  ...cks/network=KRSZO.parquet:  15%|█▍        |  420kB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet:  15%|█▍        |  945kB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet:  15%|█▍        |  804kB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet:  15%|█▍        | 1.20MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet:  15%|█▍        |  859kB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet:  15%|█▍        |  845kB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=ISK.parquet:  15%|█▍        |  706kB / 4.75MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...cks/network=JAPAN.parquet:  60%|██████    | 5.02MB / 8.30MB            [A[A
+
+
+  ...picks/network=ETH.parquet:  28%|██▊       | 4.21MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet:  15%|█▍        |  103kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet:  15%|█▍        |  420kB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet:  15%|█▍        |  945kB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet:  15%|█▍        |  804kB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet:  15%|█▍        | 1.20MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet:  15%|█▍        |  859kB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet:  15%|█▍        |  845kB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                :  12%|█▏        | 4.73MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            [A[A
+
+  .../picks/network=uw.parquet:  71%|███████   | 6.80MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  37%|███▋      | 6.58MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  37%|███▋      | 5.89MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  37%|███▋      | 9.30MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet:  59%|█████▉    | 27.2MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:  41%|████      | 18.8MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet:  48%|████▊     | 13.6MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet:  48%|████▊     | 8.95MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet:  26%|██▌       | 7.45MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 19 files]                :  40%|███▉      | 93.3MB /  235MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (0 / 21)     :  20%|█▉        | 19.1MB / 96.4MB, 10.6MB/s  
+
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            [A[AProcessing Files (0 / 29)     :  29%|██▊       |  198MB /  690MB, 99.0MB/s  Processing Files (1 / 1)      : 100%|██████████| 2.63MB / 2.63MB, 1.31MB/s  
+
+New Data Upload               :  12%|█▏        | 10.2MB / 86.5MB, 5.64MB/s  [A
+New Data Upload               :  26%|██▌       | 87.0MB /  338MB, 43.5MB/s  [AProcessing Files (1 / 1)      : 100%|██████████| 1.76MB / 1.76MB,  882kB/s  
+New Data Upload               : 100%|██████████| 1.76MB / 1.76MB,  882kB/s  
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            
+New Data Upload               : 100%|██████████| 2.63MB / 2.63MB, 1.31MB/s  
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            
+
+
+  ...cks/network=JAPAN.parquet:  79%|███████▉  | 6.58MB / 8.30MB            [A[A
+
+
+  ...picks/network=ETH.parquet:  62%|██████▏   | 9.44MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet:  56%|█████▌    |  391kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet:  56%|█████▌    | 1.59MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet:  56%|█████▌    | 3.57MB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet:  56%|█████▌    | 3.04MB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet:  56%|█████▌    | 4.54MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet:  56%|█████▌    | 3.25MB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet:  56%|█████▌    | 3.19MB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                :  55%|█████▍    | 20.9MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (0 / 21)     :  59%|█████▊    | 56.4MB / 96.4MB, 26.7MB/s  
+
+  ...cks/network=JAPAN.parquet:  85%|████████▌ | 7.07MB / 8.30MB            [A[A
+
+
+  ...picks/network=ETH.parquet:  73%|███████▎  | 11.1MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet:  69%|██████▊   |  477kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet:  69%|██████▊   | 1.94MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet:  69%|██████▊   | 4.36MB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet:  69%|██████▊   | 3.71MB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet:  69%|██████▊   | 5.55MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet:  69%|██████▊   | 3.96MB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet:  69%|██████▊   | 3.90MB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                :  68%|██████▊   | 25.7MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=uw.parquet:  85%|████████▍ | 8.11MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  66%|██████▌   | 11.9MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  66%|██████▌   | 10.7MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  66%|██████▌   | 16.9MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet:  98%|█████████▊| 44.8MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:  78%|███████▊  | 36.1MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet:  87%|████████▋ | 25.0MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet:  87%|████████▋ | 16.4MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet:  63%|██████▎   | 18.1MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 42 files]                :  65%|██████▍   |  262MB /  403MB            [A[A[A[A[A[A[A[A[A[A[A
+New Data Upload               :  67%|██████▋   | 58.2MB / 86.5MB, 26.5MB/s  [AProcessing Files (0 / 52)     :  65%|██████▌   |  450MB /  690MB,  204MB/s  
+New Data Upload               :  51%|█████     |  173MB /  338MB, 78.4MB/s  [A
+
+  .../picks/network=uw.parquet:  96%|█████████▌| 9.23MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  92%|█████████▏| 16.5MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  92%|█████████▏| 14.8MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  92%|█████████▏| 23.4MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet: 100%|█████████▉| 45.9MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet:  96%|█████████▌| 44.1MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet: 100%|█████████▉| 28.5MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet: 100%|█████████▉| 18.8MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet:  93%|█████████▎| 26.7MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 49 files]                :  77%|███████▋  |  347MB /  453MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...cks/network=JAPAN.parquet:  99%|█████████▉| 8.23MB / 8.30MB            [A[AProcessing Files (0 / 59)     :  83%|████████▎ |  574MB /  690MB,  239MB/s  
+
+
+  ...picks/network=ETH.parquet:  98%|█████████▊| 15.0MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet:  99%|█████████▉|  689kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet:  99%|█████████▉| 2.80MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet:  99%|█████████▉| 6.30MB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet:  99%|█████████▉| 5.36MB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet:  99%|█████████▉| 8.02MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet:  99%|█████████▉| 5.73MB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet:  99%|█████████▉| 5.64MB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                :  99%|█████████▉| 37.7MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[A
+New Data Upload               :  69%|██████▊   |  247MB /  360MB,  103MB/s  [AProcessing Files (0 / 21)     :  99%|█████████▉| 95.4MB / 96.4MB, 39.7MB/s  
+New Data Upload               :  99%|█████████▉| 85.5MB / 86.5MB, 35.6MB/s  [A
+
+  ...cks/network=JAPAN.parquet:  99%|█████████▉| 8.23MB / 8.30MB            [A[A
+
+
+  ...picks/network=ETH.parquet:  98%|█████████▊| 15.0MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet: 100%|█████████▉|  695kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet: 100%|█████████▉| 2.82MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet: 100%|█████████▉| 6.35MB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet: 100%|█████████▉| 5.40MB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet: 100%|█████████▉| 8.09MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|█████████▉| 5.77MB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|█████████▉| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                : 100%|█████████▉| 37.9MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=uw.parquet: 100%|█████████▉| 9.57MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  99%|█████████▉| 17.9MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  99%|█████████▉| 16.0MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  99%|█████████▉| 25.3MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet: 100%|█████████▉| 45.9MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet: 100%|█████████▉| 45.8MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet: 100%|█████████▉| 28.5MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet: 100%|█████████▉| 18.8MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|█████████▉| 28.7MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 49 files]                :  85%|████████▌ |  387MB /  453MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (0 / 21)     : 100%|█████████▉| 95.9MB / 96.4MB, 36.9MB/s  Processing Files (0 / 59)     :  90%|█████████ |  623MB /  690MB,  240MB/s  
+New Data Upload               :  99%|█████████▉| 86.0MB / 86.5MB, 33.1MB/s  [A
+New Data Upload               :  82%|████████▏ |  295MB /  360MB,  113MB/s  [A
+
+  .../picks/network=uw.parquet: 100%|█████████▉| 9.57MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  99%|█████████▉| 17.9MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  99%|█████████▉| 16.0MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  99%|█████████▉| 25.3MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet: 100%|█████████▉| 45.9MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet: 100%|█████████▉| 45.8MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet: 100%|█████████▉| 28.5MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet: 100%|█████████▉| 18.8MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|█████████▉| 28.7MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 49 files]                :  95%|█████████▍|  429MB /  453MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...cks/network=JAPAN.parquet: 100%|██████████| 8.30MB / 8.30MB            [A[A
+
+
+  ...picks/network=ETH.parquet: 100%|██████████| 15.2MB / 15.2MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet: 100%|█████████▉|  695kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet: 100%|█████████▉| 2.82MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ECX.parquet: 100%|█████████▉| 6.35MB / 6.35MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GII.parquet: 100%|█████████▉| 5.40MB / 5.40MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=INMG.parquet: 100%|█████████▉| 8.09MB / 8.09MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|█████████▉| 5.77MB / 5.77MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|█████████▉| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 11 files]                : 100%|█████████▉| 38.1MB / 38.1MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (0 / 59)     :  97%|█████████▋|  666MB /  690MB,  238MB/s  Processing Files (5 / 21)     : 100%|█████████▉| 96.4MB / 96.4MB, 34.4MB/s  
+New Data Upload               :  93%|█████████▎|  337MB /  360MB,  120MB/s  [A
+New Data Upload               : 100%|█████████▉| 86.5MB / 86.5MB, 30.9MB/s  [A
+
+  ...picks/network=NNC.parquet: 100%|█████████▉|  695kB /  695kB            [A[A
+
+
+  ...cks/network=KRSZO.parquet: 100%|█████████▉| 2.82MB / 2.82MB            [A[A[A
+
+
+
+  ...picks/network=ECX.parquet: 100%|█████████▉| 6.35MB / 6.35MB            [A[A[A[A
+
+
+
+
+  ...picks/network=GII.parquet: 100%|█████████▉| 5.40MB / 5.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...icks/network=INMG.parquet: 100%|█████████▉| 8.09MB / 8.09MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|█████████▉| 5.77MB / 5.77MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|█████████▉| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISK.parquet: 100%|█████████▉| 4.75MB / 4.75MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=IPGP.parquet: 100%|█████████▉| 10.2MB / 10.2MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 6 files]                 : 100%|█████████▉| 15.6MB / 15.6MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=uw.parquet: 100%|█████████▉| 9.57MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  99%|█████████▉| 17.9MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  99%|█████████▉| 16.0MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  99%|█████████▉| 25.3MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet: 100%|█████████▉| 45.9MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet: 100%|█████████▉| 45.8MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=us.parquet: 100%|██████████| 28.6MB / 28.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...cks/network=admin.parquet: 100%|██████████| 18.8MB / 18.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|█████████▉| 28.7MB / 28.8MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 49 files]                : 100%|█████████▉|  450MB /  453MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (2 / 59)     : 100%|█████████▉|  687MB /  690MB,  229MB/s  
+New Data Upload               :  99%|█████████▉|  358MB /  360MB,  119MB/s  [A
+
+  .../picks/network=uw.parquet: 100%|█████████▉| 9.57MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet:  99%|█████████▉| 17.9MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet:  99%|█████████▉| 16.0MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet:  99%|█████████▉| 25.3MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...ks/network=GEOFON.parquet: 100%|██████████| 45.9MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GFZ.parquet: 100%|█████████▉| 45.8MB / 45.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|█████████▉| 28.7MB / 28.8MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  .../picks/network=nn.parquet:  99%|█████████▉| 12.7MB / 12.8MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=uu.parquet: 100%|█████████▉| 6.68MB / 6.69MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 47 files]                : 100%|█████████▉|  432MB /  433MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=NNC.parquet: 100%|██████████|  695kB /  695kB            [A[A
+
+
+  ...cks/network=KRSZO.parquet: 100%|██████████| 2.82MB / 2.82MB            [A[A[A
+
+
+
+  ...picks/network=ECX.parquet: 100%|██████████| 6.35MB / 6.35MB            [A[A[A[A
+
+
+
+
+  ...picks/network=GII.parquet: 100%|██████████| 5.40MB / 5.40MB            [A[A[A[A[A
+
+
+
+
+
+  ...icks/network=INMG.parquet: 100%|██████████| 8.09MB / 8.09MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|██████████| 5.77MB / 5.77MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 6 files]                 : 100%|██████████| 15.6MB / 15.6MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (3 / 59)     : 100%|█████████▉|  688MB /  690MB,  215MB/s  Processing Files (21 / 21)    : 100%|██████████| 96.4MB / 96.4MB, 30.1MB/s  
+New Data Upload               : 100%|█████████▉|  359MB /  360MB,  112MB/s  [A
+New Data Upload               : 100%|██████████| 86.5MB / 86.5MB, 27.0MB/s  [A
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A
+
+
+
+
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=uw.parquet: 100%|██████████| 9.60MB / 9.60MB            [A[A
+
+
+  .../picks/network=hv.parquet: 100%|██████████| 18.0MB / 18.0MB            [A[A[A
+
+
+
+  ...picks/network=TAP.parquet: 100%|██████████| 16.1MB / 16.1MB            [A[A[A[A
+
+
+
+
+  ...icks/network=AEIC.parquet: 100%|██████████| 25.5MB / 25.5MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=GFZ.parquet: 100%|█████████▉| 45.8MB / 45.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|█████████▉| 28.7MB / 28.8MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=nn.parquet:  99%|█████████▉| 12.7MB / 12.8MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  .../picks/network=uu.parquet: 100%|█████████▉| 6.68MB / 6.69MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=pr.parquet: 100%|█████████▉| 7.82MB / 7.83MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 46 files]                : 100%|█████████▉|  425MB /  425MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (45 / 59)    : 100%|█████████▉|  689MB /  690MB,  203MB/s  
+New Data Upload               : 100%|█████████▉|  360MB /  360MB,  106MB/s  [A
+
+  ...picks/network=GFZ.parquet: 100%|██████████| 45.9MB / 45.9MB            [A[A
+
+
+  .../picks/network=tx.parquet: 100%|██████████| 28.8MB / 28.8MB            [A[A[A
+
+
+
+  .../picks/network=nn.parquet:  99%|█████████▉| 12.7MB / 12.8MB            [A[A[A[A
+
+
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 4 files]                 : 100%|█████████▉| 86.3MB / 86.6MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A
+
+
+
+
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (55 / 59)    : 100%|█████████▉|  689MB /  690MB,  191MB/s  
+New Data Upload               : 100%|█████████▉|  360MB /  360MB,  100MB/s  [A
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A
+
+
+
+
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A
+
+
+
+
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (59 / 59)    : 100%|██████████|  690MB /  690MB,  182MB/s  
+New Data Upload               : 100%|██████████|  360MB /  360MB, 94.8MB/s  [A
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A
+
+
+
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            [A[A[A[A
+
+
+
+
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (21 / 21)    : 100%|██████████| 96.4MB / 96.4MB, 24.1MB/s  
+New Data Upload               : 100%|██████████| 86.5MB / 86.5MB, 21.6MB/s  
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            
+  ...icks/network=IPGP.parquet: 100%|██████████| 10.2MB / 10.2MB            
+  ...picks/network=BER.parquet: 100%|██████████| 4.98MB / 4.98MB            
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            
+  ...icks/network=KNET.parquet: 100%|██████████| 1.70MB / 1.70MB            
+  ...picks/network=JSN.parquet: 100%|██████████| 1.11MB / 1.11MB            
+  ...picks/network=ISN.parquet: 100%|██████████|  681kB /  681kB            
+  ...icks/network=CNRM.parquet: 100%|██████████| 4.29MB / 4.29MB            
+  ...picks/network=EST.parquet: 100%|██████████| 1.24MB / 1.24MB            
+
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            [A[A
+
+
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A
+
+
+
+
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            [A[A[A[A[A
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (59 / 59)    : 100%|██████████|  690MB /  690MB,  150MB/s  
+New Data Upload               : 100%|██████████|  360MB /  360MB, 78.3MB/s  
+  .../picks/network=nn.parquet: 100%|██████████| 12.8MB / 12.8MB            
+  ...picks/network=THE.parquet: 100%|██████████| 15.4MB / 15.4MB            
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            
+  ...picks/network=UCR.parquet: 100%|██████████| 9.34MB / 9.34MB            
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            
+  .../picks/network=ok.parquet: 100%|██████████| 16.2MB / 16.2MB            
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            [A[A
+
+
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet: 100%|██████████|  695kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet: 100%|██████████| 2.82MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=GII.parquet: 100%|██████████| 5.40MB / 5.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=ECX.parquet: 100%|██████████| 6.35MB / 6.35MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|██████████| 5.77MB / 5.77MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=KMA.parquet: 100%|██████████| 1.60MB / 1.60MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=EAF.parquet: 100%|██████████| 1.76MB / 1.76MB            [A[A
+
+
+  ...picks/network=BGS.parquet: 100%|██████████| 2.63MB / 2.63MB            [A[A[A
+
+
+
+  ...picks/network=NNC.parquet: 100%|██████████|  695kB /  695kB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRSZO.parquet: 100%|██████████| 2.82MB / 2.82MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=GII.parquet: 100%|██████████| 5.40MB / 5.40MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...picks/network=ECX.parquet: 100%|██████████| 6.35MB / 6.35MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=GCG.parquet: 100%|██████████| 5.77MB / 5.77MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=BYKL.parquet: 100%|██████████| 5.68MB / 5.68MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=ISK.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 26 files]                :  90%|█████████ |  332MB /  369MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (29 / 36)    :  66%|██████▌   |  368MB /  559MB,   ???B/s  
+
+  ...ks/network=GEOFON.parquet: 100%|██████████| 45.9MB / 45.9MB            [A[A
+
+
+  .../picks/network=us.parquet: 100%|██████████| 28.6MB / 28.6MB            [A[A[A
+
+
+
+  ...picks/network=GFZ.parquet: 100%|██████████| 45.9MB / 45.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=uw.parquet: 100%|██████████| 9.60MB / 9.60MB            [A[A[A[A[A
+
+
+
+
+
+  ...cks/network=admin.parquet: 100%|██████████| 18.8MB / 18.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=tx.parquet: 100%|██████████| 28.8MB / 28.8MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ISC.parquet: 100%|██████████| 29.6MB / 29.6MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  .../picks/network=nc.parquet: 100%|██████████| 10.6MB / 10.6MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=ak.parquet: 100%|██████████| 15.4MB / 15.4MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 14 files]                :  94%|█████████▎|  155MB /  165MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (49 / 50)    :  98%|█████████▊|  549MB /  559MB,  905MB/s  
+
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            [A[A
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████|  559MB /  559MB,  478MB/s  
+
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            [A[A
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            [A[A
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            [A[A
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            [A[A
+
+
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            [A[A[A
+
+
+
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            [A[A[A[A
+
+
+
+
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (50 / 50)    : 100%|██████████|  559MB /  559MB,  191MB/s  
+New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
+  ...picks/network=USP.parquet: 100%|██████████| 18.6MB / 18.6MB            
+  .../picks/network=uu.parquet: 100%|██████████| 6.69MB / 6.69MB            
+  ...picks/network=LDG.parquet: 100%|██████████| 21.9MB / 21.9MB            
+  .../picks/network=pr.parquet: 100%|██████████| 7.83MB / 7.83MB            
+  ...picks/network=ZUR.parquet: 100%|██████████| 8.29MB / 8.29MB            
+  .../picks/network=mb.parquet: 100%|██████████| 8.27MB / 8.27MB            
+  ...picks/network=SJA.parquet: 100%|██████████| 10.0MB / 10.0MB            
+  ...picks/network=UPP.parquet: 100%|██████████| 4.91MB / 4.91MB            
+  .../picks/network=at.parquet: 100%|██████████| 10.9MB / 10.9MB            
+  .../picks/network=se.parquet: 100%|██████████| 2.86MB / 2.86MB            
+Successfully committed 50 at once. Increasing the limit for next batch.
+Processing Files (0 / 0)      : |          |  0.00B /  0.00B            
+New Data Upload               : |          |  0.00B /  0.00B            [A
+
+  ...picks/network=NOA.parquet: 100%|██████████| 29.2MB / 29.2MB            [A[A
+
+
+  ...picks/network=UPA.parquet: 100%|██████████| 3.92MB / 3.92MB            [A[A[A
+
+
+
+  ...cks/network=RHSSO.parquet: 100%|██████████| 8.55MB / 8.55MB            [A[A[A[A
+
+
+
+
+  ...picks/network=TIR.parquet: 100%|██████████| 8.26MB / 8.26MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=MRB.parquet: 100%|██████████| 11.8MB / 11.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=RSPR.parquet: 100%|██████████| 8.01MB / 8.01MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=RSNC.parquet: 100%|██████████| 6.70MB / 6.70MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ATH.parquet: 100%|██████████| 15.1MB / 15.1MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=UCC.parquet: 100%|██████████| 2.42MB / 2.42MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=VIE.parquet: 100%|██████████| 2.67MB / 2.67MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=NOA.parquet: 100%|██████████| 29.2MB / 29.2MB            [A[A
+
+
+  ...picks/network=UPA.parquet: 100%|██████████| 3.92MB / 3.92MB            [A[A[A
+
+
+
+  ...cks/network=RHSSO.parquet: 100%|██████████| 8.55MB / 8.55MB            [A[A[A[A
+
+
+
+
+  ...picks/network=TIR.parquet: 100%|██████████| 8.26MB / 8.26MB            [A[A[A[A[A
+
+
+
+
+
+  ...picks/network=MRB.parquet: 100%|██████████| 11.8MB / 11.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=RSPR.parquet: 100%|██████████| 8.01MB / 8.01MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...icks/network=RSNC.parquet: 100%|██████████| 6.70MB / 6.70MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...picks/network=ATH.parquet: 100%|██████████| 15.1MB / 15.1MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=UCC.parquet: 100%|██████████| 2.42MB / 2.42MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  [+ 22 files]                : 100%|██████████|  138MB /  138MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████|  232MB /  232MB,   ???B/s  
+
+  ...picks/network=DJA.parquet: 100%|██████████| 8.89MB / 8.89MB            [A[A
+
+
+  ...picks/network=BEO.parquet: 100%|██████████| 9.51MB / 9.51MB            [A[A[A
+
+
+
+  ...picks/network=MEX.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRNET.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...cks/network=CATAC.parquet: 100%|██████████| 10.8MB / 10.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=AUST.parquet: 100%|██████████| 11.3MB / 11.3MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ANF.parquet: 100%|██████████| 6.87MB / 6.87MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=AFAD.parquet: 100%|██████████| 8.10MB / 8.10MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=HEL.parquet: 100%|██████████| 1.67MB / 1.67MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=IDC.parquet: 100%|██████████| 8.49MB / 8.49MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=DJA.parquet: 100%|██████████| 8.89MB / 8.89MB            [A[A
+
+
+  ...picks/network=BEO.parquet: 100%|██████████| 9.51MB / 9.51MB            [A[A[A
+
+
+
+  ...picks/network=MEX.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRNET.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...cks/network=CATAC.parquet: 100%|██████████| 10.8MB / 10.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=AUST.parquet: 100%|██████████| 11.3MB / 11.3MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ANF.parquet: 100%|██████████| 6.87MB / 6.87MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=AFAD.parquet: 100%|██████████| 8.10MB / 8.10MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=HEL.parquet: 100%|██████████| 1.67MB / 1.67MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=IDC.parquet: 100%|██████████| 8.49MB / 8.49MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=DJA.parquet: 100%|██████████| 8.89MB / 8.89MB            [A[A
+
+
+  ...picks/network=BEO.parquet: 100%|██████████| 9.51MB / 9.51MB            [A[A[A
+
+
+
+  ...picks/network=MEX.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRNET.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...cks/network=CATAC.parquet: 100%|██████████| 10.8MB / 10.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=AUST.parquet: 100%|██████████| 11.3MB / 11.3MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ANF.parquet: 100%|██████████| 6.87MB / 6.87MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=AFAD.parquet: 100%|██████████| 8.10MB / 8.10MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=HEL.parquet: 100%|██████████| 1.67MB / 1.67MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=IDC.parquet: 100%|██████████| 8.49MB / 8.49MB            [A[A[A[A[A[A[A[A[A[A[A
+
+  ...picks/network=DJA.parquet: 100%|██████████| 8.89MB / 8.89MB            [A[A
+
+
+  ...picks/network=BEO.parquet: 100%|██████████| 9.51MB / 9.51MB            [A[A[A
+
+
+
+  ...picks/network=MEX.parquet: 100%|██████████| 4.75MB / 4.75MB            [A[A[A[A
+
+
+
+
+  ...cks/network=KRNET.parquet: 100%|██████████| 4.98MB / 4.98MB            [A[A[A[A[A
+
+
+
+
+
+  ...cks/network=CATAC.parquet: 100%|██████████| 10.8MB / 10.8MB            [A[A[A[A[A[A
+
+
+
+
+
+
+  ...icks/network=AUST.parquet: 100%|██████████| 11.3MB / 11.3MB            [A[A[A[A[A[A[A
+
+
+
+
+
+
+
+  ...picks/network=ANF.parquet: 100%|██████████| 6.87MB / 6.87MB            [A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+  ...icks/network=AFAD.parquet: 100%|██████████| 8.10MB / 8.10MB            [A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+  ...picks/network=HEL.parquet: 100%|██████████| 1.67MB / 1.67MB            [A[A[A[A[A[A[A[A[A[A
+
+
+
+
+
+
+
+
+
+
+  ...picks/network=IDC.parquet: 100%|██████████| 8.49MB / 8.49MB            [A[A[A[A[A[A[A[A[A[A[AProcessing Files (32 / 32)    : 100%|██████████|  232MB /  232MB,  0.00B/s  
+New Data Upload               : |          |  0.00B /  0.00B,  0.00B/s  
+  ...picks/network=DJA.parquet: 100%|██████████| 8.89MB / 8.89MB            
+  ...picks/network=BEO.parquet: 100%|██████████| 9.51MB / 9.51MB            
+  ...picks/network=MEX.parquet: 100%|██████████| 4.75MB / 4.75MB            
+  ...cks/network=KRNET.parquet: 100%|██████████| 4.98MB / 4.98MB            
+  ...cks/network=CATAC.parquet: 100%|██████████| 10.8MB / 10.8MB            
+  ...icks/network=AUST.parquet: 100%|██████████| 11.3MB / 11.3MB            
+  ...picks/network=ANF.parquet: 100%|██████████| 6.87MB / 6.87MB            
+  ...icks/network=AFAD.parquet: 100%|██████████| 8.10MB / 8.10MB            
+  ...picks/network=HEL.parquet: 100%|██████████| 1.67MB / 1.67MB            
+  ...picks/network=IDC.parquet: 100%|██████████| 8.49MB / 8.49MB            
+All files have been processed! Exiting worker.
+All files have been processed! Exiting worker.
+INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
+All files have been processed! Exiting worker.
+INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
+All files have been processed! Exiting worker.
+INFO:huggingface_hub._upload_large_folder:All files have been processed! Exiting worker.
+
+---------- 2026-06-29 15:15:37 (0:00:27) ----------
+Files:   hashed 82/82 (790.6M/790.6M) | pre-uploaded: 82/82 (790.6M/790.6M) | committed: 82/82 (790.6M/790.6M) | ignored: 0
+Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
+---------------------------------------------------
+INFO:huggingface_hub._upload_large_folder:
+---------- 2026-06-29 15:15:37 (0:00:27) ----------
+Files:   hashed 82/82 (790.6M/790.6M) | pre-uploaded: 82/82 (790.6M/790.6M) | committed: 82/82 (790.6M/790.6M) | ignored: 0
+Workers: hashing: 0 | get upload mode: 0 | pre-uploading: 0 | committing: 0 | waiting: 0
+---------------------------------------------------
