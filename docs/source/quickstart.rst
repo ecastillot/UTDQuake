@@ -8,7 +8,7 @@ This guide provides a **basic overview of UTDQuake** and demonstrates how to acc
 
    Make sure to use the latest stable version of UTDQuake.
 
-   .. image:: https://img.shields.io/pypi/v/UTDQuake?label=pypi
+   .. image:: https://img.shields.io/pypi/v/UTDQuake?label=pypi&cacheSeconds=300
       :target: https://pypi.org/project/UTDQuake/
       :alt: PyPI version
 
