@@ -34,9 +34,17 @@ region = [-157, -150, 58.5, 64.5 ]
 events = network.events
 stations = network.stations
 
+
+print(network.description)
+exit()
+new_name = network.description.copy()
+new_name["network"] = "UWF"
+print(new_name)
+
+
 fig, axes = plot_overview(events=events, 
                       stations=stations,
-                      analysis=network.description,
+                      analysis=new_name,
                       das=network.das,
                       region = region,
                       consider_calculated_stations=False,
