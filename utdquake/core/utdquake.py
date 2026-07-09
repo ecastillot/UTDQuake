@@ -503,7 +503,7 @@ class Network:
     Parameters
     ----------
     name : str
-        Network name (e.g. "tx", "uw", "GCI").
+        Network name (e.g. "tx", "uw", "UWF").
     das : bool, optional
         Whether to use the DAS or not. If so, tou may define DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
     """

@@ -16,4 +16,4 @@ INCLUDE="events_DAS/**"
 
 hf upload-large-folder ecastillot/UTDQuake "$UTDQ" --include "$INCLUDE" --repo-type dataset --num-workers 4
 
-hf upload-large-folder ecastillot/UTDQuake "/groups/igonin/ecastillo/UTDQuake_DAS" --include "network_DAS/**" --repo-type dataset --num-workers 4
+# hf upload-large-folder ecastillot/UTDQuake "/groups/igonin/ecastillo/UTDQuake_DAS" --include "banks_DAS/UWF.zip" --repo-type dataset --num-workers 4
