@@ -13,7 +13,10 @@
 .. image:: https://img.shields.io/badge/GitHub-UTDQuake-black?style=for-the-badge&logo=github
    :target: https://github.com/ecastillot/UTDQuake
    :alt: GitHub Repository
-
+.. image:: https://img.shields.io/pypi/v/UTDQuake?label=pypi&cacheSeconds=300
+   :target: https://pypi.org/project/UTDQuake/
+   :alt: PyPI version
+   
 .. raw:: html
 
    <br><br>
