@@ -456,9 +456,9 @@ DAS Data
      - Figures Folder
      - Preview
    
-   * - GCI
-     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks_DAS/GCI>`_
-     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks_DAS/GCI/GCI_overview.png
+   * - UWF
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks_DAS/UWF>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks_DAS/UWF/UWF_overview.png
           :width: 200px
 
 
