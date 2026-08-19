@@ -23,7 +23,7 @@ def list_local_networks(data_type: str, das: bool = False) -> dict[str, Path]:
         - For 'bank', the folder Path
         - For other data types, the Path to the parquet file
     """
-    root = get_root(das=das) / data_type
+    root = get_root(das=das) / ("banks" if data_type == "bank" else data_type)
     if not root.exists():
         return {}
 

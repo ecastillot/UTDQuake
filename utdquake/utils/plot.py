@@ -1029,7 +1029,7 @@ def plot_stats(
     counts, bin_edges = np.histogram(azimuth_rad, bins=bins, range=(0, 2*np.pi))
     angles = (bin_edges[:-1] + bin_edges[1:]) / 2
     percentages = 100 * counts / counts.sum()
-    cmap = cm.get_cmap("Greens", len(counts))
+    cmap = plt.get_cmap("Greens", len(counts))
     colors = cmap(percentages / percentages.max())
     ax4.bar(angles, np.ones_like(counts), width=2*np.pi/bins, bottom=0,
             align="center", edgecolor="k", color=colors)
@@ -1066,7 +1066,7 @@ def plot_stats(
         angles = (bin_edges[:-1] + bin_edges[1:]) / 2
         percentages = 100 * counts / counts.sum()
         # cmap = create_green_to_orange_cmap(n_colors=bins)
-        cmap = cm.get_cmap("Greens", len(counts))
+        cmap = plt.get_cmap("Greens", len(counts))
         colors = cmap(percentages / percentages.max())
         ax5.bar(angles, np.ones_like(counts), width=2*np.pi/bins, bottom=0,
                 align="center", edgecolor="k", color=colors)
@@ -1289,7 +1289,7 @@ def plot_stats_from_stats(stats: dict,
     az_bins = stats["az_gap_bins"]
     angles = (az_bins[:-1] + az_bins[1:]) / 2
     percentages = 100 * az_counts / az_counts.sum()
-    cmap = cm.get_cmap("Greens", len(az_counts))
+    cmap = plt.get_cmap("Greens", len(az_counts))
     colors = cmap(percentages / percentages.max())
     ax4.bar(angles, np.ones_like(az_counts), width=2*np.pi/len(az_counts),
             bottom=0, align="center", edgecolor="k", color=colors)
@@ -1312,7 +1312,7 @@ def plot_stats_from_stats(stats: dict,
         az_bins = stats["azimuth_bins"]
         angles = (az_bins[:-1] + az_bins[1:]) / 2
         percentages = 100 * az_counts / az_counts.sum()
-        cmap = cm.get_cmap("Greens", len(az_counts))
+        cmap = plt.get_cmap("Greens", len(az_counts))
         colors = cmap(percentages / percentages.max())
         ax5.bar(angles, np.ones_like(az_counts), width=2*np.pi/len(az_counts),
                 bottom=0, align="center", edgecolor="k", color=colors)

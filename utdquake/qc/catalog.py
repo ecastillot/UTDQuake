@@ -175,9 +175,10 @@ def apply_utdquake_qc_to_catalog(cat,pick_qc_args=None,
 def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
     """
     Apply QC from a picks DataFrame to an ObsPy Catalog.
-
-    Keeps only Arrivals and Picks corresponding to the QCed picks.
-
+ 
+    Keeps only QC-approved Picks and Arrivals and ensures that every
+    remaining Arrival references an existing Pick.
+ 
     Parameters
     ----------
     cat : obspy.Catalog
@@ -186,63 +187,95 @@ def apply_picks_qc_to_catalog(cat: Catalog, df_qc, debug=False) -> Catalog:
         QCed picks DataFrame (output of `qc_picks`).
         Must contain columns 'pick_id' and 'resource_id'.
     debug : bool, default False
-        If True, logger.debugs summary of removals per event and final QC totals.
-
+        If True, logs summary of removals per event and final QC totals.
+ 
     Returns
     -------
     obspy.Catalog
-        Catalog with arrivals and picks filtered by QC.
+        Catalog with QC-filtered and internally consistent arrivals/picks.
     """
-
     # --- Sets of IDs to keep ---
     pick_ids_to_keep = set(df_qc["pick_id"].astype(str).values)
     arrival_ids_to_keep = set(df_qc["resource_id"].astype(str).values)
-
-    total_arrivals = sum(len(event.preferred_origin().arrivals) 
-                         for event in cat if event.preferred_origin())
-    total_picks = sum(len(event.picks) if hasattr(event, "picks") else 0 for event in cat)
-
+ 
+    total_arrivals = sum(
+        len(event.preferred_origin().arrivals)
+        for event in cat
+        if event.preferred_origin()
+    )
+    total_picks = sum(
+        len(event.picks) if hasattr(event, "picks") else 0
+        for event in cat
+    )
+ 
     removed_arrivals_cum = 0
     removed_picks_cum = 0
-
+ 
     if debug:
-        logger.debug(f"QC start: {total_arrivals} arrivals, {total_picks} picks in catalog.")
-
+        logger.debug(
+            f"QC start: {total_arrivals} arrivals, "
+            f"{total_picks} picks in catalog."
+        )
+ 
     # --- Loop over events ---
     for event in cat:
         origin = event.preferred_origin()
         if not origin:
             continue
-
-        # Filter arrivals
-        kept_arrivals = [arr for arr in origin.arrivals if str(arr.resource_id) in arrival_ids_to_keep]
-        removed_arrivals = len(origin.arrivals) - len(kept_arrivals)
-        origin.arrivals = kept_arrivals
-        removed_arrivals_cum += removed_arrivals
-
-        if debug and removed_arrivals > 0:
-            logger.debug(f"Event {event.resource_id}: removed {removed_arrivals} arrivals.")
-
-        # Filter picks
+ 
+        # Filter picks first
         if hasattr(event, "picks") and event.picks:
-            kept_picks = [p for p in event.picks if str(p.resource_id) in pick_ids_to_keep]
+            kept_picks = [
+                pick
+                for pick in event.picks
+                if str(pick.resource_id) in pick_ids_to_keep
+            ]
             removed_picks = len(event.picks) - len(kept_picks)
             event.picks = kept_picks
             removed_picks_cum += removed_picks
-
             if debug and removed_picks > 0:
-                logger.debug(f"Event {event.resource_id}: removed {removed_picks} picks.")
-
+                logger.debug(
+                    f"Event {event.resource_id}: "
+                    f"removed {removed_picks} picks."
+                )
+ 
+        # IDs of picks that actually remain in the event
+        valid_pick_ids = {
+            str(pick.resource_id)
+            for pick in event.picks
+            if pick.resource_id is not None
+        }
+ 
+        # Filter arrivals by QC AND by valid pick references
+        kept_arrivals = [
+            arrival
+            for arrival in origin.arrivals
+            if (
+                str(arrival.resource_id) in arrival_ids_to_keep
+                and arrival.pick_id is not None
+                and str(arrival.pick_id) in valid_pick_ids
+            )
+        ]
+        removed_arrivals = len(origin.arrivals) - len(kept_arrivals)
+        origin.arrivals = kept_arrivals
+        removed_arrivals_cum += removed_arrivals
+        if debug and removed_arrivals > 0:
+            logger.debug(
+                f"Event {event.resource_id}: "
+                f"removed {removed_arrivals} arrivals."
+            )
+ 
     # --- Final QC summary ---
     if debug:
         logger.debug(
-            f"Final Summary:"
-            f"QC completed: removed {removed_arrivals_cum}/{total_arrivals} arrivals, "
+            "Final Summary: "
+            f"removed {removed_arrivals_cum}/{total_arrivals} arrivals, "
             f"{removed_picks_cum}/{total_picks} picks. "
-            f"Remaining: {total_arrivals - removed_arrivals_cum} arrivals, "
+            f"Remaining: "
+            f"{total_arrivals - removed_arrivals_cum} arrivals, "
             f"{total_picks - removed_picks_cum} picks."
         )
-
+ 
     return cat
 
 

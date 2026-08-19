@@ -1294,15 +1294,15 @@ def process_arrival(arrival, source_loc,
             "network_type": None,
             "station": None,
             "channel": None,
-            "dist_deg": np.NaN,
-            "esaz": np.NaN,
+            "dist_deg": np.nan,
+            "esaz": np.nan,
             "confirmed": False,
-            "confirmed_latitude": np.NaN,
-            "confirmed_longitude": np.NaN,
-            "confirmed_elevation": np.NaN,
+            "confirmed_latitude": np.nan,
+            "confirmed_longitude": np.nan,
+            "confirmed_elevation": np.nan,
             "calculated": False,
-            "calculated_latitude": np.NaN,
-            "calculated_longitude": np.NaN,
+            "calculated_latitude": np.nan,
+            "calculated_longitude": np.nan,
             "used": False,
             "origin_id": origin_id,
             "creation_time": UTCDateTime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -1395,7 +1395,7 @@ def process_arrival(arrival, source_loc,
     #finding the corresponding stations folder for the network
     network_name = os.path.basename(os.path.dirname(ebank_index_path))
     utdq_paths = get_utdq_paths(network_name)
-    stations_folder = utdq_paths[".utdquake/export/db/stations/.stations"]
+    stations_folder = utdq_paths[".utdquake/export/db"] / "stations" / f".{network_name}"
 
     # stations_folder = os.path.join( stations_folder,".stations")
 
@@ -1586,8 +1586,8 @@ def xxx(origin, df_stations,
                 missing_info ={
                     "network": net,
                     "station": sta,
-                    "latitude": np.NaN,
-                    "longitude": np.NaN,
+                    "latitude": np.nan,
+                    "longitude": np.nan,
                     "status": "missing",
                     "creation_time": UTCDateTime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}
                 missing_info = pd.DataFrame([missing_info])
@@ -1673,8 +1673,8 @@ def xxx(origin, df_stations,
                 missing_info = {
                         "network": net,
                         "station": sta,
-                        "latitude": np.NaN,
-                        "longitude": np.NaN,
+                        "latitude": np.nan,
+                        "longitude": np.nan,
                         "status": "missing",
                         "creation_time": UTCDateTime.now().strftime("%Y-%m-%d %H:%M:%S.%f")}
                 missing_info = pd.DataFrame([missing_info])

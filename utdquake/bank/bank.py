@@ -73,6 +73,7 @@ class UTDQBank(obsplus.EventBank):
         self.das = das
         self.contributor = os.path.basename(self.bank_path)
         self.db_paths = self.__prepare_paths()
+        self.utdq_paths = self.db_paths
 
     def __prepare_paths(self) -> None:
         """
@@ -297,7 +298,7 @@ class UTDQBank(obsplus.EventBank):
             raise FileNotFoundError(f"Folder not found: {folder_path}")
 
         # Build full glob pattern (e.g., /path/to/folder/*.xml)
-        pattern = os.path.join(folder_path, file_extension)
+        pattern = os.path.join(folder_path, "**", file_extension)
 
         # Retrieve all matching files
         files: List[str] = glob.glob(pattern, recursive=True)
@@ -373,9 +374,9 @@ class UTDQBank(obsplus.EventBank):
         ebank_index_path = os.path.join(self.bank_path, ".index.db")
 
         if starttime is None:
-            starttime = self.read_index()["time"].min()
+            starttime = self.read_index()["time"].min() - pd.Timedelta(seconds=1)
         if endtime is None:
-            endtime = self.read_index()["time"].max()
+            endtime = self.read_index()["time"].max() + pd.Timedelta(seconds=1)
 
         iteration = 0
         for catalog_dict  in ut.catalog_generator(self,starttime=starttime,
@@ -536,7 +537,7 @@ class UTDQBank(obsplus.EventBank):
                             i,
                             total_chunks,
                         )
-                        catalog.apply_utdq_qc()
+                        catalog = catalog.apply_utdq_qc()
 
                     events_df = catalog.utdq_events_to_df()
                     picks_df = catalog.utdq_picks_to_df()
@@ -628,7 +629,7 @@ class UTDQBank(obsplus.EventBank):
                     )
                 """
 
-        df = ut._read_table(self.index_path, query)
+        df = ut._read_table(self.utdq_paths[".utdquake/export/db/stations"], query)
 
         df = sanitize_dataframe(df,
                                 order_cols=PREF_STATIONS_ORDER,
