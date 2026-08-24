@@ -17,6 +17,7 @@ Example
 """
 
 from __future__ import annotations
+import logging
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -26,8 +27,10 @@ from scipy.interpolate import interp1d
 
 
 from typing import Dict, List, Optional, Tuple, Union
-from .config import GLOBAL_TRENDS_DEFAULTS_DEG2
-from ..writers.schema import sanitize_dataframe
+from .config import GLOBAL_TRENDS_DEFAULTS_DEG2, PICK_TT_QC_DEFAULTS
+from ..writers.schema import sanitize_dataframe, PREF_PICKS_ORDER, PREF_PICKS_TYPES
+
+logger = logging.getLogger(__name__)
 
 class PhaseTravelTimeModel:
     """
@@ -1310,3 +1313,82 @@ class TravelTime:
         distance = distance or qc.d_clean
         travel_time = travel_time or qc.t_clean
         return model.classify(distance, travel_time, p_low=p_low, p_high=p_high)
+
+
+def build_travel_time_model(
+    network: str,
+    das: bool = False,
+    local_root: Optional[Path] = None,
+    update_picks: bool = True,
+) -> TravelTimeModel:
+    """
+    Build and save a per-phase travel-time model for a network from the
+    picks already on disk (see :ref:`upload-dataset-section`, steps 1-5).
+
+    This is what powers :attr:`utdquake.Network.travel_time`,
+    ``Network.plot_travel_time_qc()``, and
+    ``Network.plot_travel_time_vs_distance_zscore()`` -- none of them work
+    for a network until this has been run once for it. Uses the same
+    defaults (:data:`utdquake.qc.config.PICK_TT_QC_DEFAULTS`) as the rest
+    of UTDQuake's travel-time QC.
+
+    Parameters
+    ----------
+    network : str
+        Network code, e.g. "CM".
+    das : bool, optional
+        Whether this is a DAS network. Default False.
+    local_root : Path, optional
+        Local UTDQuake root holding the flat manifest layout (see
+        :ref:`upload-dataset-section`). Defaults to ``get_root(das=das)``.
+    update_picks : bool, optional
+        If True (default), also overwrite the local picks table with a
+        ``travel_time_zscore`` column attached, so it's included the next
+        time you run ``publish_flat_manifests`` / ``publish_network``.
+
+    Returns
+    -------
+    TravelTimeModel
+        The fitted model (also saved to
+        ``{local_root}/.utdquake/travel_time/{network}.parquet`` --
+        upload it with ``publish_network(..., include_travel_time=True)``
+        so other users can load it too).
+    """
+    from ..core.config import get_root, get_hf_entry
+
+    root = Path(local_root) if local_root is not None else get_root(das=das)
+    picks_path = root / get_hf_entry("picks", das).path.format(network=network)
+    if not picks_path.exists():
+        raise FileNotFoundError(
+            f"No local picks manifest for network {network!r} at {picks_path}. "
+            "Run build_manifests + publish_flat_manifests first."
+        )
+
+    picks = pd.read_parquet(picks_path)
+
+    tt = TravelTime(picks)
+    tt.clean_data(**PICK_TT_QC_DEFAULTS["clean_data"])
+    bins_key = "build_bins_das" if das else "build_bins"
+    tt.build_bins(**PICK_TT_QC_DEFAULTS[bins_key])
+    tt.build_models(**PICK_TT_QC_DEFAULTS["build_models"])
+
+    model_path = root / get_hf_entry(".utdquake/travel_time", das).path.format(network=network)
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    tt.save_models_combined(str(model_path))
+    logger.info("Saved travel-time model for %s to %s", network, model_path)
+
+    if update_picks:
+        df_qc = tt.attach_zscore()
+        df_qc = sanitize_dataframe(
+            df_qc,
+            order_cols=PREF_PICKS_ORDER,
+            string_cols=PREF_PICKS_TYPES["string_cols"],
+            float_cols=PREF_PICKS_TYPES["float_cols"],
+            int_cols=PREF_PICKS_TYPES["int_cols"],
+            datetime_cols=PREF_PICKS_TYPES["datetime_cols"],
+            bool_cols=PREF_PICKS_TYPES["bool_cols"],
+        )
+        df_qc.to_parquet(picks_path, index=False)
+        logger.info("Updated %s with travel_time_zscore.", picks_path)
+
+    return TravelTimeModel.load(str(model_path))

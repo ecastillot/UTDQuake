@@ -1,3 +1,8 @@
+# FROZEN -- do not run/commit a new utdquake_overview.png right now.
+# The paper in progress cites the current figures/metrics; regenerating
+# this would change them. Delete this comment block once the paper is
+# submitted and it's safe to update the flagship figure again.
+
 import os
 os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
 

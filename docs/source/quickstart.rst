@@ -206,10 +206,12 @@ Convert to UTDQuake Format
 Travel Time Model
 ^^^^^^^
 
-UTDQuake creates a travel time model for each network based on the information provided by the catalog.
+Each network has a travel-time model, fitted per phase from that network's own picks
+(see :ref:`upload-dataset-section` if you're publishing a network and need to build one).
+Once it exists, load and query it like this:
 
 .. code-block:: python
-   
+
    tt = network.travel_time
    predictions = tt.predict(phase="P", distance=[2,3,4,5,10,20,30,40,50,60]) #in km
    display(predictions)
@@ -354,5 +356,6 @@ Further Reading
 ^^^^^^^
 
 - Explore all dataset methods:  :class:`utdquake.Dataset`
-- Explore all network methods: :class:`utdquake.Network`  
+- Explore all network methods: :class:`utdquake.Network`
 - Check the `ObsPlus EventBank <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>`_ documentation for advanced event filtering.
+- Have your own catalog (QuakeML or an ObsPy ``Catalog``) and want it in UTDQuake? See :ref:`upload-dataset-section`.

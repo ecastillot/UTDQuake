@@ -277,6 +277,15 @@ def get_network_summary(
             Earliest event time
         - end_time : str
             Latest event time
+        - approx_lat_min : float or None
+            Approximate southern edge of station coverage (confirmed
+            location, falling back to calculated location).
+        - approx_lat_max : float or None
+            Approximate northern edge of station coverage.
+        - approx_lon_min : float or None
+            Approximate western edge of station coverage.
+        - approx_lon_max : float or None
+            Approximate eastern edge of station coverage.
 
     Examples
     --------
@@ -304,6 +313,19 @@ def get_network_summary(
     # Alternatively, if we want to count all calculated stations regardless of confirmed status, we could use:
     n_calculated_stations = int(stations["calculated"].eq(True).sum())
 
+    # --- Approximate station bounding box (confirmed location, falling
+    # back to calculated location when a station has no confirmed one) ---
+    sta_lat = stations["confirmed_latitude"]
+    sta_lon = stations["confirmed_longitude"]
+    if "calculated_latitude" in stations.columns:
+        sta_lat = sta_lat.fillna(stations["calculated_latitude"])
+        sta_lon = sta_lon.fillna(stations["calculated_longitude"])
+
+    approx_lat_min = float(sta_lat.min()) if sta_lat.notna().any() else None
+    approx_lat_max = float(sta_lat.max()) if sta_lat.notna().any() else None
+    approx_lon_min = float(sta_lon.min()) if sta_lon.notna().any() else None
+    approx_lon_max = float(sta_lon.max()) if sta_lon.notna().any() else None
+
     # --- Filter events with valid coordinates ---
     events = events.dropna(subset=["latitude", "longitude"])
 
@@ -326,6 +348,10 @@ def get_network_summary(
         # "only_calculated_stations": n_only_calculated_stations,
         "start_time": str(min_event_time),
         "end_time": str(max_event_time),
+        "approx_lat_min": approx_lat_min,
+        "approx_lat_max": approx_lat_max,
+        "approx_lon_min": approx_lon_min,
+        "approx_lon_max": approx_lon_max,
     }
 
     if das:

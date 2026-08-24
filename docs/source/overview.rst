@@ -160,6 +160,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/CATAC/CATAC_overview.png
           :width: 200px
 
+   * - CM
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/CM>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/CM/CM_overview.png
+          :width: 200px
+
    * - CNRM
      - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/CNRM>`_
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/CNRM/CNRM_overview.png

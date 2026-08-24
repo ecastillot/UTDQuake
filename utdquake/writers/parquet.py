@@ -2,16 +2,18 @@ from __future__ import annotations
 
 import os
 import logging
+import shutil
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Dict, List
+from typing import Iterable, List, Optional, Dict
 
 import pandas as pd
 
 from ..core.config import get_hf_entry,get_root,get_utdq_paths
 from ..utils.cache import list_local_networks
 from ..bank.bank import UTDQBank
+from ..bank.utils import get_preferred_origins
 from .manifest import ManifestPaths, ManifestProgress
 from .schema import (PREF_PICKS_ORDER,
                     PREF_PICKS_TYPES,
@@ -185,6 +187,30 @@ def build_manifests(
             df_events = bank.read_index().copy()
             df_events["network"] = net
 
+            # stations: comma-joined station codes per event, derived from
+            # picks (bank.load_picks() reads a local sqlite index, not a
+            # quakeml re-parse, so this is cheap even at large scale).
+            try:
+                df_picks_for_stations = bank.load_picks()
+                stations_by_event = (
+                    df_picks_for_stations.groupby("event_id")["station"]
+                    .agg(lambda s: ",".join(sorted(set(s.dropna()))))
+                    .rename("stations")
+                )
+                df_events = df_events.merge(stations_by_event, on="event_id", how="left")
+            except FileNotFoundError:
+                logger.warning("No picks index for %s yet; leaving 'stations' empty", net)
+                df_events["stations"] = None
+
+            # preferred_origin_id: reuse the existing helper (also used by
+            # core/patch.py's utdq_events_to_df) rather than reimplementing it.
+            preferred_df = get_preferred_origins(bank.get_events())[["event_id", "preferred_origin_id"]]
+            df_events = df_events.merge(preferred_df, on="event_id", how="left")
+
+            # Drop obsplus's internal "path" column - redundant since the
+            # bank itself is the file-path lookup; not part of our schema.
+            df_events = df_events.drop(columns=["path"], errors="ignore")
+
             df_events = sanitize_dataframe(df_events,
                                             string_cols=PREF_EVENTS_TYPES["string_cols"],
                                             float_cols=PREF_EVENTS_TYPES["float_cols"],
@@ -319,4 +345,67 @@ def build_manifests(
         # if include_events and not progress.is_done("events", net):
         #     logger.info("Building events manifest for %s", net)
         #     df_events["network"] = net
+
+
+def publish_flat_manifests(
+    root: Optional[Path] = None,
+    das: bool = False,
+    networks: Optional[Iterable[str]] = None,
+) -> List[Path]:
+    """
+    Copy the per-network shards built by :func:`build_manifests` (under
+    ``root/.utdquake/export/manifests/...``) into the flat
+    ``root/{events,stations,picks,network}/...`` layout that both
+    :func:`utdquake.publish_network` and
+    :func:`utdquake.core.data.download_snapshot` expect.
+
+    Parameters
+    ----------
+    root : Path, optional
+        Local UTDQuake root. Defaults to ``get_root(das=das)``.
+    das : bool, optional
+        Whether this is a DAS dataset. Default False.
+    networks : iterable of str, optional
+        Networks to flatten. If None, every network found under
+        ``manifests/events``, ``manifests/stations`` or
+        ``manifests/picks`` is flattened.
+
+    Returns
+    -------
+    list of Path
+        Destination paths that were written.
+    """
+    root = Path(root) if root is not None else get_root(das=das)
+    manifest_dir = ManifestPaths(root=root).manifest_dir
+
+    if networks is None:
+        found = set()
+        for key in ("events", "stations", "picks"):
+            shard_dir = manifest_dir / key
+            if shard_dir.exists():
+                found.update(p.stem.split("=", 1)[-1] for p in shard_dir.glob("network=*.parquet"))
+        networks = sorted(found)
+
+    written: List[Path] = []
+    for key in ("events", "stations", "picks"):
+        for net in networks:
+            src = manifest_dir / key / f"network={net}.parquet"
+            if not src.exists():
+                logger.warning("No %s manifest for network %s at %s; skipping.", key, net, src)
+                continue
+            dst = root / get_hf_entry(key, das).path.format(network=net)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+            logger.info("Published %s -> %s", key, dst)
+            written.append(dst)
+
+    network_src = manifest_dir / "network" / "network.parquet"
+    if network_src.exists():
+        network_dst = root / get_hf_entry("networks", das).path
+        network_dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(network_src, network_dst)
+        logger.info("Published network -> %s", network_dst)
+        written.append(network_dst)
+
+    return written
 

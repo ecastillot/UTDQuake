@@ -264,7 +264,7 @@ The **Events** dataset contains earthquake catalogs for each network.
      - Event longitude
    * - depth
      - float64
-     - Event depth
+     - Event depth, in meters (QuakeML Origin.depth convention)
    * - magnitude
      - float64
      - Preferred magnitude value

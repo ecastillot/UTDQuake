@@ -43,6 +43,7 @@ PREF_NETWORK_TYPES = {
     "approx_lat_min": "float",
     "approx_lat_max": "float",
     "score": "float",
+    "last_published": "datetime",
 }
 
 PREF_NETWORK_ORDER = list(PREF_NETWORK_TYPES.keys())
@@ -73,9 +74,11 @@ PREF_EVENTS_ORDER = ["network",
                     "time",
                     "latitude",
                     "longitude",
-                    "depth",
+                    "depth",  # meters (QuakeML Origin.depth convention), not km
                     "magnitude",
-                    "azimuthal_gap"]
+                    "azimuthal_gap",
+                    "preferred_origin_id",
+                    "stations"]
 
 PREF_PICKS_ORDER = [
                     "network",
@@ -178,7 +181,7 @@ PREF_PICKS_TYPES["float_cols"].extend(["travel_time","linear_hyp_distance"])
 
 # Preferred event types
 PREF_EVENTS_TYPES = columns_by_type(EVENT_DTYPES)
-PREF_EVENTS_TYPES["string_cols"].extend(["network","prefered_origin_id"])
+PREF_EVENTS_TYPES["string_cols"].extend(["network","preferred_origin_id","stations"])
 
 
 def order_dataframe_columns(df: pd.DataFrame, preferred_order: List[str]) -> pd.DataFrame:

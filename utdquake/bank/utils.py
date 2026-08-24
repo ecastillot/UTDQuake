@@ -1228,11 +1228,14 @@ def get_stations_summary(stations_folder,
         # --- Collapse into one row ---
         summary = {}
         exclude_cols = {"dist_deg", "esaz", "used", "origin_id", "creation_time"}
+        std_cols = {"calculated_latitude", "calculated_longitude"}
         for col in df.columns:
             if col in exclude_cols:
                 continue
             if pd.api.types.is_float_dtype(df[col]):
                 summary[col] = df[col].mean()
+                if col in std_cols:
+                    summary[f"{col}_std"] = df[col].std()
             elif pd.api.types.is_bool_dtype(df[col]):
                 summary[col] = df[col].any()   # True if any True
             elif pd.api.types.is_integer_dtype(df[col]):
@@ -1241,6 +1244,12 @@ def get_stations_summary(stations_folder,
                 summary[col] = ",".join(df[col].unique())  # all unique values
             else:
                 summary[col] = df[col].iloc[0]  # fallback
+
+        # Number of arrivals that contributed to the calculated position
+        # (one row per origin at this point, since drop_duplicates above
+        # collapses to one entry per origin_id).
+        if "calculated_latitude" in df.columns:
+            summary["calculated_num_entries"] = int(df["calculated_latitude"].notna().sum())
 
         summary["db_path"] = db_path
         summary["creation_time"] = UTCDateTime.now().strftime("%Y-%m-%d %H:%M:%S.%f")

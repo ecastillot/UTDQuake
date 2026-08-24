@@ -1,0 +1,3 @@
+UTDQuake hub upload test file
+created: 2026-08-19T21:25:04Z
+purpose: demo payload for utdquake.hub upload examples

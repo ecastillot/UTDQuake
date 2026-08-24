@@ -25,8 +25,16 @@
 
 A global earthquake dataset constructed from high-quality source and receiver metadata, including associated seismic phase picks across diverse station geometries.
 
+.. note::
+
+   You can upload your own dataset too -- check the :ref:`upload-dataset-section` guide.
+
 .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview.png
    :width: 800px
+
+.. raw:: html
+
+   <p style="text-align:center; font-size:0.9em; color:#666; margin-top:-0.5em;">Figure as of February 25, 2026</p>
 
 See :ref:`dataset-section` section for details on how to access network data, events, stations, and picks. Next table shows the network data:
 
@@ -151,6 +159,7 @@ Content
    dataset
    overview
    quickstart
+   upload_dataset
    api/index
    authors
    contribution
