@@ -440,6 +440,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ZUR/ZUR_overview.png
           :width: 200px
 
+   * - comcat_deep30
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/comcat_deep30>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/comcat_deep30/comcat_deep30_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
