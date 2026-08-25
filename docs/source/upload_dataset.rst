@@ -146,8 +146,15 @@ This builds the four tables from everything computed in steps 1-3.
 
 Some network-level fields simply can't be derived from picks/events --
 ``provider``, ``provider_url``, ``country``, ``agency``, ``continent`` --
-there's no way to infer "who operates this network" from the data itself. Add
-those yourself with ``include_manual_network_info``:
+there's no way to infer "who operates this network" from the data itself.
+The same goes for who's actually behind the contribution: ``uploaded_by_github``,
+``contact_email``, and ``doi`` (a paper the dataset is tied to, if any --
+leave it out, or ``None``, if there isn't one). ``uploaded_by_github`` must
+be your GitHub profile URL (``"https://github.com/<your-username>"``), not
+just your name -- a link is traceable back to a real account, a free-text
+name isn't. Add all of these yourself with ``include_manual_network_info``
+-- without it, every one of these fields is left null for the network, so
+it's worth always supplying it:
 
 .. code-block:: python
 
@@ -160,6 +167,9 @@ those yourself with ``include_manual_network_info``:
        "country": ["Colombia"],
        "agency": ["Servicio Geologico Colombiano"],
        "continent": ["South America"],
+       "uploaded_by_github": ["https://github.com/ecastillot"],
+       "contact_email": ["castillo.280997@gmail.com"],
+       "doi": [None],
    })
 
    build_manifests(

@@ -140,6 +140,18 @@ The **Network** dataset contains metadata about each seismic network.
    * - score
      - int64
      - Quality score
+   * - last_published
+     - timestamp[us]
+     - When this network's row was last published to the Hub
+   * - uploaded_by_github
+     - string
+     - GitHub profile URL of the person who contributed this network
+   * - contact_email
+     - string
+     - Contact email for the uploader
+   * - doi
+     - string
+     - DOI of a paper this dataset is tied to, if any
 
 .. raw:: html
 

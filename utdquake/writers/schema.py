@@ -44,6 +44,9 @@ PREF_NETWORK_TYPES = {
     "approx_lat_max": "float",
     "score": "float",
     "last_published": "datetime",
+    "uploaded_by_github": "string",
+    "contact_email": "string",
+    "doi": "string",
 }
 
 PREF_NETWORK_ORDER = list(PREF_NETWORK_TYPES.keys())
@@ -294,12 +297,19 @@ def sanitize_dataframe(
         print("Dtypes:", df.dtypes, "\n")
     
     # ---- 1. Normalize column names ----
-    df.columns = df.columns.str.lower().str.replace(r"\s+", "_", 
+    df.columns = df.columns.str.lower().str.replace(r"\s+", "_",
                                                     regex=True)
     if debug:
         print("Step 1: Normalized column names")
         print(df.head(), "\n")
-    
+
+    # ---- 1b. Ensure declared columns exist, so every network's output
+    # shares the same schema even if its own pipeline run didn't produce
+    # a given column (e.g. older data predating a schema addition). ----
+    for c in string_cols + float_cols + int_cols + datetime_cols + bool_cols:
+        if c not in df.columns:
+            df[c] = pd.NA
+
     # ---- 2. Parse datetime columns ----
     if datetime_cols:
         for c in datetime_cols:

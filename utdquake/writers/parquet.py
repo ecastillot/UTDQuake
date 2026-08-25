@@ -113,6 +113,22 @@ def build_manifests(
 
         This is the best option for very large datasets.
         You can still combine later if you want.
+    include_manual_network_info
+        Per-network metadata that can't be derived from picks/events, keyed
+        by a ``"network"`` column -- e.g. ``provider``, ``provider_url``,
+        ``country``, ``agency``, ``continent``, ``score``, and the
+        contributor-provenance fields ``uploaded_by_github``,
+        ``contact_email``, ``doi`` (see :ref:`upload-dataset-section`).
+        ``uploaded_by_github`` should be a GitHub profile URL (e.g.
+        ``"https://github.com/ecastillot"``), not a free-text name --
+        that's what makes it possible to trace a network back to who
+        actually contributed it. Rows are matched to each network by the
+        ``"network"`` column; missing columns are left null. If None (the
+        default) and ``include_networks`` is True, this is auto-loaded
+        from the existing local ``network/network.parquet`` so
+        previously-supplied manual info carries forward automatically --
+        pass a DataFrame explicitly for a brand-new network, or the manual
+        fields will all be null for it.
 
     Returns
     -------

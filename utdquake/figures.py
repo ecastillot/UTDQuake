@@ -9,7 +9,10 @@ Two independent halves:
   with the ``{network}_{suffix}.png`` naming already used on the ``figures``
   branch of https://github.com/ecastillot/UTDQuake.
 - ``publish_network_figures``: uploads to GitHub. Needs a token
-  (``GITHUB_TOKEN`` env var or ``token=``) with ``repo`` scope.
+  (``GITHUB_TOKEN`` env var or ``token=``) with ``repo`` scope. Also adds
+  the network's row to ``docs/source/overview.rst`` on ``main`` by default
+  (``update_overview=``) -- a different branch from the figures themselves,
+  which go to ``figures``.
 - ``overview_rst_row``: read-only, no token needed -- the repo is public.
 
 Unlike the Hugging Face Hub, GitHub does not let a non-collaborator open a
@@ -37,8 +40,18 @@ logger = logging.getLogger(__name__)
 GITHUB_OWNER = "ecastillot"
 GITHUB_REPO = "UTDQuake"
 GITHUB_BRANCH = "figures"
+GITHUB_DEFAULT_BRANCH = "main"  # where docs/source/overview.rst lives
 GITHUB_TOKEN_ENV_VAR = "GITHUB_TOKEN"
 GITHUB_API = "https://api.github.com"
+OVERVIEW_RST_PATH = "docs/source/overview.rst"
+# Marks the end of the Seismic Data list-table in overview.rst -- new rows
+# are inserted right before it.
+_SEISMIC_TABLE_END_ANCHOR = "\n.. raw:: html\n\n\n   </div>\n\n.. _overview-DAS-data:"
+# Marks the section header the DAS Data table lives under, and the closing
+# block at the very end of the file -- new DAS rows are inserted right
+# before that closing block.
+_DAS_SECTION_MARKER = ".. _overview-DAS-data:"
+_DAS_TABLE_END_ANCHOR = ".. raw:: html\n\n\n   </div>\n"
 
 # (suffix, Network method name, kwargs for that method, accepts a show= kwarg)
 FIGURE_SPECS = [
@@ -169,17 +182,107 @@ def _put_file(owner: str, token: str, path_in_repo: str, local_path: Path, branc
     _gh("PUT", url, token, json=body)
 
 
+def _get_text_file(owner: str, token: str, path_in_repo: str, branch: str) -> tuple[str, str]:
+    """Return (decoded text content, sha) of a file at owner/repo@branch."""
+    url = f"{GITHUB_API}/repos/{owner}/{GITHUB_REPO}/contents/{path_in_repo}"
+    data = _gh("GET", url, token, params={"ref": branch}).json()
+    return base64.b64decode(data["content"]).decode("utf-8"), data["sha"]
+
+
+def _put_text_file(owner: str, token: str, path_in_repo: str, content: str, sha: str, branch: str, message: str) -> None:
+    url = f"{GITHUB_API}/repos/{owner}/{GITHUB_REPO}/contents/{path_in_repo}"
+    body = {
+        "message": message,
+        "content": base64.b64encode(content.encode("utf-8")).decode("ascii"),
+        "branch": branch,
+        "sha": sha,
+    }
+    _gh("PUT", url, token, json=body)
+
+
+def _overview_row_markup(network: str, folder_url: str, raw_url: str) -> str:
+    return (
+        f"   * - {network}\n"
+        f"     - `Open Folder <{folder_url}>`_\n"
+        f"     - .. image:: {raw_url}\n"
+        f"          :width: 200px\n"
+    )
+
+
+def _network_remote_subdir(das: bool) -> str:
+    return "networks_DAS" if das else "networks"
+
+
+def _network_urls(network: str, das: bool = False) -> tuple[str, str]:
+    """Return (folder_url, raw_url) for a network's figures on the ``figures`` branch."""
+    subdir = _network_remote_subdir(das)
+    folder_url = f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/tree/{GITHUB_BRANCH}/figures/{subdir}/{network}"
+    raw_url = (
+        f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/"
+        f"{GITHUB_BRANCH}/figures/{subdir}/{network}/{network}_overview.png"
+    )
+    return folder_url, raw_url
+
+
+def _update_overview_rst(owner: str, token: str, branch: str, network: str, message: str, das: bool = False) -> bool:
+    """
+    Insert the ``overview.rst`` row for ``network`` into the Seismic Data or
+    DAS Data table (per ``das``), committing directly to
+    ``owner/UTDQuake@branch``. No-op (returns False) if a row for this
+    network is already there.
+    """
+    content, sha = _get_text_file(owner, token, OVERVIEW_RST_PATH, branch)
+
+    if f"   * - {network}\n" in content:
+        logger.info("overview.rst on %s@%s already has a row for %s -- leaving it as-is.", owner, branch, network)
+        return False
+
+    folder_url, raw_url = _network_urls(network, das)
+    row = _overview_row_markup(network, folder_url, raw_url)
+
+    if not das:
+        if _SEISMIC_TABLE_END_ANCHOR not in content:
+            raise RuntimeError(
+                f"Could not find the Seismic Data table's end marker in {OVERVIEW_RST_PATH} on "
+                f"{owner}@{branch} -- its layout may have changed. Add the row for "
+                f"'{network}' manually (see overview_rst_row)."
+            )
+        replacement = "\n" + row + "\n" + _SEISMIC_TABLE_END_ANCHOR[1:]
+        new_content = content.replace(_SEISMIC_TABLE_END_ANCHOR, replacement, 1)
+    else:
+        das_section_start = content.find(_DAS_SECTION_MARKER)
+        anchor_idx = content.rfind(_DAS_TABLE_END_ANCHOR)
+        if das_section_start == -1 or anchor_idx == -1 or anchor_idx < das_section_start:
+            raise RuntimeError(
+                f"Could not find the DAS Data table's end marker in {OVERVIEW_RST_PATH} on "
+                f"{owner}@{branch} -- its layout may have changed. Add the row for "
+                f"'{network}' manually (see overview_rst_row)."
+            )
+        prefix = content[:anchor_idx].rstrip("\n")
+        suffix = content[anchor_idx:]
+        new_content = prefix + "\n\n" + row + "\n\n" + suffix
+
+    _put_text_file(
+        owner=owner, token=token, path_in_repo=OVERVIEW_RST_PATH,
+        content=new_content, sha=sha, branch=branch, message=message,
+    )
+    return True
+
+
 def publish_network_figures(
     network: str,
     local_dir: Optional[Path] = None,
     token: Optional[str] = None,
     create_pr: bool = True,
+    update_overview: bool = True,
+    das: bool = False,
     commit_message: Optional[str] = None,
 ) -> str:
     """
     Publish a network's already-generated figures (see
     :func:`generate_network_figures`) to the ``figures`` branch of
-    ecastillot/UTDQuake on GitHub.
+    ecastillot/UTDQuake on GitHub, and add its row to ``overview.rst`` on
+    the ``main`` branch.
 
     Parameters
     ----------
@@ -192,6 +295,12 @@ def publish_network_figures(
     token : str, optional
         GitHub personal access token (``repo`` scope). Defaults to the
         ``GITHUB_TOKEN`` environment variable.
+    das : bool, optional
+        Whether this is a DAS network. Default False. Controls both where
+        the figures are uploaded (``figures/networks_DAS/{network}/`` vs.
+        ``figures/networks/{network}/``) and, when ``update_overview`` is
+        True, which ``overview.rst`` table (DAS Data vs. Seismic Data) gets
+        the new row.
     create_pr : bool, optional
         If True (default) and the token does *not* have write access to
         ecastillot/UTDQuake, fork the repo under the token's account, push
@@ -201,13 +310,29 @@ def publish_network_figures(
         directly to ecastillot/UTDQuake's ``figures`` branch regardless of
         this flag -- there's no reason to route a maintainer's own push
         through a fork.
+    update_overview : bool, optional
+        If True (default), also add ``network``'s row to
+        ``docs/source/overview.rst``. This always targets the ``main``
+        branch -- a *different* branch from the figures themselves, which
+        go to ``figures`` -- since that's where the docs live. Maintainers
+        get this committed directly to ecastillot/UTDQuake's ``main``
+        (requires write access to ``main`` specifically; if ``main`` is
+        branch-protected this step will fail even though the figures
+        upload already succeeded -- pass ``update_overview=False`` and
+        edit ``overview.rst`` by hand in that case). Non-maintainers get a
+        *second*, separate pull request opened against ``main`` (a PR can
+        only target one base branch, so it can't be folded into the
+        figures PR against ``figures``). A no-op if the network already
+        has a row.
     commit_message : str, optional
         Commit message. Defaults to a generated message.
 
     Returns
     -------
     str
-        URL of the resulting commit (or PR, if ``create_pr=True``).
+        URL of the resulting figures commit (or PR, if ``create_pr=True``).
+        The ``overview.rst`` update's own commit/PR URL is only logged, not
+        returned -- see the log output.
     """
     token = _resolve_token(token)
     local_dir = Path(local_dir) if local_dir is not None else Path.cwd() / "figures" / network
@@ -225,19 +350,60 @@ def publish_network_figures(
         target_owner = GITHUB_OWNER
         create_pr = False  # already a maintainer -- commit directly
 
+    remote_subdir = _network_remote_subdir(das)
+
     for png in pngs:
         _put_file(
             owner=target_owner,
             token=token,
-            path_in_repo=f"figures/networks/{network}/{png.name}",
+            path_in_repo=f"figures/{remote_subdir}/{network}/{png.name}",
             local_path=png,
             branch=GITHUB_BRANCH,
             message=message,
         )
         logger.info("Uploaded %s to %s/%s@%s", png.name, target_owner, GITHUB_REPO, GITHUB_BRANCH)
 
+    if update_overview:
+        overview_message = f"Add {network} to overview.rst"
+        try:
+            changed = _update_overview_rst(
+                owner=target_owner,
+                token=token,
+                branch=GITHUB_DEFAULT_BRANCH,
+                network=network,
+                message=overview_message,
+                das=das,
+            )
+            if changed and create_pr:
+                overview_pr = _gh(
+                    "POST",
+                    f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/pulls",
+                    token,
+                    json={
+                        "title": overview_message,
+                        "head": f"{username}:{GITHUB_DEFAULT_BRANCH}",
+                        "base": GITHUB_DEFAULT_BRANCH,
+                        "body": (
+                            f"Adds the `overview.rst` row for network `{network}`. "
+                            f"Depends on the figures PR for `{network}` being merged first, "
+                            "otherwise the preview image will 404."
+                        ),
+                    },
+                ).json()
+                logger.info("Opened overview.rst PR: %s", overview_pr["html_url"])
+            elif changed:
+                logger.info(
+                    "Committed overview.rst update to %s/%s@%s",
+                    GITHUB_OWNER, GITHUB_REPO, GITHUB_DEFAULT_BRANCH,
+                )
+        except Exception as e:
+            logger.warning(
+                "Figures for %s published, but updating overview.rst failed: %s. "
+                "Add its row manually (see overview_rst_row).", network, e,
+            )
+
     if not create_pr:
-        return f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/tree/{GITHUB_BRANCH}/figures/networks/{network}"
+        return f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/tree/{GITHUB_BRANCH}/figures/{remote_subdir}/{network}"
 
     pr = _gh(
         "POST",
@@ -263,21 +429,12 @@ def overview_rst_row(network: str, das: bool = False) -> str:
     This makes a single unauthenticated, read-only request -- no token
     needed, since the repo is public.
     """
-    raw_url = (
-        f"https://raw.githubusercontent.com/{GITHUB_OWNER}/{GITHUB_REPO}/"
-        f"{GITHUB_BRANCH}/figures/networks/{network}/{network}_overview.png"
-    )
-    folder_url = f"https://github.com/{GITHUB_OWNER}/{GITHUB_REPO}/tree/{GITHUB_BRANCH}/figures/networks/{network}"
+    folder_url, raw_url = _network_urls(network, das)
 
     exists = requests.head(raw_url, timeout=15).status_code == 200
 
     if exists:
-        return (
-            f"   * - {network}\n"
-            f"     - `Open Folder <{folder_url}>`_\n"
-            f"     - .. image:: {raw_url}\n"
-            f"          :width: 200px\n"
-        )
+        return _overview_row_markup(network, folder_url, raw_url)
     return (
         f"   * - {network}\n"
         f"     - *pending*\n"
