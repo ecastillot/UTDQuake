@@ -445,6 +445,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/comcat_deep30/comcat_deep30_overview.png
           :width: 200px
 
+   * - SYN_QTM
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/SYN_QTM>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/SYN_QTM/SYN_QTM_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
