@@ -450,6 +450,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/SYN_QTM/SYN_QTM_overview.png
           :width: 200px
 
+   * - 5B
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/5B>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/5B/5B_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
