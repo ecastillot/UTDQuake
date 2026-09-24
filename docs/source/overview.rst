@@ -455,6 +455,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/5B/5B_overview.png
           :width: 200px
 
+   * - ISOR
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ISOR>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ISOR/ISOR_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
