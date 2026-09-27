@@ -165,7 +165,11 @@ def columns_by_type(dtypes: Dict[str, object]) -> Dict[str, List[str]]:
 # Convert preferred types to grouped column lists
 PREF_NETWORK_TYPES = columns_by_type(PREF_NETWORK_TYPES)
 PREF_STATIONS_TYPES = columns_by_type(PREF_STATIONS_TYPES)
-PREF_PICKS_TYPES = columns_by_type(PICK_DTYPES)
+# Only 'time' and 'evaluation_mode' come from the obsplus pick table (see
+# core/patch.py::utdq_picks_to_df). The other obsplus pick fields (onset,
+# polarity, event_time, ...) are not part of the documented picks schema and
+# would otherwise be created as empty columns by sanitize_dataframe.
+PREF_PICKS_TYPES = columns_by_type({c: PICK_DTYPES[c] for c in ("time", "evaluation_mode")})
 PREF_ARRIVALS_TYPES = columns_by_type(ARRIVAL_DTYPES)
 
 QC_DTYPES = OrderedDict([('travel_time_zscore',float)])
@@ -179,7 +183,7 @@ for k,v in PREF_PICKS_QC_TYPES.items():
     PREF_PICKS_TYPES[k].extend(v)
 
 # Add extra columns to picks types
-PREF_PICKS_TYPES["string_cols"].extend(["network","event_id","pick_agency"])
+PREF_PICKS_TYPES["string_cols"].extend(["network","event_id","pick_agency","preferred_origin_id"])
 PREF_PICKS_TYPES["float_cols"].extend(["travel_time","linear_hyp_distance"])
 
 # Preferred event types

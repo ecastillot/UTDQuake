@@ -236,6 +236,18 @@ The **Stations** dataset contains metadata for each seismic station.
 
    </div>
 
+.. warning::
+
+   In the Stations table, ``network`` is the UTDQuake network name (e.g.
+   ``comcat_deep30``), not the FDSN network code. A station code can
+   therefore appear more than once in the same table when it belongs to
+   different FDSN networks (e.g. ``AV.SPU`` in Alaska and ``UU.SPU`` in Utah,
+   ~3,500 km apart). The FDSN code is currently only embedded in ``db_path``.
+   Do not join picks to stations on ``station`` alone: use the FDSN network
+   code from the pick's ``pick_agency`` (same as the first field of
+   ``seed_id``, ``NET.STA.LOC.CHA``) together with
+   ``station``. A dedicated FDSN network column is planned for this table.
+
 Events
 ^^^^^^^
 
@@ -424,7 +436,7 @@ The **Picks** dataset contains seismic phase picks associated with each event.
      - Associated event identifier
    * - pick_agency
      - string
-     - Agency that provided the pick
+     - FDSN network code of the station that recorded the pick (from ``seed_id``, e.g. ``TX``); use it with ``station`` to join picks to stations
    * - origin_time
      - timestamp[ns]
      - Origin time of associated event
