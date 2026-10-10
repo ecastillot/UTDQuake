@@ -460,6 +460,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ISOR/ISOR_overview.png
           :width: 200px
 
+   * - tx_highres
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/tx_highres>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx_highres/tx_highres_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
