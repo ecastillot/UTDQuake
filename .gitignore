@@ -10,6 +10,8 @@ test/scripts/fig/*.out
 test/scripts/das/**/*.csv
 test/upload/*.out
 test/**/*.out
+test/**/*.xml
+test/10092026/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

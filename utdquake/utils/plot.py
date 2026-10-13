@@ -90,9 +90,15 @@ def add_scalebar(
     # Approx degrees longitude ≈ km at mean latitude
     lon_km = lon_range * np.cos(np.radians(lat_mean)) * 111.32
 
-    # Choose rounded scale length
-    scale_length_km = 50  # fallback
-    for l in [20, 50, 100, 200, 500, 1000, 5000, 10000, 20000, 50000, 100000]:
+    # Choose rounded scale length. Candidates below 20 km are needed for
+    # compact local/induced-seismicity networks (a few km aperture) --
+    # without them, lon_km/5 never exceeds the smallest candidate and this
+    # silently fell back to a fixed 50 km bar, many times wider than the
+    # whole map, with its label rendered off-frame.
+    candidates = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500,
+                  1000, 5000, 10000, 20000, 50000, 100000]
+    scale_length_km = candidates[0]  # fallback: smallest candidate, not a fixed 50 km
+    for l in candidates:
         if lon_km / 5 > l:
             scale_length_km = l
 
@@ -473,8 +479,14 @@ def plot_overview(
                 c='darkorange', edgecolor=None, alpha=0.5, zorder=5)  # higher zorder
     ax3.set_ylabel('Magnitude', color='darkorange')
     # ax3.set_xlabel('Time')
-    ax3.set_ylim(-1, 7)
-    ax3.yaxis.set_major_locator(MultipleLocator(2))  # ticks every 2
+    # Pad around the actual magnitude range instead of a fixed (-1, 7) --
+    # that fixed range assumes teleseismic-scale events and leaves most of
+    # the panel empty for compact/induced-seismicity catalogs (e.g. M-1 to
+    # M3). MaxNLocator (instead of a fixed 2-unit step) keeps tick spacing
+    # sensible whether the range is 8 units or under 1.
+    mag_min, mag_max = events["magnitude"].min(), events["magnitude"].max()
+    ax3.set_ylim(mag_min - 0.5, mag_max + 0.5)
+    ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, min_n_ticks=3))
     ax3.yaxis.tick_left()
     ax3.yaxis.set_label_position("left")
     ax3.spines["left"].set_edgecolor('darkorange')
@@ -1507,22 +1519,19 @@ def plot_pick_histograms(
             ps_counts.append(len(p_group)/len(s_group))
 
 
-        if "channel" in group.columns:
-            # Merge S and P by seed_id to find S-P pairs
-            merged = pd.merge(
-                s_group[['network','station','channel', 'time']], 
-                p_group[['network','station','channel', 'time']], 
-                on=['network','station','channel'], 
-                suffixes=('_S', '_P')
-            )
-        else:
-            # Merge S and P by seed_id to find S-P pairs
-            merged = pd.merge(
-                s_group[['network','station', 'time']], 
-                p_group[['network','station', 'time']], 
-                on=['network','station'], 
-                suffixes=('_S', '_P')
-            )
+        # Wadati pairs P and S arrivals at the same station -- S is expected
+        # on a different channel than P (e.g. horizontal vs vertical), so
+        # matching on 'channel' as well (as this used to) requires P and S
+        # to share an identical channel code, which is only true by
+        # coincidence and made this merge find 0 pairs for any network
+        # whose picks encode phase-appropriate components (e.g. P->Z,
+        # S->N), such as CM and SYN_QTM.
+        merged = pd.merge(
+            s_group[['network','station', 'time']],
+            p_group[['network','station', 'time']],
+            on=['network','station'],
+            suffixes=('_S', '_P')
+        )
 
         merged = merged.drop_duplicates()
         if len(merged) < 2:
