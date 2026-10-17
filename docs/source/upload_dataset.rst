@@ -59,6 +59,19 @@ once logged in).
 1. Load your events into an event bank
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. warning::
+
+   **Depths are below sea level.** UTDQuake stores event depths as QuakeML
+   ``Origin.depth``: meters below sea level (WGS84 geoid), positive down,
+   negative above sea level. Catalogs from local, borehole or industry arrays
+   often give depth below the ground surface, a kelly bushing or a TVD
+   reference instead -- subtract that reference elevation before loading,
+   e.g. ``depth_sea_level = depth_tvd - reference_elevation``. On a network at
+   900 m elevation, skipping this puts every event 0.9 km too deep.
+   ``publish_network`` warns about this on every upload and runs
+   ``utdquake.hub.check_depth_datum`` (events above the highest station,
+   depths in the wrong units).
+
 Everything below reads from a :class:`utdquake.bank.bank.UTDQBank` rather than
 from your Catalog or files directly, so the first step is loading your events
 into one. The bank's directory name *is* your network code -- a bank at

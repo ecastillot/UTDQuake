@@ -29,6 +29,7 @@ import logging
 import os
 import shutil
 import tempfile
+import warnings
 import zipfile
 from pathlib import Path
 from typing import Optional
@@ -47,6 +48,47 @@ from .core.config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, get_root
 logger = logging.getLogger(__name__)
 
 HF_TOKEN_ENV_VAR = "HF_TOKEN"
+
+#: Shown on every publish: UTDQuake depths are QuakeML ``Origin.depth``.
+DEPTH_DATUM_WARNING = (
+    "UTDQuake event depths must be in meters below SEA LEVEL (QuakeML Origin.depth: "
+    "positive down, negative above sea level), NOT below the ground surface, a well's "
+    "kelly bushing or a TVD reference. Catalogs from local or industry arrays often give "
+    "depth below the surface or TVD: subtract the reference elevation (m above sea level) "
+    "before publishing, e.g. depth_sea_level = depth_tvd - reference_elevation."
+)
+
+
+class DepthDatumWarning(UserWarning):
+    """Event depths may not be referenced to sea level."""
+
+
+def check_depth_datum(events: pd.DataFrame, stations: Optional[pd.DataFrame] = None) -> list[str]:
+    """
+    Sanity checks of the event depths' datum and units; returns the problems found.
+
+    ``events`` needs ``depth`` (m, below sea level); ``stations``, when given,
+    ``confirmed_elevation`` or ``elevation`` (m above sea level). A wrong datum
+    cannot be detected in general (an offset of the station elevation looks
+    plausible), so this only catches what is impossible: events above the
+    highest station (sign or datum error) and depths over 800 km (units).
+    """
+    problems = []
+    depth = pd.to_numeric(events.get("depth"), errors="coerce").dropna()
+    if depth.empty:
+        return ["no event depths"]
+    if depth.max() > 800e3:
+        problems.append(f"{int((depth > 800e3).sum())} events deeper than 800 km "
+                        f"(max {depth.max():.0f} m): units should be meters, not cm/mm")
+    if stations is not None:
+        col = next((c for c in ("confirmed_elevation", "elevation") if c in stations), None)
+        elev = pd.to_numeric(stations[col], errors="coerce").dropna() if col else pd.Series(dtype=float)
+        if not elev.empty:
+            above = depth < -elev.max()
+            if above.any():
+                problems.append(f"{int(above.sum())} events above the highest station "
+                                f"({elev.max():.0f} m above sea level): wrong sign or datum")
+    return problems
 
 
 def _resolve_token(token: Optional[str] = None) -> str:
@@ -90,6 +132,24 @@ def _download_networks_table(
         return pd.DataFrame(columns=["network"]), None
 
 
+def _warn_depth_datum(root: Path, network: str, das: bool) -> None:
+    """Warn about the depth datum; louder if :func:`check_depth_datum` finds a problem."""
+    warnings.warn(f"[{network}] {DEPTH_DATUM_WARNING}", DepthDatumWarning, stacklevel=3)
+    logger.warning("[%s] %s", network, DEPTH_DATUM_WARNING)
+    events_path = _local_manifest_path(root, "events", network, das)
+    if not events_path.exists():
+        return
+    stations_path = _local_manifest_path(root, "stations", network, das)
+    events = pd.read_parquet(events_path, columns=["depth"])
+    stations = pd.read_parquet(stations_path) if stations_path.exists() else None
+    depth = pd.to_numeric(events["depth"], errors="coerce")
+    logger.warning("[%s] event depths (m): min %.0f, median %.0f, max %.0f -- check these are below sea level",
+                   network, depth.min(), depth.median(), depth.max())
+    for problem in check_depth_datum(events, stations):
+        warnings.warn(f"[{network}] {problem}", DepthDatumWarning, stacklevel=3)
+        logger.warning("[%s] %s", network, problem)
+
+
 def publish_network(
     network: str,
     local_root: Optional[Path] = None,
@@ -102,6 +162,12 @@ def publish_network(
 ) -> str:
     """
     Publish one network's manifests to the shared UTDQuake Hub repo.
+
+    .. warning::
+       Event depths must be in meters below **sea level** (QuakeML
+       ``Origin.depth``), not below the surface or a TVD reference;
+       see :data:`DEPTH_DATUM_WARNING`. Every call warns
+       (:class:`DepthDatumWarning`) and runs :func:`check_depth_datum`.
 
     Expects ``local_root`` to already contain the flat manifest layout
     produced by ``utdquake.writers.parquet.build_manifests`` (e.g.
@@ -151,6 +217,7 @@ def publish_network(
     """
     token = _resolve_token(token)
     root = Path(local_root) if local_root is not None else get_root(das=das)
+    _warn_depth_datum(root, network, das)
     api = HfApi(token=token)
 
     operations = []
