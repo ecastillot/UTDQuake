@@ -465,6 +465,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/tx_highres/tx_highres_overview.png
           :width: 200px
 
+   * - GEYSERS
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/GEYSERS>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GEYSERS/GEYSERS_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
