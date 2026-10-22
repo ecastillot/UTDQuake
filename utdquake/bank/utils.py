@@ -1274,12 +1274,22 @@ def process_arrival(arrival, source_loc,
                     ebank_index_path,
                     # table="/stations/index",
                     calculate_d_az = False,
-                    das=False
+                    das=False,
+                    row_sink=None,
+                    station_lookup=None,
+                    stations_folder=None,
                     ):
     """
     Process an individual arrival: verify pick and station information,
     optionally update distance and azimuth, and add missing or confirmed
     station records to the database.
+
+    With ``row_sink`` (a dict), the station record is appended to
+    ``row_sink[<station db path>]`` instead of being written at once; the
+    caller writes each station database once (see
+    :func:`write_station_rows`). ``station_lookup`` ({(network, station):
+    DataFrame}) and ``stations_folder`` avoid repeating per arrival what is
+    the same for the whole catalog.
 
     Parameters:
         arrival (Arrival): The arrival object to process.
@@ -1332,7 +1342,10 @@ def process_arrival(arrival, source_loc,
     info["channel"] = cha
     phase = arrival.phase
     
-    df_sta = df_stations[(df_stations.network == net) & (df_stations.station == sta)]
+    if station_lookup is not None:
+        df_sta = station_lookup.get((net, sta), df_stations.iloc[0:0])
+    else:
+        df_sta = df_stations[(df_stations.network == net) & (df_stations.station == sta)]
     
     if df_sta is None:
         pass
@@ -1402,17 +1415,17 @@ def process_arrival(arrival, source_loc,
     # stations_folder = os.path.join( os.path.dirname(ebank_index_path),".stations")
 
     #finding the corresponding stations folder for the network
-    network_name = os.path.basename(os.path.dirname(ebank_index_path))
-    utdq_paths = get_utdq_paths(network_name)
-    stations_folder = utdq_paths[".utdquake/export/db"] / "stations" / f".{network_name}"
-
-    # stations_folder = os.path.join( stations_folder,".stations")
-
-    os.makedirs(stations_folder, exist_ok=True)
+    if stations_folder is None:
+        stations_folder = get_stations_folder(ebank_index_path)
+        os.makedirs(stations_folder, exist_ok=True)
     if das:
         stations_db_ev_path = os.path.join(stations_folder,f".{net}_{sta}_{cha}.db")
     else:
         stations_db_ev_path = os.path.join(stations_folder,f".{net}_{sta}.db")
+
+    if row_sink is not None:
+        row_sink.setdefault(stations_db_ev_path, []).append(info)
+        return info
 
     logger.info(stations_db_ev_path)
 
@@ -1428,6 +1441,50 @@ def process_arrival(arrival, source_loc,
             )
 
     return info
+
+def get_stations_folder(ebank_index_path):
+    """The folder of the per-station databases of the network of an event bank."""
+    network_name = os.path.basename(os.path.dirname(ebank_index_path))
+    utdq_paths = get_utdq_paths(network_name)
+    return utdq_paths[".utdquake/export/db"] / "stations" / f".{network_name}"
+
+
+def build_station_lookup(df_stations):
+    """{(network, station): rows of df_stations}, to look stations up once per arrival without filtering."""
+    if df_stations is None or df_stations.empty:
+        return {}
+    return {key: group for key, group in df_stations.groupby(["network", "station"], sort=False)}
+
+
+def write_station_rows(row_sink, station_sample_size=None):
+    """
+    Write the station records collected in ``row_sink`` ({db path: [records]}),
+    one transaction per station database.
+
+    With ``station_sample_size``, each station database keeps at most that
+    many records in total (spread evenly over the events of this call): enough
+    for the station-location summary (the mean and spread of the positions
+    back-projected from the arrivals), without one record per pick. Distances
+    and azimuths of the arrivals themselves are not affected.
+
+    Returns the number of records written.
+    """
+    written = 0
+    for path, rows in row_sink.items():
+        with sqlite3.connect(path) as con:
+            if station_sample_size is not None:
+                try:
+                    have = con.execute('SELECT COUNT(*) FROM "/stations/index"').fetchone()[0]
+                except sqlite3.OperationalError:
+                    have = 0
+                room = max(station_sample_size - have, 0)
+                if room < len(rows):
+                    keep = np.unique(np.linspace(0, len(rows) - 1, room).round().astype(int)) if room else []
+                    rows = [rows[i] for i in keep]
+            if rows:
+                pd.DataFrame(rows).to_sql("/stations/index", con, if_exists="append", index=False)
+                written += len(rows)
+    return written
 
 # ------------------------------------------------------
 def update_origin_quality(origin, distances, esazs, stations_used, used_phase_count):
@@ -1467,7 +1524,10 @@ def parse_origin(origin,
                 df_stations=None,
                 calculate_d_az=True,
                 require_arrivals=True,
-                das=False
+                das=False,
+                row_sink=None,
+                station_lookup=None,
+                stations_folder=None,
                 ):
     """
     Process all arrivals in a seismic Origin: verify picks, update
@@ -1507,7 +1567,10 @@ def parse_origin(origin,
                         df_stations=df_stations,
                         calculate_d_az=calculate_d_az, 
                         ebank_index_path=ebank_index_path, 
-                        das=das
+                        das=das,
+                        row_sink=row_sink,
+                        station_lookup=station_lookup,
+                        stations_folder=stations_folder,
                                                     )
         # print("############### INFO",info)
         if not info["available"]:
@@ -1785,7 +1848,8 @@ def random_string(length=8):
 def append_stations_to_catalog(catalog: Catalog, df_stations,
                         ebank_index_path: str, 
                         calculate_d_az=True,
-                        das=False
+                        das=False,
+                        station_sample_size=None,
                         ) -> tuple[Catalog, pd.DataFrame]:
     """
     Append distance and azimuth to each arrival in a catalog,
@@ -1798,13 +1862,27 @@ def append_stations_to_catalog(catalog: Catalog, df_stations,
     df_stations : pandas.DataFrame
         DataFrame containing station metadata with columns:
         ['network', 'station', 'latitude', 'longitude'].
+    station_sample_size : int, optional
+        At most this many records per station database (see
+        :func:`write_station_rows`); None (default) keeps one per arrival.
 
     Returns
     -------
     catalog : obspy.core.event.Catalog
         Modified catalog with distance, azimuth, and quality metrics added.
+
+    Notes
+    -----
+    The station records are collected in memory and each station database is
+    written once per call (one transaction per station instead of one per
+    arrival: the per-arrival writes made this step take hours on a network
+    filesystem). The records themselves are the same.
     """
     random_id = random_string(8)
+    stations_folder = get_stations_folder(ebank_index_path)
+    os.makedirs(stations_folder, exist_ok=True)
+    station_lookup = build_station_lookup(df_stations)
+    row_sink = {}
     logger.info(f"Starting to process {len(catalog.events)} events in catalog {random_id}. (This id is created just for logging purposes)")
 
     for event in catalog:
@@ -1819,7 +1897,10 @@ def append_stations_to_catalog(catalog: Catalog, df_stations,
                                 ebank_index_path=ebank_index_path,
                                 df_stations=df_stations,
                                 calculate_d_az=calculate_d_az,
-                                das=das
+                                das=das,
+                                row_sink=row_sink,
+                                station_lookup=station_lookup,
+                                stations_folder=stations_folder,
                                 )
         if not gd_proc:
             logger.warning(f"Removing event {event.resource_id.id} due to too many missing picks.")
@@ -1827,6 +1908,10 @@ def append_stations_to_catalog(catalog: Catalog, df_stations,
             catalog.events.remove(event)
 
 
+    n_rows = sum(len(r) for r in row_sink.values())
+    written = write_station_rows(row_sink, station_sample_size=station_sample_size)
+    logger.info(f"Wrote {written} of {n_rows} station records to {len(row_sink)} station databases "
+                f"(station_sample_size={station_sample_size}).")
     logger.info(f"Finishing to process {len(catalog.events)} events in catalog {random_id}.")
 
     return catalog
