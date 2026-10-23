@@ -470,6 +470,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GEYSERS/GEYSERS_overview.png
           :width: 200px
 
+   * - ESPOO
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ESPOO>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ESPOO/ESPOO_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
