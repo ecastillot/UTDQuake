@@ -475,6 +475,11 @@ Seismic Data
      - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ESPOO/ESPOO_overview.png
           :width: 200px
 
+   * - LASSO
+     - `Open Folder <https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/LASSO>`_
+     - .. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/LASSO/LASSO_overview.png
+          :width: 200px
+
 .. raw:: html
 
 
