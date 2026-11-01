@@ -31,7 +31,12 @@ autodoc_mock_imports = [
 project = 'UTDQuake'
 copyright = '2026, Emmanuel Castillo'
 author = 'Emmanuel Castillo'
-release = '0.1'
+# the package version, read from utdquake/__init__.py (no import needed)
+import re as _re
+from pathlib import Path as _Path
+release = _re.search(r'__version__\s*=\s*"([^"]+)"',
+                     (_Path(__file__).resolve().parents[2] / "utdquake" / "__init__.py").read_text()).group(1)
+version = release
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
