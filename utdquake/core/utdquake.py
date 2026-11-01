@@ -58,7 +58,7 @@ from .load import resolve_network_paths
 from .config import get_hf_entry, get_root, get_utdq_paths
 from ..qc.travel_time import TravelTimeModel
 from .utils import merge_network_stats, renamed_kwarg
-from ..utils.utils import get_network_summary, human_format, phase_family
+from ..utils.utils import compute_region, get_network_summary, human_format, phase_family
 from ..utils.plot import (plot_overview,
                           plot_stats,
                           plot_pick_histograms,
@@ -398,50 +398,44 @@ class Dataset:
         Parameters:
         ----------
         density_in_region : bool, optional
-            If True, calculate station density only within the network's defined region. Default is True.
+            If True (default), each network's region is the region of most of its seismicity
+            (95% of its events, with a 20% margin) and only the distinct stations located inside
+            it are counted. If
+            False, the network table's station counts and station-coverage bounds are used.
         savepath : str or None
             Path to save the figure. If None, figure is not saved.
         show : bool
             Whether to display the figure.
         """
         if density_in_region:
-            print("Calculating station density within network regions...")
+            # Region of each network = the region of most of its seismicity: 95% of its
+            # events in longitude and latitude (a few distant events do not stretch it, many
+            # do), 20% padding, across the antimeridian when tighter. Stations: distinct
+            # (network, station) located inside it. A box around all located stations would
+            # include the far (teleseismic) stations that recorded the larger events.
             networks = self.networks.copy()
             stations = self.stations.copy()
+            events = self.events
 
-            confirmed_mask = stations["confirmed"] == True
-            only_calculated_mask = (stations["confirmed"] == False) & (stations["available"] == True)
-            stations = stations[confirmed_mask | only_calculated_mask]
-            stations["latitude"] = stations["confirmed_latitude"].combine_first(stations["calculated_latitude"])
-            stations["longitude"] = stations["confirmed_longitude"].combine_first(stations["calculated_longitude"])
+            stations["latitude"] = stations["confirmed_latitude"].astype(float).fillna(
+                stations["calculated_latitude"].astype(float))
+            stations["longitude"] = stations["confirmed_longitude"].astype(float).fillna(
+                stations["calculated_longitude"].astype(float))
+            stations = stations.dropna(subset=["latitude", "longitude"])
 
-            networks_reg = networks[["utdq_net","approx_lon_min",	"approx_lon_max",	"approx_lat_min",	"approx_lat_max"]]
-            n_stations = pd.merge(stations, networks_reg, on="utdq_net", how="left")
-            n_stations = n_stations[(n_stations["latitude"] >= n_stations["approx_lat_min"]) & (n_stations["latitude"] <= n_stations["approx_lat_max"])]
-            n_stations = n_stations[(n_stations["longitude"] >= n_stations["approx_lon_min"]) & (n_stations["longitude"] <= n_stations["approx_lon_max"])]
-            counts = n_stations["utdq_net"].value_counts().to_dict()
-            networks["total_stations"] = networks.apply(lambda row: counts.get(row["utdq_net"], np.nan), axis=1)
-        
-            # #in case of polygon area / no need for now, but leaving here for future reference
-            # gdf = gpd.GeoDataFrame(
-            #     n_stations,
-            #     geometry=gpd.points_from_xy(n_stations.longitude, n_stations.latitude),
-            #     crs="EPSG:4326"
-            # )
-            # def area_deg2(group):
-            #     if len(group) < 3:
-            #         return 0.0
-            #     hull = group.geometry.union_all().convex_hull
-            #     return hull.area  # degree^2
-
-            # area_per_network = (
-            #     gdf.groupby("network")
-            #     .apply(area_deg2)
-            #     .reset_index(name="area_deg2")
-            #         )
-            # area_per_network = area_per_network.set_index("network")["area_deg2"].to_dict()
-            # networks["area_deg2"] = networks.apply(lambda row: area_per_network.get(row["network"], np.nan), axis=1)
-        
+            for i, row in networks.iterrows():
+                ev = events[events["utdq_net"] == row["utdq_net"]]
+                st = stations[stations["utdq_net"] == row["utdq_net"]]
+                if ev[["latitude", "longitude"]].dropna().empty:
+                    networks.loc[i, "total_stations"] = np.nan
+                    continue
+                lon_min, lon_max, lat_min, lat_max = compute_region(ev, st, padding=0.2, coverage=0.95)
+                lon = st["longitude"] % 360 if lon_max > 180 else st["longitude"]
+                inside = (lon >= lon_min) & (lon <= lon_max) & \
+                         (st["latitude"] >= lat_min) & (st["latitude"] <= lat_max)
+                networks.loc[i, ["approx_lon_min", "approx_lon_max", "approx_lat_min", "approx_lat_max"]] = \
+                    [lon_min, lon_max, lat_min, lat_max]
+                networks.loc[i, "total_stations"] = len(st.loc[inside, ["network", "station"]].drop_duplicates())
         else:
             networks = self.networks.copy()
 

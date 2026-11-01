@@ -28,6 +28,7 @@ def compute_region(
     global_region: Optional[Tuple[float, float, float, float]] = None,
     how: str = "events",
     rm_outliers: bool = False,
+    coverage: Optional[float] = None,
 ) -> Tuple[float, float, float, float]:
     """
     Compute a bounding box for plotting events and stations.
@@ -48,6 +49,10 @@ def compute_region(
         Which data to use: 'events', 'stations', or 'both' (default 'events').
     rm_outliers : bool, optional
         If True, remove extreme outliers beyond 6 std deviations.
+    coverage : float, optional
+        Keep the central ``coverage`` fraction of the points in longitude and
+        in latitude (e.g. 0.95: 2.5th to 97.5th percentiles), so that a few
+        distant points do not stretch the region while many of them do.
 
     Returns
     -------
@@ -92,6 +97,12 @@ def compute_region(
     lons360 = lons % 360
     if np.ptp(lons360) < np.ptp(lons) and np.ptp(lons360) < 180:
         lons = lons360
+
+    # --- Keep the central part of the points if requested ---
+    if coverage is not None:
+        q = (1 - coverage) / 2
+        lons = lons[(lons >= lons.quantile(q)) & (lons <= lons.quantile(1 - q))]
+        lats = lats[(lats >= lats.quantile(q)) & (lats <= lats.quantile(1 - q))]
 
     # --- Remove extreme outliers if requested ---
     if rm_outliers:
