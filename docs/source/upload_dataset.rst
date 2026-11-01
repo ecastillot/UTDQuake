@@ -2,6 +2,13 @@
 Upload your dataset
 ============================
 
+.. raw:: html
+
+   <a href="https://colab.research.google.com/github/ecastillot/UTDQuake/blob/main/examples/UTDQuake_Upload.ipynb" target="_blank">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
+   </a>
+   <p>Try it with 100 earthquakes of the COSEISMIQ project (Iceland): the whole workflow in a few minutes.</p>
+
 Turn your catalog (an ObsPy :class:`~obspy.core.event.Catalog` or a folder of QuakeML files with picks)
 into a UTDQuake network on the
 `Hugging Face dataset <https://huggingface.co/datasets/ecastillot/UTDQuake>`_.

@@ -574,15 +574,19 @@ class Network:
         dict
             Keys include 'events', 'total_stations', and metadata fields.
         """
-        # networks_df =  Dataset(self.das).local_networks
-        networks_df = Dataset(das=self.das).networks
-        # print(networks_df)
-
+        dataset = Dataset(das=self.das)
+        networks_df = dataset.networks
         network_row = networks_df[networks_df["utdq_net"] == self.name]
         if network_row.empty:
-            raise Exception(f"Network '{self.name}' not found.") 
-        network_series = network_row.iloc[0]
-        return network_series.to_dict()
+            # not published (yet): a network built locally, e.g. before publish_network
+            try:
+                local = dataset.local_networks
+                network_row = local[local["utdq_net"] == self.name]
+            except FileNotFoundError:
+                pass
+        if network_row.empty:
+            raise Exception(f"Network '{self.name}' not found.")
+        return network_row.iloc[0].to_dict()
 
     @property
     def bank(self) -> obsplus.EventBank:

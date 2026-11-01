@@ -28,3 +28,84 @@ table.centered-table {
     display: block;
     overflow-x: auto;
 }
+/* Wider page content (the Read the Docs theme caps it at 800px) */
+.wy-nav-content {
+    max-width: 1300px !important;
+}
+
+/* Overview gallery: search controls and network cards (docs/source/overview.rst) */
+.utdq-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin: 1.2em auto 1.5em auto;
+}
+.utdq-controls input[type="search"] {
+    flex: 1 1 360px;
+    max-width: 520px;
+    padding: 8px 12px;
+    font-size: 1em;
+    border: 1px solid #c9c9c9;
+    border-radius: 6px;
+}
+.utdq-controls select {
+    padding: 7px 10px;
+    border: 1px solid #c9c9c9;
+    border-radius: 6px;
+    background: white;
+}
+#utdq-count {
+    color: #666;
+    font-size: 0.9em;
+    width: 100%;
+    text-align: center;
+}
+.utdq-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    gap: 18px;
+    margin: 0 auto 2em auto;
+}
+.utdq-card {
+    border: 1px solid #e1e4e5;
+    border-radius: 8px;
+    padding: 12px 14px 10px 14px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+}
+.utdq-card-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+.utdq-net {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #E87500;
+}
+.utdq-meta {
+    color: #555;
+    font-size: 0.95em;
+}
+.utdq-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.utdq-pending {
+    padding: 3em 0;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+.utdq-folder {
+    margin-top: 6px;
+    align-self: flex-end;
+    font-size: 0.9em;
+}

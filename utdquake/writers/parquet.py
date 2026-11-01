@@ -254,14 +254,16 @@ def build_manifests(
         known_versions, new_version = _event_versions(shard_dirs["events"] / f"utdq_net={net}.parquet",
                                                       include_manual_network_info, net)
         if df_picks is not None:
-            df_picks["dataset_version"] = df_picks["event_id"].map(known_versions).fillna(new_version)
+            # object dtype: event_id may be an Arrow string column, whose map() result
+            # cannot be filled with a string
+            df_picks["dataset_version"] = df_picks["event_id"].astype(object).map(known_versions).fillna(new_version)
 
         #Events
         if todo["events"]:
             logger.info("Building events manifest for %s", net)
             df_events = bank.read_index().copy()
             df_events["utdq_net"] = net
-            df_events["dataset_version"] = df_events["event_id"].map(known_versions).fillna(new_version)
+            df_events["dataset_version"] = df_events["event_id"].astype(object).map(known_versions).fillna(new_version)
 
             # stations: comma-joined NET.STA codes of the stations that picked
             # each event (from the fixed picks above).

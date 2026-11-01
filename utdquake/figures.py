@@ -13,7 +13,7 @@ Two independent halves:
   the network's row to ``docs/source/overview.rst`` on ``main`` by default
   (``update_overview=``) -- a different branch from the figures themselves,
   which go to ``figures``.
-- ``overview_rst_row``: read-only, no token needed -- the repo is public.
+- ``overview_rst_row``: the network's card for the overview page; read-only, no token needed.
 
 Unlike the Hugging Face Hub, GitHub does not let a non-collaborator open a
 PR without forking first. If the token does not have write access to
@@ -45,14 +45,10 @@ GITHUB_DEFAULT_BRANCH = "main"  # where docs/source/overview.rst lives
 GITHUB_TOKEN_ENV_VAR = "GITHUB_TOKEN"
 GITHUB_API = "https://api.github.com"
 OVERVIEW_RST_PATH = "docs/source/overview.rst"
-# Marks the end of the Seismic Data list-table in overview.rst -- new rows
-# are inserted right before it.
-_SEISMIC_TABLE_END_ANCHOR = "\n.. raw:: html\n\n\n   </div>\n\n.. _overview-DAS-data:"
-# Marks the section header the DAS Data table lives under, and the closing
-# block at the very end of the file -- new DAS rows are inserted right
-# before that closing block.
-_DAS_SECTION_MARKER = ".. _overview-DAS-data:"
-_DAS_TABLE_END_ANCHOR = ".. raw:: html\n\n\n   </div>\n"
+# overview.rst is a gallery of network cards (raw HTML); new cards are inserted
+# right before these markers, at the end of the Seismic Data / DAS Data galleries.
+_SEISMIC_GALLERY_END = "   <!-- utdq-seismic-end -->"
+_DAS_GALLERY_END = "   <!-- utdq-das-end -->"
 
 # (suffix, Network method name, kwargs for that method, accepts a show= kwarg)
 FIGURE_SPECS = [
@@ -205,19 +201,40 @@ def _put_text_file(owner: str, token: str, path_in_repo: str, content: str, sha:
     _gh("PUT", url, token, json=body)
 
 
-def _network_cell(utdq_net: str, catalog: str, version: str) -> str:
-    """First cell of an overview.rst row: the utdq_net code, then catalog and version on a second line."""
-    return (f"   * - **{utdq_net}**\n\n"
-            f"       {catalog or '--'} ({version or '--'})\n")
-
-
-def _overview_row_markup(utdq_net: str, catalog: str, version: str, folder_url: str, raw_url: str) -> str:
+def _overview_card_markup(utdq_net: str, info: dict, folder_url: str, raw_url: str,
+                          pending: bool = False) -> str:
+    """
+    One network card of the overview.rst gallery (raw HTML, indented for a
+    ``.. raw:: html`` block): the utdq_net code, catalog, country and version,
+    the overview figure (or a pending note) and the figures folder link.
+    ``data-search`` holds the text the page's search box filters on.
+    """
+    from html import escape
+    catalog = info.get("catalog") or ""
+    version = info.get("dataset_version") or ""
+    country = info.get("country") or ""
+    continent = info.get("continent") or ""
+    meta = " &middot; ".join(escape(x) for x in (catalog, country, version) if x)
+    search = escape(" ".join([utdq_net, catalog, country, continent, version]).lower(), quote=True)
+    if pending:
+        body = '     <div class="utdq-pending">Figures pending</div>'
+    else:
+        body = (f'     <a href="{raw_url}" target="_blank"><img src="{raw_url}" loading="lazy" '
+                f'alt="{escape(utdq_net)} overview"></a>')
     return (
-        _network_cell(utdq_net, catalog, version)
-        + f"     - `Open Folder <{folder_url}>`_\n"
-        f"     - .. image:: {raw_url}\n"
-        f"          :width: 400px\n"
+        f'   <div class="utdq-card" data-net="{escape(utdq_net)}" data-search="{search}" '
+        f'data-continent="{escape(continent)}" data-version="{escape(version)}">\n'
+        f'     <div class="utdq-card-head"><span class="utdq-net">{escape(utdq_net)}</span>'
+        f'<span class="utdq-meta">{meta}</span></div>\n'
+        f"{body}\n"
+        f'     <a class="utdq-folder" href="{folder_url}" target="_blank">Open folder &rarr;</a>\n'
+        f"   </div>\n"
     )
+
+
+def _network_info(utdq_net: str, das: bool = False) -> dict:
+    """Card fields of a UTDQuake network from the published network table ('' if unknown)."""
+    return {f: _network_field(utdq_net, f, das) for f in ("catalog", "dataset_version", "country", "continent")}
 
 
 def _network_field(utdq_net: str, field: str, das: bool = False) -> str:
@@ -253,43 +270,31 @@ def _network_urls(network: str, das: bool = False) -> tuple[str, str]:
 def _update_overview_rst(owner: str, token: str, branch: str, network: str, message: str,
                          das: bool = False, catalog: Optional[str] = None) -> bool:
     """
-    Insert the ``overview.rst`` row for ``network`` into the Seismic Data or
-    DAS Data table (per ``das``), committing directly to
-    ``owner/UTDQuake@branch``. No-op (returns False) if a row for this
-    network is already there.
+    Insert the card of ``network`` into the Seismic Data or DAS Data gallery
+    of ``overview.rst`` (per ``das``), committing directly to
+    ``owner/UTDQuake@branch``. No-op (returns False) if the page already has
+    a card for this network.
     """
     content, sha = _get_text_file(owner, token, OVERVIEW_RST_PATH, branch)
 
-    if f"   * - {network}\n" in content:
-        logger.info("overview.rst on %s@%s already has a row for %s -- leaving it as-is.", owner, branch, network)
+    if f'data-net="{network}"' in content:
+        logger.info("overview.rst on %s@%s already has a card for %s -- leaving it as-is.", owner, branch, network)
         return False
 
     folder_url, raw_url = _network_urls(network, das)
-    catalog = _catalog_of(network, das) if catalog is None else catalog
-    row = _overview_row_markup(network, catalog, _network_field(network, "dataset_version", das),
-                               folder_url, raw_url)
+    info = _network_info(network, das)
+    if catalog is not None:
+        info["catalog"] = catalog
+    card = _overview_card_markup(network, info, folder_url, raw_url)
 
-    if not das:
-        if _SEISMIC_TABLE_END_ANCHOR not in content:
-            raise RuntimeError(
-                f"Could not find the Seismic Data table's end marker in {OVERVIEW_RST_PATH} on "
-                f"{owner}@{branch} -- its layout may have changed. Add the row for "
-                f"'{network}' manually (see overview_rst_row)."
-            )
-        replacement = "\n" + row + "\n" + _SEISMIC_TABLE_END_ANCHOR[1:]
-        new_content = content.replace(_SEISMIC_TABLE_END_ANCHOR, replacement, 1)
-    else:
-        das_section_start = content.find(_DAS_SECTION_MARKER)
-        anchor_idx = content.rfind(_DAS_TABLE_END_ANCHOR)
-        if das_section_start == -1 or anchor_idx == -1 or anchor_idx < das_section_start:
-            raise RuntimeError(
-                f"Could not find the DAS Data table's end marker in {OVERVIEW_RST_PATH} on "
-                f"{owner}@{branch} -- its layout may have changed. Add the row for "
-                f"'{network}' manually (see overview_rst_row)."
-            )
-        prefix = content[:anchor_idx].rstrip("\n")
-        suffix = content[anchor_idx:]
-        new_content = prefix + "\n\n" + row + "\n\n" + suffix
+    marker = _DAS_GALLERY_END if das else _SEISMIC_GALLERY_END
+    if marker not in content:
+        raise RuntimeError(
+            f"Could not find the {'DAS' if das else 'Seismic'} gallery end marker ({marker.strip()}) in "
+            f"{OVERVIEW_RST_PATH} on {owner}@{branch} -- its layout may have changed. Add the card for "
+            f"'{network}' manually (see overview_rst_row)."
+        )
+    new_content = content.replace(marker, card + marker, 1)
 
     _put_text_file(
         owner=owner, token=token, path_in_repo=OVERVIEW_RST_PATH,
@@ -460,25 +465,18 @@ def publish_network_figures(
 
 def overview_rst_row(utdq_net: str, catalog: Optional[str] = None, das: bool = False) -> str:
     """
-    Return the ``overview.rst`` list-table row (utdq_net, catalog, version,
-    figures folder, preview) for a UTDQuake network, ready to paste in: the real
-    image row if figures exist on the ``figures`` branch, or a "pending"
-    placeholder row if not.
+    Return the ``overview.rst`` gallery card (utdq_net, catalog, country,
+    version, preview, figures folder) of a UTDQuake network, ready to paste
+    before the gallery's end marker: with the preview if figures exist on the
+    ``figures`` branch, else a "Figures pending" card.
 
-    ``catalog`` defaults to the network's ``catalog`` in the published
-    network table. Checking the figures makes a single unauthenticated,
-    read-only request -- no token needed, since the repo is public.
+    The card fields default to the network's row of the published network
+    table. Checking the figures makes a single unauthenticated, read-only
+    request -- no token needed, since the repo is public.
     """
     folder_url, raw_url = _network_urls(utdq_net, das)
-    catalog = _catalog_of(utdq_net, das) if catalog is None else catalog
-    version = _network_field(utdq_net, "dataset_version", das)
-
+    info = _network_info(utdq_net, das)
+    if catalog is not None:
+        info["catalog"] = catalog
     exists = requests.head(raw_url, timeout=15).status_code == 200
-
-    if exists:
-        return _overview_row_markup(utdq_net, catalog, version, folder_url, raw_url)
-    return (
-        _network_cell(utdq_net, catalog, version)
-        + "     - *pending*\n"
-        "     - *Figures pending -- see* :ref:`upload-dataset-section`\n"
-    )
+    return _overview_card_markup(utdq_net, info, folder_url, raw_url, pending=not exists)
