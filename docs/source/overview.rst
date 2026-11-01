@@ -207,11 +207,6 @@ Seismic Data
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GEOFON/GEOFON_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GEOFON/GEOFON_overview.png" loading="lazy" alt="GEOFON overview"></a>
      <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/GEOFON" target="_blank">Open folder &rarr;</a>
    </div>
-   <div class="utdq-card" data-net="GFZ" data-search="gfz isc bulletin germany world v1" data-continent="World" data-version="v1">
-     <div class="utdq-card-head"><span class="utdq-net">GFZ</span><span class="utdq-meta">ISC Bulletin &middot; Germany &middot; v1</span></div>
-     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GFZ/GFZ_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GFZ/GFZ_overview.png" loading="lazy" alt="GFZ overview"></a>
-     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/GFZ" target="_blank">Open folder &rarr;</a>
-   </div>
    <div class="utdq-card" data-net="GII" data-search="gii isc bulletin israel middle east v1" data-continent="Middle East" data-version="v1">
      <div class="utdq-card-head"><span class="utdq-net">GII</span><span class="utdq-meta">ISC Bulletin &middot; Israel &middot; v1</span></div>
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GII/GII_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/GII/GII_overview.png" loading="lazy" alt="GII overview"></a>

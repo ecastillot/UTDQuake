@@ -76,19 +76,19 @@ The dataset of the UTDQuake paper.
      - Seismic
      - DAS
    * - UTDQuake networks
-     - 82
+     - 81
      - 1 (``UWF``)
    * - Earthquakes (after QC)
-     - 346,487
+     - 341,612
      - 450
    * - Picks
-     - 10,100,513
+     - 9,727,527
      - 7,816,115
    * - P-type picks (P / Pg / Pn)
-     - 6,754,777 (5,064,898 / 737,603 / 952,276)
+     - 6,383,659 (4,693,985 / 737,398 / 952,276)
      - 2,930,110
    * - S-type picks (S / Sg / Sn)
-     - 3,345,736 (2,423,759 / 645,592 / 276,385)
+     - 3,343,868 (2,421,891 / 645,592 / 276,385)
      - 4,886,005
    * - Stations (distinct ``network``, ``station``)
      - 17,844 (16,225 located, 15,343 confirmed)
@@ -115,6 +115,8 @@ The dataset of the UTDQuake paper.
   a few bank files not in the bank index were removed and stale index rows dropped.
 - **Networks.** The research catalogs and ``CM`` are not part of ``v1.0``; they are released, with ``R``
   codes, in ``v2.0``.
+- **GFZ removed.** ``GFZ`` was a copy of ``GEOFON`` (the same 4,875 events, picks and stations) and is no
+  longer a UTDQuake network; ``GEOFON`` keeps the data.
 
 
 v0.3

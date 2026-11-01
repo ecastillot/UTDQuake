@@ -1,4 +1,4 @@
-Saving figure to /groups/igonin/ecastillo/utdquake_schema/paper/utdq_stats.png
+Saving figure to /groups/igonin/ecastillo/utdquake_gfz/paper/utdq_stats.png
 AEIC stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/AEIC.npz
 AFAD stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/AFAD.npz
 ANF stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/ANF.npz
@@ -19,7 +19,6 @@ ETH stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stat
 FUNV stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/FUNV.npz
 GCG stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/GCG.npz
 GEOFON stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/GEOFON.npz
-GFZ stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/GFZ.npz
 GII stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/GII.npz
 HEL stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/HEL.npz
 IDC stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/IDC.npz
@@ -81,4 +80,4 @@ tx stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats
 us stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/us.npz
 uu stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/uu.npz
 uw stats loaded from cache: /groups/igonin/ecastillo/UTDQuake_v2/.utdquake/stats/uw.npz
-Saved plot to /groups/igonin/ecastillo/utdquake_schema/paper/utdq_stats.png
+Saved plot to /groups/igonin/ecastillo/utdquake_gfz/paper/utdq_stats.png

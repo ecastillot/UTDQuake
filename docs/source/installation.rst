@@ -57,7 +57,7 @@ selected from the latest release.
 
 **v1.0** *(dataset of the UTDQuake paper)*
 
-- 82 seismic networks and one DAS network (``UWF``): 346,487 earthquakes, 10.1 million P and S picks
+- 81 seismic networks and one DAS network (``UWF``): 341,612 earthquakes, 9.7 million P and S picks
   and 17,844 stations; 450 DAS earthquakes with 7.8 million picks on 22,500 channels.
 - New layout: ``utdq_net`` names each UTDQuake network, ``network`` is the FDSN code of each station and
   ``catalog`` the source catalog.
