@@ -28,7 +28,7 @@ Usage
 >>> net.events.head()
 
 """
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from .core.utdquake import Dataset, Network
 from .core.data import download_snapshot, load
