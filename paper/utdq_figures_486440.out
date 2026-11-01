@@ -1,0 +1,20 @@
+Sat Oct 31 09:21:58 CDT 2026 utdq_overview
+  FAILED
+  File "/groups/igonin/ecastillo/utdquake_schema/utdquake/core/utdquake.py", line 386, in plot_overview
+    plot_utdq_overview(events=self.events,
+  File "/groups/igonin/ecastillo/utdquake_schema/utdquake/utils/plot.py", line 833, in plot_utdq_overview
+    ax2.text(
+TypeError: Axes.text() missing 1 required positional argument: 's'
+Sat Oct 31 09:22:23 CDT 2026 utdq_das
+  ok
+Sat Oct 31 09:22:50 CDT 2026 utdq_stats
+  ok
+Sat Oct 31 09:23:04 CDT 2026 utdq_density
+  ok
+Sat Oct 31 09:23:16 CDT 2026 utdq_magnitude
+  ok
+Sat Oct 31 09:23:29 CDT 2026 utdq_z_score
+  ok
+Sat Oct 31 09:23:46 CDT 2026 utdq_travel_time
+  ok
+Sat Oct 31 09:29:35 CDT 2026 DONE

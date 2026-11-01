@@ -13,6 +13,7 @@ test/upload/*.out
 test/**/*.out
 test/**/*.xml
 test/10092026/**
+CLAUDE.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,6 +1,6 @@
 .. _versions-section:
-Release notes
-=============
+Release versions
+================
 
 How dataset and package versions work, and how to read a fixed version, is explained in
 :ref:`installation-versions-subsection`. This page lists what each dataset version contains and changes.
@@ -99,17 +99,16 @@ The dataset of the UTDQuake paper.
 - **Naming.** ``utdq_net`` names the UTDQuake network (the key of every table and file,
   ``events/utdq_net=tx.parquet``); ``network`` is now the FDSN code of the station in the stations and
   picks tables; the network table gains ``catalog``, ``catalog_type``, ``networks`` and
-  ``dataset_version``. See :ref:`dataset-naming-subsection`.
+  ``dataset_version``.
 - **Stations.** Stations are keyed by ``(utdq_net, network, station)``, so two stations with the same code
   in different FDSN networks are no longer mixed. Stations that appear only in picks get a row. Totals
   over several networks count distinct ``(network, station)`` pairs.
 - **ISC ``IR`` stations.** Stations reported by ISC with the placeholder code ``IR`` get their location
-  and, when unambiguous, their FDSN network from the ISC station registry (see the note in
-  :ref:`dataset-naming-subsection`): about 12,800 stations are reassigned to their network and about
+  and, when unambiguous, their FDSN network from the ISC station registry: about 12,800 stations are reassigned to their network and about
   26,000 get a confirmed location.
 - **Phase counts.** ``p_arrivals``/``s_arrivals`` count every P-type and S-type pick, and new columns count
   each label (``p_count``, ``pg_count``, ...). Before, only picks labelled exactly ``P`` or ``S`` were
-  counted. See :ref:`dataset-phase-counts-subsection`.
+  counted.
 - **Versions.** ``dataset_version`` on networks, events and picks.
 - **Fixes.** Calculated station longitudes outside [-180, 180] are wrapped (47 stations) and averaged
   around the circle; maps of networks across the antimeridian (e.g. the Aleutians) are drawn correctly;

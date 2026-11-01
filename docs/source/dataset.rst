@@ -24,70 +24,6 @@ It is also hosted on GitHub:
    :alt: GitHub Repository
 
 
-.. _dataset-naming-subsection:
-Naming: ``utdq_net``, ``network`` and ``catalog``
---------------------------------------------------
-
-Three names identify where the data come from. They are used the same way in every table:
-
-- ``utdq_net``: the **UTDQuake network**, i.e. the monitoring network or project that reported the
-  events and picks (e.g. ``tx``, ``AEIC``, ``R05``). It is the key of the ``Network`` table and of
-  every file (``events/utdq_net=tx.parquet``), and it links the four tables. Networks downloaded from
-  an agency keep the agency's code (``tx``, ``AEIC``); catalogs built by research projects get an
-  ``R`` code (``R01``, ``R02``, ...).
-- ``catalog``: the catalog or bulletin the events of a UTDQuake network come from (e.g. ``ComCat``,
-  ``ISC Bulletin``, ``ToC2ME``). Only in the ``Network`` table.
-- ``network``: the `FDSN network code <https://www.fdsn.org/networks/>`_ of the station that recorded
-  a pick (e.g. ``AK``), as in the pick's ``seed_id``. Only in the ``Stations`` and ``Picks`` tables. A
-  UTDQuake network usually uses stations of several FDSN networks: the ``networks`` column of the
-  ``Network`` table lists them.
-
-The tables join on these keys:
-
-.. code-block:: text
-
-   Network  --utdq_net-->  Events  --(utdq_net, event_id)-->  Picks  --(utdq_net, network, station)-->  Stations
-
-A station seen by two UTDQuake networks has one row in each of them, because its calculated
-location is estimated from each network's own events. The distinct physical stations are the
-distinct ``(network, station)`` pairs.
-
-.. note::
-
-   ISC reports many picks with the placeholder network code ``IR`` (its International Registry of
-   stations) instead of the station's FDSN code. ISC has no FDSN station service, so UTDQuake resolves
-   these stations with the `ISC station registry <http://www.isc.ac.uk/registries/>`_, matching the
-   station code and the time span of its picks:
-
-   - the station gets its **confirmed location** from the registry;
-   - when exactly one FDSN network has a station with the same code at the site (within 10 km), the
-     station and its picks get that **network** (``network_source = isc_registry``) and are merged with
-     that network's station row if there is one (``ir_merged``);
-   - a station the registry knows only as ``IR`` keeps ``network = IR``, now located
-     (``network_source = isc_registry_ir``);
-   - stations with two or more candidate networks, or not in the registry, keep ``IR``
-     (``network_source = unresolved_ir``).
-
-   Before the registry, an ``IR`` station was matched only to a same-code station of the same UTDQuake
-   network within 10 km (``network_source = resolved_twin``). The ``seed_id`` of a pick is always the
-   one reported. A dated copy of the registry and the decision of every station are kept with the
-   dataset (``.utdquake/isc_registry/``), so an extension reuses them.
-
-.. _dataset-phase-counts-subsection:
-Phase counts
-------------
-
-The ``phase`` column of the ``Picks`` table keeps the label reported by the catalog (``P``, ``Pg``,
-``Pn``, ``S``, ``Sg``, ``Sn``). The ``Events`` and ``Network`` tables count the picks two ways:
-
-- per label: ``p_count``, ``pg_count``, ``pn_count``, ``s_count``, ``sg_count``, ``sn_count``;
-- per phase family: ``p_arrivals`` (every P-type pick: P + Pg + Pn + any other label starting with
-  ``P``) and ``s_arrivals`` (every S-type pick).
-
-The ``p_phase_count`` and ``s_phase_count`` columns of the ``Events`` table come from ObsPlus and only
-count arrivals labelled exactly ``P`` or ``S``: for catalogs that label their picks ``Pg``/``Pn``/``Sg``/``Sn``
-they are close to zero. Use ``p_arrivals`` and ``s_arrivals`` instead.
-
 .. _dataset-seismic-subsection:
 Seismic Data
 --------------
@@ -149,7 +85,7 @@ The **Network** dataset contains metadata about each UTDQuake network (one row p
      - FDSN network codes of the stations that recorded the picks, comma-separated, most picks first
    * - dataset_version
      - string
-     - UTDQuake version that first added the network (``v1``, ``v2``); later versions may add events to it, see :ref:`versions-section`
+     - UTDQuake version that first added the network (``v1``, ``v2``)
    * - continent
      - string
      - Continent of network
@@ -271,7 +207,7 @@ network: one row per ``(utdq_net, network, station)``.
      - UTDQuake network code
    * - network
      - string
-     - FDSN network code of the station (``IR`` if unresolved, see :ref:`dataset-naming-subsection`)
+     - FDSN network code of the station
    * - station
      - string
      - Station identifier
@@ -319,8 +255,7 @@ network: one row per ``(utdq_net, network, station)``.
      - Number of entries used for calculation
    * - network_source
      - string
-     - Where ``network`` comes from: ``reported`` (code reported with the picks), ``isc_registry``,
-       ``isc_registry_ir`` or ``unresolved_ir`` (see the ``IR`` note in :ref:`dataset-naming-subsection`)
+     - Origin of ``network``: ``reported``, ``isc_registry``, ``isc_registry_ir`` or ``unresolved_ir``
    * - ir_merged
      - bool
      - Whether an ``IR`` station row was merged into this one
@@ -369,7 +304,7 @@ The **Events** dataset contains the earthquakes of each UTDQuake network.
      - UTDQuake network code
    * - dataset_version
      - string
-     - UTDQuake version that added the event (``v1``, ``v2``, ...), see :ref:`versions-section`
+     - UTDQuake version that added the event (``v1``, ``v2``)
    * - time
      - timestamp[ns]
      - Origin time of the event
@@ -505,10 +440,10 @@ The **Picks** dataset contains seismic phase picks associated with each event.
      - UTDQuake network code
    * - dataset_version
      - string
-     - UTDQuake version that added the pick's event, see :ref:`versions-section`
+     - UTDQuake version that added the pick's event
    * - network
      - string
-     - FDSN network code of the station (from ``seed_id``; for ``IR`` picks, resolved where possible, see :ref:`dataset-naming-subsection`)
+     - FDSN network code of the station (from ``seed_id``)
    * - station
      - string
      - Station identifier
@@ -520,8 +455,7 @@ The **Picks** dataset contains seismic phase picks associated with each event.
      - Seismic channel code
    * - network_source
      - string
-     - Where ``network`` comes from: ``reported``, ``resolved_twin``, ``isc_registry``,
-       ``isc_registry_ir`` or ``unresolved_ir`` (see the ``IR`` note in :ref:`dataset-naming-subsection`)
+     - Origin of ``network``: ``reported``, ``resolved_twin``, ``isc_registry``, ``isc_registry_ir`` or ``unresolved_ir``
    * - phase
      - string
      - Phase type (e.g., P, S)

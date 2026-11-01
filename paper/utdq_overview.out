@@ -1,0 +1,3 @@
+Saving figure to /groups/igonin/ecastillo/utdquake_schema/figures/utdquake_overview.png
+{'events': 346487, 'p_arrivals': 6754777, 's_arrivals': 3345736, 'total_stations': 17844, 'located_stations': 16225, 'confirmed_stations': 15343, 'calculated_stations': 10625, 'start_time': '2010-01-01 04:30:32.770000', 'end_time': '2025-07-31 23:59:53.390000', 'approx_lat_min': -89.9289, 'approx_lat_max': 82.50329999999998, 'approx_lon_min': -179.9059, 'approx_lon_max': 179.7365}
+Saved plot to /groups/igonin/ecastillo/utdquake_schema/figures/utdquake_overview.png

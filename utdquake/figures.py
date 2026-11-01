@@ -205,14 +205,18 @@ def _put_text_file(owner: str, token: str, path_in_repo: str, content: str, sha:
     _gh("PUT", url, token, json=body)
 
 
+def _network_cell(utdq_net: str, catalog: str, version: str) -> str:
+    """First cell of an overview.rst row: the utdq_net code, then catalog and version on a second line."""
+    return (f"   * - **{utdq_net}**\n\n"
+            f"       {catalog or '--'} ({version or '--'})\n")
+
+
 def _overview_row_markup(utdq_net: str, catalog: str, version: str, folder_url: str, raw_url: str) -> str:
     return (
-        f"   * - {utdq_net}\n"
-        f"     - {catalog or '--'}\n"
-        f"     - {version or '--'}\n"
-        f"     - `Open Folder <{folder_url}>`_\n"
+        _network_cell(utdq_net, catalog, version)
+        + f"     - `Open Folder <{folder_url}>`_\n"
         f"     - .. image:: {raw_url}\n"
-        f"          :width: 200px\n"
+        f"          :width: 400px\n"
     )
 
 
@@ -474,9 +478,7 @@ def overview_rst_row(utdq_net: str, catalog: Optional[str] = None, das: bool = F
     if exists:
         return _overview_row_markup(utdq_net, catalog, version, folder_url, raw_url)
     return (
-        f"   * - {utdq_net}\n"
-        f"     - {catalog or '--'}\n"
-        f"     - {version or '--'}\n"
-        f"     - *pending*\n"
-        f"     - *Figures pending -- see* :ref:`upload-dataset-section`\n"
+        _network_cell(utdq_net, catalog, version)
+        + "     - *pending*\n"
+        "     - *Figures pending -- see* :ref:`upload-dataset-section`\n"
     )

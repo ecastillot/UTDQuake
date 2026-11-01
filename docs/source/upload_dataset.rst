@@ -2,330 +2,152 @@
 Upload your dataset
 ============================
 
-This guide turns a catalog you already have -- an ObsPy
-:class:`~obspy.core.event.Catalog`, or a folder of QuakeML files -- into a
-network published on the shared
-`UTDQuake Hugging Face dataset <https://huggingface.co/datasets/ecastillot/UTDQuake>`_,
-so anyone can load it with :func:`utdquake.load`.
-
-There are six required steps: 1-5 build everything locally, and step 6
-uploads it. Two more are optional, for the documentation site: step 7 adds
-the travel-time z-score, and step 8 adds the figures shown in
-:ref:`overview-section`.
+Turn your catalog (an ObsPy :class:`~obspy.core.event.Catalog` or a folder of QuakeML files with picks)
+into a UTDQuake network on the
+`Hugging Face dataset <https://huggingface.co/datasets/ecastillot/UTDQuake>`_.
 
 .. list-table::
-   :widths: 8 20 40
+   :widths: 8 32 60
    :header-rows: 1
 
    * - Step
      - Function
      - What it does
    * - 1
-     - ``ebank.put_events(...)``
-     - loads your Catalog / QuakeML files into an event bank
+     - ``ebank.put_events``
+     - load your events into an event bank
    * - 2
-     - ``ebank.put_utdq_stations(...)``
-     - attaches station locations, computes distance/azimuth
+     - ``ebank.put_utdq_stations``
+     - add station locations
    * - 3
-     - ``ebank.put_utdq_picks(...)``
-     - builds the picks table and applies QC
+     - ``ebank.put_utdq_picks``
+     - build the picks and apply QC
    * - 4
-     - ``build_manifests(...)``
-     - builds the ``events`` / ``stations`` / ``picks`` / ``network`` tables
+     - ``build_manifests``
+     - build the tables, with your network's metadata
    * - 5
-     - ``publish_flat_manifests(...)``
-     - lays those tables out for publishing
+     - ``publish_flat_manifests``
+     - prepare the files for upload
    * - 6
-     - ``utdquake.publish_network(...)``
-     - uploads to the Hub
+     - ``utdquake.publish_network``
+     - open a pull request on Hugging Face
+   * - 7-8
+     - *optional*
+     - travel-time model; figures for the documentation
 
-Prerequisites
+**Before you start**
+
+- ``pip install utdquake`` and a `Hugging Face token <https://huggingface.co/settings/tokens>`_
+  (``export HF_TOKEN=hf_xxx``), needed only in step 6.
+- **Depths must be in meters below sea level** (QuakeML ``Origin.depth``). If your catalog gives depth
+  below the surface or a well reference, subtract that elevation first.
+- Each pick needs a ``waveform_id`` with network and station codes.
+- Name your network (``utdq_net``): the agency's code for an agency catalog (``CM``, ``tx``), or the next
+  free ``R`` code (``R10``, ...) for a research catalog.
+
+1. Event bank
 ^^^^^^^^^^^^^
-
-.. code-block:: bash
-
-   pip install utdquake
-   export HF_TOKEN=hf_xxx   # or run `huggingface-cli login` once instead
-
-``HF_TOKEN`` is only needed for step 6 (Steps 1-5 are entirely local). It
-authenticates you with `Hugging Face <https://huggingface.co>`_, the site
-that hosts the dataset. If you don't have an account yet, sign up for free at
-`huggingface.co/join <https://huggingface.co/join>`_, then create a token by
-following Hugging Face's own guide,
-`User access tokens <https://huggingface.co/docs/hub/security-tokens>`_
-(or go straight to `huggingface.co/settings/tokens <https://huggingface.co/settings/tokens>`_
-once logged in).
-
-1. Load your events into an event bank
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. warning::
-
-   **Depths are below sea level.** UTDQuake stores event depths as QuakeML
-   ``Origin.depth``: meters below sea level (WGS84 geoid), positive down,
-   negative above sea level. Catalogs from local, borehole or industry arrays
-   often give depth below the ground surface, a kelly bushing or a TVD
-   reference instead -- subtract that reference elevation before loading,
-   e.g. ``depth_sea_level = depth_tvd - reference_elevation``. On a network at
-   900 m elevation, skipping this puts every event 0.9 km too deep.
-   ``publish_network`` warns about this on every upload and runs
-   ``utdquake.hub.check_depth_datum`` (events above the highest station,
-   depths in the wrong units).
-
-Everything below reads from a :class:`utdquake.bank.bank.UTDQBank` rather than
-from your Catalog or files directly, so the first step is loading your events
-into one. The bank's directory name *is* your UTDQuake network code
-(``utdq_net``) -- a bank at ``.../banks/CM`` publishes as ``utdq_net = "CM"``.
-Use the agency's code for a network downloaded from an agency (``CM``, ``tx``),
-and the next free ``R`` code (``R09``, ``R10``, ...) for a catalog built by a
-research project; its name goes in the ``catalog`` column (step 4).
 
 .. code-block:: python
 
    from utdquake.bank.bank import UTDQBank
    from utdquake.core.config import get_utdq_paths
 
-   UTDQ_NET = "CM"
-   bank_path = get_utdq_paths(UTDQ_NET)["banks"]   # .../banks/CM
+   ebank = UTDQBank(base_path=str(get_utdq_paths("CM")["banks"]),   # the folder name is the utdq_net
+                    path_structure="{year}/{month}/{day}",
+                    name_structure="{event_id_end}", format="quakeml")
 
-   ebank = UTDQBank(
-       base_path=str(bank_path),
-       path_structure="{year}/{month}/{day}",
-       name_structure="{event_id_end}",
-       format="quakeml",
-   )
+   ebank.put_events(cat)                                    # an ObsPy Catalog, or:
+   # ebank.put_utdq_events_from_folder("/path/to/quakeml", file_extension="*.xml")
 
-Then load your events in, whichever form you have them in:
+2. Stations
+^^^^^^^^^^^
 
-.. code-block:: python
-
-   # If you already have an ObsPy Catalog:
-   # cat = obspy.read_events(...) / built from an FDSN client / etc.
-   ebank.put_events(cat)
-
-   # If you have a folder of QuakeML files instead:
-   ebank.put_utdq_events_from_folder("/path/to/quakeml_folder", file_extension="*.xml")
-
-Either way, each ``Pick`` needs a ``waveform_id`` with a network and station
-code (standard for QuakeML/FDSN picks) -- step 2 uses it to look up that
-station's location.
-
-2. Attach station metadata
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Give it a table with at least ``network`` (the FDSN network code),
-``station``, ``latitude``, ``longitude`` -- from a StationXML inventory, an
-FDSN station query, or your own table:
+A table with ``network`` (FDSN code), ``station``, ``latitude``, ``longitude``, ``elevation``, e.g. from
+StationXML:
 
 .. code-block:: python
 
    import obsplus
    from obspy import read_inventory
 
-   inv = read_inventory("/path/to/network.xml")
-   stations_df = obsplus.stations_to_df(inv)
-   stations_df = (
-       stations_df.sort_values("start_date")
-       .drop_duplicates(subset=["network", "station"], keep="first")
-       [["network", "station", "latitude", "longitude", "elevation"]]
-   )
+   stations = obsplus.stations_to_df(read_inventory("/path/to/network.xml"))
+   stations = stations.drop_duplicates(["network", "station"])[
+       ["network", "station", "latitude", "longitude", "elevation"]]
+   ebank.put_utdq_stations(stations, calculate_d_az=True)
 
-   ebank.put_utdq_stations(stations_df, calculate_d_az=True)
-
-3. Compute picks and apply QC
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+3. Picks and QC
+^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-   ebank.put_utdq_picks(apply_utdq_qc=True)
+   ebank.put_utdq_picks(apply_utdq_qc=True)   # QC criteria: see the table in the quickstart
 
-This filters out picks/events that fail UTDQuake's minimum QC criteria (see
-the table in :ref:`quickstart-section`) and saves the resulting picks table.
+4. Tables and metadata
+^^^^^^^^^^^^^^^^^^^^^^
 
-4. Build the manifest tables
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-   from utdquake.writers.parquet import build_manifests
-
-   build_manifests(
-       utdq_nets=["CM"],
-       include_events=True,
-       include_stations=True,
-       include_picks=True,
-       include_networks=True,
-       overwrite=True,
-   )
-
-This builds the four tables from everything computed in steps 1-3. In the
-stations and picks tables, ``network`` is the FDSN code of each station (from
-the pick's ``seed_id``); stations reported by ISC with the placeholder code
-``IR`` are resolved where possible (see :ref:`dataset-naming-subsection`).
-
-Some network-level fields simply can't be derived from picks/events --
-``catalog``, ``catalog_type``, ``dataset_version``, ``provider``,
-``provider_url``, ``country``, ``agency``, ``continent`` --
-there's no way to infer "who operates this network" from the data itself.
-The same goes for who's actually behind the contribution: ``uploaded_by_github``,
-``contact_email``, and ``doi`` (a paper the dataset is tied to, if any --
-leave it out, or ``None``, if there isn't one). ``uploaded_by_github`` must
-be your GitHub profile URL (``"https://github.com/<your-username>"``), not
-just your name -- a link is traceable back to a real account, a free-text
-name isn't. Add all of these yourself with ``include_manual_network_info``
--- without it, every one of these fields is left null for the network.
-``catalog``, ``catalog_type`` and ``dataset_version`` are **required**:
-``build_manifests`` warns when they are missing and ``publish_network``
-refuses to publish without them. ``catalog`` is the name of the catalog or
-bulletin your events come from (e.g. ``SGC``, ``ToC2ME``), and
-``catalog_type`` is ``agency`` (a monitoring agency's bulletin),
-``research`` (a research project's catalog) or ``synthetic``:
+``catalog``, ``catalog_type`` (``agency``, ``research`` or ``synthetic``) and ``dataset_version`` are
+**required**: publishing refuses without them. ``uploaded_by_github`` should be your GitHub profile URL.
 
 .. code-block:: python
 
    import pandas as pd
+   from utdquake.writers.parquet import build_manifests
 
-   manual_info = pd.DataFrame({
+   info = pd.DataFrame({
        "utdq_net": ["CM"],
-       "catalog": ["SGC"],
-       "catalog_type": ["agency"],      # agency, research or synthetic
-       "dataset_version": ["v2"],
-       "provider": ["SGC"],
-       "provider_url": ["https://www.sgc.gov.co"],
-       "country": ["Colombia"],
-       "agency": ["Servicio Geologico Colombiano"],
+       "catalog": ["SGC"], "catalog_type": ["agency"], "dataset_version": ["v2"],
+       "provider": ["SGC"], "provider_url": ["https://www.sgc.gov.co"],
+       "country": ["Colombia"], "agency": ["Servicio Geologico Colombiano"],
        "continent": ["South America"],
-       "uploaded_by_github": ["https://github.com/ecastillot"],
-       "contact_email": ["castillo.280997@gmail.com"],
-       "doi": [None],
+       "uploaded_by_github": ["https://github.com/<your-username>"],
+       "contact_email": ["you@example.com"], "doi": [None],
    })
+   build_manifests(utdq_nets=["CM"], include_events=True, include_stations=True,
+                   include_picks=True, include_networks=True, overwrite=True,
+                   include_manual_network_info=info)
 
-   build_manifests(
-       utdq_nets=["CM"],
-       include_networks=True,
-       overwrite=True,
-       include_manual_network_info=manual_info,
-   )
-
-5. Lay out for publishing
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+5. Prepare and 6. publish
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
+   import utdquake as utdq
    from utdquake.writers.parquet import publish_flat_manifests
 
    publish_flat_manifests()
+   utdq.publish_network("CM", create_pr=True)   # opens a pull request; the maintainer reviews and merges
 
-6. Publish
-^^^^^^^^^^
+The pull request contains the tables, the zipped event bank and the network row, in one commit. Maintainers
+can drop ``create_pr=True`` to commit directly; ``utdq.remove_network("CM", create_pr=True)`` retires a
+network.
 
-Most contributors won't have write access to the shared repo -- and don't
-need it. Publish with ``create_pr=True``, which opens a Pull Request instead
-of committing directly, using the same token from Prerequisites (a **read**
-token is enough for this):
+7. Travel-time model (optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: python
-
-   import utdquake as utdq
-
-   utdq.publish_network("CM", create_pr=True)
-
-The maintainer reviews the PR on the
-`dataset's Hugging Face page <https://huggingface.co/datasets/ecastillot/UTDQuake>`_
-and merges it. ``remove_network(..., create_pr=True)`` works the same way for
-retiring a network.
-
-If you already have write access
-"""""""""""""""""""""""""""""""
-
-Drop ``create_pr=True`` to commit directly instead of opening a PR:
-
-.. code-block:: python
-
-   import utdquake as utdq
-
-   utdq.publish_network("CM")
-   # utdq.remove_network("CM")   # to undo / retire a network
-
-Either way, ``publish_network`` bundles every file -- the per-network shards
-and the shared ``network.parquet`` -- into a single commit, so a network is
-never left half-published. It also uploads the local EventBank (zipped) by
-default (``include_banks=True``), since ``Network.events``/``.stations``/``.picks``
-require the bank locally to resolve at all -- pass ``include_banks=False``
-explicitly if you're re-publishing a network whose local bank no longer
-exists on disk.
-
-7. Build a travel-time model (optional)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Your dataset is already complete and usable without this. It's only needed
-if you want ``travel_time_zscore`` filled in on the picks table, or the
-travel-time QC figures (step 8) to work.
+Adds ``travel_time_zscore`` to the picks and enables the travel-time figures:
 
 .. code-block:: python
 
    from utdquake.qc.travel_time import build_travel_time_model
 
    build_travel_time_model("CM")
-
-This fits a travel-time model per phase from the picks built in step 3,
-saves it locally, and updates the local picks table with a
-``travel_time_zscore`` column. Since you already published in step 6,
-publish again to push the update -- add ``include_travel_time=True`` this
-time so the model itself is uploaded too, not just the updated picks table:
-
-.. code-block:: python
-
-   import utdquake as utdq
-
    utdq.publish_network("CM", include_travel_time=True, create_pr=True)
 
-8. Add your network to the documentation (optional)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+8. Figures for the documentation (optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The figures shown in :ref:`overview-section` live on GitHub (a different
-site from Hugging Face, where the dataset itself lives), so this is a
-separate, optional step -- your dataset is already fully usable without it.
-
-If you don't already have a `GitHub <https://github.com>`_ account, sign up
-for free at `github.com/join <https://github.com/join>`_. GitHub calls its
-version of what we set up in Prerequisites a "personal access token." To
-create one:
-
-1. Go to `github.com/settings/tokens <https://github.com/settings/tokens>`_
-   (you'll need to log in first).
-2. Click **Generate new token** → **Generate new token (classic)**.
-3. Give it any name you'll recognize later, e.g. "utdquake".
-4. Under **Select scopes**, check the box next to **repo** (this is what
-   lets it create the PR on your behalf).
-5. Click **Generate token** and copy it -- GitHub only shows it once.
-
-Then, same as with ``HF_TOKEN``:
-
-.. code-block:: bash
-
-   export GITHUB_TOKEN=ghp_xxx
+Needs a `GitHub token <https://github.com/settings/tokens>`_ with the **repo** scope
+(``export GITHUB_TOKEN=ghp_xxx``) and ``pip install cartopy``. Opens a pull request that adds your network
+to :ref:`overview-section`:
 
 .. code-block:: python
 
-   import utdquake as utdq
+   utdq.generate_network_figures("CM")
+   utdq.publish_network_figures("CM")
 
-   utdq.generate_network_figures("CM")   # saves the figures to ./figures/CM
-   utdq.publish_network_figures("CM")    # opens a PR (or commits, if you're a maintainer)
-
-The maintainer reviews and merges the PR the same way as the dataset PR
-earlier. Until it's merged, :ref:`overview-section` shows that network as
-*pending* rather than a broken image.
-
-Next steps
-^^^^^^^^^^
-
-Once published (or merged, if you opened a PR), load your network like any
-other in :ref:`quickstart-section`:
+Once merged, load your network like any other:
 
 .. code-block:: python
-
-   import utdquake as utdq
 
    net = utdq.Dataset().get_network("CM")
-   display(net.events)

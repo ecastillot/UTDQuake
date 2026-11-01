@@ -39,7 +39,6 @@ To get started, import the package and load the dataset using the :class:`utdqua
 
 Every UTDQuake network has a ``utdq_net`` code, the key that links the network, stations, events
 and picks tables. In the stations and picks tables, ``network`` is the FDSN code of each station.
-See :ref:`dataset-naming-subsection`.
 
 In addition to network-level access, the dataset allows you to retrieve aggregated information across multiple networks. You can directly access events, stations, and picks using the following methods:
 
