@@ -5,13 +5,14 @@ from pathlib import Path
 from datasets import load_dataset, Dataset, IterableDataset
 from typing import Union, List, Optional
 from huggingface_hub import snapshot_download
-from .config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, HF_CONFIG
+from .config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, get_revision, get_root, HF_CONFIG
+from .utils import renamed_kwarg
 
 logger = logging.getLogger(__name__)
 
 def download_snapshot(
     local_dir: Union[str, Path],
-    networks: Union[str, List[str]],
+    utdq_nets: Union[str, List[str]] = None,
     das: bool = False,
     include_banks: bool = True,
     include_networks: bool = True,
@@ -20,7 +21,9 @@ def download_snapshot(
     include_picks: bool = True,
     include_travel_time: bool = False,
     overwrite: bool = True,
-    unzip_banks: bool = True
+    unzip_banks: bool = True,
+    networks: Union[str, List[str]] = None,
+    revision: Optional[str] = None,
 ) -> Path:
     """
     Download selected data from the UTDQuake Hugging Face repository.
@@ -29,8 +32,8 @@ def download_snapshot(
     ----------
     local_dir : str or Path
         Local directory where the data will be downloaded. Created if it does not exist.
-    networks : str or list of str
-        Networks to download:
+    utdq_nets : str or list of str
+        UTDQuake networks (``utdq_net`` codes) to download:
         - "*" downloads all networks
         - "t*" downloads all networks starting with 't'
         - ["tx", "uw"] downloads only specified networks
@@ -50,6 +53,12 @@ def download_snapshot(
         If True, existing files will be re-downloaded. Default: True.
     unzip_banks : bool, optional
         If True, downloaded bank zip files will be automatically extracted. Default: True.
+    networks : str or list of str, optional
+        Deprecated alias of ``utdq_nets``.
+    revision : str, optional
+        Hugging Face revision to download (branch, tag such as ``v1.0``,
+        commit hash or ``refs/pr/N``). Default: the ``UTDQUAKE_REVISION``
+        environment variable, else ``main``.
 
     Returns
     -------
@@ -63,11 +72,14 @@ def download_snapshot(
     
     Examples
     --------
-    >>> download_snapshot("/tmp/utdquake", networks=["tx", "uw"], include_picks=False)
-    >>> download_snapshot("/tmp/utdquake", networks="*", overwrite=False)
+    >>> download_snapshot("/tmp/utdquake", utdq_nets=["tx", "uw"], include_picks=False)
+    >>> download_snapshot("/tmp/utdquake", utdq_nets="*", overwrite=False)
     """
     repo_id = HF_REPO_ID
     repo_type = HF_REPO_TYPE
+    networks = renamed_kwarg(utdq_nets, networks, "utdq_nets", "networks", "download_snapshot")
+    if networks is None:
+        raise TypeError("download_snapshot() missing required argument: 'utdq_nets'")
 
     # Ensure local directory exists
     os.makedirs(local_dir, exist_ok=True)
@@ -92,10 +104,10 @@ def download_snapshot(
             if not enabled:
                 continue
             cfg = get_hf_entry(key,das)
-            path_to_check = Path(local_dir) / cfg.path.format(network=net)
+            path_to_check = Path(local_dir) / cfg.path.format(utdq_net=net)
 
             if overwrite or not path_to_check.exists():
-                allow_patterns.append(cfg.path.format(network=net))
+                allow_patterns.append(cfg.path.format(utdq_net=net))
 
     # Always include networks metadata if requested
     if include_networks:
@@ -105,7 +117,8 @@ def download_snapshot(
             allow_patterns.append(get_hf_entry("networks",das).path)
 
     # Logging for debug
-    logger.info("Downloading data from: %s", repo_id)
+    revision = get_revision(revision)
+    logger.info("Downloading data from: %s%s", repo_id, f" (revision {revision})" if revision else "")
     logger.info("Saving into: %s", os.path.abspath(local_dir))
     logger.info("Allow patterns: %s", allow_patterns)
 
@@ -115,6 +128,7 @@ def download_snapshot(
         local_dir=local_dir,
         repo_type=repo_type,
         allow_patterns=allow_patterns,
+        revision=revision,
         max_workers=1,
     )
 
@@ -123,7 +137,7 @@ def download_snapshot(
         if unzip_banks:
             for net in networks:
                 # Unzip downloaded files and remove .zip
-                zip_paths = get_hf_entry("banks",das).path.format(network=net)
+                zip_paths = get_hf_entry("banks",das).path.format(utdq_net=net)
                 for zip_file in Path(local_dir).glob(zip_paths):
                     logger.info("Unzipping %s...", zip_file)
                     with zipfile.ZipFile(zip_file, "r") as zip_ref:
@@ -138,9 +152,11 @@ def download_snapshot(
 
 def load(
     key: str,
-    network: Optional[Union[str, List[str]]] = None,
+    utdq_net: Optional[Union[str, List[str]]] = None,
     streaming: bool = False,
     das: bool = False,
+    network: Optional[Union[str, List[str]]] = None,
+    revision: Optional[str] = None,
     **kwargs
 ) -> Union[Dataset, IterableDataset]:
     """
@@ -150,13 +166,19 @@ def load(
     ----------
     key : str
         Dataset key. Must be one of "networks", "stations", "events", "picks".
-    network : str or list of str, optional
-        Network code(s) to filter. Use "*" for all networks.
+    utdq_net : str or list of str, optional
+        UTDQuake network code(s) to filter. Use "*" for all networks.
         Ignored if key == "networks".
     das : bool, optional
         if das is True, loads from the DAS cache root instead of the standard cache root.
     streaming : bool, optional
         If True, loads dataset in streaming mode (lazy iteration).
+    network : str or list of str, optional
+        Deprecated alias of ``utdq_net``.
+    revision : str, optional
+        Hugging Face revision to read (branch, tag such as ``v1.0``, commit
+        hash or ``refs/pr/N``). Default: the ``UTDQUAKE_REVISION`` environment
+        variable, else ``main``.
     **kwargs : dict
         Additional keyword arguments forwarded to `datasets.load_dataset`.
 
@@ -172,15 +194,19 @@ def load(
 
     Notes
     -----
-    - When `key` is "networks", the `network` parameter is ignored.
-    - For other keys, the `network` argument filters the files to load.
+    - When `key` is "networks", the `utdq_net` parameter is ignored.
+    - For other keys, the `utdq_net` argument filters the files to load.
     - Supports both single network (str) and multiple networks (list of str).
+    - If the Hub cannot be reached (e.g. offline, ``HF_HUB_OFFLINE=1``), the
+      files already under the local root (see :func:`download_snapshot` and
+      ``UTDQUAKE_ROOT``) are read instead, with a warning.
     
     Examples
     --------
-    >>> ds = load("stations", network="tx")
-    >>> ds = load("events", network=["tx","uw"], streaming=True)
+    >>> ds = load("stations", utdq_net="tx")
+    >>> ds = load("events", utdq_net=["tx","uw"], streaming=True)
     """
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "load")
     if key not in HF_CONFIG:
         raise ValueError(f"Unknown key '{key}'. Must be one of {list(HF_CONFIG.keys())}.")
 
@@ -191,18 +217,44 @@ def load(
         if isinstance(network, str):
             network = [network]
 
-        network_paths = [get_hf_entry(key,das).path.format(network=net) for net in network] \
+        network_paths = [get_hf_entry(key,das).path.format(utdq_net=net) for net in network] \
                         if isinstance(network, list) \
                         else [get_hf_entry(key,das).path]
 
         data_files = {get_hf_entry(key,das).split: network_paths }
 
-    dataset = load_dataset(
-        HF_REPO_ID,
-        name=get_hf_entry(key,das).name,
-        split=get_hf_entry(key,das).split,
-        data_files=data_files,
-        streaming=streaming,
-        **kwargs
-    )
+    try:
+        dataset = load_dataset(
+            HF_REPO_ID,
+            name=get_hf_entry(key,das).name,
+            split=get_hf_entry(key,das).split,
+            data_files=data_files,
+            streaming=streaming,
+            revision=get_revision(revision),
+            **kwargs
+        )
+    except Exception as e:
+        # offline or Hub unreachable: read the copy under the local root
+        # (e.g. after Dataset.download), same type of object as from the Hub
+        local = _load_local(key, network, das, streaming)
+        if local is None:
+            raise
+        logger.warning("Could not read %s from the Hugging Face Hub (%s); using the local copy under %s.",
+                       key, type(e).__name__, get_root(das=das))
+        return local
     return dataset
+
+
+def _load_local(key: str, utdq_net, das: bool, streaming: bool):
+    """``key`` from the local root as a ``datasets`` object, or None if no local file matches."""
+    root = get_root(das=das)
+    entry = get_hf_entry(key, das)
+    if key == "networks" or utdq_net is None:
+        patterns = [entry.path] if key == "networks" else [entry.path.format(utdq_net="*")]
+    else:
+        nets = [utdq_net] if isinstance(utdq_net, str) else list(utdq_net)
+        patterns = [entry.path.format(utdq_net=n) for n in nets]
+    files = sorted({str(f) for pattern in patterns for f in root.glob(pattern)})
+    if not files:
+        return None
+    return load_dataset("parquet", data_files={entry.split: files}, split=entry.split, streaming=streaming)

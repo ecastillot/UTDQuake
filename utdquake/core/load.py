@@ -130,7 +130,7 @@ def cleanup_components(to_download: Set[str], bank_path: Path, parquets: Dict[st
                     path.unlink()
 
 def resolve_network_paths(
-    network: str,
+    utdq_net: str,
     das: bool = False,
     include_bank: bool = True,
     include_events: bool = True,
@@ -140,15 +140,15 @@ def resolve_network_paths(
     max_retries: int = 3,
 ) -> Dict[str, Path]:
     """
-    Ensure that all network data components exist locally and return their paths.
+    Ensure that all data components of a UTDQuake network exist locally and return their paths.
 
     If any required components are missing or invalid, attempts to download them
     using `download_snapshot`. Raises RuntimeError if unable to resolve after retries.
 
     Parameters
     ----------
-    network : str
-        Network code to resolve.
+    utdq_net : str
+        UTDQuake network code to resolve.
     das : bool, optional
         If True, resolves paths from the DAS dataset. Default is False (standard paths).
     include_bank : bool, optional
@@ -174,10 +174,10 @@ def resolve_network_paths(
     RuntimeError
         If network data could not be resolved after `max_retries` attempts.
     """
-    network = network.strip()
+    utdq_net = utdq_net.strip()
 
     # Paths for EventBank and Parquet components
-    utdq_paths = get_utdq_paths(network,das)
+    utdq_paths = get_utdq_paths(utdq_net,das)
     bank_path = utdq_paths["banks"] 
     parquets = {
         "events": utdq_paths["events"],
@@ -207,7 +207,7 @@ def resolve_network_paths(
 
         logger.info(
             "Resolving network '%s' (attempt %d/%d). Missing: %s",
-            network, attempt + 1, max_retries, missing
+            utdq_net, attempt + 1, max_retries, missing
         )
 
         # Remove invalid/missing components before redownloading
@@ -216,7 +216,7 @@ def resolve_network_paths(
         # Download missing components
         download_snapshot(
             local_dir=get_root(das),
-            networks=network,
+            utdq_nets=utdq_net,
             das=das,
             include_banks="banks" in missing,
             include_events="events" in missing,
@@ -227,7 +227,7 @@ def resolve_network_paths(
         )
 
     raise RuntimeError(
-        f"Could not resolve network '{network}' after {max_retries} attempts"
+        f"Could not resolve network '{utdq_net}' after {max_retries} attempts"
     )
 
                 

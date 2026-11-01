@@ -158,6 +158,7 @@ Content
    installation
    dataset
    overview
+   versions
    quickstart
    upload_dataset
    api/index

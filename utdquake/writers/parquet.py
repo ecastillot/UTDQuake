@@ -13,7 +13,10 @@ import pandas as pd
 from ..core.config import get_hf_entry,get_root,get_utdq_paths
 from ..utils.cache import list_local_networks
 from ..bank.bank import UTDQBank
-from ..bank.utils import get_preferred_origins
+from ..bank.utils import preferred_origins_from_files
+from ..core.utils import renamed_kwarg
+from ..qc.stations import event_stations, resolve_station_networks
+from ..utils.utils import add_phase_counts, get_network_summary
 from .manifest import ManifestPaths, ManifestProgress
 from .schema import (PREF_PICKS_ORDER,
                     PREF_PICKS_TYPES,
@@ -23,6 +26,7 @@ from .schema import (PREF_PICKS_ORDER,
                     PREF_NETWORK_TYPES,
                     PREF_STATIONS_ORDER,
                     PREF_STATIONS_TYPES,
+                    missing_network_info,
                     sanitize_dataframe)
 
 logger = logging.getLogger(__name__)
@@ -73,8 +77,30 @@ def _append_parquet_dedup(
     _write_parquet_atomic(combined, out_path)
 
 
+def _event_versions(events_manifest: Path, manual_info: Optional[pd.DataFrame], utdq_net: str) -> tuple:
+    """
+    ``dataset_version`` of the events of a network.
+
+    Returns ``(known, version)``: ``known`` maps the event_id of each event
+    already in ``events_manifest`` to its version (kept as is), ``version``
+    is the one for new events, the network's ``dataset_version`` in
+    ``manual_info``. Events added to an existing network by a later release
+    so get a different version from the earlier ones.
+    """
+    known = {}
+    if events_manifest.exists():
+        previous = pd.read_parquet(events_manifest)
+        if "dataset_version" in previous:
+            known = previous.dropna(subset=["dataset_version"]).set_index("event_id")["dataset_version"].to_dict()
+    version = None
+    if manual_info is not None and "dataset_version" in manual_info:
+        rows = manual_info.loc[manual_info["utdq_net"] == utdq_net, "dataset_version"].dropna()
+        version = rows.iloc[0] if len(rows) else None
+    return known, version
+
+
 def build_manifests(
-    networks: Optional[Iterable[str]] = None,
+    utdq_nets: Optional[Iterable[str]] = None,
     das: bool = False,
     # force_download: bool = False,
     include_events: bool = False,
@@ -83,7 +109,8 @@ def build_manifests(
     include_networks: bool = True,
     overwrite: bool = False,
     per_network_shards: bool = True,
-    include_manual_network_info: pd.DataFrame = None
+    include_manual_network_info: pd.DataFrame = None,
+    networks: Optional[Iterable[str]] = None,
     ) -> ManifestPaths:
     """
     Build UTDQuake manifest files incrementally, resume-safe.
@@ -93,13 +120,15 @@ def build_manifests(
     - save output after each network
     - track progress in SQLite so you can resume safely
     - saves one parquet per network per manifest type, e.g.
-        manifests/events/network=tx.parquet
-        manifests/picks/network=tx.parquet
+        manifests/events/utdq_net=tx.parquet
+        manifests/picks/utdq_net=tx.parquet
+    - stations and picks get the FDSN code of each station in ``network``,
+      fixed by :func:`utdquake.qc.stations.resolve_station_networks`
 
     Parameters
     ----------
-    networks
-        Networks to process. If None, uses local networks.
+    utdq_nets
+        UTDQuake networks to process. If None, uses local networks.
     force_download
         If True, download missing networks.
     overwrite
@@ -108,14 +137,15 @@ def build_manifests(
         Which manifests to build.
     per_network_shards
         If True, saves one parquet per network per manifest type, e.g.
-        manifests/events/network=tx.parquet
-        manifests/picks/network=tx.parquet
+        manifests/events/utdq_net=tx.parquet
+        manifests/picks/utdq_net=tx.parquet
 
         This is the best option for very large datasets.
         You can still combine later if you want.
     include_manual_network_info
         Per-network metadata that can't be derived from picks/events, keyed
-        by a ``"network"`` column -- e.g. ``provider``, ``provider_url``,
+        by a ``"utdq_net"`` column -- e.g. ``catalog``, ``catalog_type``,
+        ``dataset_version``, ``provider``, ``provider_url``,
         ``country``, ``agency``, ``continent``, ``score``, and the
         contributor-provenance fields ``uploaded_by_github``,
         ``contact_email``, ``doi`` (see :ref:`upload-dataset-section`).
@@ -123,17 +153,20 @@ def build_manifests(
         ``"https://github.com/ecastillot"``), not a free-text name --
         that's what makes it possible to trace a network back to who
         actually contributed it. Rows are matched to each network by the
-        ``"network"`` column; missing columns are left null. If None (the
+        ``"utdq_net"`` column; missing columns are left null. If None (the
         default) and ``include_networks`` is True, this is auto-loaded
         from the existing local ``network/network.parquet`` so
         previously-supplied manual info carries forward automatically --
         pass a DataFrame explicitly for a brand-new network, or the manual
         fields will all be null for it.
+    networks
+        Deprecated alias of ``utdq_nets``.
 
     Returns
     -------
     ManifestPaths
     """
+    networks = renamed_kwarg(utdq_nets, networks, "utdq_nets", "networks", "build_manifests")
 
     root = get_root(das=das)
     paths = ManifestPaths(root=root)
@@ -188,39 +221,63 @@ def build_manifests(
         logger.info("Processing network: %s", net)
 
         net_paths = get_utdq_paths(net,das=das)
-        # print(net_paths)
         logger.info("Loading bank for network %s from %s", net, net_paths["banks"])
         bank = UTDQBank(net_paths["banks"],
                         path_structure='{year}/{month}/{day}',
                         name_structure='{event_id_end}',
                         format='quakeml',
                         das=das)
-        
+
+        todo = {key: flag and not progress.is_done(key, net)
+                for key, flag in (("events", include_events), ("stations", include_stations),
+                                  ("picks", include_picks), ("networks", include_networks))}
+        if not any(todo.values()):
+            continue
+
+        # Stations and picks are fixed together: ``network`` becomes the FDSN
+        # code of each station (from the pick's seed_id), IR placeholder codes
+        # are resolved where possible and every picked station gets a row.
+        df_stations = bank.load_stations().copy()
+        try:
+            df_picks = bank.load_picks().copy()
+        except FileNotFoundError:
+            logger.warning("No picks index for %s yet; stations are not checked against picks", net)
+            df_picks = None
+        if df_picks is not None:
+            df_stations, df_picks, report = resolve_station_networks(df_stations, df_picks, das=das)
+        else:
+            df_stations["network_source"] = "reported"
+        for df in (df_stations, df_picks):
+            if df is not None:
+                df["utdq_net"] = net
+
+        known_versions, new_version = _event_versions(shard_dirs["events"] / f"utdq_net={net}.parquet",
+                                                      include_manual_network_info, net)
+        if df_picks is not None:
+            df_picks["dataset_version"] = df_picks["event_id"].map(known_versions).fillna(new_version)
 
         #Events
-        if include_events and not progress.is_done("events", net):
+        if todo["events"]:
             logger.info("Building events manifest for %s", net)
             df_events = bank.read_index().copy()
-            df_events["network"] = net
+            df_events["utdq_net"] = net
+            df_events["dataset_version"] = df_events["event_id"].map(known_versions).fillna(new_version)
 
-            # stations: comma-joined station codes per event, derived from
-            # picks (bank.load_picks() reads a local sqlite index, not a
-            # quakeml re-parse, so this is cheap even at large scale).
-            try:
-                df_picks_for_stations = bank.load_picks()
-                stations_by_event = (
-                    df_picks_for_stations.groupby("event_id")["station"]
-                    .agg(lambda s: ",".join(sorted(set(s.dropna()))))
-                    .rename("stations")
-                )
-                df_events = df_events.merge(stations_by_event, on="event_id", how="left")
-            except FileNotFoundError:
-                logger.warning("No picks index for %s yet; leaving 'stations' empty", net)
+            # stations: comma-joined NET.STA codes of the stations that picked
+            # each event (from the fixed picks above).
+            df_events = df_events.drop(columns=["stations"], errors="ignore")
+            if df_picks is not None:
+                df_events = df_events.merge(event_stations(df_picks), left_on="event_id",
+                                            right_index=True, how="left")
+                # picks per phase label and family (p_count, ..., p_arrivals, s_arrivals)
+                df_events = add_phase_counts(df_events, df_picks)
+            else:
                 df_events["stations"] = None
 
-            # preferred_origin_id: reuse the existing helper (also used by
-            # core/patch.py's utdq_events_to_df) rather than reimplementing it.
-            preferred_df = get_preferred_origins(bank.get_events())[["event_id", "preferred_origin_id"]]
+            # preferred_origin_id, read from the QuakeML files: building ObsPy
+            # events for the whole bank does not scale (millions of events)
+            preferred_df = preferred_origins_from_files(bank.bank_path, df_events["path"],
+                                                        workers=min(16, os.cpu_count() or 1))
             df_events = df_events.merge(preferred_df, on="event_id", how="left")
 
             # Drop obsplus's internal "path" column - redundant since the
@@ -237,7 +294,7 @@ def build_manifests(
                                             )
 
             if per_network_shards:
-                out = shard_dirs["events"] / f"network={net}.parquet"
+                out = shard_dirs["events"] / f"utdq_net={net}.parquet"
                 _write_parquet_atomic(df_events, out)
             else:
                 # combined file (can become heavy)
@@ -245,16 +302,14 @@ def build_manifests(
                 _append_parquet_dedup(
                     path,
                     df_events,
-                    subset_cols=["network", "event_id"] if "event_id" in df_events.columns else ["network"],
+                    subset_cols=["utdq_net", "event_id"] if "event_id" in df_events.columns else ["utdq_net"],
                 )
 
             progress.mark_done("events", net)
         
         # Stations
-        if include_stations and not progress.is_done("stations", net):
+        if todo["stations"]:
             logger.info("Building stations manifest for %s", net)
-            df_stations = bank.load_stations().copy()
-            df_stations["network"] = net
 
             df_stations = sanitize_dataframe(df_stations,
                                             string_cols=PREF_STATIONS_TYPES["string_cols"],
@@ -265,26 +320,19 @@ def build_manifests(
                                             order_cols=PREF_STATIONS_ORDER)
 
             if per_network_shards:
-                out = shard_dirs["stations"] / f"network={net}.parquet"
+                out = shard_dirs["stations"] / f"utdq_net={net}.parquet"
                 _write_parquet_atomic(df_stations, out)
             else:
                 path = shard_dirs["events"] / f"stations.parquet"
-                subset = ["network"]
-                for c in ["station", "station_code", "id", "seed_id"]:
-                    if c in df_stations.columns:
-                        subset.append(c)
-                        break
+                subset = ["utdq_net", "network", "station"] + (["channel"] if das else [])
                 _append_parquet_dedup(path, df_stations, subset_cols=subset)
 
             progress.mark_done("stations", net)   
             
 
         # Picks
-        if include_picks and not progress.is_done("picks", net):
+        if todo["picks"] and df_picks is not None:
             logger.info("Building picks manifest for %s", net)
-            
-            df_picks = bank.load_picks().copy()
-            df_picks["network"] = net
 
             df_picks = sanitize_dataframe(df_picks,
                                     string_cols=PREF_PICKS_TYPES["string_cols"],
@@ -295,12 +343,12 @@ def build_manifests(
                                     order_cols=PREF_PICKS_ORDER)
             
             if per_network_shards:
-                out = shard_dirs["picks"] / f"network={net}.parquet"
+                out = shard_dirs["picks"] / f"utdq_net={net}.parquet"
 
                 _write_parquet_atomic(df_picks, out)
             else:
                 path = shard_dirs["events"] / f"picks.parquet"
-                subset = ["network"]
+                subset = ["utdq_net"]
                 # typical unique pick keys (best-effort)
                 for c in ["pick_id", "id", "resource_id"]:
                     if c in df_picks.columns:
@@ -312,18 +360,26 @@ def build_manifests(
 
         
 
-        if include_networks and not progress.is_done("networks", net):
+        if todo["networks"]:
             logger.info("Building networks manifest for %s", net)
 
             if include_manual_network_info is not None:
-                manual_info = include_manual_network_info[include_manual_network_info["network"] == net]
+                manual_info = include_manual_network_info[include_manual_network_info["utdq_net"] == net].copy()
+                if manual_info.empty:
+                    manual_info = pd.DataFrame({"utdq_net": [net]})
             else:
-                manual_info = pd.DataFrame({"network": [net]})
+                manual_info = pd.DataFrame({"utdq_net": [net]})
 
-            summary = bank.get_summary()
+            summary = get_network_summary(stations=df_stations, events=bank.load_events(), das=das, picks=df_picks)
 
             for key, value in summary.items():
                 manual_info[key] = value
+            if df_picks is not None:
+                by_net = df_picks.groupby("network").size().sort_values(ascending=False, kind="stable")
+                manual_info["networks"] = ",".join(by_net.index)
+            for problem in missing_network_info(manual_info.iloc[0]):
+                logger.warning("[%s] %s: pass it in include_manual_network_info "
+                               "(publish_network refuses networks without it)", net, problem)
 
             df_summary = sanitize_dataframe(manual_info,
                                             string_cols=PREF_NETWORK_TYPES["string_cols"],
@@ -335,9 +391,9 @@ def build_manifests(
 
 
             path = shard_dirs["networks"] / f"network.parquet"
-            _append_parquet_dedup(path, df_summary, subset_cols=["network"])
+            _append_parquet_dedup(path, df_summary, subset_cols=["utdq_net"])
 
-            progress.mark_done("network", net)
+            progress.mark_done("networks", net)
 
     logger.info("Manifest build complete.")
     return paths
@@ -382,7 +438,7 @@ def publish_flat_manifests(
     das : bool, optional
         Whether this is a DAS dataset. Default False.
     networks : iterable of str, optional
-        Networks to flatten. If None, every network found under
+        ``utdq_net`` codes to flatten. If None, every network found under
         ``manifests/events``, ``manifests/stations`` or
         ``manifests/picks`` is flattened.
 
@@ -399,17 +455,17 @@ def publish_flat_manifests(
         for key in ("events", "stations", "picks"):
             shard_dir = manifest_dir / key
             if shard_dir.exists():
-                found.update(p.stem.split("=", 1)[-1] for p in shard_dir.glob("network=*.parquet"))
+                found.update(p.stem.split("=", 1)[-1] for p in shard_dir.glob("utdq_net=*.parquet"))
         networks = sorted(found)
 
     written: List[Path] = []
     for key in ("events", "stations", "picks"):
         for net in networks:
-            src = manifest_dir / key / f"network={net}.parquet"
+            src = manifest_dir / key / f"utdq_net={net}.parquet"
             if not src.exists():
                 logger.warning("No %s manifest for network %s at %s; skipping.", key, net, src)
                 continue
-            dst = root / get_hf_entry(key, das).path.format(network=net)
+            dst = root / get_hf_entry(key, das).path.format(utdq_net=net)
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
             logger.info("Published %s -> %s", key, dst)

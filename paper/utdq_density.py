@@ -2,7 +2,7 @@ import os
 os.environ["HF_DATASETS_PARALLELISM"] = "false"
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+import _local  # noqa: F401  (local UTDQuake 1.0 root, paper networks)
 
 from pathlib import Path
 import utdquake as utdq

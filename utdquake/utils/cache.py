@@ -3,11 +3,11 @@ from ..core.config import get_root
 
 def list_local_networks(data_type: str, das: bool = False) -> dict[str, Path]:
     """
-    Return all networks available locally as a dictionary.
+    Return all UTDQuake networks available locally as a dictionary.
 
     For 'bank', returns folders containing at least one file.  
-    For other data types, returns parquet files, removing the 'network='
-    prefix and '.parquet' suffix to get the network name.
+    For other data types, returns parquet files, removing the 'utdq_net='
+    prefix and '.parquet' suffix to get the ``utdq_net`` code.
 
     Parameters
     ----------
@@ -19,7 +19,7 @@ def list_local_networks(data_type: str, das: bool = False) -> dict[str, Path]:
     Returns
     -------
     dict[str, Path]
-        Dictionary where keys are network names and values are Paths:
+        Dictionary where keys are ``utdq_net`` codes and values are Paths:
         - For 'bank', the folder Path
         - For other data types, the Path to the parquet file
     """
@@ -38,10 +38,10 @@ def list_local_networks(data_type: str, das: bool = False) -> dict[str, Path]:
         # Files ending with .parquet
         for p in root.iterdir():
             if p.is_file() and p.suffix == ".parquet":
-                # Remove prefix 'network=' and suffix '.parquet' for key
+                # Remove prefix 'utdq_net=' and suffix '.parquet' for key
                 name = p.stem
-                if name.startswith("network="):
-                    name = name[len("network="):]
+                if name.startswith("utdq_net="):
+                    name = name[len("utdq_net="):]
                 network_dict[name] = p
 
     # Sort by key (network name)

@@ -50,11 +50,13 @@ This dataset offers structured event catalogs, station metadata, and phase picks
 
 | Directory   | Format        | Description |
 |------------|---------------|-------------|
-| `network/`   | `*.parquet`   | Network metadata. |
-| `events/`   | `*.parquet`   | Earthquake event catalogs per network. |
-| `stations/` | `*.parquet`   | Station metadata per network. |
-| `picks/`    | `*.parquet`   | Seismic phase pick datasets per network. |
-| `bank/`     | `*.zip`       | ObsPlus `EventBank` datasets, one per network. Can be read directly using [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html). |
+| `network/`   | `*.parquet`   | Network metadata, one row per UTDQuake network (`utdq_net`). |
+| `events/`   | `*.parquet`   | Earthquake events, one file per `utdq_net`. |
+| `stations/` | `*.parquet`   | Station metadata, one file per `utdq_net`. |
+| `picks/`    | `*.parquet`   | Seismic phase picks, one file per `utdq_net`. |
+| `banks/`     | `*.zip`       | ObsPlus `EventBank` datasets, one per `utdq_net`. Can be read directly using [ObsPlus EventBank](https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html). |
+
+**Naming.** `utdq_net` is the UTDQuake network: the monitoring network or project that reported the events and picks (e.g. `tx`, `AEIC`, `R05`); it is the key that links the four tables. `catalog` (network table) is the catalog or bulletin the events come from. `network` (stations and picks tables) is the FDSN network code of each station, as in the pick's `seed_id`. Join picks to stations on `(utdq_net, network, station)`.
 
 For details on the contents and schema of each dataset, please refer to the [Hugging Face dataset viewer](https://huggingface.co/datasets/ecastillot/UTDQuake/viewer).
 
@@ -80,7 +82,7 @@ dataset.plot_overview(savepath="utdquake.png")
 
 ### Network Data
 ```python
-# load network 
+# load a network by its utdq_net code
 network = dataset.get_network(name="tx")
 print(network)
 

@@ -86,7 +86,7 @@ def load_picks_from_manifest( picks_dir:str,
     Load picks from per-network Parquet manifests.
 
     Args:
-        networks (Optional[List[str]]): List of network names to load. 
+        networks (Optional[List[str]]): ``utdq_net`` codes to load.
             If None, loads all networks in manifests/picks/.
         picks_dir (str): Directory where pick manifests are stored.
     Returns:
@@ -95,10 +95,10 @@ def load_picks_from_manifest( picks_dir:str,
     # picks_dir = os.path.join(self.bank_path, "manifests", "picks")
 
     if networks is None:
-        pattern = os.path.join(picks_dir, "network=*.parquet")
+        pattern = os.path.join(picks_dir, "utdq_net=*.parquet")
         files = glob.glob(pattern)
     else:
-        files = [os.path.join(picks_dir, f"network={net}.parquet") for net in networks]
+        files = [os.path.join(picks_dir, f"utdq_net={net}.parquet") for net in networks]
 
     all_dfs = []
     for f in files:
@@ -494,9 +494,9 @@ def get_picks(event_picks):
     pick_list = []
     for i, row in event_picks.iterrows():
 
-        if row.phase == "P":
+        if row.phase.startswith("P"):
             component = "Z"
-        elif row.phase == "S":
+        elif row.phase.startswith("S"):
             component = "N"
         else:
             component = ""
@@ -732,6 +732,48 @@ def get_preferred_origins(catalog):
     events['preferred_origin_id'] = events['event_id'].map(preferred_origins)
 
     return events
+
+def _preferred_origins_of_files(paths):
+    """(event_id, preferred origin id) of the events in some QuakeML files."""
+    from lxml import etree
+    out = []
+    for path in paths:
+        for event in etree.parse(path).getroot().iter("{*}event"):
+            origins = [o.get("publicID") for o in event.findall("{*}origin")]
+            pref = event.findtext("{*}preferredOriginID")
+            out.append((event.get("publicID"), pref if pref in origins else (origins[0] if origins else None)))
+    return out
+
+
+def preferred_origins_from_files(bank_path, paths, workers: int = 8, chunk: int = 2000) -> pd.DataFrame:
+    """
+    ``event_id`` and ``preferred_origin_id`` of the events of a bank, read
+    from its QuakeML files without building ObsPy events (same rule as
+    :func:`get_preferred_origins`: the preferred origin if the event has it,
+    else its first origin). Scales to millions of events.
+
+    Parameters
+    ----------
+    bank_path : str or Path
+        Root of the event bank.
+    paths : iterable of str
+        File paths relative to ``bank_path`` (the ``path`` column of the bank index).
+    workers : int
+        Processes reading the files in parallel.
+    """
+    from concurrent.futures import ProcessPoolExecutor
+    files = [os.path.join(str(bank_path), str(p).lstrip("/")) for p in paths]
+    chunks = [files[i:i + chunk] for i in range(0, len(files), chunk)]
+    rows = []
+    if workers > 1 and len(chunks) > 1:
+        with ProcessPoolExecutor(workers) as pool:
+            for part in pool.map(_preferred_origins_of_files, chunks):
+                rows.extend(part)
+    else:
+        for c in chunks:
+            rows.extend(_preferred_origins_of_files(c))
+    return pd.DataFrame(rows, columns=["event_id", "preferred_origin_id"]).drop_duplicates("event_id")
+
 
 def get_nth_arrival_time(arrivals_df, n, column='time'):
     """
@@ -1232,7 +1274,11 @@ def get_stations_summary(stations_folder,
         for col in df.columns:
             if col in exclude_cols:
                 continue
-            if pd.api.types.is_float_dtype(df[col]):
+            if col == "calculated_longitude" and pd.api.types.is_float_dtype(df[col]):
+                # around the circle: a station near +-180 deg gets projections on both
+                # sides (and old banks hold longitudes outside [-180, 180])
+                summary[col], summary[f"{col}_std"] = circular_lon_mean_std(df[col])
+            elif pd.api.types.is_float_dtype(df[col]):
                 summary[col] = df[col].mean()
                 if col in std_cols:
                     summary[f"{col}_std"] = df[col].std()
@@ -1443,7 +1489,7 @@ def process_arrival(arrival, source_loc,
     return info
 
 def get_stations_folder(ebank_index_path):
-    """The folder of the per-station databases of the network of an event bank."""
+    """The folder of the per-station databases of the UTDQuake network of an event bank."""
     network_name = os.path.basename(os.path.dirname(ebank_index_path))
     utdq_paths = get_utdq_paths(network_name)
     return utdq_paths[".utdquake/export/db"] / "stations" / f".{network_name}"
@@ -1787,6 +1833,29 @@ def xxx(origin, df_stations,
         logger.debug(f"Updated azimuthal gaps for origin {origin.resource_id.id}")
     
     return True
+
+def wrap_lon(lon):
+    """Longitude(s) in degrees wrapped to [-180, 180)."""
+    return (np.asarray(lon, dtype=float) + 180) % 360 - 180
+
+
+def circular_lon_mean_std(lon: pd.Series):
+    """
+    Mean and standard deviation (degrees) of longitudes around the circle.
+
+    Longitudes are taken relative to their circular mean and wrapped, so
+    179.9 and -179.9 average to +-180 (not 0) and their spread is 0.1 deg.
+    """
+    lon = pd.Series(lon, dtype=float).dropna()
+    if lon.empty:
+        return np.nan, np.nan
+    rad = np.deg2rad(lon.to_numpy())
+    center = np.rad2deg(np.arctan2(np.sin(rad).mean(), np.cos(rad).mean()))
+    rel = wrap_lon(lon.to_numpy() - center)
+    mean = float(wrap_lon(center + rel.mean()))
+    std = float(np.std(rel, ddof=1)) if len(rel) > 1 else np.nan
+    return mean, std
+
 
 def destination_point(lat1_deg, lon1_deg, azimuth_deg, distance_deg):
     """

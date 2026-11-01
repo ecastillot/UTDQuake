@@ -24,6 +24,70 @@ It is also hosted on GitHub:
    :alt: GitHub Repository
 
 
+.. _dataset-naming-subsection:
+Naming: ``utdq_net``, ``network`` and ``catalog``
+--------------------------------------------------
+
+Three names identify where the data come from. They are used the same way in every table:
+
+- ``utdq_net``: the **UTDQuake network**, i.e. the monitoring network or project that reported the
+  events and picks (e.g. ``tx``, ``AEIC``, ``R05``). It is the key of the ``Network`` table and of
+  every file (``events/utdq_net=tx.parquet``), and it links the four tables. Networks downloaded from
+  an agency keep the agency's code (``tx``, ``AEIC``); catalogs built by research projects get an
+  ``R`` code (``R01``, ``R02``, ...).
+- ``catalog``: the catalog or bulletin the events of a UTDQuake network come from (e.g. ``ComCat``,
+  ``ISC Bulletin``, ``ToC2ME``). Only in the ``Network`` table.
+- ``network``: the `FDSN network code <https://www.fdsn.org/networks/>`_ of the station that recorded
+  a pick (e.g. ``AK``), as in the pick's ``seed_id``. Only in the ``Stations`` and ``Picks`` tables. A
+  UTDQuake network usually uses stations of several FDSN networks: the ``networks`` column of the
+  ``Network`` table lists them.
+
+The tables join on these keys:
+
+.. code-block:: text
+
+   Network  --utdq_net-->  Events  --(utdq_net, event_id)-->  Picks  --(utdq_net, network, station)-->  Stations
+
+A station seen by two UTDQuake networks has one row in each of them, because its calculated
+location is estimated from each network's own events. The distinct physical stations are the
+distinct ``(network, station)`` pairs.
+
+.. note::
+
+   ISC reports many picks with the placeholder network code ``IR`` (its International Registry of
+   stations) instead of the station's FDSN code. ISC has no FDSN station service, so UTDQuake resolves
+   these stations with the `ISC station registry <http://www.isc.ac.uk/registries/>`_, matching the
+   station code and the time span of its picks:
+
+   - the station gets its **confirmed location** from the registry;
+   - when exactly one FDSN network has a station with the same code at the site (within 10 km), the
+     station and its picks get that **network** (``network_source = isc_registry``) and are merged with
+     that network's station row if there is one (``ir_merged``);
+   - a station the registry knows only as ``IR`` keeps ``network = IR``, now located
+     (``network_source = isc_registry_ir``);
+   - stations with two or more candidate networks, or not in the registry, keep ``IR``
+     (``network_source = unresolved_ir``).
+
+   Before the registry, an ``IR`` station was matched only to a same-code station of the same UTDQuake
+   network within 10 km (``network_source = resolved_twin``). The ``seed_id`` of a pick is always the
+   one reported. A dated copy of the registry and the decision of every station are kept with the
+   dataset (``.utdquake/isc_registry/``), so an extension reuses them.
+
+.. _dataset-phase-counts-subsection:
+Phase counts
+------------
+
+The ``phase`` column of the ``Picks`` table keeps the label reported by the catalog (``P``, ``Pg``,
+``Pn``, ``S``, ``Sg``, ``Sn``). The ``Events`` and ``Network`` tables count the picks two ways:
+
+- per label: ``p_count``, ``pg_count``, ``pn_count``, ``s_count``, ``sg_count``, ``sn_count``;
+- per phase family: ``p_arrivals`` (every P-type pick: P + Pg + Pn + any other label starting with
+  ``P``) and ``s_arrivals`` (every S-type pick).
+
+The ``p_phase_count`` and ``s_phase_count`` columns of the ``Events`` table come from ObsPlus and only
+count arrivals labelled exactly ``P`` or ``S``: for catalogs that label their picks ``Pg``/``Pn``/``Sg``/``Sn``
+they are close to zero. Use ``p_arrivals`` and ``s_arrivals`` instead.
+
 .. _dataset-seismic-subsection:
 Seismic Data
 --------------
@@ -35,11 +99,11 @@ It also integrates `EventBanks <https://niosh-mining.github.io/obsplus/versions/
 
    Directory    Format       Description
    ----------   -----------  -------------------------------------------------------
-   networks/    *.parquet    Network metadata.
-   events/      *.parquet    Earthquake event catalogs per network.
-   stations/    *.parquet    Station metadata per network.
-   picks/       *.parquet    Seismic phase pick datasets per network.
-   bank/        *.zip        ObsPlus EventBank datasets, one per network. Can be
+   network/     *.parquet    Network metadata (one row per utdq_net).
+   events/      *.parquet    Earthquake event catalogs, one file per utdq_net.
+   stations/    *.parquet    Station metadata, one file per utdq_net.
+   picks/       *.parquet    Seismic phase picks, one file per utdq_net.
+   banks/       *.zip        ObsPlus EventBank datasets, one per utdq_net. Can be
                              read directly using ObsPlus EventBank
                              <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>.
 
@@ -48,7 +112,7 @@ Each dataset is organized per network and can be explored interactively using th
 Network
 ^^^^^^^
 
-The **Network** dataset contains metadata about each seismic network.
+The **Network** dataset contains metadata about each UTDQuake network (one row per ``utdq_net``).
 
 .. raw:: html
 
@@ -71,9 +135,21 @@ The **Network** dataset contains metadata about each seismic network.
    * - Column
      - Type
      - Description
-   * - network
+   * - utdq_net
      - string
-     - Network identifier
+     - UTDQuake network code (key of every table)
+   * - catalog
+     - string
+     - Catalog or bulletin the events come from (e.g. ``ComCat``, ``ISC Bulletin``, ``ToC2ME``)
+   * - catalog_type
+     - string
+     - ``agency`` (bulletin of a monitoring agency), ``research`` (catalog of a research project) or ``synthetic``
+   * - networks
+     - string
+     - FDSN network codes of the stations that recorded the picks, comma-separated, most picks first
+   * - dataset_version
+     - string
+     - UTDQuake version that first added the network (``v1``, ``v2``); later versions may add events to it, see :ref:`versions-section`
    * - continent
      - string
      - Continent of network
@@ -91,7 +167,7 @@ The **Network** dataset contains metadata about each seismic network.
      - Responsible agency
    * - total_stations
      - int64
-     - Total stations in network
+     - Rows of the network's Stations table (distinct ``(network, station)`` pairs)
    * - located_stations
      - int64
      - Stations with location information
@@ -106,19 +182,25 @@ The **Network** dataset contains metadata about each seismic network.
      - Original number of events
    * - original_p_arrivals
      - int64
-     - Original number of P picks
+     - Original number of P-type arrivals (P, Pg, Pn, ...), before QC
    * - original_s_arrivals
      - int64
-     - Original number of S picks
+     - Original number of S-type arrivals (S, Sg, Sn, ...), before QC
    * - events
      - int64
      - Number of events after QC
    * - p_arrivals
      - int64
-     - Number of P picks after QC
+     - Number of P-type picks after QC (P, Pg, Pn and any other P-type label)
    * - s_arrivals
      - int64
-     - Number of S picks after QC
+     - Number of S-type picks after QC (S, Sg, Sn and any other S-type label)
+   * - p_count, pg_count, pn_count
+     - int64
+     - Number of picks labelled exactly P, Pg and Pn after QC
+   * - s_count, sg_count, sn_count
+     - int64
+     - Number of picks labelled exactly S, Sg and Sn after QC
    * - start_time
      - timestamp[us]
      - Start of catalog
@@ -160,7 +242,8 @@ The **Network** dataset contains metadata about each seismic network.
 Stations
 ^^^^^^^
 
-The **Stations** dataset contains metadata for each seismic station.
+The **Stations** dataset contains metadata for each station that recorded the picks of a UTDQuake
+network: one row per ``(utdq_net, network, station)``.
 
 .. raw:: html
 
@@ -183,18 +266,24 @@ The **Stations** dataset contains metadata for each seismic station.
    * - Column
      - Type
      - Description
+   * - utdq_net
+     - string
+     - UTDQuake network code
    * - network
      - string
-     - Network identifier
+     - FDSN network code of the station (``IR`` if unresolved, see :ref:`dataset-naming-subsection`)
    * - station
      - string
      - Station identifier
    * - channel
      - string
      - Channel identifier (Only applies for DAS data)
+   * - network_type
+     - string
+     - ``surface`` or ``DAS``
    * - available
      - bool
-     - Availability of station metadata
+     - Whether the station has a location (confirmed or calculated). False for stations that only appear in the picks
    * - confirmed
      - bool
      - Whether station is confirmed
@@ -228,6 +317,13 @@ The **Stations** dataset contains metadata for each seismic station.
    * - calculated_num_entries
      - int64
      - Number of entries used for calculation
+   * - network_source
+     - string
+     - Where ``network`` comes from: ``reported`` (code reported with the picks), ``isc_registry``,
+       ``isc_registry_ir`` or ``unresolved_ir`` (see the ``IR`` note in :ref:`dataset-naming-subsection`)
+   * - ir_merged
+     - bool
+     - Whether an ``IR`` station row was merged into this one
    * - db_path
      - string
      - Path to station database file
@@ -236,22 +332,16 @@ The **Stations** dataset contains metadata for each seismic station.
 
    </div>
 
-.. warning::
+.. note::
 
-   In the Stations table, ``network`` is the UTDQuake network name (e.g.
-   ``comcat_deep30``), not the FDSN network code. A station code can
-   therefore appear more than once in the same table when it belongs to
-   different FDSN networks (e.g. ``AV.SPU`` in Alaska and ``UU.SPU`` in Utah,
-   ~3,500 km apart). The FDSN code is currently only embedded in ``db_path``.
-   Do not join picks to stations on ``station`` alone: use the FDSN network
-   code from the pick's ``pick_agency`` (same as the first field of
-   ``seed_id``, ``NET.STA.LOC.CHA``) together with
-   ``station``. A dedicated FDSN network column is planned for this table.
+   Join picks to stations on ``(utdq_net, network, station)``, never on ``station`` alone: the same
+   station code is used by different FDSN networks (e.g. ``AV.SPU`` in Alaska and ``UU.SPU`` in Utah,
+   ~3,500 km apart). Every pick has a station row.
 
 Events
 ^^^^^^^
 
-The **Events** dataset contains earthquake catalogs for each network.
+The **Events** dataset contains the earthquakes of each UTDQuake network.
 
 .. raw:: html
 
@@ -274,9 +364,12 @@ The **Events** dataset contains earthquake catalogs for each network.
    * - Column
      - Type
      - Description
-   * - network
+   * - utdq_net
      - string
-     - Network identifier
+     - UTDQuake network code
+   * - dataset_version
+     - string
+     - UTDQuake version that added the event (``v1``, ``v2``, ...), see :ref:`versions-section`
    * - time
      - timestamp[ns]
      - Origin time of the event
@@ -321,10 +414,10 @@ The **Events** dataset contains earthquake catalogs for each network.
      - Type of reported magnitude
    * - p_phase_count
      - float64
-     - Number of associated P phases
+     - Number of arrivals labelled exactly ``P`` in the preferred origin (ObsPlus; Pg and Pn are not counted, see ``p_arrivals``)
    * - s_phase_count
      - float64
-     - Number of associated S phases
+     - Number of arrivals labelled exactly ``S`` in the preferred origin (ObsPlus; Sg and Sn are not counted, see ``s_arrivals``)
    * - p_pick_count
      - float64
      - Number of P-wave picks
@@ -360,7 +453,19 @@ The **Events** dataset contains earthquake catalogs for each network.
      - Event solution version
    * - stations
      - string
-     - List of stations contributing to event
+     - ``NET.STA`` codes of the stations that picked the event, comma-separated
+   * - p_count, pg_count, pn_count
+     - int64
+     - Picks of the event labelled exactly P, Pg and Pn (picks table)
+   * - s_count, sg_count, sn_count
+     - int64
+     - Picks of the event labelled exactly S, Sg and Sn (picks table)
+   * - p_arrivals
+     - int64
+     - P-type picks of the event (P, Pg, Pn and any other P-type label)
+   * - s_arrivals
+     - int64
+     - S-type picks of the event (S, Sg, Sn and any other S-type label)
    * - preferred_origin_id
      - string
      - Identifier of preferred origin solution
@@ -395,18 +500,28 @@ The **Picks** dataset contains seismic phase picks associated with each event.
    * - Column
      - Type
      - Description
+   * - utdq_net
+     - string
+     - UTDQuake network code
+   * - dataset_version
+     - string
+     - UTDQuake version that added the pick's event, see :ref:`versions-section`
    * - network
      - string
-     - Network identifier
+     - FDSN network code of the station (from ``seed_id``; for ``IR`` picks, resolved where possible, see :ref:`dataset-naming-subsection`)
    * - station
      - string
      - Station identifier
-   * - channel
-     - string
-     - Seismic channel code
    * - location
      - string
      - Station location code
+   * - channel
+     - string
+     - Seismic channel code
+   * - network_source
+     - string
+     - Where ``network`` comes from: ``reported``, ``resolved_twin``, ``isc_registry``,
+       ``isc_registry_ir`` or ``unresolved_ir`` (see the ``IR`` note in :ref:`dataset-naming-subsection`)
    * - phase
      - string
      - Phase type (e.g., P, S)
@@ -436,7 +551,7 @@ The **Picks** dataset contains seismic phase picks associated with each event.
      - Associated event identifier
    * - pick_agency
      - string
-     - FDSN network code of the station that recorded the pick (from ``seed_id``, e.g. ``TX``); use it with ``station`` to join picks to stations
+     - FDSN network code as reported with the pick (first field of ``seed_id``, e.g. ``TX``); ``network`` is the resolved code to join with
    * - origin_time
      - timestamp[ns]
      - Origin time of associated event
@@ -510,11 +625,11 @@ This design preserves compatibility with conventional seismic metadata structure
 
    Directory    Format       Description
    ----------   -----------  -------------------------------------------------------
-   networks_DAS/    *.parquet    Network metadata.
-   events_DAS/      *.parquet    Earthquake event catalogs per network.
+   network_DAS/     *.parquet    Network metadata (one row per utdq_net).
+   events_DAS/      *.parquet    Earthquake event catalogs, one file per utdq_net.
    stations_DAS/    *.parquet    Metadata for DAS virtual sensors associated with each cable system in the network. (See ``channel`` column for unique sensor identifiers.)
-   picks_DAS/       *.parquet    Seismic phase pick datasets per network.
-   bank_DAS/        *.zip        ObsPlus EventBank datasets, one per Network_DAS. Can be
+   picks_DAS/       *.parquet    Seismic phase picks, one file per utdq_net.
+   banks_DAS/       *.zip        ObsPlus EventBank datasets, one per utdq_net. Can be
                              read directly using ObsPlus EventBank
                              <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>.
 

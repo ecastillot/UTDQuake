@@ -1,14 +1,34 @@
+import warnings
 import numpy as np
-from typing import Optional
+from typing import Any, Optional
+
+
+def renamed_kwarg(new: Any, old: Any, new_name: str, old_name: str, func: str) -> Any:
+    """
+    Resolve a keyword argument renamed in UTDQuake 1.0 (``network`` ->
+    ``utdq_net``, ``networks`` -> ``utdq_nets``).
+
+    Returns ``new`` unless only the deprecated ``old`` was given, in which
+    case it warns and returns ``old``. Giving both is an error.
+    """
+    if old is None:
+        return new
+    if new is not None:
+        raise TypeError(f"{func}() got both {new_name!r} and its deprecated alias {old_name!r}")
+    warnings.warn(f"{func}(): {old_name!r} is deprecated, use {new_name!r} (the UTDQuake "
+                  "network code; 'network' now means the FDSN code of a station)",
+                  DeprecationWarning, stacklevel=3)
+    return old
+
 
 def merge_network_stats(all_stats: dict, distance_bins: Optional[list] = None) -> dict:
     """
-    Merge statistics from multiple networks into a single stats dictionary.
+    Merge statistics from multiple UTDQuake networks into a single stats dictionary.
 
     Parameters
     ----------
     all_stats : dict
-        Dictionary of network stats, {network_name: stats_dict}.
+        Dictionary of network stats, {utdq_net: stats_dict}.
     distance_bins : list, optional
         Distance bins to use. If None, default bins are used.
 

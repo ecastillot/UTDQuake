@@ -54,14 +54,14 @@ class ManifestPaths:
     def ensure_dirs(self) -> None:
         self.manifest_dir.mkdir(parents=True, exist_ok=True)
         
-    def get_events(self,network) -> Path:
-        return self.manifest_dir / "events" / f"network={network}.{self.ext}"
+    def get_events(self,utdq_net) -> Path:
+        return self.manifest_dir / "events" / f"utdq_net={utdq_net}.{self.ext}"
 
-    def get_stations(self,network) -> Path:
-        return self.manifest_dir / "stations" / f"network={network}.{self.ext}"
+    def get_stations(self,utdq_net) -> Path:
+        return self.manifest_dir / "stations" / f"utdq_net={utdq_net}.{self.ext}"
 
-    def get_picks(self,network) -> Path:
-        return self.manifest_dir / "picks" / f"network={network}.{self.ext}"
+    def get_picks(self,utdq_net) -> Path:
+        return self.manifest_dir / "picks" / f"utdq_net={utdq_net}.{self.ext}"
 
 
 # ---------------------------------------------------------------------

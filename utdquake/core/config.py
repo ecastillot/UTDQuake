@@ -15,10 +15,21 @@ HF_REPO_ID: str = "ecastillot/UTDQuake"
 HF_REPO_TYPE: str = "dataset"
 """Type of Hugging Face repository (default: 'dataset')."""
 
+UTDQUAKE_REVISION: str = "UTDQUAKE_REVISION"
+"""Environment variable name for the Hugging Face revision to read (a branch,
+tag such as ``v1.0``, commit hash or ``refs/pr/N``). Unset: ``main``."""
+
 CORE_DIR: Path = Path(__file__).resolve().parent
 """Path to the core directory of the UTDQuake package."""
 
 KM_PER_DEG = 111.19
+
+UTDQ_NET: str = "utdq_net"
+"""Column (and file key) that names a UTDQuake network: the key of the
+network table and of every events/stations/picks file. A UTDQuake network
+is the monitoring network or project that reported the events and picks
+(e.g. ``tx``, ``AEIC``, ``R05``). The ``network`` column of the stations and
+picks tables is something else: the FDSN code of the recording station."""
 
 @dataclass(frozen=True)
 class HFEntry:
@@ -42,7 +53,7 @@ HF_CONFIG: Dict[str, HFEntry] = {
     "banks": HFEntry(
         name=None,
         split=None,
-        path="banks/{network}.zip",
+        path="banks/{utdq_net}.zip",
     ),
     "networks": HFEntry(
         name="0_networks",
@@ -52,27 +63,27 @@ HF_CONFIG: Dict[str, HFEntry] = {
     "stations": HFEntry(
         name="1_stations",
         split="metadata",
-        path="stations/network={network}.parquet",
+        path="stations/utdq_net={utdq_net}.parquet",
     ),
     "events": HFEntry(
         name="2_events",
         split="metadata",
-        path="events/network={network}.parquet",
+        path="events/utdq_net={utdq_net}.parquet",
     ),
     "picks": HFEntry(
         name="3_picks",
         split="metadata",
-        path="picks/network={network}.parquet",
+        path="picks/utdq_net={utdq_net}.parquet",
     ),
     ".utdquake/travel_time": HFEntry(
         name=None,
         split=None,
-        path=".utdquake/travel_time/{network}.parquet",
+        path=".utdquake/travel_time/{utdq_net}.parquet",
     ),
     ".utdquake/stats": HFEntry(
         name=None,
         split=None,
-        path=".utdquake/stats/{network}.npz",
+        path=".utdquake/stats/{utdq_net}.npz",
     ),
     ".utdquake/export": HFEntry(
         name=None,
@@ -131,13 +142,31 @@ def get_hf_entry(key: str, das: bool = False) -> HFEntry:
         das_path = Path(f"{first_part}_DAS", *rest_parts)
         return replace(entry, path=str(das_path))
     
-    # Store DAS files in a dedicated directory and append "_DAS"
-    # to the dataset name when one exists.
+    # Store DAS files in a dedicated directory (the entry's own directory
+    # with "_DAS", e.g. network/ -> network_DAS/) and append "_DAS" to the
+    # dataset name when one exists.
+    path = Path(entry.path)
     return replace(
         entry,
         name=f"{entry.name}_DAS" if entry.name else None,
-        path=f"{key}_DAS/{Path(entry.path).name}",
+        path=f"{path.parent.name}_DAS/{path.name}",
     )
+
+def get_revision(revision: Optional[str] = None) -> Optional[str]:
+    """
+    Return the Hugging Face revision to read: ``revision`` if given, else the
+    ``UTDQUAKE_REVISION`` environment variable, else None (``main``).
+
+    Examples
+    --------
+    >>> os.environ["UTDQUAKE_REVISION"] = "v1.0"
+    >>> get_revision()
+    'v1.0'
+    """
+    if revision is None:
+        revision = os.environ.get(UTDQUAKE_REVISION, "").strip() or None
+    return revision
+
 
 def get_root(das: bool = False) -> Path:
     """
@@ -191,18 +220,20 @@ def get_root(das: bool = False) -> Path:
 
     return Path(root).expanduser().resolve()
 
-def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
+def get_utdq_paths(utdq_net: str, das: bool = False) -> Dict[str, Path]:
     """
-    Return standardized UTDQuake directory paths for a given network.
+    Return standardized UTDQuake directory paths for a given UTDQuake network.
 
     This helper constructs the filesystem paths used by UTDQuake
     for storing and accessing data products associated with a
-    seismic network.
+    UTDQuake network (``utdq_net``).
 
     Parameters
     ----------
-    network : str
-        Network code (e.g., ``"tx"``, ``"AK"``, etc.).
+    utdq_net : str
+        UTDQuake network code (e.g., ``"tx"``, ``"AEIC"``, ``"R05"``), the
+        key of the network table. Not an FDSN network code: those are the
+        ``network`` column of the stations and picks tables.
     das : bool, optional
         If True, use the DAS cache root environment variable
         (`UTDQUAKE_DAS_ROOT`). Otherwise use the standard cache root
@@ -227,24 +258,21 @@ def get_utdq_paths(network: str, das: bool = False) -> Dict[str, Path]:
 
     root = get_root(das=das)
 
-    utdq_paths = {
-        "banks": root / get_hf_entry("banks",das).path.format(network=network).split(".zip")[0],
-        "events": root / get_hf_entry("events",das).path.format(
-            network=network
-        ),
-        "stations": root / get_hf_entry("stations",das).path.format(
-            network=network
-        ),
-        "picks": root / get_hf_entry("picks",das).path.format(
-            network=network
-        ),
+    def fmt(key):
+        return get_hf_entry(key, das).path.format(utdq_net=utdq_net)
 
-        ".utdquake/travel_time": root / get_hf_entry(".utdquake/travel_time",das).path.format(network=network),
-        ".utdquake/stats": root / get_hf_entry(".utdquake/stats",das).path.format(network=network),
+    utdq_paths = {
+        "banks": root / fmt("banks").split(".zip")[0],
+        "events": root / fmt("events"),
+        "stations": root / fmt("stations"),
+        "picks": root / fmt("picks"),
+
+        ".utdquake/travel_time": root / fmt(".utdquake/travel_time"),
+        ".utdquake/stats": root / fmt(".utdquake/stats"),
 
         # not for the public API
         ".utdquake/export/db": root / get_hf_entry(".utdquake/export",das).path / "db",
-        ".utdquake/logs/banks": root / get_hf_entry(".utdquake/logs",das).path / f"{network}" / "banks",
+        ".utdquake/logs/banks": root / get_hf_entry(".utdquake/logs",das).path / f"{utdq_net}" / "banks",
     }
 
 

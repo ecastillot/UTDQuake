@@ -51,8 +51,24 @@ from ..qc.config import GLOBAL_TRENDS_DEFAULTS_DEG2
 from .utils import (compute_region, 
                     human_format, 
                     smart_date_formatter,
-                    create_green_to_orange_cmap
+                    create_green_to_orange_cmap,
+                    map_projection,
+                    phase_family
                     )
+
+def set_dateline_ticks(gl, region) -> None:
+    """
+    Longitude ticks of a map across the antimeridian (``region[1] > 180``,
+    see :func:`utdquake.utils.utils.compute_region`): the automatic ones only
+    label 180. No-op for other regions.
+    """
+    if region is None or region[1] <= 180:
+        return
+    span = region[1] - region[0]
+    step = 10 if span > 40 else 5 if span > 15 else 2
+    ticks = np.arange(np.ceil(region[0] / step) * step, region[1] + 1e-9, step)
+    gl.xlocator = mticker.FixedLocator((ticks + 180) % 360 - 180)
+
 
 def add_scalebar(
     ax: plt.Axes,
@@ -82,6 +98,8 @@ def add_scalebar(
     >>> region = (-70, -60, 2, 10)
     >>> add_scalebar(ax, region, location='lower left')
     """
+    import cartopy.crs as ccrs
+
     lon_min, lon_max, lat_min, lat_max = region
     lon_range = lon_max - lon_min
     lat_range = lat_max - lat_min
@@ -133,7 +151,7 @@ def add_scalebar(
         (x1, y1),  # lower left corner
         x2 - x1,   # width
         y2 - y1,   # height
-        transform=ax.projection,
+        transform=ccrs.PlateCarree(),  # positions are lon/lat (also for maps centered on 180)
         facecolor='white',
         edgecolor='none',
         zorder=1   # draw below the line
@@ -144,7 +162,7 @@ def add_scalebar(
     ax.plot(
         [x0, x0 + scale_length_deg],
         [y0, y0],
-        transform=ax.projection,
+        transform=ccrs.PlateCarree(),  # positions are lon/lat (also for maps centered on 180)
         color='k',
         linewidth=4
     )
@@ -155,7 +173,7 @@ def add_scalebar(
         f"{scale_length_km} km",
         ha='center',
         va='bottom',
-        transform=ax.projection,
+        transform=ccrs.PlateCarree(),  # positions are lon/lat (also for maps centered on 180)
         fontsize=10,
         bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=0.8)
     )
@@ -261,10 +279,12 @@ def plot_overview(
 
     
     if analysis is not None:
-        ax1.set_title(f"Contributor: {analysis.get('network', 'N/A')}",
-                  fontsize=14, weight='bold',loc='left')
-        print(analysis)
-        print(analysis.get('located_stations', 'N/A'))
+        utdq_net = analysis.get('utdq_net', 'N/A')
+        catalog = analysis.get('catalog')
+        title = f"Contributor: {utdq_net}"
+        if isinstance(catalog, str) and catalog and catalog != utdq_net:
+            title += f" ({catalog})"
+        ax1.set_title(title, fontsize=14, weight='bold',loc='left')
 
         if das:
             msg = f"Events: {human_format(analysis.get('events', len(events)))}\n"+\
@@ -485,7 +505,12 @@ def plot_overview(
     # M3). MaxNLocator (instead of a fixed 2-unit step) keeps tick spacing
     # sensible whether the range is 8 units or under 1.
     mag_min, mag_max = events["magnitude"].min(), events["magnitude"].max()
-    ax3.set_ylim(mag_min - 0.5, mag_max + 0.5)
+    if np.isfinite(mag_min) and np.isfinite(mag_max):
+        ax3.set_ylim(mag_min - 0.5, mag_max + 0.5)
+    else:
+        # catalogs without magnitudes (e.g. LASSO): keep the counts histogram only
+        ax3.text(0.02, 0.9, "No magnitudes", transform=ax3.transAxes,
+                 color='darkorange', fontsize=9)
     ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, min_n_ticks=3))
     ax3.yaxis.tick_left()
     ax3.yaxis.set_label_position("left")
@@ -569,7 +594,7 @@ def plot_overview(
                         )
         region =(-180, -130, 50, 72)
     else:
-        proj = ccrs.PlateCarree()
+        proj = map_projection(region)
 
 
     ax2 = fig.add_subplot(gs[1, 0],
@@ -637,9 +662,11 @@ def plot_overview(
 
 
     gl = ax2.gridlines(draw_labels=True, linewidth=0.5, color='gray',
-                       alpha=0.5, linestyle='--')
+                       alpha=0.5, linestyle='--', crs=ccrs.PlateCarree())
     gl.top_labels = False
     gl.right_labels = False
+    if not is_alaska:
+        set_dateline_ticks(gl, region)
 
     # ax2.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
     #               fontsize=14, weight='bold',loc='left')
@@ -824,7 +851,7 @@ def plot_utdq_overview(
 
     ax2.text(
         0.02, 0.05,
-        msg=msg,
+        msg,
         transform=ax2.transAxes,
         ha="left",
         va="bottom",
@@ -908,18 +935,21 @@ def plot_stats(
     ax1.grid(True, linestyle='--', alpha=0.5)
 
     # --- Magnitude histogram ---
-    ax2.hist(events['magnitude'], bins=20, color='#ec7524')
-    ax2.set_yscale("log")
     ax2.set_title("Magnitude")
-    ax2.set_xlabel("Magnitude")
-    ax2.set_ylabel("Log Frequency")
-    ax2.grid(True, linestyle='--', alpha=0.5)
-    ax2.set_ylim(bottom=1)
-    max_mag, min_mag = events['magnitude'].max(), events['magnitude'].min()
-    ax2.annotate(f"Max: {max_mag:.2f}", xy=(0.98, 0.95),
-                 xycoords="axes fraction", ha="right", fontsize=9)
-    ax2.annotate(f"Min: {min_mag:.2f}", xy=(0.98, 0.88),
-                 xycoords="axes fraction", ha="right", fontsize=9)
+    mags = events['magnitude'].dropna()
+    if mags.empty:
+        ax2.text(0.5, 0.5, "No magnitudes", ha='center', va='center')
+    else:
+        ax2.hist(mags, bins=20, color='#ec7524')
+        ax2.set_yscale("log")
+        ax2.set_xlabel("Magnitude")
+        ax2.set_ylabel("Log Frequency")
+        ax2.grid(True, linestyle='--', alpha=0.5)
+        ax2.set_ylim(bottom=1)
+        ax2.annotate(f"Max: {mags.max():.2f}", xy=(0.98, 0.95),
+                     xycoords="axes fraction", ha="right", fontsize=9)
+        ax2.annotate(f"Min: {mags.min():.2f}", xy=(0.98, 0.88),
+                     xycoords="axes fraction", ha="right", fontsize=9)
 
     # --- Epicentral distance (picks-dependent) ---
     if picks is None:
@@ -936,8 +966,9 @@ def plot_stats(
         picks["distance_km"] = picks['distance'] * 111
 
         # Split by phase
-        picks_P = picks[picks["phase"] == "P"]
-        picks_S = picks[picks["phase"] == "S"]
+        family = phase_family(picks["phase"])
+        picks_P = picks[family.eq("P")]
+        picks_S = picks[family.eq("S")]
 
         # Histogram counts
         counts_P, _ = np.histogram(picks_P["distance_km"], bins=bins)
@@ -1496,8 +1527,10 @@ def plot_pick_histograms(
     # -------------------------------
     # 1. Count P and S picks per origin
     # -------------------------------
-    p_counts = df[df['phase'].str.upper() == 'P'].groupby('origin_id').size()
-    s_counts = df[df['phase'].str.upper() == 'S'].groupby('origin_id').size()
+    # P and S families: P counts P, Pg, Pn, ...; S counts S, Sg, Sn, ...
+    df = df.assign(phase_family=phase_family(df['phase']))
+    p_counts = df[df['phase_family'] == 'P'].groupby('origin_id').size()
+    s_counts = df[df['phase_family'] == 'S'].groupby('origin_id').size()
 
     # -------------------------------
     # 2. Calculate Vp/Vs ratios per origin using Wadati method
@@ -1508,8 +1541,8 @@ def plot_pick_histograms(
     for origin_id, group in df.groupby('origin_id'):
         group = group.copy()
         # Calculate S-P times
-        s_group = group[group['phase'].str.upper() == 'S']
-        p_group = group[group['phase'].str.upper() == 'P']
+        s_group = group[group['phase_family'] == 'S']
+        p_group = group[group['phase_family'] == 'P']
 
         if len(s_group) == 0:
             only_p_count += 1
@@ -1806,11 +1839,12 @@ def plot_pick_stats(df, distance_type="epicentral", savepath=None, show=True):
     df = df.dropna(subset=['time','origin_time'])
 
 
-    # Get first/last P/S arrivals
-    first_p = df[df['phase'].str.upper() == 'P'].sort_values('time').groupby('origin_id').first()
-    last_p  = df[df['phase'].str.upper() == 'P'].sort_values('time').groupby('origin_id').last()
-    first_s = df[df['phase'].str.upper() == 'S'].sort_values('time').groupby('origin_id').first()
-    last_s  = df[df['phase'].str.upper() == 'S'].sort_values('time').groupby('origin_id').last()
+    # Get first/last P/S arrivals (P and S families: P, Pg, Pn, ... and S, Sg, Sn, ...)
+    df = df.assign(phase_family=phase_family(df['phase']))
+    first_p = df[df['phase_family'] == 'P'].sort_values('time').groupby('origin_id').first()
+    last_p  = df[df['phase_family'] == 'P'].sort_values('time').groupby('origin_id').last()
+    first_s = df[df['phase_family'] == 'S'].sort_values('time').groupby('origin_id').first()
+    last_s  = df[df['phase_family'] == 'S'].sort_values('time').groupby('origin_id').last()
 
     first_p["tt_first_P"] = (first_p["time"] - first_p["origin_time"]).dt.total_seconds()
     last_p["tt_last_P"]   = (last_p["time"] - last_p["origin_time"]).dt.total_seconds()
@@ -1819,8 +1853,8 @@ def plot_pick_stats(df, distance_type="epicentral", savepath=None, show=True):
 
     # analyze stations by network and stations with P and S picks
 
-    p_group = df[df['phase'].str.upper() == 'P']
-    s_group = df[df['phase'].str.upper() == 'S']
+    p_group = df[df['phase_family'] == 'P']
+    s_group = df[df['phase_family'] == 'S']
     # Find stations with both P and S picks
     common_stations = pd.merge(
         s_group[['network', 'station', 'origin_id', 'distance_used', 'time']],
@@ -1968,7 +2002,8 @@ def plot_station_location_uncertainty(
         
     # Compute differences
     dlat = df["calculated_latitude"] - df["confirmed_latitude"]
-    dlon = df["calculated_longitude"] - df["confirmed_longitude"]
+    # shortest way around (a longitude difference never exceeds 180 deg)
+    dlon = (df["calculated_longitude"] - df["confirmed_longitude"] + 180) % 360 - 180
     
     mean_lat = np.radians(df["confirmed_latitude"].mean())
     km_per_deg_lat = 111.32
@@ -1991,16 +2026,14 @@ def plot_station_location_uncertainty(
     # Create figure
     fig,axes = plt.subplots(2,1,figsize=(6, 8), dpi=dpi)
     
-    fig2, ax = plt.subplots(
-                            1, 1,
-                            subplot_kw={"projection": ccrs.PlateCarree()},
-                            figsize=(8, 6)
-                        )
-    # AX1 spans two cells horizontally (big)
-    # ax1 = fig.add_subplot(gs[0, 0:3],projection=ccrs.PlateCarree())   # Row 0, columns 0 & 1
     _df = df.rename(columns={"calculated_latitude": "latitude",
                             "calculated_longitude": "longitude"})
     region = compute_region(_df,df,padding=0.05)
+    fig2, ax = plt.subplots(
+                            1, 1,
+                            subplot_kw={"projection": map_projection(region)},
+                            figsize=(8, 6)
+                        )
     # print(region)
     plot_station_map(ax, df,region)
     
@@ -2031,7 +2064,7 @@ def plot_station_location_uncertainty(
     fig.tight_layout()
     if savepath is not None:
         fig.savefig(savepath, dpi=dpi)
-        map_path = savepath.replace('.png','_map.png')
+        map_path = str(savepath).replace('.png','_map.png')  # str or Path
         fig2.savefig(map_path, dpi=dpi)
         print(f"Saved plot to {savepath}")
         print(f"Saved plot to {map_path}")
@@ -2172,7 +2205,8 @@ def setup_map(ax: "plt.Axes", region: list) -> tuple:
     ax.add_feature(cfeature.RIVERS)
 
     gl = ax.gridlines(draw_labels=True, linewidth=0.8, color='gray',
-                      alpha=0.7, linestyle='--')
+                      alpha=0.7, linestyle='--', crs=ccrs.PlateCarree())
+    set_dateline_ticks(gl, region)
     gl.top_labels = True
     gl.left_labels = True
     gl.right_labels = False
@@ -2267,7 +2301,7 @@ def plot_network_station_density(
     ----------
     df : pandas.DataFrame
         Must contain the following columns:
-        - 'network': network name
+        - 'utdq_net': UTDQuake network code
         - 'approx_lon_min', 'approx_lon_max', 'approx_lat_min', 'approx_lat_max'
         - 'total_stations': number of stations in the network
         - 'events': number of events in the network
@@ -2319,7 +2353,7 @@ def plot_network_station_density(
         )
 
     # Add network labels
-    for i, net in enumerate(df["network"]):
+    for i, net in enumerate(df["utdq_net"]):
         ax.text(
             df["area_deg2"][i],
             df["total_stations"][i],
@@ -2389,9 +2423,16 @@ def plot_phase_count_radar_by_magnitude(events, show=True, savepath=None):
     Returns
     -------
     None
-    """
 
+    Notes
+    -----
+    P and S counts are the events' ``p_arrivals``/``s_arrivals`` (all P-type
+    and S-type picks: P, Pg, Pn, ... and S, Sg, Sn, ...) when present, else
+    ``p_phase_count``/``s_phase_count`` (arrivals labelled exactly "P"/"S").
+    """
     # Columns to plot
+    if {"p_arrivals", "s_arrivals"} <= set(events.columns):
+        events = events.assign(p_phase_count=events["p_arrivals"], s_phase_count=events["s_arrivals"])
     cols = ["p_phase_count", "s_phase_count", "used_phase_count", "station_count"]
 
     # Magnitude bins
