@@ -116,7 +116,8 @@ The dataset of the UTDQuake paper.
 - **Networks.** The research catalogs and ``CM`` are not part of ``v1.0``; they are released, with ``R``
   codes, in ``v2.0``.
 - **GFZ removed.** ``GFZ`` was a copy of ``GEOFON`` (the same 4,875 events, picks and stations) and is no
-  longer a UTDQuake network; ``GEOFON`` keeps the data.
+  longer a UTDQuake network; ``GEOFON`` keeps the data. The tag ``v1.0`` was moved on 2026-11-01; the
+  first ``v1.0``, with ``GFZ``, can still be read with ``revision="f776932f988b4d797503fb2cc276b9726c4eddaa"``.
 
 
 v0.3
