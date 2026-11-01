@@ -28,6 +28,7 @@ def compute_region(
     global_region: Optional[Tuple[float, float, float, float]] = None,
     how: str = "events",
     rm_outliers: bool = False,
+    coverage: Optional[float] = None,
 ) -> Tuple[float, float, float, float]:
     """
     Compute a bounding box for plotting events and stations.
@@ -48,11 +49,18 @@ def compute_region(
         Which data to use: 'events', 'stations', or 'both' (default 'events').
     rm_outliers : bool, optional
         If True, remove extreme outliers beyond 6 std deviations.
+    coverage : float, optional
+        Keep the central ``coverage`` fraction of the points in longitude and
+        in latitude (e.g. 0.95: 2.5th to 97.5th percentiles), so that a few
+        distant points do not stretch the region while many of them do.
 
     Returns
     -------
     tuple
-        (lon_min, lon_max, lat_min, lat_max)
+        (lon_min, lon_max, lat_min, lat_max). For data across the
+        antimeridian (e.g. the Aleutians: 179 E and 170 W) the longitudes are
+        given in [0, 360) (e.g. 160 to 215) when that is the tighter and
+        under-180-degree range; plot it with :func:`map_projection`.
 
     Raises
     ------
@@ -84,6 +92,18 @@ def compute_region(
     if lons.empty or lats.empty:
         raise ValueError("No valid coordinates to compute region.")
 
+    # --- Data across the antimeridian: work in [0, 360) when that range is
+    # tighter and under 180 degrees (e.g. the Aleutians) ---
+    lons360 = lons % 360
+    if np.ptp(lons360) < np.ptp(lons) and np.ptp(lons360) < 180:
+        lons = lons360
+
+    # --- Keep the central part of the points if requested ---
+    if coverage is not None:
+        q = (1 - coverage) / 2
+        lons = lons[(lons >= lons.quantile(q)) & (lons <= lons.quantile(1 - q))]
+        lats = lats[(lats >= lats.quantile(q)) & (lats <= lats.quantile(1 - q))]
+
     # --- Remove extreme outliers if requested ---
     if rm_outliers:
         lons_mean, lons_std = lons.mean(), lons.std()
@@ -110,9 +130,11 @@ def compute_region(
     # print(f"region after: lon_min={lon_min}, lon_max={lon_max}, lat_min={lat_min}, lat_max={lat_max}")
 
     # --- Clamp to valid geographic coordinates ---
+    if lon_max - lon_min > 360:
+        lon_min, lon_max = -180, 180
     if lon_min < -180:
         lon_min=-180
-    if lon_max > 180:
+    if lon_max > 180 and lon_min < 0:
         lon_max=180
     if lat_min < -90:
         lat_min=-90
@@ -120,6 +142,18 @@ def compute_region(
         lat_max=90
 
     return (lon_min, lon_max, lat_min, lat_max)
+
+def map_projection(region):
+    """
+    PlateCarree projection for a ``(lon_min, lon_max, lat_min, lat_max)``
+    region: centered on 180 deg when the region crosses the antimeridian
+    (``lon_max > 180``, see :func:`compute_region`), else the default.
+    """
+    import cartopy.crs as ccrs
+    if region is not None and region[1] > 180:
+        return ccrs.PlateCarree(central_longitude=180)
+    return ccrs.PlateCarree()
+
 
 def human_format(num: float) -> str:
     """
@@ -234,24 +268,107 @@ def create_green_to_orange_cmap(name: str = 'green_to_orange', n_colors: int = 2
     cmap = LinearSegmentedColormap.from_list(name, colors, N=n_colors)
     return cmap
 
+def phase_family(phase: pd.Series) -> pd.Series:
+    """
+    Return the phase family of each pick label: "P" for P-type labels
+    (P, Pg, Pn, Pb, ...), "S" for S-type labels (S, Sg, Sn, ...), else <NA>.
+    The labels themselves are kept in the picks table; the family is only
+    used to count and group picks.
+
+    Examples
+    --------
+    >>> phase_family(pd.Series(["P", "Pg", "Sn", "S", "X"])).tolist()
+    ['P', 'P', 'S', 'S', <NA>]
+    """
+    first = phase.astype("string").str[0]
+    return first.where(first.isin(["P", "S"]))
+
+
+def phase_counts(picks: pd.DataFrame, by: Optional[str] = None) -> pd.DataFrame:
+    """
+    Count picks by phase label and by phase family.
+
+    Parameters
+    ----------
+    picks : pd.DataFrame
+        Picks table (column ``phase``, and ``by`` if given).
+    by : str, optional
+        Column to group by, e.g. ``"event_id"``. Default: one row for all picks.
+
+    Returns
+    -------
+    pd.DataFrame
+        Columns ``{label.lower()}_count`` for each label of
+        :data:`utdquake.writers.schema.PHASE_LABELS` (P, Pg, Pn, S, Sg, Sn),
+        ``p_arrivals`` (all P-type picks) and ``s_arrivals`` (all S-type
+        picks), indexed by ``by``.
+
+    Examples
+    --------
+    >>> phase_counts(pd.DataFrame({"phase": ["P", "Pg", "Sn"]}))[["p_count", "p_arrivals", "s_arrivals"]]
+       p_count  p_arrivals  s_arrivals
+    0        1           2           1
+    """
+    from ..writers.schema import PHASE_LABELS, PHASE_COUNT_COLS
+
+    phase = picks["phase"].astype("string")
+    df = pd.DataFrame({f"{label.lower()}_count": phase.eq(label).fillna(False).astype("int64")
+                       for label in PHASE_LABELS}, index=picks.index)
+    family = phase_family(phase)
+    df["p_arrivals"] = family.eq("P").fillna(False).astype("int64")
+    df["s_arrivals"] = family.eq("S").fillna(False).astype("int64")
+    if by is None:
+        return df.sum().to_frame().T[PHASE_COUNT_COLS]
+    return df.groupby(picks[by]).sum()[PHASE_COUNT_COLS]
+
+
+def add_phase_counts(events: pd.DataFrame, picks: pd.DataFrame) -> pd.DataFrame:
+    """Return ``events`` with the per-event :func:`phase_counts` of ``picks`` (0 for events without picks)."""
+    from ..writers.schema import PHASE_COUNT_COLS
+
+    counts = phase_counts(picks, by="event_id")
+    events = events.drop(columns=PHASE_COUNT_COLS, errors="ignore")
+    events = events.merge(counts, left_on="event_id", right_index=True, how="left")
+    events[PHASE_COUNT_COLS] = events[PHASE_COUNT_COLS].fillna(0).astype("int64")
+    return events
+
+
 def get_network_summary(
     stations: pd.DataFrame,
     events: pd.DataFrame,
-    das: bool = False
+    das: bool = False,
+    picks: Optional[pd.DataFrame] = None,
+    distinct_stations: bool = False,
 ) -> Dict[str, Any]:
     """
-    Compute summary statistics for a seismic network.
+    Compute summary statistics for one or more UTDQuake networks.
 
     Parameters
     ----------
     stations : pd.DataFrame
         Stations table. Must contain columns:
-        ['network', 'station', 'confirmed', 'calculated'].
+        ['network', 'station', 'confirmed', 'calculated'] (``network`` is the
+        FDSN code; with ``utdq_net`` too, a station seen by two UTDQuake
+        networks counts once for each).
     events : pd.DataFrame
         Events table. Must contain columns:
         ['latitude', 'longitude', 'time', 'p_phase_count', 's_phase_count'].
     das : bool, optional
         Whether to use DAS dataset. Default is False.
+    picks : pd.DataFrame, optional
+        Picks table (column ``phase``). When given, ``p_arrivals`` and
+        ``s_arrivals`` count its P-type and S-type picks (see
+        :func:`phase_family`). Without it they are the sums of the events'
+        ``p_arrivals``/``s_arrivals`` columns, or, for an events table without
+        them, of ``p_phase_count``/``s_phase_count``, which only count
+        arrivals labelled exactly "P" or "S" (Pg, Pn, Sg, Sn are left out).
+    distinct_stations : bool, optional
+        Count physical stations, i.e. distinct ``(network, station)`` pairs
+        across UTDQuake networks: a station used by several networks counts
+        once, as confirmed (calculated) if any of its rows is. Default False:
+        with ``utdq_net``, a station counts once per UTDQuake network (the
+        counts of the network table). Use True for totals over several
+        networks.
 
     Returns
     -------
@@ -260,9 +377,11 @@ def get_network_summary(
         - events : int
             Number of events
         - p_arrivals : int
-            Total P-phase picks
+            Total P-type picks (P, Pg, Pn, ...)
         - s_arrivals : int
-            Total S-phase picks
+            Total S-type picks (S, Sg, Sn, ...)
+        - p_count, pg_count, pn_count, s_count, sg_count, sn_count : int
+            Picks of each phase label (only when ``picks`` is given)
         - total_stations : int
             Number of stations
         - located_stations : int
@@ -293,11 +412,19 @@ def get_network_summary(
     {'events': 10, 'p_arrivals': 30, ...}
     """
     # --- Deduplicate stations ---
+    key = ["utdq_net"] if "utdq_net" in stations.columns and not distinct_stations else []
+    if distinct_stations:
+        sta_keys = ["network", "station"] + (["channel"] if das else [])
+        flags = (stations[sta_keys]
+                 .assign(confirmed=stations["confirmed"].fillna(False).astype(bool),
+                         calculated=stations["calculated"].fillna(False).astype(bool))
+                 .groupby(sta_keys)[["confirmed", "calculated"]].transform("any"))
+        stations = stations.assign(confirmed=flags["confirmed"], calculated=flags["calculated"])
     if das:
-        stations = stations.drop_duplicates(subset=["network", "station", "channel"])
-        n_total_stations = len(stations["station"].unique())
+        stations = stations.drop_duplicates(subset=key + ["network", "station", "channel"])
+        n_total_stations = len(stations.drop_duplicates(subset=key + ["network", "station"]))
     else:
-        stations = stations.drop_duplicates(subset=["network", "station"])
+        stations = stations.drop_duplicates(subset=key + ["network", "station"])
         n_total_stations = len(stations)
 
     n_confirmed_stations = int(stations["confirmed"].eq(True).sum())
@@ -333,13 +460,24 @@ def get_network_summary(
     min_event_time = events["time"].min()
     max_event_time = events["time"].max()
 
-    n_p_picks = int(events["p_phase_count"].sum())
-    n_s_picks = int(events["s_phase_count"].sum())
+    counts = {}
+    if picks is not None:
+        counts = {k: int(v) for k, v in phase_counts(picks).iloc[0].items()}
+        n_p_picks = counts.pop("p_arrivals")
+        n_s_picks = counts.pop("s_arrivals")
+    elif {"p_arrivals", "s_arrivals"} <= set(events.columns):
+        # per-event phase-family counts of the events table (see add_phase_counts)
+        n_p_picks = int(events["p_arrivals"].sum())
+        n_s_picks = int(events["s_arrivals"].sum())
+    else:
+        n_p_picks = int(events["p_phase_count"].sum())
+        n_s_picks = int(events["s_phase_count"].sum())
 
     data =  {
         "events": n_events,
         "p_arrivals": n_p_picks,
         "s_arrivals": n_s_picks,
+        **counts,
         "total_stations": n_total_stations,
         "located_stations": n_confirmed_stations + n_only_calculated_stations,
         "confirmed_stations": n_confirmed_stations,

@@ -6,7 +6,7 @@ Two independent halves:
 
 - ``generate_network_figures``: purely local, no credentials. Runs
   :class:`utdquake.Network`'s own ``plot_*`` methods and saves the results
-  with the ``{network}_{suffix}.png`` naming already used on the ``figures``
+  with the ``{utdq_net}_{suffix}.png`` naming used on the ``figures``
   branch of https://github.com/ecastillot/UTDQuake.
 - ``publish_network_figures``: uploads to GitHub. Needs a token
   (``GITHUB_TOKEN`` env var or ``token=``) with ``repo`` scope. Also adds
@@ -34,6 +34,7 @@ from typing import Dict, Optional
 import requests
 
 from .core.utdquake import Network
+from .core.utils import renamed_kwarg
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +69,10 @@ FIGURE_SPECS = [
 
 
 def generate_network_figures(
-    network: str,
+    utdq_net: Optional[str] = None,
     outdir: Optional[Path] = None,
     das: bool = False,
+    network: Optional[str] = None,
 ) -> Dict[str, Path]:
     """
     Generate the standard figure set for a network.
@@ -81,18 +83,21 @@ def generate_network_figures(
 
     Parameters
     ----------
-    network : str
-        Network code, e.g. "CM".
+    utdq_net : str
+        UTDQuake network code, e.g. "CM".
     outdir : Path, optional
-        Directory to save into. Defaults to ``./figures/{network}``.
+        Directory to save into. Defaults to ``./figures/{utdq_net}``.
     das : bool, optional
         Whether this is a DAS network. Default False.
+    network : str, optional
+        Deprecated alias of ``utdq_net``.
 
     Returns
     -------
     dict[str, Path]
         ``{suffix: saved_path}`` for every figure that succeeded.
     """
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "generate_network_figures")
     net = Network(network, das=das)
     outdir = Path(outdir) if outdir is not None else Path.cwd() / "figures" / network
     outdir.mkdir(parents=True, exist_ok=True)
@@ -200,13 +205,30 @@ def _put_text_file(owner: str, token: str, path_in_repo: str, content: str, sha:
     _gh("PUT", url, token, json=body)
 
 
-def _overview_row_markup(network: str, folder_url: str, raw_url: str) -> str:
+def _overview_row_markup(utdq_net: str, catalog: str, version: str, folder_url: str, raw_url: str) -> str:
     return (
-        f"   * - {network}\n"
+        f"   * - {utdq_net}\n"
+        f"     - {catalog or '--'}\n"
+        f"     - {version or '--'}\n"
         f"     - `Open Folder <{folder_url}>`_\n"
         f"     - .. image:: {raw_url}\n"
         f"          :width: 200px\n"
     )
+
+
+def _network_field(utdq_net: str, field: str, das: bool = False) -> str:
+    """A field (``catalog``, ``dataset_version``) of a UTDQuake network from the published network table ('' if unknown)."""
+    try:
+        value = Network(utdq_net, das=das).description.get(field)
+    except Exception as e:
+        logger.warning("Could not read the %s of %s from the network table: %s", field, utdq_net, e)
+        return ""
+    return "" if value is None or str(value) in ("", "<NA>", "nan") else str(value)
+
+
+def _catalog_of(utdq_net: str, das: bool = False) -> str:
+    """The ``catalog`` of a UTDQuake network from the published network table ('' if unknown)."""
+    return _network_field(utdq_net, "catalog", das)
 
 
 def _network_remote_subdir(das: bool) -> str:
@@ -224,7 +246,8 @@ def _network_urls(network: str, das: bool = False) -> tuple[str, str]:
     return folder_url, raw_url
 
 
-def _update_overview_rst(owner: str, token: str, branch: str, network: str, message: str, das: bool = False) -> bool:
+def _update_overview_rst(owner: str, token: str, branch: str, network: str, message: str,
+                         das: bool = False, catalog: Optional[str] = None) -> bool:
     """
     Insert the ``overview.rst`` row for ``network`` into the Seismic Data or
     DAS Data table (per ``das``), committing directly to
@@ -238,7 +261,9 @@ def _update_overview_rst(owner: str, token: str, branch: str, network: str, mess
         return False
 
     folder_url, raw_url = _network_urls(network, das)
-    row = _overview_row_markup(network, folder_url, raw_url)
+    catalog = _catalog_of(network, das) if catalog is None else catalog
+    row = _overview_row_markup(network, catalog, _network_field(network, "dataset_version", das),
+                               folder_url, raw_url)
 
     if not das:
         if _SEISMIC_TABLE_END_ANCHOR not in content:
@@ -270,13 +295,15 @@ def _update_overview_rst(owner: str, token: str, branch: str, network: str, mess
 
 
 def publish_network_figures(
-    network: str,
+    utdq_net: Optional[str] = None,
     local_dir: Optional[Path] = None,
     token: Optional[str] = None,
     create_pr: bool = True,
     update_overview: bool = True,
     das: bool = False,
     commit_message: Optional[str] = None,
+    catalog: Optional[str] = None,
+    network: Optional[str] = None,
 ) -> str:
     """
     Publish a network's already-generated figures (see
@@ -286,11 +313,11 @@ def publish_network_figures(
 
     Parameters
     ----------
-    network : str
-        Network code, e.g. "CM".
+    utdq_net : str
+        UTDQuake network code, e.g. "CM".
     local_dir : Path, optional
         Directory holding the generated PNGs. Defaults to
-        ``./figures/{network}`` (matching ``generate_network_figures``'s
+        ``./figures/{utdq_net}`` (matching ``generate_network_figures``'s
         default).
     token : str, optional
         GitHub personal access token (``repo`` scope). Defaults to the
@@ -326,6 +353,11 @@ def publish_network_figures(
         has a row.
     commit_message : str, optional
         Commit message. Defaults to a generated message.
+    catalog : str, optional
+        Catalog shown in the new ``overview.rst`` row. Defaults to the
+        network's ``catalog`` in the published network table.
+    network : str, optional
+        Deprecated alias of ``utdq_net``.
 
     Returns
     -------
@@ -334,6 +366,7 @@ def publish_network_figures(
         The ``overview.rst`` update's own commit/PR URL is only logged, not
         returned -- see the log output.
     """
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "publish_network_figures")
     token = _resolve_token(token)
     local_dir = Path(local_dir) if local_dir is not None else Path.cwd() / "figures" / network
     pngs = sorted(local_dir.glob(f"{network}_*.png"))
@@ -373,6 +406,7 @@ def publish_network_figures(
                 network=network,
                 message=overview_message,
                 das=das,
+                catalog=catalog,
             )
             if changed and create_pr:
                 overview_pr = _gh(
@@ -420,23 +454,29 @@ def publish_network_figures(
     return pr["html_url"]
 
 
-def overview_rst_row(network: str, das: bool = False) -> str:
+def overview_rst_row(utdq_net: str, catalog: Optional[str] = None, das: bool = False) -> str:
     """
-    Return the ``overview.rst`` list-table row for a network, ready to
-    paste in: the real image row if figures exist on the ``figures``
-    branch, or a "pending" placeholder row if not.
+    Return the ``overview.rst`` list-table row (utdq_net, catalog, version,
+    figures folder, preview) for a UTDQuake network, ready to paste in: the real
+    image row if figures exist on the ``figures`` branch, or a "pending"
+    placeholder row if not.
 
-    This makes a single unauthenticated, read-only request -- no token
-    needed, since the repo is public.
+    ``catalog`` defaults to the network's ``catalog`` in the published
+    network table. Checking the figures makes a single unauthenticated,
+    read-only request -- no token needed, since the repo is public.
     """
-    folder_url, raw_url = _network_urls(network, das)
+    folder_url, raw_url = _network_urls(utdq_net, das)
+    catalog = _catalog_of(utdq_net, das) if catalog is None else catalog
+    version = _network_field(utdq_net, "dataset_version", das)
 
     exists = requests.head(raw_url, timeout=15).status_code == 200
 
     if exists:
-        return _overview_row_markup(network, folder_url, raw_url)
+        return _overview_row_markup(utdq_net, catalog, version, folder_url, raw_url)
     return (
-        f"   * - {network}\n"
+        f"   * - {utdq_net}\n"
+        f"     - {catalog or '--'}\n"
+        f"     - {version or '--'}\n"
         f"     - *pending*\n"
         f"     - *Figures pending -- see* :ref:`upload-dataset-section`\n"
     )

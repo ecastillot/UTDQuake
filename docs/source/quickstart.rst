@@ -33,13 +33,17 @@ To get started, import the package and load the dataset using the :class:`utdqua
    dataset = utdq.Dataset(das=False) # set das=True to load DAS data
    print(dataset)
 
-   # network level
+   # network level: one row per UTDQuake network (utdq_net)
    network_data = dataset.networks
-   display(network_data)
+   display(network_data[["utdq_net", "catalog", "networks", "events"]])
+
+Every UTDQuake network has a ``utdq_net`` code, the key that links the network, stations, events
+and picks tables. In the stations and picks tables, ``network`` is the FDSN code of each station.
+See :ref:`dataset-naming-subsection`.
 
 In addition to network-level access, the dataset allows you to retrieve aggregated information across multiple networks. You can directly access events, stations, and picks using the following methods:
 
-- :func:`utdquake.Dataset.get_events` – retrieve event information across networks  
+- :func:`utdquake.Dataset.get_events` – retrieve event information across networks (e.g. ``get_events(utdq_net=["tx", "ok"])``)  
 - :func:`utdquake.Dataset.get_stations` – retrieve station metadata  
 - :func:`utdquake.Dataset.get_picks` – retrieve seismic phase picks  
 
@@ -50,7 +54,7 @@ Detailed information for a specific seismic network can be accessed through the 
 
 .. code-block:: python
 
-   # load network 
+   # load a UTDQuake network by its utdq_net code
    network = dataset.get_network(name="tx")
    display(network)
 
@@ -64,6 +68,9 @@ Detailed information for a specific seismic network can be accessed through the 
 
    # picks
    picks = network.picks
+
+   # join picks to stations on (utdq_net, network, station)
+   picks = picks.merge(stations, on=["utdq_net", "network", "station"], how="left")
    display(picks)
 
 Event Bank

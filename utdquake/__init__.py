@@ -7,6 +7,10 @@ includes:
 
 - `Dataset`: Class for global dataset access (all networks, stations, events).
 - `Network`: Class for network-specific access, including EventBank, picks, and stations.
+
+A UTDQuake network is named by its ``utdq_net`` code (e.g. ``tx``, ``AEIC``,
+``R05``), the key that links the network, stations, events and picks tables.
+In the stations and picks tables, ``network`` is the FDSN code of the station.
 - `download_snapshot`: Function to download UTDQuake data from Hugging Face.
 - `load`: Function to load datasets from Hugging Face by key.
 - `publish_network`: Function to publish a network's manifests to the shared Hub repo.
@@ -24,7 +28,7 @@ Usage
 >>> net.events.head()
 
 """
-__version__ = "0.2.3"
+__version__ = "1.0.0"
 
 from .core.utdquake import Dataset, Network
 from .core.data import download_snapshot, load

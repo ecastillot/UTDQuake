@@ -1316,10 +1316,11 @@ class TravelTime:
 
 
 def build_travel_time_model(
-    network: str,
+    utdq_net: Optional[str] = None,
     das: bool = False,
     local_root: Optional[Path] = None,
     update_picks: bool = True,
+    network: Optional[str] = None,
 ) -> TravelTimeModel:
     """
     Build and save a per-phase travel-time model for a network from the
@@ -1334,8 +1335,8 @@ def build_travel_time_model(
 
     Parameters
     ----------
-    network : str
-        Network code, e.g. "CM".
+    utdq_net : str
+        UTDQuake network code, e.g. "CM".
     das : bool, optional
         Whether this is a DAS network. Default False.
     local_root : Path, optional
@@ -1345,19 +1346,25 @@ def build_travel_time_model(
         If True (default), also overwrite the local picks table with a
         ``travel_time_zscore`` column attached, so it's included the next
         time you run ``publish_flat_manifests`` / ``publish_network``.
+    network : str, optional
+        Deprecated alias of ``utdq_net``.
 
     Returns
     -------
     TravelTimeModel
         The fitted model (also saved to
-        ``{local_root}/.utdquake/travel_time/{network}.parquet`` --
+        ``{local_root}/.utdquake/travel_time/{utdq_net}.parquet`` --
         upload it with ``publish_network(..., include_travel_time=True)``
         so other users can load it too).
     """
     from ..core.config import get_root, get_hf_entry
+    from ..core.utils import renamed_kwarg
 
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "build_travel_time_model")
+    if network is None:
+        raise TypeError("build_travel_time_model() missing required argument: 'utdq_net'")
     root = Path(local_root) if local_root is not None else get_root(das=das)
-    picks_path = root / get_hf_entry("picks", das).path.format(network=network)
+    picks_path = root / get_hf_entry("picks", das).path.format(utdq_net=network)
     if not picks_path.exists():
         raise FileNotFoundError(
             f"No local picks manifest for network {network!r} at {picks_path}. "
@@ -1372,7 +1379,7 @@ def build_travel_time_model(
     tt.build_bins(**PICK_TT_QC_DEFAULTS[bins_key])
     tt.build_models(**PICK_TT_QC_DEFAULTS["build_models"])
 
-    model_path = root / get_hf_entry(".utdquake/travel_time", das).path.format(network=network)
+    model_path = root / get_hf_entry(".utdquake/travel_time", das).path.format(utdq_net=network)
     model_path.parent.mkdir(parents=True, exist_ok=True)
     tt.save_models_combined(str(model_path))
     logger.info("Saved travel-time model for %s to %s", network, model_path)

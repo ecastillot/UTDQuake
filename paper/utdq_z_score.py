@@ -1,5 +1,5 @@
 import os
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+import _local  # noqa: F401  (local UTDQuake 1.0 root, paper networks)
 
 from pathlib import Path
 import utdquake as utdq

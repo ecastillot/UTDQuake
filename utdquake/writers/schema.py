@@ -20,14 +20,33 @@ from obsplus.constants import PICK_DTYPES,EVENT_DTYPES,ARRIVAL_DTYPES
 import pandas as pd
 
 
+#: Phase labels counted one by one (``{label.lower()}_count`` columns of the
+#: events and network tables: p_count, pg_count, ...). ``p_arrivals``/
+#: ``s_arrivals`` count every P-type and S-type label, including labels not
+#: listed here.
+PHASE_LABELS = ("P", "Pg", "Pn", "S", "Sg", "Sn")
+PHASE_COUNT_COLS = [f"{label.lower()}_count" for label in PHASE_LABELS] + ["p_arrivals", "s_arrivals"]
+
+# Naming used by every table:
+# - utdq_net: the UTDQuake network, i.e. the monitoring network or project
+#   that reported the events and picks (e.g. "tx", "AEIC", "R05"). It is the
+#   key of the network table and links the four tables.
+# - network: the FDSN code of the station that recorded a pick (e.g. "AK"),
+#   as in the pick's seed_id. Only in the stations and picks tables.
+# - catalog: the catalog or bulletin a UTDQuake network's events come from.
 PREF_NETWORK_TYPES = {
-    "network": "string",
+    "utdq_net": "string",
+    "catalog": "string",
+    "catalog_type": "string",
+    "networks": "string",
+    "dataset_version": "string",
     "continent": "string",
     "provider": "string",
     "provider_url": "string",
     "country": "string",
     "agency": "string",
     "total_stations": "int64",
+    "located_stations": "int64",
     "confirmed_stations": "int64",
     "calculated_stations": "int64",
     "original_events": "int64",
@@ -36,6 +55,14 @@ PREF_NETWORK_TYPES = {
     "events": "int64",
     "p_arrivals": "int64",
     "s_arrivals": "int64",
+    # picks of each phase label after QC; p_arrivals = P + Pg + Pn (+ any
+    # other P-type label), s_arrivals = S + Sg + Sn (see PHASE_LABELS)
+    "p_count": "int64",
+    "pg_count": "int64",
+    "pn_count": "int64",
+    "s_count": "int64",
+    "sg_count": "int64",
+    "sn_count": "int64",
     "start_time": "datetime",
     "end_time": "datetime",
     "approx_lon_min": "float",
@@ -51,12 +78,29 @@ PREF_NETWORK_TYPES = {
 
 PREF_NETWORK_ORDER = list(PREF_NETWORK_TYPES.keys())
 
+#: Network-table columns every UTDQuake network must have before it is
+#: published: they cannot be derived from the data.
+REQUIRED_NETWORK_INFO = ("catalog", "catalog_type", "dataset_version")
+#: Allowed values of ``catalog_type``.
+CATALOG_TYPES = ("agency", "research", "synthetic")
+
+
+def missing_network_info(row) -> list:
+    """Problems with the required network-table fields of one row (a dict or Series)."""
+    problems = [f"{c} is missing" for c in REQUIRED_NETWORK_INFO
+                if c not in row or pd.isna(row[c]) or str(row[c]).strip() == ""]
+    ctype = row.get("catalog_type") if hasattr(row, "get") else None
+    if isinstance(ctype, str) and ctype not in CATALOG_TYPES:
+        problems.append(f"catalog_type must be one of {CATALOG_TYPES}, not {ctype!r}")
+    return problems
+
 
 PREF_STATIONS_TYPES = {
-                        "network_type": "string",
+                        "utdq_net": "string",
                         "network": "string",
                         "station": "string",
                         "channel": "string",
+                        "network_type": "string",
                         "available": "boolean",
                         "confirmed": "boolean",
                         "confirmed_latitude": "float",
@@ -68,12 +112,15 @@ PREF_STATIONS_TYPES = {
                         "calculated_longitude_std": "float",
                         "confirmed_elevation": "float",
                         "calculated_num_entries": "int64",
+                        "network_source": "string",
+                        "ir_merged": "boolean",
                         "db_path": "string",
                         "creation_time": "datetime"
                         }
 PREF_STATIONS_ORDER = list(PREF_STATIONS_TYPES.keys())
 
-PREF_EVENTS_ORDER = ["network",
+PREF_EVENTS_ORDER = ["utdq_net",
+                    "dataset_version",  # UTDQuake version that added the event
                     "time",
                     "latitude",
                     "longitude",
@@ -81,11 +128,17 @@ PREF_EVENTS_ORDER = ["network",
                     "magnitude",
                     "azimuthal_gap",
                     "preferred_origin_id",
-                    "stations"]
+                    "stations",
+                    *PHASE_COUNT_COLS]
 
 PREF_PICKS_ORDER = [
+                    "utdq_net",
+                    "dataset_version",  # version that added the pick's event
                     "network",
-                    "station", 
+                    "station",
+                    "location",
+                    "channel",
+                    "network_source",
                     "phase",
                     "time",
                     "travel_time",
@@ -183,12 +236,13 @@ for k,v in PREF_PICKS_QC_TYPES.items():
     PREF_PICKS_TYPES[k].extend(v)
 
 # Add extra columns to picks types
-PREF_PICKS_TYPES["string_cols"].extend(["network","event_id","pick_agency","preferred_origin_id"])
+PREF_PICKS_TYPES["string_cols"].extend(["utdq_net","dataset_version","network","network_source","event_id","pick_agency","preferred_origin_id"])
 PREF_PICKS_TYPES["float_cols"].extend(["travel_time","linear_hyp_distance"])
 
 # Preferred event types
 PREF_EVENTS_TYPES = columns_by_type(EVENT_DTYPES)
-PREF_EVENTS_TYPES["string_cols"].extend(["network","preferred_origin_id","stations"])
+PREF_EVENTS_TYPES["string_cols"].extend(["utdq_net","dataset_version","preferred_origin_id","stations"])
+PREF_EVENTS_TYPES["int_cols"].extend(PHASE_COUNT_COLS)
 
 
 def order_dataframe_columns(df: pd.DataFrame, preferred_order: List[str]) -> pd.DataFrame:
@@ -206,7 +260,7 @@ def order_dataframe_columns(df: pd.DataFrame, preferred_order: List[str]) -> pd.
     preferred_order : list[str] or str
         List of column names specifying the desired order. Alternatively, a string
         key can be provided to use predefined orderings:
-        - "network" → uses PREF_NETWORK_ORDER
+        - "network" → uses PREF_NETWORK_ORDER (the network table)
         - "events" → uses PREF_EVENTS_ORDER
         - "picks" → uses PREF_PICKS_ORDER
 

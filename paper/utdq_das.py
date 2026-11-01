@@ -1,14 +1,13 @@
-import os 
+import os
 os.environ["HF_DATASETS_PARALLELISM"] = "false"
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
-os.environ["UTDQUAKE_DAS_ROOT"] = "/groups/igonin/ecastillo/UTDQuake_DAS"
+import _local  # noqa: F401  (local UTDQuake 1.0 root, paper networks)
 
+import shutil
 from pathlib import Path
 import utdquake as utdq
 
-from utdquake.core.config import get_utdq_paths, get_hf_entry
 from utdquake.utils.plot import plot_overview
 
 
@@ -24,9 +23,11 @@ import numpy as np
 
 
 fig_path = Path(__file__).parent / "utdq_das.png"
+# the same figure is the UWF overview of the docs (figures/networks_DAS/UWF)
+overview_path = Path(_local.ROOT) / "figures" / "networks_DAS" / "UWF" / "UWF_overview.png"
 dataset = utdq.Dataset(das=True)
 print(dataset)
-network = dataset.get_network("GCI")
+network = dataset.get_network("UWF")
 print(network)
 
 region = [-157, -150, 58.5, 64.5 ]
@@ -34,17 +35,18 @@ region = [-157, -150, 58.5, 64.5 ]
 events = network.events
 stations = network.stations
 
+# cable names on the inset: station code -> label, text offset (degrees) from the cable end
+CABLE_LABELS = {"KKFLN": ("KKFL-N", (0.05, 0.08)),
+                "KKFLS": ("KKFL-S", (0.17, 0.03)),
+                "TERRA": ("TERRA", (0.0, 0.07))}
 
 print(network.description)
-exit()
-new_name = network.description.copy()
-new_name["network"] = "UWF"
-print(new_name)
+analysis = network.description
 
 
 fig, axes = plot_overview(events=events, 
                       stations=stations,
-                      analysis=new_name,
+                      analysis=analysis,
                       das=network.das,
                       region = region,
                       consider_calculated_stations=False,
@@ -94,6 +96,14 @@ for c,cable in stations.groupby("station"):
         transform=ccrs.PlateCarree(),
     )
 
+    # cable name at its far (offshore) end
+    label, (dx, dy) = CABLE_LABELS.get(c, (c, (0.0, 0.07)))
+    end = das_stations.iloc[-1]
+    ax_inset.text(end["confirmed_longitude"] + dx, end["confirmed_latitude"] + dy, label,
+                  fontsize=8, weight="bold", ha="center", va="center", color="darkgreen",
+                  bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.8),
+                  transform=ccrs.PlateCarree())
+
 lon_min, lon_max, lat_min, lat_max = inset_region
 rect = sgeom.box(lon_min, lat_min, lon_max, lat_max)
 
@@ -140,5 +150,7 @@ ax_inset.add_artist(scalebar)
 
 
 fig.savefig(fig_path, dpi=300)
+shutil.copy2(fig_path, overview_path)
+print(f"Saved {fig_path} and copied it to {overview_path}")
 
 

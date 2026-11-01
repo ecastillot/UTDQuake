@@ -74,16 +74,19 @@ once logged in).
 
 Everything below reads from a :class:`utdquake.bank.bank.UTDQBank` rather than
 from your Catalog or files directly, so the first step is loading your events
-into one. The bank's directory name *is* your network code -- a bank at
-``.../banks/CM`` publishes as network ``"CM"``.
+into one. The bank's directory name *is* your UTDQuake network code
+(``utdq_net``) -- a bank at ``.../banks/CM`` publishes as ``utdq_net = "CM"``.
+Use the agency's code for a network downloaded from an agency (``CM``, ``tx``),
+and the next free ``R`` code (``R09``, ``R10``, ...) for a catalog built by a
+research project; its name goes in the ``catalog`` column (step 4).
 
 .. code-block:: python
 
    from utdquake.bank.bank import UTDQBank
    from utdquake.core.config import get_utdq_paths
 
-   NETWORK = "CM"
-   bank_path = get_utdq_paths(NETWORK)["banks"]   # .../banks/CM
+   UTDQ_NET = "CM"
+   bank_path = get_utdq_paths(UTDQ_NET)["banks"]   # .../banks/CM
 
    ebank = UTDQBank(
        base_path=str(bank_path),
@@ -110,9 +113,9 @@ station's location.
 2. Attach station metadata
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Give it a table with at least ``network``, ``station``, ``latitude``,
-``longitude`` -- from a StationXML inventory, an FDSN station query, or your
-own table:
+Give it a table with at least ``network`` (the FDSN network code),
+``station``, ``latitude``, ``longitude`` -- from a StationXML inventory, an
+FDSN station query, or your own table:
 
 .. code-block:: python
 
@@ -147,7 +150,7 @@ the table in :ref:`quickstart-section`) and saves the resulting picks table.
    from utdquake.writers.parquet import build_manifests
 
    build_manifests(
-       networks=["CM"],
+       utdq_nets=["CM"],
        include_events=True,
        include_stations=True,
        include_picks=True,
@@ -155,10 +158,14 @@ the table in :ref:`quickstart-section`) and saves the resulting picks table.
        overwrite=True,
    )
 
-This builds the four tables from everything computed in steps 1-3.
+This builds the four tables from everything computed in steps 1-3. In the
+stations and picks tables, ``network`` is the FDSN code of each station (from
+the pick's ``seed_id``); stations reported by ISC with the placeholder code
+``IR`` are resolved where possible (see :ref:`dataset-naming-subsection`).
 
 Some network-level fields simply can't be derived from picks/events --
-``provider``, ``provider_url``, ``country``, ``agency``, ``continent`` --
+``catalog``, ``catalog_type``, ``dataset_version``, ``provider``,
+``provider_url``, ``country``, ``agency``, ``continent`` --
 there's no way to infer "who operates this network" from the data itself.
 The same goes for who's actually behind the contribution: ``uploaded_by_github``,
 ``contact_email``, and ``doi`` (a paper the dataset is tied to, if any --
@@ -166,15 +173,23 @@ leave it out, or ``None``, if there isn't one). ``uploaded_by_github`` must
 be your GitHub profile URL (``"https://github.com/<your-username>"``), not
 just your name -- a link is traceable back to a real account, a free-text
 name isn't. Add all of these yourself with ``include_manual_network_info``
--- without it, every one of these fields is left null for the network, so
-it's worth always supplying it:
+-- without it, every one of these fields is left null for the network.
+``catalog``, ``catalog_type`` and ``dataset_version`` are **required**:
+``build_manifests`` warns when they are missing and ``publish_network``
+refuses to publish without them. ``catalog`` is the name of the catalog or
+bulletin your events come from (e.g. ``SGC``, ``ToC2ME``), and
+``catalog_type`` is ``agency`` (a monitoring agency's bulletin),
+``research`` (a research project's catalog) or ``synthetic``:
 
 .. code-block:: python
 
    import pandas as pd
 
    manual_info = pd.DataFrame({
-       "network": ["CM"],
+       "utdq_net": ["CM"],
+       "catalog": ["SGC"],
+       "catalog_type": ["agency"],      # agency, research or synthetic
+       "dataset_version": ["v2"],
        "provider": ["SGC"],
        "provider_url": ["https://www.sgc.gov.co"],
        "country": ["Colombia"],
@@ -186,7 +201,7 @@ it's worth always supplying it:
    })
 
    build_manifests(
-       networks=["CM"],
+       utdq_nets=["CM"],
        include_networks=True,
        overwrite=True,
        include_manual_network_info=manual_info,

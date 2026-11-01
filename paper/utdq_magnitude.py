@@ -1,5 +1,5 @@
 import os
-os.environ["UTDQUAKE_ROOT"] = "/groups/igonin/ecastillo/UTDQuake"
+import _local  # noqa: F401  (local UTDQuake 1.0 root, paper networks)
 
 from pathlib import Path
 import utdquake as utdq
@@ -9,7 +9,7 @@ print(f"Saving figure to {fig_path}")
 
 dataset = utdq.Dataset()
 network_data = dataset.networks
-network_names = network_data["network"].tolist()
+network_names = network_data["utdq_net"].tolist()
 
 # network_names = ["RSNC"]
 

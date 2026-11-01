@@ -10,6 +10,11 @@ stations, events, and picks. This module defines two main classes:
 - `Network`: Access network-specific data, including EventBank, stations,
   events, and picks. Provides network-level plotting and analysis.
 
+A UTDQuake network is identified by its ``utdq_net`` code (e.g. ``"tx"``,
+``"AEIC"``, ``"R05"``), the key that links the network, stations, events and
+picks tables. The ``network`` column of the stations and picks tables is the
+FDSN code of each station (e.g. ``"AK"``).
+
 Usage
 -----
 
@@ -52,8 +57,8 @@ from .data import download_snapshot,load
 from .load import resolve_network_paths
 from .config import get_hf_entry, get_root, get_utdq_paths
 from ..qc.travel_time import TravelTimeModel
-from .utils import merge_network_stats
-from ..utils.utils import get_network_summary, human_format
+from .utils import merge_network_stats, renamed_kwarg
+from ..utils.utils import compute_region, get_network_summary, human_format, phase_family
 from ..utils.plot import (plot_overview,
                           plot_stats,
                           plot_pick_histograms,
@@ -107,13 +112,16 @@ class Dataset:
         str
             Summary of networks, stations, and events.
         """
-        return get_network_summary(stations=self.stations, 
-                                    events= self.events)
+        # dataset totals: a station used by several networks counts once
+        return get_network_summary(stations=self.stations,
+                                    events=self.events,
+                                    das=self.das,
+                                    distinct_stations=True)
 
     @property
     def networks(self):
         """Return all networks as a Pandas DataFrame."""
-        return load(key="networks", das=self.das, network="*").to_pandas()
+        return load(key="networks", das=self.das, utdq_net="*").to_pandas()
 
     @property
     def local_networks(self):
@@ -127,34 +135,37 @@ class Dataset:
     @property
     def stations(self):
         """Return all stations as a Pandas DataFrame."""
-        return load(key="stations", das=self.das,network="*").to_pandas()
+        return load(key="stations", das=self.das, utdq_net="*").to_pandas()
     
     @property
     def events(self):
         """Return all events as a Pandas DataFrame."""
-        return load(key="events", das=self.das,network="*").to_pandas()
+        return load(key="events", das=self.das, utdq_net="*").to_pandas()
 
     def get_network(self, name: str):
-        """Return a Network object for a given network name."""
+        """Return a Network object for a given UTDQuake network (``utdq_net`` code)."""
         return Network(name,das=self.das)
 
-    def get_events(self,network="*",streaming=False,**kwargs):
-        """Return events for a specific network."""
-        return load(key="events", das=self.das,network=network,
+    def get_events(self, utdq_net="*", streaming=False, network=None, **kwargs):
+        """Return events of one or more UTDQuake networks (``network`` is a deprecated alias)."""
+        utdq_net = renamed_kwarg(utdq_net, network, "utdq_net", "network", "get_events")
+        return load(key="events", das=self.das, utdq_net=utdq_net,
                     streaming=streaming,**kwargs)
     
-    def get_stations(self,network="*", streaming: bool=False,
+    def get_stations(self, utdq_net="*", streaming: bool=False, network=None,
                      **kwargs):
-        """Return stations for a specific network."""
-        return load(key="stations", das=self.das,network=network,
+        """Return stations of one or more UTDQuake networks (``network`` is a deprecated alias)."""
+        utdq_net = renamed_kwarg(utdq_net, network, "utdq_net", "network", "get_stations")
+        return load(key="stations", das=self.das, utdq_net=utdq_net,
                     streaming=streaming,**kwargs)
     
-    def get_picks(self,network="*", streaming: bool=True):
-        """Return picks for a specific network."""
-        return load(key="picks", das=self.das,network=network,
+    def get_picks(self, utdq_net="*", streaming: bool=True, network=None):
+        """Return picks of one or more UTDQuake networks (``network`` is a deprecated alias)."""
+        utdq_net = renamed_kwarg(utdq_net, network, "utdq_net", "network", "get_picks")
+        return load(key="picks", das=self.das, utdq_net=utdq_net,
                     streaming=streaming)
     
-    def download(self,networks: Union[str, List[str]],
+    def download(self, utdq_nets: Union[str, List[str]] = None,
                     include_networks: bool = True,
                     include_events: bool = False,
                     include_stations: bool = False,
@@ -163,14 +174,15 @@ class Dataset:
                     include_travel_time: bool = False,
                     unzip_banks: bool = True,
                     overwrite: bool = False,
+                    networks: Union[str, List[str]] = None,
                 ) -> Path:
         """
         Download selected data from the UTDQuake Hugging Face repository.
 
         Parameters
         ----------
-        networks : str or list of str
-            Networks to download:
+        utdq_nets : str or list of str
+            UTDQuake networks (``utdq_net`` codes) to download:
             - "*" downloads all networks
             - "t*" downloads all networks starting with 't'
             - ["tx", "uw"] downloads only specified networks
@@ -190,6 +202,8 @@ class Dataset:
             If True, existing files will be re-downloaded. Default: False.
         unzip_banks : bool, optional
             If True, downloaded bank zip files will be automatically extracted. Default: True.
+        networks : str or list of str, optional
+            Deprecated alias of ``utdq_nets``.
 
         Returns
         -------
@@ -203,11 +217,12 @@ class Dataset:
         
         Examples
         --------
-        >>> download(networks=["tx", "uw"], include_picks=True, overwrite=False)
+        >>> download(utdq_nets=["tx", "uw"], include_picks=True, overwrite=False)
         """
+        utdq_nets = renamed_kwarg(utdq_nets, networks, "utdq_nets", "networks", "download")
         return download_snapshot(
             local_dir=self.root,
-            networks=networks,
+            utdq_nets=utdq_nets,
             das=self.das,
             include_networks=include_networks,
             include_events=include_events,
@@ -228,7 +243,7 @@ class Dataset:
         Parameters
         ----------
         networks : list of str, optional
-            List of network names. If None or '*', use all local networks.
+            List of ``utdq_net`` codes. If None or '*', use all networks.
         use_cache : bool
             Whether to use cached stats if available.
         distance_bins : list, optional
@@ -239,11 +254,11 @@ class Dataset:
         Returns
         -------
         all_stats : dict
-            If merge=False: {network_name: stats_dict}  
+            If merge=False: {utdq_net: stats_dict}  
             If merge=True: single merged stats_dict suitable for plotting
         """
         all_stats = {}
-        net_names = self.networks["network"].tolist() if networks == "*" \
+        net_names = self.networks["utdq_net"].tolist() if networks == "*" \
                     or networks is None else networks
 
         for name in net_names:
@@ -284,7 +299,7 @@ class Dataset:
                         savepath: str=None, 
                         show=True):
 
-        net_names = self.networks["network"].tolist() if networks == "*" \
+        net_names = self.networks["utdq_net"].tolist() if networks == "*" \
                     or networks is None else networks
 
         fig, axes = plt.subplots(2, 3, figsize=(12, 8))
@@ -297,7 +312,7 @@ class Dataset:
         for name in net_names:
             net = self.get_network(name)
 
-            model_path = net.paths["utdq/travel_time"]
+            model_path = net.paths[".utdquake/travel_time"]
 
             if not model_path.exists():
                 raise FileNotFoundError(f"Travel time model not found for network {name} at {model_path}.")
@@ -383,50 +398,44 @@ class Dataset:
         Parameters:
         ----------
         density_in_region : bool, optional
-            If True, calculate station density only within the network's defined region. Default is True.
+            If True (default), each network's region is the region of most of its seismicity
+            (95% of its events, with a 20% margin) and only the distinct stations located inside
+            it are counted. If
+            False, the network table's station counts and station-coverage bounds are used.
         savepath : str or None
             Path to save the figure. If None, figure is not saved.
         show : bool
             Whether to display the figure.
         """
         if density_in_region:
-            print("Calculating station density within network regions...")
+            # Region of each network = the region of most of its seismicity: 95% of its
+            # events in longitude and latitude (a few distant events do not stretch it, many
+            # do), 20% padding, across the antimeridian when tighter. Stations: distinct
+            # (network, station) located inside it. A box around all located stations would
+            # include the far (teleseismic) stations that recorded the larger events.
             networks = self.networks.copy()
             stations = self.stations.copy()
+            events = self.events
 
-            confirmed_mask = stations["confirmed"] == True
-            only_calculated_mask = (stations["confirmed"] == False) & (stations["available"] == True)
-            stations = stations[confirmed_mask | only_calculated_mask]
-            stations["latitude"] = stations["confirmed_latitude"].combine_first(stations["calculated_latitude"])
-            stations["longitude"] = stations["confirmed_longitude"].combine_first(stations["calculated_longitude"])
+            stations["latitude"] = stations["confirmed_latitude"].astype(float).fillna(
+                stations["calculated_latitude"].astype(float))
+            stations["longitude"] = stations["confirmed_longitude"].astype(float).fillna(
+                stations["calculated_longitude"].astype(float))
+            stations = stations.dropna(subset=["latitude", "longitude"])
 
-            networks_reg = networks[["network","approx_lon_min",	"approx_lon_max",	"approx_lat_min",	"approx_lat_max"]]
-            n_stations = pd.merge(stations, networks_reg, on="network", how="left")
-            n_stations = n_stations[(n_stations["latitude"] >= n_stations["approx_lat_min"]) & (n_stations["latitude"] <= n_stations["approx_lat_max"])]
-            n_stations = n_stations[(n_stations["longitude"] >= n_stations["approx_lon_min"]) & (n_stations["longitude"] <= n_stations["approx_lon_max"])]
-            counts = n_stations["network"].value_counts().to_dict()
-            networks["total_stations"] = networks.apply(lambda row: counts.get(row["network"], np.nan), axis=1)
-        
-            # #in case of polygon area / no need for now, but leaving here for future reference
-            # gdf = gpd.GeoDataFrame(
-            #     n_stations,
-            #     geometry=gpd.points_from_xy(n_stations.longitude, n_stations.latitude),
-            #     crs="EPSG:4326"
-            # )
-            # def area_deg2(group):
-            #     if len(group) < 3:
-            #         return 0.0
-            #     hull = group.geometry.union_all().convex_hull
-            #     return hull.area  # degree^2
-
-            # area_per_network = (
-            #     gdf.groupby("network")
-            #     .apply(area_deg2)
-            #     .reset_index(name="area_deg2")
-            #         )
-            # area_per_network = area_per_network.set_index("network")["area_deg2"].to_dict()
-            # networks["area_deg2"] = networks.apply(lambda row: area_per_network.get(row["network"], np.nan), axis=1)
-        
+            for i, row in networks.iterrows():
+                ev = events[events["utdq_net"] == row["utdq_net"]]
+                st = stations[stations["utdq_net"] == row["utdq_net"]]
+                if ev[["latitude", "longitude"]].dropna().empty:
+                    networks.loc[i, "total_stations"] = np.nan
+                    continue
+                lon_min, lon_max, lat_min, lat_max = compute_region(ev, st, padding=0.2, coverage=0.95)
+                lon = st["longitude"] % 360 if lon_max > 180 else st["longitude"]
+                inside = (lon >= lon_min) & (lon <= lon_max) & \
+                         (st["latitude"] >= lat_min) & (st["latitude"] <= lat_max)
+                networks.loc[i, ["approx_lon_min", "approx_lon_max", "approx_lat_min", "approx_lat_max"]] = \
+                    [lon_min, lon_max, lat_min, lat_max]
+                networks.loc[i, "total_stations"] = len(st.loc[inside, ["network", "station"]].drop_duplicates())
         else:
             networks = self.networks.copy()
 
@@ -485,7 +494,7 @@ class Dataset:
             If provided, the figure will be saved to this path with
             dpi=300 (default is None).
         """
-        picks = self.get_picks(network="*", streaming=False).to_pandas()
+        picks = self.get_picks(utdq_net="*", streaming=False).to_pandas()
         picks = picks[picks["travel_time"] > 0]  # Filter out non-positive travel times
         picks["travel_time"] = picks["travel_time"] / 60  # Convert to minutes
         picks = picks[picks["travel_time"] < 100]  # Filter out non-positive travel times
@@ -495,7 +504,7 @@ class Dataset:
 
 class Network:
     """
-    Represents a single network in UTDQuake.
+    Represents a single UTDQuake network.
 
     Provides access to network-specific events, stations, picks,
     EventBank, and plotting utilities.
@@ -503,7 +512,7 @@ class Network:
     Parameters
     ----------
     name : str
-        Network name (e.g. "tx", "uw", "UWF").
+        UTDQuake network code, ``utdq_net`` (e.g. "tx", "AEIC", "R05", "UWF").
     das : bool, optional
         Whether to use the DAS or not. If so, tou may define DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
     """
@@ -512,7 +521,12 @@ class Network:
         """Initialize Network with name and DAS flag."""
         self.name = name.strip() 
         self.das = das
-        self.paths = get_utdq_paths(name,das)
+        self.paths = get_utdq_paths(self.name,das)
+
+    @property
+    def utdq_net(self) -> str:
+        """The UTDQuake network code (same as ``name``)."""
+        return self.name
 
     def __str__(self, extended: bool = False) -> str:
         """
@@ -544,7 +558,7 @@ class Network:
             details = "\n".join(
                 f"  {key}: {value}" 
                 for key, value in description.items() 
-                if key != "network"
+                if key != "utdq_net"
             )
             msg += f"\n{details}"
 
@@ -564,7 +578,7 @@ class Network:
         networks_df = Dataset(das=self.das).networks
         # print(networks_df)
 
-        network_row = networks_df[networks_df["network"] == self.name]
+        network_row = networks_df[networks_df["utdq_net"] == self.name]
         if network_row.empty:
             raise Exception(f"Network '{self.name}' not found.") 
         network_series = network_row.iloc[0]
@@ -652,8 +666,9 @@ class Network:
         # --- Epicentral distance (picks-dependent) ---
         picks["distance_km"] = picks["distance"] * 111
 
-        p_picks = picks[picks["phase"] == "P"]
-        s_picks = picks[picks["phase"] == "S"]
+        family = phase_family(picks["phase"])
+        p_picks = picks[family.eq("P")]
+        s_picks = picks[family.eq("S")]
 
         epi_counts_P, _ = np.histogram(p_picks["distance_km"], bins=distance_bins)
         epi_counts_S, _ = np.histogram(s_picks["distance_km"], bins=distance_bins)

@@ -344,7 +344,8 @@ class UTDQBank(obsplus.EventBank):
     def put_utdq_stations(self, stations, starttime=None, endtime=None,
                         chunk_seconds=86400,
                         das=False,
-                        calculate_d_az=True) -> None:
+                        calculate_d_az=True,
+                        station_sample_size=None) -> None:
         """
         Save station metadata to events in the event bank over a given time range.
 
@@ -368,6 +369,12 @@ class UTDQBank(obsplus.EventBank):
         calculate_d_az : bool, optional
             Whether to calculate distance and azimuth between
             events and stations (default is True).
+        station_sample_size : int, optional
+            At most this many station records (one per arrival) per station
+            database, spread over the events: enough for the station-location
+            summary (calculated position and its spread). None (default)
+            keeps one per arrival. Distances and azimuths of all arrivals
+            are computed either way.
 
         """
         
@@ -398,7 +405,8 @@ class UTDQBank(obsplus.EventBank):
                                                     df_stations=stations,
                                                     calculate_d_az=calculate_d_az,
                                                     ebank_index_path=ebank_index_path,
-                                                    das=das
+                                                    das=das,
+                                                    station_sample_size=station_sample_size,
                                                                 )
 
             new_len_catalog = len(catalog)

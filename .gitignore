@@ -1,5 +1,6 @@
 # Custom
 data/
+datasets/
 .bck/
 .test/
 #figures/networks/**/*.png 

@@ -11,7 +11,7 @@ a single atomic commit per call.
 so publishing/removing a network only ever touches that network's own
 files. ``network.parquet`` is a single file shared by every network, so
 it is merged (update-or-append the row for this network, keyed by
-``network``) rather than overwritten, and the commit is anchored to the
+``utdq_net``) rather than overwritten, and the commit is anchored to the
 revision it was read from (``parent_commit``) so a concurrent publish by
 someone else is detected as a conflict instead of silently lost.
 ``publish_network`` stamps the merged row's ``last_published`` column with
@@ -44,6 +44,8 @@ from huggingface_hub import (
 from huggingface_hub.errors import HfHubHTTPError
 
 from .core.config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, get_root
+from .core.utils import renamed_kwarg
+from .writers.schema import CATALOG_TYPES, missing_network_info
 
 logger = logging.getLogger(__name__)
 
@@ -101,8 +103,8 @@ def _resolve_token(token: Optional[str] = None) -> str:
     return token
 
 
-def _local_manifest_path(root: Path, key: str, network: str, das: bool) -> Path:
-    return root / get_hf_entry(key, das).path.format(network=network)
+def _local_manifest_path(root: Path, key: str, utdq_net: str, das: bool) -> Path:
+    return root / get_hf_entry(key, das).path.format(utdq_net=utdq_net)
 
 
 def _download_networks_table(
@@ -129,7 +131,7 @@ def _download_networks_table(
             "No existing %s on %s yet; starting from an empty networks table.",
             remote_path, HF_REPO_ID,
         )
-        return pd.DataFrame(columns=["network"]), None
+        return pd.DataFrame(columns=["utdq_net"]), None
 
 
 def _warn_depth_datum(root: Path, network: str, das: bool) -> None:
@@ -151,7 +153,7 @@ def _warn_depth_datum(root: Path, network: str, das: bool) -> None:
 
 
 def publish_network(
-    network: str,
+    utdq_net: Optional[str] = None,
     local_root: Optional[Path] = None,
     das: bool = False,
     include_banks: bool = True,
@@ -159,9 +161,10 @@ def publish_network(
     token: Optional[str] = None,
     commit_message: Optional[str] = None,
     create_pr: bool = False,
+    network: Optional[str] = None,
 ) -> str:
     """
-    Publish one network's manifests to the shared UTDQuake Hub repo.
+    Publish one UTDQuake network's manifests to the shared UTDQuake Hub repo.
 
     .. warning::
        Event depths must be in meters below **sea level** (QuakeML
@@ -171,14 +174,14 @@ def publish_network(
 
     Expects ``local_root`` to already contain the flat manifest layout
     produced by ``utdquake.writers.parquet.build_manifests`` (e.g.
-    ``root/events/network={network}.parquet``, ``root/stations/...``,
+    ``root/events/utdq_net={utdq_net}.parquet``, ``root/stations/...``,
     ``root/picks/...``, and a row for this network in
     ``root/network/network.parquet``) -- run that first.
 
     Parameters
     ----------
-    network : str
-        Network code to publish, e.g. "CM".
+    utdq_net : str
+        UTDQuake network code to publish, e.g. "CM".
     local_root : Path, optional
         Directory holding the local manifest layout. Defaults to
         ``get_root(das=das)``.
@@ -209,12 +212,17 @@ def publish_network(
         committing directly. Use this for anyone who is not a maintainer
         of the shared repo -- it does not require write access. Default
         False.
+    network : str, optional
+        Deprecated alias of ``utdq_net``.
 
     Returns
     -------
     str
         URL of the resulting commit (or PR, if ``create_pr=True``) on the Hub.
     """
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "publish_network")
+    if network is None:
+        raise TypeError("publish_network() missing required argument: 'utdq_net'")
     token = _resolve_token(token)
     root = Path(local_root) if local_root is not None else get_root(das=das)
     _warn_depth_datum(root, network, das)
@@ -233,7 +241,7 @@ def publish_network(
                     key, network, local_path,
                 )
                 continue
-            remote_path = get_hf_entry(key, das).path.format(network=network)
+            remote_path = get_hf_entry(key, das).path.format(utdq_net=network)
             operations.append(
                 CommitOperationAdd(path_in_repo=remote_path, path_or_fileobj=str(local_path))
             )
@@ -255,20 +263,20 @@ def publish_network(
                         # expects - relative to bank_dir alone drops the
                         # network folder and the bank ends up at the wrong path.
                         zf.write(file_path, file_path.relative_to(bank_dir.parent))
-            remote_path = get_hf_entry("banks", das).path.format(network=network)
+            remote_path = get_hf_entry("banks", das).path.format(utdq_net=network)
             operations.append(
                 CommitOperationAdd(path_in_repo=remote_path, path_or_fileobj=str(tmp_zip))
             )
 
         # --- optional travel-time model ---
         if include_travel_time:
-            tt_path = root / get_hf_entry(".utdquake/travel_time", das).path.format(network=network)
+            tt_path = root / get_hf_entry(".utdquake/travel_time", das).path.format(utdq_net=network)
             if not tt_path.exists():
                 raise FileNotFoundError(
                     f"No local travel-time model for network {network} at {tt_path}. "
                     "Run utdquake.qc.travel_time.build_travel_time_model first."
                 )
-            remote_path = get_hf_entry(".utdquake/travel_time", das).path.format(network=network)
+            remote_path = get_hf_entry(".utdquake/travel_time", das).path.format(utdq_net=network)
             operations.append(
                 CommitOperationAdd(path_in_repo=remote_path, path_or_fileobj=str(tt_path))
             )
@@ -281,16 +289,24 @@ def publish_network(
                 "Run build_manifests(include_networks=True) first."
             )
         local_row = pd.read_parquet(local_networks_path)
-        local_row = local_row[local_row["network"] == network].copy()
+        local_row = local_row[local_row["utdq_net"] == network].copy()
         if local_row.empty:
-            raise ValueError(f"Local network manifest has no row for network={network!r}.")
+            raise ValueError(f"Local network manifest has no row for utdq_net={network!r}.")
         # Stamp with the actual moment of upload -- not written back to the
         # local file, only to what gets published.
+        problems = missing_network_info(local_row.iloc[0])
+        if problems:
+            raise ValueError(
+                f"Network table row of {network!r}: {'; '.join(problems)}. Set them with "
+                "build_manifests(include_manual_network_info=...) -- catalog is the name of the "
+                "catalog or bulletin the events come from, catalog_type one of "
+                f"{CATALOG_TYPES}, dataset_version e.g. 'v2'."
+            )
         local_row["last_published"] = pd.Timestamp.utcnow().tz_localize(None)
 
         remote_networks, parent_commit = _download_networks_table(api, token, das)
         merged = pd.concat([remote_networks, local_row], ignore_index=True)
-        merged = merged.drop_duplicates(subset=["network"], keep="last")
+        merged = merged.drop_duplicates(subset=["utdq_net"], keep="last")
 
         tmp_networks = Path(tempfile.mkstemp(suffix=".parquet")[1])
         tmp_files.append(tmp_networks)
@@ -303,7 +319,7 @@ def publish_network(
         )
 
         if not operations:
-            raise ValueError(f"Nothing to publish for network={network!r}: no local manifests found.")
+            raise ValueError(f"Nothing to publish for utdq_net={network!r}: no local manifests found.")
 
         commit_info = api.create_commit(
             repo_id=HF_REPO_ID,
@@ -326,22 +342,23 @@ def publish_network(
 
 
 def remove_network(
-    network: str,
+    utdq_net: Optional[str] = None,
     das: bool = False,
     include_banks: bool = False,
     include_travel_time: bool = False,
     token: Optional[str] = None,
     commit_message: Optional[str] = None,
     create_pr: bool = False,
+    network: Optional[str] = None,
 ) -> str:
     """
-    Remove one network's files from the shared UTDQuake Hub repo and drop
-    its row from ``network.parquet``.
+    Remove one UTDQuake network's files from the shared UTDQuake Hub repo and
+    drop its row from ``network.parquet``.
 
     Parameters
     ----------
-    network : str
-        Network code to remove, e.g. "CM".
+    utdq_net : str
+        UTDQuake network code to remove, e.g. "CM".
     das : bool, optional
         Whether this is a DAS dataset. Default False.
     include_banks : bool, optional
@@ -357,12 +374,17 @@ def remove_network(
     create_pr : bool, optional
         If True, opens a Pull Request with this removal instead of
         committing directly. Default False.
+    network : str, optional
+        Deprecated alias of ``utdq_net``.
 
     Returns
     -------
     str
         URL of the resulting commit (or PR, if ``create_pr=True``) on the Hub.
     """
+    network = renamed_kwarg(utdq_net, network, "utdq_net", "network", "remove_network")
+    if network is None:
+        raise TypeError("remove_network() missing required argument: 'utdq_net'")
     token = _resolve_token(token)
     api = HfApi(token=token)
 
@@ -376,15 +398,15 @@ def remove_network(
             + ([".utdquake/travel_time"] if include_travel_time else [])
         )
         for key in keys:
-            remote_path = get_hf_entry(key, das).path.format(network=network)
+            remote_path = get_hf_entry(key, das).path.format(utdq_net=network)
             if api.file_exists(HF_REPO_ID, remote_path, repo_type=HF_REPO_TYPE, token=token):
                 operations.append(CommitOperationDelete(path_in_repo=remote_path))
             else:
                 logger.warning("Remote file %s does not exist; nothing to delete.", remote_path)
 
         remote_networks, parent_commit = _download_networks_table(api, token, das)
-        if network in set(remote_networks.get("network", [])):
-            remaining = remote_networks[remote_networks["network"] != network]
+        if network in set(remote_networks.get("utdq_net", [])):
+            remaining = remote_networks[remote_networks["utdq_net"] != network]
             tmp_networks = Path(tempfile.mkstemp(suffix=".parquet")[1])
             tmp_files.append(tmp_networks)
             remaining.to_parquet(tmp_networks, index=False)
@@ -396,7 +418,7 @@ def remove_network(
             )
 
         if not operations:
-            raise ValueError(f"Nothing to remove for network={network!r}: no matching remote files.")
+            raise ValueError(f"Nothing to remove for utdq_net={network!r}: no matching remote files.")
 
         commit_info = api.create_commit(
             repo_id=HF_REPO_ID,
