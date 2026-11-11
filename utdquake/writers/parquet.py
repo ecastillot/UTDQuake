@@ -96,6 +96,14 @@ def _event_versions(events_manifest: Path, manual_info: Optional[pd.DataFrame], 
     if manual_info is not None and "dataset_version" in manual_info:
         rows = manual_info.loc[manual_info["utdq_net"] == utdq_net, "dataset_version"].dropna()
         version = rows.iloc[0] if len(rows) else None
+    if version is None:
+        # not given: the release the new events go into (latest released version + one minor version)
+        from ..core.config import next_dataset_version
+        version = next_dataset_version()
+        if version is None:
+            raise ValueError(f"[{utdq_net}] dataset_version not given and the released versions could not be "
+                             "read from the Hub (offline?): pass it in include_manual_network_info, e.g. 'v2.1'.")
+        logger.info("[%s] new events labelled dataset_version=%s (the next release)", utdq_net, version)
     return known, version
 
 
@@ -200,6 +208,20 @@ def build_manifests(
         except Exception as e:
             logger.warning("Could not load manual network info from %s: %s", path, e)
             include_manual_network_info = None
+    if include_manual_network_info is not None:
+        # a network without dataset_version goes into the next release (latest released version + 0.1)
+        info = include_manual_network_info.copy()
+        if "dataset_version" not in info:
+            info["dataset_version"] = None
+        empty = info["dataset_version"].isna() | (info["dataset_version"].astype(str).str.strip() == "")
+        if empty.any():
+            from ..core.config import next_dataset_version
+            nxt = next_dataset_version()
+            if nxt is not None:
+                info.loc[empty, "dataset_version"] = nxt
+                logger.info("dataset_version not given for %s: %s (the next release)",
+                            info.loc[empty, "utdq_net"].tolist(), nxt)
+        include_manual_network_info = info
 
     shard_dirs: Dict[str, Path] = {
         "events": paths.manifest_dir / "events",

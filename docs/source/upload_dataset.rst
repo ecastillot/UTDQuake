@@ -93,8 +93,10 @@ StationXML:
 4. Tables and metadata
 ^^^^^^^^^^^^^^^^^^^^^^
 
-``catalog``, ``catalog_type`` (``agency``, ``research`` or ``synthetic``) and ``dataset_version`` are
-**required**: publishing refuses without them. ``uploaded_by_github`` should be your GitHub profile URL.
+``catalog`` and ``catalog_type`` (``agency``, ``research`` or ``synthetic``) are **required**: publishing
+refuses without them. ``dataset_version`` is set for you: a new network goes into the next release (after
+``v2.0``, ``v2.1``; see :ref:`versions-section`), so leave it out unless the maintainers ask for another one.
+``uploaded_by_github`` should be your GitHub profile URL.
 
 .. code-block:: python
 
@@ -103,7 +105,7 @@ StationXML:
 
    info = pd.DataFrame({
        "utdq_net": ["CM"],
-       "catalog": ["SGC"], "catalog_type": ["agency"], "dataset_version": ["v2"],
+       "catalog": ["SGC"], "catalog_type": ["agency"],      # dataset_version: the next release
        "provider": ["SGC"], "provider_url": ["https://www.sgc.gov.co"],
        "country": ["Colombia"], "agency": ["Servicio Geologico Colombiano"],
        "continent": ["South America"],

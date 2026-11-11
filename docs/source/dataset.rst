@@ -43,6 +43,19 @@ It also integrates `EventBanks <https://niosh-mining.github.io/obsplus/versions/
                              read directly using ObsPlus EventBank
                              <https://niosh-mining.github.io/obsplus/versions/latest/api/obsplus.bank.eventbank.html>.
 
+.. note::
+
+   **Tables and banks hold different things.** The ``events``, ``picks`` and ``stations`` tables hold the
+   events and picks **after** UTDQuake's quality control (see the QC criteria in the quickstart). The bank of a
+   network holds **everything that was downloaded** for it, in QuakeML: also the events that did not pass the
+   event QC, and every pick and arrival before the pick QC. For example, the ``ISC`` bank of ``v2.0`` has 21,892
+   events and its table 18,613. Use the tables for analysis and training; use the bank to go back to the
+   full source catalog.
+
+   Banks are much larger than the tables (about 20 GB of zips for all networks in ``v2.0``) and are not
+   downloaded with the tables: ``Network(...).bank`` downloads and unzips a network's bank the first time it is
+   used, and ``Dataset().download(..., include_banks=True)`` downloads them explicitly.
+
 Each dataset is organized per network and can be explored interactively using the Hugging Face dataset viewers below.
 
 Network

@@ -1287,7 +1287,8 @@ def get_stations_summary(stations_folder,
             elif pd.api.types.is_integer_dtype(df[col]):
                 summary[col] = df[col].max()   # or sum if counts make sense
             elif col in ["network", "station", "channel"]:
-                summary[col] = ",".join(df[col].unique())  # all unique values
+                # all unique values (an empty code, e.g. ISC stations without a network, is read back as NaN)
+                summary[col] = ",".join(str(v) for v in df[col].unique() if pd.notna(v))
             else:
                 summary[col] = df[col].iloc[0]  # fallback
 
@@ -1544,6 +1545,8 @@ def update_origin_quality(origin, distances, esazs, stations_used, used_phase_co
         stations_used (set): Set of station IDs used.
         used_phase_count (int): Count of phases actually used.
     """
+    if origin.quality is None:  # some providers send origins without a quality block
+        origin.quality = OriginQuality()
     quality = origin.quality
     logger.info(f"Updating quality metrics for origin {origin.resource_id.id}.")
     quality.associated_phase_count = len(origin.arrivals)
@@ -1962,6 +1965,10 @@ def append_stations_to_catalog(catalog: Catalog, df_stations,
             continue
 
         logger.info(f"Processing event {event.resource_id.id} with origin {origin.resource_id.id}")
+        # arrivals find their pick through the ObsPy resource registry: bind each pick of this event to its
+        # id first (the registry lost them for SCEDC ids, e.g. ComCat ci, and every event was dropped)
+        for pick in event.picks:
+            pick.resource_id.set_referred_object(pick, warn=False)
         gd_proc = parse_origin(origin=origin, 
                                 ebank_index_path=ebank_index_path,
                                 df_stations=df_stations,

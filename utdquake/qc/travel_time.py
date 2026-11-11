@@ -1371,9 +1371,17 @@ def build_travel_time_model(
             "Run build_manifests + publish_flat_manifests first."
         )
 
-    picks = pd.read_parquet(picks_path)
+    picks = pd.read_parquet(picks_path).reset_index(drop=True)
+    picks["_row"] = np.arange(len(picks))
 
-    tt = TravelTime(picks)
+    # phases matched to TravelTime.DEFAULT_PHASES ignoring case (PG -> Pg, SN -> Sn), for the model only:
+    # the phase labels of the table are not changed.
+    canon = {p.upper(): p for p in TravelTime.DEFAULT_PHASES}
+    picks_tt = picks.copy()
+    up = picks_tt["phase"].astype("string").str.upper()
+    picks_tt["phase"] = up.map(canon).fillna(picks_tt["phase"].astype("string"))
+
+    tt = TravelTime(picks_tt)
     tt.clean_data(**PICK_TT_QC_DEFAULTS["clean_data"])
     bins_key = "build_bins_das" if das else "build_bins"
     tt.build_bins(**PICK_TT_QC_DEFAULTS[bins_key])
@@ -1385,7 +1393,15 @@ def build_travel_time_model(
     logger.info("Saved travel-time model for %s to %s", network, model_path)
 
     if update_picks:
-        df_qc = tt.attach_zscore()
+        # z-scores of the phases with a model; every other pick (phase without a model, or not in
+        # TravelTime.DEFAULT_PHASES) is kept with a NaN z-score instead of being dropped.
+        z = tt.attach_zscore()
+        df_qc = picks.copy()
+        df_qc["travel_time_zscore"] = np.nan
+        if not z.empty:
+            df_qc.loc[z["_row"].to_numpy(), "travel_time_zscore"] = z["travel_time_zscore"].to_numpy()
+        df_qc = df_qc.drop(columns="_row")
+        assert len(df_qc) == len(picks), "travel-time step changed the number of picks"
         df_qc = sanitize_dataframe(
             df_qc,
             order_cols=PREF_PICKS_ORDER,

@@ -42,6 +42,12 @@ Seismic Data
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/av/av_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/av/av_overview.png" loading="lazy" alt="av overview"></a>
      <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/av" target="_blank">Open folder &rarr;</a>
    </div>
+   <div class="utdq-card" data-net="ci" data-search="ci comcat u.s.a. north america v2" data-continent="North America" data-version="v2">
+     <div class="utdq-card-head"><span class="utdq-net">ci</span><span class="utdq-meta">ComCat &middot; U.S.A. &middot; v2</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ci/ci_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ci/ci_overview.png" loading="lazy" alt="ci overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ci" target="_blank">Open folder &rarr;</a>
+   </div>
+
    <div class="utdq-card" data-net="hv" data-search="hv comcat u.s.a. north america v1" data-continent="North America" data-version="v1">
      <div class="utdq-card-head"><span class="utdq-net">hv</span><span class="utdq-meta">ComCat &middot; U.S.A. &middot; v1</span></div>
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/hv/hv_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/hv/hv_overview.png" loading="lazy" alt="hv overview"></a>
@@ -257,10 +263,10 @@ Seismic Data
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ISN/ISN_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/ISN/ISN_overview.png" loading="lazy" alt="ISN overview"></a>
      <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/ISN" target="_blank">Open folder &rarr;</a>
    </div>
-   <div class="utdq-card" data-net="JAPAN" data-search="japan jma japan asia v1" data-continent="Asia" data-version="v1">
-     <div class="utdq-card-head"><span class="utdq-net">JAPAN</span><span class="utdq-meta">JMA &middot; Japan &middot; v1</span></div>
-     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/JAPAN/JAPAN_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/JAPAN/JAPAN_overview.png" loading="lazy" alt="JAPAN overview"></a>
-     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/JAPAN" target="_blank">Open folder &rarr;</a>
+   <div class="utdq-card" data-net="JMA" data-search="jma jma japan asia v1" data-continent="Asia" data-version="v1">
+     <div class="utdq-card-head"><span class="utdq-net">JMA</span><span class="utdq-meta">JMA &middot; Japan &middot; v1</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/JMA/JMA_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/JMA/JMA_overview.png" loading="lazy" alt="JMA overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/JMA" target="_blank">Open folder &rarr;</a>
    </div>
    <div class="utdq-card" data-net="JSN" data-search="jsn isc bulletin jamaica central america v1" data-continent="Central America" data-version="v1">
      <div class="utdq-card-head"><span class="utdq-net">JSN</span><span class="utdq-meta">ISC Bulletin &middot; Jamaica &middot; v1</span></div>
@@ -482,6 +488,18 @@ Seismic Data
      <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R09/R09_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R09/R09_overview.png" loading="lazy" alt="R09 overview"></a>
      <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R09" target="_blank">Open folder &rarr;</a>
    </div>
+   <div class="utdq-card" data-net="R10" data-search="r10 detect italy europe v2" data-continent="Europe" data-version="v2">
+     <div class="utdq-card-head"><span class="utdq-net">R10</span><span class="utdq-meta">DETECT &middot; Italy &middot; v2</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R10/R10_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R10/R10_overview.png" loading="lazy" alt="R10 overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R10" target="_blank">Open folder &rarr;</a>
+   </div>
+
+   <div class="utdq-card" data-net="R11" data-search="r11 synthetic delaware basin catalog (db1d monte carlo) u.s.a. north america v2" data-continent="North America" data-version="v2">
+     <div class="utdq-card-head"><span class="utdq-net">R11</span><span class="utdq-meta">Synthetic Delaware Basin catalog (DB1D Monte Carlo) &middot; U.S.A. &middot; v2</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R11/R11_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R11/R11_overview.png" loading="lazy" alt="R11 overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R11" target="_blank">Open folder &rarr;</a>
+   </div>
+
    <!-- utdq-seismic-end -->
    </div>
 

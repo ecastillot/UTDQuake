@@ -2005,10 +2005,11 @@ def plot_station_location_uncertainty(
     # shortest way around (a longitude difference never exceeds 180 deg)
     dlon = (df["calculated_longitude"] - df["confirmed_longitude"] + 180) % 360 - 180
     
-    mean_lat = np.radians(df["confirmed_latitude"].mean())
+    # km per degree of longitude at each station's own latitude (not the network's mean latitude: near
+    # the poles a large longitude difference is a short distance, e.g. IU.QSPA at the South Pole)
     km_per_deg_lat = 111.32
-    km_per_deg_lon = 111.32 * np.cos(mean_lat)
-    
+    km_per_deg_lon = 111.32 * np.cos(np.radians(df["confirmed_latitude"]))
+
     dlat_km = dlat * km_per_deg_lat
     dlon_km = dlon * km_per_deg_lon
 
@@ -2052,8 +2053,12 @@ def plot_station_location_uncertainty(
                transform=ax3.transAxes, ha='right', va='top',
                fontsize=10, fontweight='bold', color='black')
     
-    # Compute distance difference
-    distance = np.sqrt(dlat_km**2 + dlon_km**2)
+    # Compute distance difference: great-circle distance between the calculated and confirmed locations
+    p = np.pi / 180
+    lat1, lon1 = df["confirmed_latitude"] * p, df["confirmed_longitude"] * p
+    lat2, lon2 = df["calculated_latitude"] * p, df["calculated_longitude"] * p
+    h = np.sin((lat2 - lat1) / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin((lon2 - lon1) / 2) ** 2
+    distance = 2 * 6371.0 * np.arcsin(np.sqrt(np.clip(h, 0, 1)))
     # Histogram of total difference
     ax4.hist(distance, bins=50, color="green", alpha=0.7)
     ax4.set_xlabel(f"Epicentral Difference (km)")

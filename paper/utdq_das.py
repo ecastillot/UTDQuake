@@ -24,7 +24,7 @@ import numpy as np
 
 fig_path = Path(__file__).parent / "utdq_das.png"
 # the same figure is the UWF overview of the docs (figures/networks_DAS/UWF)
-overview_path = Path(_local.ROOT) / "figures" / "networks_DAS" / "UWF" / "UWF_overview.png"
+overview_path = Path(_local.FIGURES) / "networks_DAS" / "UWF" / "UWF_overview.png"
 dataset = utdq.Dataset(das=True)
 print(dataset)
 network = dataset.get_network("UWF")

@@ -28,17 +28,18 @@ Usage
 >>> net.events.head()
 
 """
-__version__ = "1.0.1"
+__version__ = "1.1.0"
 
 from .core.utdquake import Dataset, Network
 from .core.data import download_snapshot, load
+from .core.config import set_version
 from .core.patch import utdquake_obspy_patch
 from .hub import publish_network, remove_network
 from .figures import generate_network_figures, publish_network_figures
 
 utdquake_obspy_patch()
 __all__ = [
-    "Dataset", "Network", "download_snapshot", "load",
+    "Dataset", "Network", "download_snapshot", "load", "set_version",
     "publish_network", "remove_network",
     "generate_network_figures", "publish_network_figures",
 ]

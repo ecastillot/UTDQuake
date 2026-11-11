@@ -79,8 +79,9 @@ plt.tight_layout()
 """),
     md("""
 ## 2. One network
-`get_network` downloads a network the first time (events, stations, picks and its event bank) and reads
-it locally afterwards. Here: **tx**, the Texas seismological network (TexNet).
+`get_network` gives one network. Each table (events, stations, picks) is downloaded the first time you read
+it and read locally afterwards; the event bank only when you use it (section 3). Here: **tx**, the Texas
+seismological network (TexNet).
 """),
     code("""
 net = dataset.get_network("tx")
@@ -116,7 +117,10 @@ plt.tight_layout()
     md("""
 ## 3. One earthquake
 Every network comes with an [ObsPy](https://docs.obspy.org) event bank, so you can also get the full
-QuakeML events. Here: the largest earthquake and its picks.
+QuakeML events. `net.bank` downloads the bank the first time (it is larger than the tables) and reads it
+locally afterwards. The tables hold the events and picks after UTDQuake's quality control; the bank holds
+everything that was downloaded (also events and picks that did not pass it). Here: the largest earthquake
+and its picks.
 """),
     code("""
 big = events.sort_values("magnitude").iloc[-1]
@@ -150,7 +154,8 @@ ax.legend()
 """),
     md("""
 > **Reproducibility.** The dataset is versioned. To always get the data of a given release (e.g. the
-> paper's), set `os.environ["UTDQUAKE_REVISION"] = "v1.0"` before downloading.
+> paper's), start with `dataset = utdq.Dataset(version="v1.0")` (or `"v2.0"`); each version is downloaded
+> into its own folder.
 """),
     md("""
 ## 5. Built-in figures
@@ -238,7 +243,8 @@ ebank.put_utdq_stations(stations, calculate_d_az=True)
     code("ebank.put_utdq_picks(apply_utdq_qc=True)"),
     md("""
 ## 4-5. Tables and metadata
-`catalog`, `catalog_type` (`agency`, `research` or `synthetic`) and `dataset_version` are **required**.
+`catalog` and `catalog_type` (`agency`, `research` or `synthetic`) are **required**. `dataset_version` is set
+for you: a new network goes into the next release (after `v2.0`, `v2.1`).
 """),
     code("""
 import pandas as pd
@@ -246,7 +252,7 @@ from utdquake.writers.parquet import build_manifests, publish_flat_manifests
 
 info = pd.DataFrame({
     "utdq_net": [UTDQ_NET],
-    "catalog": ["COSEISMIQ"], "catalog_type": ["research"], "dataset_version": ["v2"],
+    "catalog": ["COSEISMIQ"], "catalog_type": ["research"],
     "provider": ["COSEISMIQ / ETH Zurich"], "provider_url": ["http://coseismiq.ethz.ch"],
     "country": ["Iceland"], "continent": ["Europe"],
     "uploaded_by_github": ["https://github.com/<your-username>"],
