@@ -32,42 +32,31 @@ Versions
 
 UTDQuake versions the data and the software separately:
 
-- **Dataset versions** (``v1.0``, ``v2.0``, ...) are tags of the
-  `Hugging Face repository <https://huggingface.co/datasets/ecastillot/UTDQuake>`_. A tagged version
-  never changes. ``main`` always holds the latest data, including additions not yet released.
+- **Dataset versions** (``v1.0``, ``v2.0``, ``v2.1``, ...) are tags of the
+  `Hugging Face repository <https://huggingface.co/datasets/ecastillot/UTDQuake>`_. A released version never
+  changes. ``main`` holds the latest data: the last release plus the networks added since, which go into the
+  next release.
 - **Package versions** (``1.0.0``, ...) are releases of ``utdquake`` on
-  `PyPI <https://pypi.org/project/utdquake/>`_. Package 1.0 reads every dataset version from ``v1.0`` on.
+  `PyPI <https://pypi.org/project/utdquake/>`_. A package reads every dataset version from ``v1.0`` on.
 
-By default the latest data (``main``) is downloaded. To reproduce a result, e.g. the one of a paper,
-read a fixed version: set ``UTDQUAKE_REVISION`` to its tag before downloading, or pass ``revision=`` to
-:func:`utdquake.download_snapshot` and :func:`utdquake.load`.
+How the dataset is numbered, what each version contains and how data is added between releases:
+:ref:`versions-section`.
+
+**Reading a version.** By default the latest data (``main``) is read. To reproduce a result, e.g. the one of
+a paper, read a released version:
 
 .. code-block:: python
 
-   os.environ["UTDQUAKE_REVISION"] = "v1.0"
+   import utdquake
 
-Every row records the version that added it (``dataset_version``), so the data of a version can also be
-selected from the latest release.
+   dataset = utdquake.Dataset(version="v2.0")          # or Network("tx", version="v1.0")
+   # same as: os.environ["UTDQUAKE_REVISION"] = "v2.0" (or revision= in download_snapshot / load)
 
-**v2.0** *(in preparation)*
+The version applies to everything read or downloaded afterwards in the session.
 
-- New UTDQuake networks: ``CM`` (Servicio Geologico Colombiano) and the research catalogs ``R01``-``R08``.
-- More events for the existing networks: up to 20,000 events per network after quality control,
-  extended to 2026.
-
-**v1.0** *(dataset of the UTDQuake paper)*
-
-- 81 seismic networks and one DAS network (``UWF``): 341,612 earthquakes, 9.7 million P and S picks
-  and 17,844 stations; 450 DAS earthquakes with 7.8 million picks on 22,500 channels.
-- New layout: ``utdq_net`` names each UTDQuake network, ``network`` is the FDSN code of each station and
-  ``catalog`` the source catalog.
-- Stations reported by ISC with the placeholder code ``IR`` get their network and location from the ISC
-  station registry.
-- Picks are counted by phase label (P, Pg, Pn, S, Sg, Sn) and by phase family.
-
-**v0.3** *(previous layout)*
-
-- The dataset as published before version 1.0 (files ``network=<name>.parquet``), read by ``utdquake``
-  0.3. Kept so earlier results can be reproduced.
-
-See :ref:`versions-section` for the full list of changes of each version.
+**Where downloads go.** In the default cache each version has its own folder (``~/.utdquake/v2.0``,
+``~/.utdquake/main``, ...), so files of different versions are never mixed and a new version is downloaded
+fresh. A folder set with ``UTDQUAKE_ROOT`` is used as is, for whatever version you read: keep one version per
+folder (a warning is logged when files of another version are downloaded into it). Each folder records the
+version and Hub commit it was downloaded from in ``.utdquake/snapshot.json``. Event banks are downloaded only
+when used (``Network(...).bank``).

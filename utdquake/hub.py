@@ -300,7 +300,7 @@ def publish_network(
                 f"Network table row of {network!r}: {'; '.join(problems)}. Set them with "
                 "build_manifests(include_manual_network_info=...) -- catalog is the name of the "
                 "catalog or bulletin the events come from, catalog_type one of "
-                f"{CATALOG_TYPES}, dataset_version e.g. 'v2'."
+                f"{CATALOG_TYPES}, dataset_version: the next release (build_manifests sets it; e.g. 'v2.1')."
             )
         local_row["last_published"] = pd.Timestamp.utcnow().tz_localize(None)
 

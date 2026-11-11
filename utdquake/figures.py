@@ -381,6 +381,8 @@ def publish_network_figures(
     pngs = sorted(local_dir.glob(f"{network}_*.png"))
     if not pngs:
         raise FileNotFoundError(f"No {network}_*.png files in {local_dir}. Run generate_network_figures first.")
+    # text files next to the figures (e.g. {network}_catalog_description.txt: how a catalog was made) go too
+    pngs += sorted(local_dir.glob(f"{network}_*.txt"))
 
     username = _authenticated_user(token)
     message = commit_message or f"Add figures for network {network}"

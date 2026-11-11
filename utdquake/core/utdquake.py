@@ -55,7 +55,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from .data import download_snapshot,load
 from .load import resolve_network_paths
-from .config import get_hf_entry, get_root, get_utdq_paths
+from .config import get_hf_entry, get_revision, get_root, get_utdq_paths, set_version
 from ..qc.travel_time import TravelTimeModel
 from .utils import merge_network_stats, renamed_kwarg
 from ..utils.utils import compute_region, get_network_summary, human_format, phase_family
@@ -88,10 +88,18 @@ class Dataset:
         Otherwise use the standard cache root (`UTDQUAKE_ROOT`). Default is False.
     """
 
-    def __init__(self, das: bool = False):
+    def __init__(self, das: bool = False, version: Optional[str] = None):
         """Initialize Dataset with root cache directory.
+
+        ``version``: the dataset version to read, a tag such as ``"v2.0"`` or ``"v1.0"``, ``"main"`` (the
+        latest data, also additions not yet released) or a commit; default: ``UTDQUAKE_REVISION`` if set, else
+        ``main``. It applies to everything read or downloaded afterwards (it sets ``UTDQUAKE_REVISION``). In
+        the default cache each version has its own folder (``~/.utdquake/<version>``).
         """
+        if version is not None:
+            set_version(version)
         self.das = das
+        self.version = get_revision() or "main"
         self.root = get_root(das=das)
         self.stats = None 
 
@@ -195,7 +203,8 @@ class Dataset:
         include_picks : bool, optional
             Whether to download seismic picks. Default: False.
         include_banks : bool, optional
-            Whether to download the bank (synthetic) data. Default: False.
+            Whether to download the QuakeML banks (zipped; much larger than the tables). Default: False;
+            ``Network(...).bank`` downloads a network's bank when it is first used.
         include_travel_time : bool, optional
             Whether to download the travel time models. Default: False.
         overwrite : bool, optional
@@ -517,10 +526,13 @@ class Network:
         Whether to use the DAS or not. If so, tou may define DAS cache root environment variable (`UTDQUAKE_DAS_ROOT`).
     """
 
-    def __init__(self, name: str, das: bool = False):
-        """Initialize Network with name and DAS flag."""
+    def __init__(self, name: str, das: bool = False, version: Optional[str] = None):
+        """Initialize Network with name and DAS flag; ``version`` as in :class:`Dataset`."""
+        if version is not None:
+            set_version(version)
         self.name = name.strip() 
         self.das = das
+        self.version = get_revision() or "main"
         self.paths = get_utdq_paths(self.name,das)
 
     @property
@@ -575,22 +587,26 @@ class Network:
             Keys include 'events', 'total_stations', and metadata fields.
         """
         dataset = Dataset(das=self.das)
-        networks_df = dataset.networks
-        network_row = networks_df[networks_df["utdq_net"] == self.name]
+        # the local network table first: the events, picks and stations are read from the local root too, so
+        # its counts match them (e.g. a network extended locally before publish_network); else the published one
+        network_row = pd.DataFrame()
+        try:
+            local = dataset.local_networks
+            network_row = local[local["utdq_net"] == self.name]
+        except FileNotFoundError:
+            pass
         if network_row.empty:
-            # not published (yet): a network built locally, e.g. before publish_network
-            try:
-                local = dataset.local_networks
-                network_row = local[local["utdq_net"] == self.name]
-            except FileNotFoundError:
-                pass
+            networks_df = dataset.networks
+            network_row = networks_df[networks_df["utdq_net"] == self.name]
         if network_row.empty:
             raise Exception(f"Network '{self.name}' not found.")
         return network_row.iloc[0].to_dict()
 
     @property
     def bank(self) -> obsplus.EventBank:
-        """Return the ObsPlus EventBank for this network."""
+        """Return the ObsPlus EventBank for this network (QuakeML: every downloaded event with all its picks,
+        before UTDQuake's quality control; the tables hold the events and picks after it). Downloaded and
+        unzipped from the Hub the first time it is used."""
         paths = resolve_network_paths(self.name,das=self.das, include_bank=True)
         return obsplus.EventBank(str(paths["bank"]))
 

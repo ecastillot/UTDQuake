@@ -168,6 +168,38 @@ def get_revision(revision: Optional[str] = None) -> Optional[str]:
     return revision
 
 
+def released_versions(repo_id: str = None) -> list:
+    """Released dataset versions: the ``vMAJOR.MINOR`` tags of the Hub repository, oldest first (needs the
+    network; [] if it cannot be reached)."""
+    import re
+    try:
+        from huggingface_hub import HfApi
+        refs = HfApi().list_repo_refs(repo_id or HF_REPO_ID, repo_type=HF_REPO_TYPE)
+    except Exception:
+        return []
+    tags = [t.name for t in refs.tags if re.fullmatch(r"v\d+\.\d+", t.name)]
+    return sorted(tags, key=lambda t: tuple(int(x) for x in t[1:].split(".")))
+
+
+def next_dataset_version(repo_id: str = None) -> Optional[str]:
+    """The release new data goes into: the latest released version plus one minor version (``v2.0`` ->
+    ``v2.1``). New networks and events are labelled with it (``dataset_version``). None if the Hub cannot
+    be reached."""
+    released = released_versions(repo_id)
+    if not released:
+        return None
+    major, minor = (int(x) for x in released[-1][1:].split("."))
+    return f"v{major}.{minor + 1}"
+
+
+def set_version(version: Optional[str]) -> None:
+    """Read dataset ``version`` (tag, ``main`` or commit) from now on: sets ``UTDQUAKE_REVISION``."""
+    if version is None or str(version).strip() in ("", "main"):
+        os.environ.pop(UTDQUAKE_REVISION, None)
+    else:
+        os.environ[UTDQUAKE_REVISION] = str(version).strip()
+
+
 def get_root(das: bool = False) -> Path:
     """
     Return the root directory for cached UTDQuake data.
@@ -176,10 +208,13 @@ def get_root(das: bool = False) -> Path:
     `UTDQUAKE_ROOT` or `UTDQUAKE_DAS_ROOT` before importing or using
     UTDQuake.
 
-    If the variable is not set, the default locations are:
+    If the variable is not set, the default locations are one folder per dataset version (the
+    ``UTDQUAKE_REVISION`` / ``Dataset(version=...)``, ``main`` if none):
 
-    - ``~/.utdquake``
-    - ``~/.utdquake_das`` (for DAS data)`
+    - ``~/.utdquake/<version>`` (e.g. ``~/.utdquake/v2.0``)
+    - ``~/.utdquake_das/<version>`` (for DAS data)
+
+    A root set with the variable is used as is, whatever the version.
 
     Parameters
     ----------
@@ -211,14 +246,43 @@ def get_root(das: bool = False) -> Path:
 
     root = os.environ.get(env_var, None)
 
-    if root is None or str(root).strip() == "":
-        # default Linux cache location
-        if das:
-            root = os.path.join(Path.home(), ".utdquake_das")
-        else:
-            root = os.path.join(Path.home(), ".utdquake")
+    if root is not None and str(root).strip() != "":
+        # a root you chose is used as is (one dataset version per folder: you choose the folder)
+        return Path(root).expanduser().resolve()
+    # default cache: one folder per dataset version (~/.utdquake/v2.0, ~/.utdquake/main), so that files of
+    # different versions are never mixed and a newer version is never read from an older download
+    base = os.path.join(Path.home(), ".utdquake_das" if das else ".utdquake")
+    return (Path(base) / version_folder(get_revision())).expanduser().resolve()
 
-    return Path(root).expanduser().resolve()
+
+def version_folder(revision: Optional[str]) -> str:
+    """Folder name of a dataset version in the default cache: the tag (``v2.0``), ``main`` when none is set,
+    or the revision with ``/`` replaced (``refs_pr_3``)."""
+    return (revision or "main").replace("/", "_")
+
+
+#: File in a local root recording the version its files were downloaded from.
+SNAPSHOT_FILE = ".utdquake/snapshot.json"
+
+
+def read_snapshot(root: Path) -> Optional[dict]:
+    """The version a local root was downloaded from (``revision``, Hub ``commit``, ``date``), or None."""
+    import json
+    path = Path(root) / SNAPSHOT_FILE
+    try:
+        return json.loads(path.read_text())
+    except (OSError, ValueError):
+        return None
+
+
+def write_snapshot(root: Path, revision: Optional[str], commit: Optional[str]) -> None:
+    """Record in ``root`` the version and Hub commit its files were downloaded from."""
+    import datetime
+    import json
+    path = Path(root) / SNAPSHOT_FILE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"revision": revision or "main", "commit": commit,
+                                "date": datetime.datetime.now().isoformat(timespec="seconds")}, indent=1))
 
 def get_utdq_paths(utdq_net: str, das: bool = False) -> Dict[str, Path]:
     """

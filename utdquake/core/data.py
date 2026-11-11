@@ -5,7 +5,7 @@ from pathlib import Path
 from datasets import load_dataset, Dataset, IterableDataset
 from typing import Union, List, Optional
 from huggingface_hub import snapshot_download
-from .config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, get_revision, get_root, HF_CONFIG
+from .config import HF_REPO_ID, HF_REPO_TYPE, get_hf_entry, get_revision, get_root, HF_CONFIG, read_snapshot, write_snapshot
 from .utils import renamed_kwarg
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ def download_snapshot(
     local_dir: Union[str, Path],
     utdq_nets: Union[str, List[str]] = None,
     das: bool = False,
-    include_banks: bool = True,
+    include_banks: bool = False,
     include_networks: bool = True,
     include_events: bool = True,
     include_stations: bool = True,
@@ -40,7 +40,9 @@ def download_snapshot(
     das : bool, optional
         If True, downloads from the DAS dataset paths. Default: False (standard paths).
     include_banks : bool, optional
-        Whether to download the bank (synthetic) data. Default: True.
+        Whether to download the QuakeML banks (zipped, much larger than the tables: about 20 GB for all
+        networks in v2.0). Default: False; ``Network(...).bank`` downloads a network's bank when it is first
+        used.
     include_networks : bool, optional
         Whether to download the network metadata. Default: True.
     include_events : bool, optional
@@ -122,6 +124,14 @@ def download_snapshot(
     logger.info("Saving into: %s", os.path.abspath(local_dir))
     logger.info("Allow patterns: %s", allow_patterns)
 
+    # a root holds one dataset version: warn before mixing files of another version into it
+    before = read_snapshot(local_dir)
+    if before is not None and before.get("revision") != (revision or "main"):
+        logger.warning("%s holds files of dataset version %s; downloading %s into it mixes versions (files already "
+                       "there are not replaced unless overwrite=True). Use another root (UTDQUAKE_ROOT) or the "
+                       "default cache, which has one folder per version.", local_dir, before.get("revision"),
+                       revision or "main")
+
     # Download files matching allow_patterns
     path = snapshot_download(
         repo_id=repo_id,
@@ -146,6 +156,15 @@ def download_snapshot(
                     logger.info("Removed %s", zip_file)
 
     logger.info("Extraction complete!")
+
+    commit = None
+    try:
+        from huggingface_hub import HfApi
+        commit = HfApi().dataset_info(repo_id, revision=revision).sha
+    except Exception:                      # offline: the version is still recorded
+        pass
+    if before is None or before.get("revision") == (revision or "main"):
+        write_snapshot(local_dir, revision, commit)
 
     return Path(local_dir)
 

@@ -78,8 +78,10 @@ UTDQuake integrates an **event bank**. Check `ObsPlus EventBank <https://niosh-m
 
 .. code-block:: python
 
-   # get event bank
-   ebank = network.bank # 
+   # get event bank: downloaded and unzipped the first time (it is not downloaded with the tables)
+   ebank = network.bank
+
+   # the bank holds every downloaded event and pick (before QC); the tables hold them after QC
 
    # Example: Filter by event_id
    ev_ids = events["event_id"].iloc[:5].tolist()

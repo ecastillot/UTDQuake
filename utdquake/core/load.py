@@ -132,10 +132,10 @@ def cleanup_components(to_download: Set[str], bank_path: Path, parquets: Dict[st
 def resolve_network_paths(
     utdq_net: str,
     das: bool = False,
-    include_bank: bool = True,
-    include_events: bool = True,
-    include_stations: bool = True,
-    include_picks: bool = True,
+    include_bank: bool = False,
+    include_events: bool = False,
+    include_stations: bool = False,
+    include_picks: bool = False,
     include_travel_time: bool = False,
     max_retries: int = 3,
 ) -> Dict[str, Path]:
@@ -152,13 +152,13 @@ def resolve_network_paths(
     das : bool, optional
         If True, resolves paths from the DAS dataset. Default is False (standard paths).
     include_bank : bool, optional
-        Whether to include EventBank. Default is True.
+        Whether to include EventBank. Default is False (only the components asked for are resolved and downloaded).
     include_events : bool, optional
-        Whether to include event Parquet. Default is True.
+        Whether to include event Parquet. Default is False (only the components asked for are resolved and downloaded).
     include_stations : bool, optional
-        Whether to include stations Parquet. Default is True.
+        Whether to include stations Parquet. Default is False (only the components asked for are resolved and downloaded).
     include_picks : bool, optional
-        Whether to include picks Parquet. Default is True.
+        Whether to include picks Parquet. Default is False (only the components asked for are resolved and downloaded).
     include_travel_time : bool, optional
         Whether to include travel time model. Default is False (not currently implemented for DAS).
     max_retries : int, optional
