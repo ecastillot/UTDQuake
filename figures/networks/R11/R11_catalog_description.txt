@@ -1,0 +1,56 @@
+R11 -- Synthetic Delaware Basin catalog (tx_syn), UTDQuake v2
+=====================================================================
+
+WHAT IT IS
+  21,000 SYNTHETIC earthquakes (not real events) in the Delaware Basin, West Texas, made to teach
+  earthquake-location models to locate through many different velocity models. Every event has its own
+  1D velocity model (Monte Carlo around DB1D); its P and S picks are travel times through that model plus
+  pick errors. Station geometry, pick patterns and magnitudes come from the real research catalog R03
+  (TexNet High Resolution Earthquake Catalog, Bureau of Economic Geology, University of Texas at Austin,
+  doi:10.15781/76hj-ed46). DB1D: Lomax & Savvaidis (2019), JGR Solid Earth, doi:10.1029/2019JB017727.
+
+  Events 21,000 | picks 890,606 (P 475,885, S 414,721) | stations 174 | origin times spread over
+  2017-09-20 - 2024-03-27 (one every ~3 h; they are not real times).
+
+HOW IT WAS MADE  (code: datasets/tx_syn/tx_syn.py in github.com/ecastillot/UTDQuake)
+  1. Velocity model, one per event, drawn independently (seed 11):
+     - reference: DB1D, the Delaware Basin 1D velocity model of Lomax & Savvaidis (2019), Improving
+       Absolute Earthquake Location in West Texas Using Probabilistic, Proxy Ground-Truth Station
+       Corrections, J. Geophys. Res. Solid Earth 124(11), 11447-11465, doi:10.1029/2019JB017727; file as
+       shared by Castillo, Ushakov & Savvaidis (2026), Seismological Research Letters,
+       doi:10.1785/0220250288 (vp/DB_model.csv of huggingface.co/datasets/ecastillot/CMEZ-SPHighResCatalog).
+       Layers at 0, 2, 6, 10, 28, 40, 46 km below sea level, plus a DTM layer from the surface to sea level. Below 46 km: the
+       last DB1D layer to 120 km, IASP91 from 210 km.
+     - Vp = DB1D x (1 + g + l): g shared by every layer, uniform +-10%; l per layer, uniform +-5%
+       (+-15% in the sediments, above 6 km). About +-15 % overall around DB1D.
+     - Vs = Vp / (r + m): r shared, uniform 1.6-2.0; m per layer +-0.05; Vp/Vs kept within 1.6-2.0, so
+       Vs is always below Vp.
+     - Interfaces moved uniform +-1 km (Moho, 40 km: +-3 km); layers at least 0.5 km thick.
+     - Velocity never decreases with depth below 6 km; above (sediments) a layer can be up to
+       10% slower than the one above (short low-velocity zones). A model breaking a rule is redrawn.
+     - Result: median Vp per layer within ~4 % of DB1D; Vp/Vs 1.60-2.00.
+  2. Hypocenters:
+     - 70% near R03 events: a random R03 event moved by a Gaussian offset (sd 1 km in x, y and depth);
+     - 30% uniform over the R03 area (31.03-31.91 N, -104.76 - -103.07 E), depth 0-15 km;
+     - depths below sea level (>= 0 km).
+  3. Stations and picks: each synthetic event copies the stations and phases (P, S) of the closest R03
+     event (3D distance) -- the same stations pick P and S as there -- and its magnitude (ML, copied, not
+     measured).
+  4. Travel times: ObsPy TauP, first arrival among p/P/Pn/Pg (S: s/S/Sn/Sg) through the event's own
+     model; model top at 1.75 km above sea level, station and event depths measured from it (station
+     elevations kept). Picks without an arrival are dropped (230 of 903,704).
+  5. Pick errors (recipe "local" of hypogt.synthetic.picks): Laplacian, scale 0.05 s (P) / 0.1 s (S);
+     1% of P and 4% of S picks off by an extra 0.4-1.0 s / 0.4-1.4 s (either sign).
+  6. UTDQuake pipeline as for every network: event QC, station distances/azimuths, pick QC, tables,
+     travel-time model and z-scores, stats and figures. Events kept: the first 21,000 with >= 4 picks
+     on >= 3 stations (of 21,300 drawn).
+
+KNOWN LIMITS
+  - 1D models only (no lateral changes); first arrivals only.
+  - Magnitudes and the station/phase pattern are those of the nearest real event, not of the synthetic
+    location; uniform events far from the seismicity copy an event up to ~61 km away (median 0.9 km).
+  - Origin times are artificial.
+
+FILES
+  Per-event true velocity models and true travel times: work/models.parquet, work/picks_true.parquet
+  (datasets/tx_syn). Event ids txsyn_00000 ... ; pick agency "synthetic (TauP, DB1D Monte Carlo)".
