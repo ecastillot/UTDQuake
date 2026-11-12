@@ -11,6 +11,13 @@ This will install the Python package and its dependencies.
 
    pip install utdquake
 
+The maps of the figures (``plot_overview``, ``generate_network_figures``, ...) need
+`Cartopy <https://cartopy.readthedocs.io>`_, which is not installed with the package:
+
+.. code-block:: bash
+
+   pip install cartopy
+
 Configuration
 ----------------------------
 

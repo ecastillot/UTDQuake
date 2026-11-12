@@ -72,7 +72,13 @@ Networks and events added to ``main`` after ``v2.0`` are listed here until they 
 v2.0
 ----
 
-Released on 2026-11-11 (Hugging Face commit ``785d4c97``).
+Released on 2026-11-11 (Hugging Face commit ``785d4c97``). **At a glance:** 94 seismic networks, 1.37 M
+earthquakes (four times ``v1.0``), 44.5 M picks, 28.4 K stations; up to 20,000 events per network, new
+networks ``ci`` and ``R09``-``R11`` (``R11`` synthetic), ``JMA`` with its S picks.
+
+.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview_v2.0.png
+   :width: 700px
+   :align: center
 
 **Contents**
 
@@ -99,7 +105,7 @@ Released on 2026-11-11 (Hugging Face commit ``785d4c97``).
      - 15,057,642 (11,804,742 / 2,124,929 / 1,127,959)
      - 4,886,005
    * - Stations (distinct ``network``, ``station``)
-     - 28,429 (26,958 located, 24,853 confirmed)
+     - 28,429 (26,956 located, 24,853 confirmed)
      - 3 cables, 22,500 channels
 
 The ``v1`` events are those of ``v1.0`` except ``JMA``, whose rebuilt events are all ``v2``.
@@ -188,7 +194,12 @@ The ``v1`` events are those of ``v1.0`` except ``JMA``, whose rebuilt events are
 v1.0
 ----
 
-The dataset of the UTDQuake paper.
+The dataset of the UTDQuake paper. **At a glance:** 81 seismic networks and one DAS network, 341.6 K
+earthquakes, 9.7 M picks, 17.8 K stations.
+
+.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview_v1.0.png
+   :width: 700px
+   :align: center
 
 **Contents**
 
