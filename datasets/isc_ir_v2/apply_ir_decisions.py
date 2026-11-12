@@ -1,6 +1,6 @@
 """
 Apply the ISC registry decisions (ir_decisions.parquet, from
-analyze_ir_stations.py) to the seismic tables of UTDQuake_v2.
+analyze_ir_stations.py) to the seismic tables of UTDQuake.
 
 v2.0 (datasets/isc_ir_v2, copied from datasets/isc_ir): the first run copies the current stations/,
 picks/, events/ and network/ to .utdquake/backups/v2.0_ir/ and every run reads its inputs from that
@@ -41,7 +41,7 @@ from utdquake.writers.schema import (PREF_EVENTS_ORDER, PREF_EVENTS_TYPES, PREF_
                                      PREF_NETWORK_TYPES, PREF_PICKS_ORDER, PREF_PICKS_TYPES,
                                      PREF_STATIONS_ORDER, PREF_STATIONS_TYPES)
 
-ROOT = Path("/groups/igonin/ecastillo/UTDQuake_v2")
+ROOT = Path("/groups/igonin/ecastillo/UTDQuake")
 BACKUP = ROOT / ".utdquake" / "backups" / "v2.0_ir"
 HERE = Path(__file__).resolve().parent
 DECISIONS = HERE / "ir_decisions.parquet"

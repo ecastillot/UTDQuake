@@ -3,7 +3,7 @@ import os, shutil, sys
 from pathlib import Path
 import pandas as pd
 
-LIVE = Path("/groups/igonin/ecastillo/UTDQuake_v2")
+LIVE = Path("/groups/igonin/ecastillo/UTDQuake")
 TEST = Path(sys.argv[1])
 NETS = ["ETH", "JMA", "ci"]
 if TEST.exists():

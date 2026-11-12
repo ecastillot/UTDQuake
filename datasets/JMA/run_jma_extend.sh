@@ -11,7 +11,7 @@
 #   mkdir -p logs && sbatch run_jma_extend.sh [extend|replace-v1]
 source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
-export PYTHONPATH=/groups/igonin/ecastillo/utdquake_v2ext UTDQUAKE_ROOT=/groups/igonin/ecastillo/UTDQuake_v2 HF_HUB_OFFLINE=1
+export PYTHONPATH=/groups/igonin/ecastillo/utdquake_v2ext UTDQUAKE_ROOT=/groups/igonin/ecastillo/UTDQuake HF_HUB_OFFLINE=1
 cd /groups/igonin/ecastillo/utdquake_v2ext/datasets/JMA
 echo "$(date) start"
 python -W ignore jma_to_utdq.py ${1:-extend}

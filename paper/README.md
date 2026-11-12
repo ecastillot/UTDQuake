@@ -5,7 +5,7 @@ Figures of the UTDQuake paper, for each dataset version:
 | Folder | Data |
 |---|---|
 | `v1/` | UTDQuake **v1.0** as published (Hugging Face tag `v1.0`, a local copy in `UTDQuake_paper_v1`) |
-| `v2/` | UTDQuake **v2** (the working copy `UTDQuake_v2`: v2.0 and the corrections listed under v2.1 in `docs/source/versions.rst`) |
+| `v2/` | UTDQuake **v2** (the working copy `UTDQuake`: v2.0 and the corrections listed under v2.1 in `docs/source/versions.rst`) |
 
 Each version folder has the same figures (logs of the last run in `logs/`):
 

@@ -1,6 +1,6 @@
 """
 Make the paper figures read UTDQuake 1.0 exactly as published: the Hugging Face tag ``v1.0`` at commit
-:data:`REVISION`, in a local copy of its own (:data:`ROOT`). The working copy (UTDQuake_v2) keeps
+:data:`REVISION`, in a local copy of its own (:data:`ROOT`). The working copy (UTDQuake) keeps
 growing (v2 events are added to v1 networks), so the paper does not read it. Import it before anything else:
 
     import _local  # noqa: F401
@@ -13,20 +13,22 @@ import os
 from pathlib import Path
 
 #: Dataset version of the figures: PAPER_VERSION=v1 (default; UTDQuake 1.0 as published, a local copy of the Hub
-#: tag) or v2 (the working copy UTDQuake_v2: v2.0 and the corrections listed under v2.1 in versions.rst).
+#: tag) or v2 (the working copy UTDQuake: v2.0 and the corrections listed under v2.1 in versions.rst).
 #: Figures go to paper/<version>/.
 VERSION = os.environ.get("PAPER_VERSION", "v1")
 #: UTDQuake 1.0 on the Hub: tag v1.0 (moved 2026-11-02 for the JMA rename; see docs/source/versions.rst).
 REVISION = "c5370c8d"
-ROOTS = {"v1": "/groups/igonin/ecastillo/UTDQuake_paper_v1", "v2": "/groups/igonin/ecastillo/UTDQuake_v2"}
+ROOTS = {"v1": "/groups/igonin/ecastillo/UTDQuake_paper_v1", "v2": "/groups/igonin/ecastillo/UTDQuake"}
 ROOT = ROOTS[VERSION]
 #: Folder of the figures of this version.
 OUT = Path(__file__).resolve().parents[1] / VERSION      # paper/<version>/ (scripts in paper/scripts/)
 OUT.mkdir(exist_ok=True)
 #: Figures made by the network figure pipeline (overview of UWF), from the working copy.
-FIGURES = "/groups/igonin/ecastillo/UTDQuake_v2/figures"
+FIGURES = "/groups/igonin/ecastillo/UTDQuake/figures"
 os.environ["UTDQUAKE_ROOT"] = ROOT
-os.environ["UTDQUAKE_DAS_ROOT"] = ROOT
+#: DAS data: inside the v1 paper copy; the working copy keeps it in its own folder UTDQuake_DAS.
+DAS_ROOTS = {"v1": ROOTS["v1"], "v2": "/groups/igonin/ecastillo/UTDQuake_DAS"}
+os.environ["UTDQUAKE_DAS_ROOT"] = DAS_ROOTS[VERSION]
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ.setdefault("MPLBACKEND", "Agg")
 

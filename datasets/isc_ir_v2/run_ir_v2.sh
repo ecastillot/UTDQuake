@@ -4,7 +4,7 @@
 #SBATCH --mem=64G
 #SBATCH -p normal
 #SBATCH --time=08:00:00
-# v2.0 ISC IR step: decide the new IR stations (analyze, read-only), then apply all decisions to UTDQuake_v2
+# v2.0 ISC IR step: decide the new IR stations (analyze, read-only), then apply all decisions to UTDQuake
 # (backup .utdquake/backups/v2.0_ir first; validation inside).
 #   sbatch -J ir_v2 -o logs/%x_%j.out run_ir_v2.sh
 source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh

@@ -354,7 +354,7 @@ def main():
     sub.add_parser("combine")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    os.environ.setdefault("UTDQUAKE_ROOT", "/groups/igonin/ecastillo/UTDQuake_v2")
+    os.environ.setdefault("UTDQUAKE_ROOT", "/groups/igonin/ecastillo/UTDQuake")
     if a.cmd == "compare":
         compare(a.month.replace("-", ""))
     elif a.cmd == "combine":

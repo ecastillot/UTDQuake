@@ -16,7 +16,7 @@ MODE=$1; VERSION=$2; shift 2
 REPO=${UTDQ_REPO:-/groups/igonin/ecastillo/utdquake}
 source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
-export UTDQUAKE_ROOT=${UTDQUAKE_ROOT:-/groups/igonin/ecastillo/UTDQuake_v2} HF_HUB_OFFLINE=1 PYTHONPATH=$REPO
+export UTDQUAKE_ROOT=${UTDQUAKE_ROOT:-/groups/igonin/ecastillo/UTDQuake} HF_HUB_OFFLINE=1 PYTHONPATH=$REPO
 cd $REPO
 echo "$(date) $MODE $VERSION: $*; code $REPO"
 failed=()

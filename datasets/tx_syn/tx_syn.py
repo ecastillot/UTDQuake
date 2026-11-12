@@ -61,7 +61,7 @@ logging.getLogger("utdquake.bank.utils").setLevel(logging.WARNING)
 HERE = Path(__file__).resolve().parent
 WORK = HERE / "work"
 FIGS = HERE / "figures"
-V1_ROOT = Path("/groups/igonin/ecastillo/UTDQuake_v2")    # R03 tables
+V1_ROOT = Path("/groups/igonin/ecastillo/UTDQuake")    # R03 tables
 REF_NET = "R03"
 
 UTDQ_NET = "R11"

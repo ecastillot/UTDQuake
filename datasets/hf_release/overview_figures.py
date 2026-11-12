@@ -18,7 +18,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parents[2]
 OUT = HERE / "figures"
 PAPER = HERE / "paper"
-CURRENT = Path("/groups/igonin/ecastillo/UTDQuake_v2")        # main: v2.0 and the corrections of v2.1
+CURRENT = Path("/groups/igonin/ecastillo/UTDQuake")        # main: v2.0 and the corrections of v2.1
 #: versions page: dataset version -> folder of its paper figures
 VERSIONS = {"v1.0": "v1", "v2.0": "v2"}
 
