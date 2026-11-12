@@ -145,14 +145,18 @@ def add_depth_magnitude_keys(ax, events: pd.DataFrame, sc) -> None:
         return
     base, m0, n_nodepth = sc._utdq_sizes
     m = pd.to_numeric(events.get("magnitude"), errors="coerce").dropna()
-    mags = [x for x in (1, 3, 5, 7) if len(m) and m.min() - 0.5 <= x <= m.max() + 0.5][:3] or [round(m0)]
-    sizes = np.clip(base * 0.6 * 1.8 ** np.clip(np.array(mags, float) - m0, 0, None), 1.0, 15 * base)
-    handles = [Line2D([], [], marker="o", ls="", ms=np.sqrt(s), mfc=EVENT_COLOR, mec="none", alpha=0.85,
-                      label=f"M{x}") for x, s in zip(mags, sizes)]
+    handles = []
+    if len(m):                                  # no magnitudes: one size for all, no size legend
+        mags = [x for x in (1, 3, 5, 7) if m.min() - 0.5 <= x <= m.max() + 0.5][:3] or [round(m0)]
+        sizes = np.clip(base * 0.6 * 1.8 ** np.clip(np.array(mags, float) - m0, 0, None), 1.0, 15 * base)
+        handles = [Line2D([], [], marker="o", ls="", ms=np.sqrt(s), mfc=EVENT_COLOR, mec="none", alpha=0.85,
+                          label=f"M{x}") for x, s in zip(mags, sizes)]
     if n_nodepth:
         handles.append(Line2D([], [], marker="o", ls="", ms=6, mfc=NO_DEPTH_COLOR, mec="none", label="no depth"))
-    ax.legend(handles=handles, loc="upper right", fontsize=7, title="Magnitude", title_fontsize=7,
-              frameon=True, framealpha=0.85, edgecolor="#bbbbbb", borderpad=0.5, labelspacing=0.6)
+    if handles:
+        ax.legend(handles=handles, loc="upper right", fontsize=7, title="Magnitude" if len(m) else None,
+                  title_fontsize=7, frameon=True, framealpha=0.85, edgecolor="#bbbbbb", borderpad=0.5,
+                  labelspacing=0.6)
     # depth colour bar in a light box at the lower right, ticks and label above the bar
     ax.add_patch(mpatches.FancyBboxPatch((0.585, 0.02), 0.395, 0.135, boxstyle="round,pad=0.005",
                                          transform=ax.transAxes, facecolor="white", edgecolor="#bbbbbb",
@@ -612,13 +616,14 @@ def plot_overview(
     # M3). MaxNLocator (instead of a fixed 2-unit step) keeps tick spacing
     # sensible whether the range is 8 units or under 1.
     mag_min, mag_max = events["magnitude"].min(), events["magnitude"].max()
-    if np.isfinite(mag_min) and np.isfinite(mag_max):
+    has_magnitudes = bool(np.isfinite(mag_min) and np.isfinite(mag_max))
+    if has_magnitudes:
         ax3.set_ylim(mag_min - 0.5, mag_max + 0.5)
+        ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, min_n_ticks=3))
     else:
-        # catalogs without magnitudes (e.g. LASSO): keep the counts histogram only
-        ax3.text(0.02, 0.9, "No magnitudes", transform=ax3.transAxes,
-                 color='darkorange', fontsize=9)
-    ax3.yaxis.set_major_locator(mticker.MaxNLocator(nbins=5, min_n_ticks=3))
+        # catalogs without magnitudes (e.g. LASSO): the axis label only, no ticks (default ticks would
+        # overlap the counts box to the left)
+        ax3.set_yticks([])
     ax3.yaxis.tick_left()
     ax3.yaxis.set_label_position("left")
     ax3.spines["left"].set_edgecolor('darkorange')
