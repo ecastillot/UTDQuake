@@ -25,12 +25,12 @@ A global earthquake dataset constructed from high-quality source and receiver me
 
    You can upload your own dataset too -- check the :ref:`upload-dataset-section` guide.
 
-.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview.png
-   :width: 800px
+.. image:: ../../figures/utdquake_overview_stats.png
+   :width: 100%
 
 .. raw:: html
 
-   <p style="text-align:center; font-size:0.9em; color:#666; margin-top:-0.5em;">Figure as of February 25, 2026</p>
+   <p style="text-align:center; font-size:0.9em; color:#666; margin-top:-0.5em;">UTDQuake as of November 2026: (a) depth, (b) magnitude, (c) azimuthal gap, (d) epicentral distance of P and S picks, (e) arrival azimuth</p>
 
 See :ref:`dataset-section` section for details on how to access network data, events, stations, and picks. Next table shows the network data:
 
@@ -89,7 +89,7 @@ Quick Overview
 
 The following animation summarizes the overview figure for some of all available networks. **All figures and analyses are available** in the :ref:`overview-section` section.
 
-.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/all_networks_overview.gif
+.. image:: ../../figures/all_networks_overview.gif
    :width: 700px
    :align: center
 

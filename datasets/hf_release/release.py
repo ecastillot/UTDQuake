@@ -41,7 +41,11 @@ NOTES = {"notes/R11_catalog_description.txt": ROOT / "figures" / "networks" / "R
 DESCRIPTIONS = {"v2.0": """UTDQuake dataset v2.0: agency networks extended to up to 20,000 events after QC (new events
 labelled v2), JMA rebuilt with its S picks, new networks ci, R09, R10 and R11 (synthetic), ISC IR stations
 resolved, phase labels Pg/Pn/Sg/Sn, v1 picks restored (HEL, OTT), banks with the new events.
-See docs/source/versions.rst."""}
+See docs/source/versions.rst.""",
+                "v2.1": """UTDQuake v2.1 (in preparation), corrections to v2.0 data: 13 events with impossible depths removed
+with their 201 picks (default 700/750 km depths, one 9,330 km origin: NOA, TUN, PRE, NOU, MDD, JSN, TIR), 2 uw
+placeholder magnitudes (-5.0) emptied, R08 continent World; updated R11 description (R03 reference).
+See docs/source/versions.rst, v2.1."""}
 DESCRIPTION = DESCRIPTIONS.get(TAG, f"UTDQuake dataset {TAG}. See docs/source/versions.rst.")
 
 

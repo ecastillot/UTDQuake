@@ -400,7 +400,44 @@ class Dataset:
                             consider_calculated_stations=consider_calculated_stations,
                             show=show)
 
-    def plot_network_station_density(self, density_in_region:bool=True, savepath: str=None, show=True):
+    def plot_global_overview(self, layout: str = "vertical", title: str = None, savepath: str = None,
+                             show: bool = False, **kwargs):
+        """
+        World maps of the whole dataset: earthquakes and stations with their counts
+        (:func:`utdquake.utils.plot.plot_global_overview`).
+
+        Parameters
+        ----------
+        layout : {"vertical", "wide", "combined"}
+            "vertical": earthquakes above stations; "wide": side by side; "combined": side by side, and the
+            5 statistics panels of :meth:`plot_stats` below (computes the merged statistics).
+        title : str, optional
+            Default ``"UTDQuake: <n> networks"``.
+        savepath : str, optional
+            Where to save the figure.
+
+        Examples
+        --------
+        >>> utdq.Dataset(version="v2.0").plot_global_overview(layout="combined", savepath="utdquake.png")
+        """
+        from ..utils.plot import plot_global_overview
+        networks = self.networks
+        events, stations = self.events, self.stations
+        summary = self.description
+        totals = {"networks": len(networks), "events": len(events),
+                  "p_picks": int(pd.to_numeric(networks["p_arrivals"], errors="coerce").sum()),
+                  "s_picks": int(pd.to_numeric(networks["s_arrivals"], errors="coerce").sum()),
+                  "stations": int(summary["total_stations"]), "located": int(summary["located_stations"]),
+                  "confirmed": int(summary["confirmed_stations"])}
+        stats = None
+        if layout == "combined":
+            self.compute_stats(networks=networks["utdq_net"].tolist(), merge=True)
+            stats = self.stats
+        return plot_global_overview(events, stations, totals, layout=layout, stats=stats, title=title,
+                                    savepath=savepath, show=show, **kwargs)
+
+    def plot_network_station_density(self, density_in_region:bool=True, savepath: str=None, show=True,
+                                     **kwargs):
         """
         Plot station density maps for all networks.
 
@@ -449,7 +486,7 @@ class Dataset:
             networks = self.networks.copy()
 
         plot_network_station_density(networks, 
-                                savepath=savepath, show=show)
+                                savepath=savepath, show=show, **kwargs)
         
     def plot_phase_count_radar_by_magnitude(self, savepath: str=None, show=True):
         """
