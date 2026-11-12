@@ -5,7 +5,7 @@ station registry. READ-ONLY on the dataset: writes only the decisions table,
 a log and README.md next to this script. The step that applies the decisions
 to stations/picks is separate and run after review.
 
-Registry: UTDQuake_v2/.utdquake/isc_registry/isc_station_registry_<date>.zip
+Registry: UTDQuake/.utdquake/isc_registry/isc_station_registry_<date>.zip
 (http://www.isc.ac.uk/registries/download/station_csv.zip). Rows: network,
 station, lat, lon, elevation, channel, location, start, end, site name; one row
 per station epoch (and channel for FDSN networks).
@@ -42,7 +42,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/groups/igonin/ecastillo/UTDQuake_v2")
+ROOT = Path("/groups/igonin/ecastillo/UTDQuake")
 REGISTRY = ROOT / ".utdquake" / "isc_registry" / "isc_station_registry_2026-10-31.zip"
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "ir_decisions.parquet"

@@ -11,7 +11,7 @@
 set -e
 source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
-export PYTHONPATH=/groups/igonin/ecastillo/utdquake_v2ext UTDQUAKE_ROOT=/groups/igonin/ecastillo/UTDQuake_v2 HF_HUB_OFFLINE=1
+export PYTHONPATH=/groups/igonin/ecastillo/utdquake_v2ext UTDQUAKE_ROOT=/groups/igonin/ecastillo/UTDQuake HF_HUB_OFFLINE=1
 W=$UTDQUAKE_ROOT/.utdquake/extend/v2.0; S=$W/stage; QUAR=$W/quarantine_JMA_$(date +%Y%m%d_%H%M)
 mkdir -p $QUAR
 for p in banks/JMA banks/JMA_v1; do [ -e $W/$p ] && mkdir -p $QUAR/raw && mv $W/$p $QUAR/raw/; done

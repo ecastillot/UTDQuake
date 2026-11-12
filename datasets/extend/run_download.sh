@@ -17,7 +17,7 @@ VERSION=${1:?version} PROVIDERS=${2:?providers} PARALLEL=${3:-1} WORKERS=${4:-2}
 source /groups/igonin/ecastillo/anaconda3/etc/profile.d/conda.sh
 conda activate utdq
 REPO=${UTDQ_REPO:-/groups/igonin/ecastillo/utdquake}
-export PYTHONPATH=$REPO UTDQUAKE_ROOT=${UTDQUAKE_ROOT:-/groups/igonin/ecastillo/UTDQuake_v2} HF_HUB_OFFLINE=1
+export PYTHONPATH=$REPO UTDQUAKE_ROOT=${UTDQUAKE_ROOT:-/groups/igonin/ecastillo/UTDQuake} HF_HUB_OFFLINE=1
 LOGS=$UTDQUAKE_ROOT/.utdquake/extend/$VERSION/logs
 mkdir -p "$LOGS"
 echo "$(date) $VERSION $PROVIDERS parallel $PARALLEL workers $WORKERS; code $REPO ($(git -C $REPO rev-parse --short HEAD))"

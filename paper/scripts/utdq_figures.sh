@@ -7,7 +7,7 @@
 #SBATCH --time=12:00:00
 
 # All paper figures of a dataset version into paper/<version>/, logs in paper/<version>/logs/ (see _local.py):
-# PAPER_VERSION=v1 (default: UTDQuake 1.0 as published on the Hub) or v2 (the working copy UTDQuake_v2).
+# PAPER_VERSION=v1 (default: UTDQuake 1.0 as published on the Hub) or v2 (the working copy UTDQuake).
 #   cd paper && sbatch --export=ALL,PAPER_VERSION=v2 -o v2/logs/utdq_figures_%j.out scripts/utdq_figures.sh
 # Some figures only:  ... scripts/utdq_figures.sh utdq_stats utdq_density
 # Another checkout (e.g. a worktree): add UTDQ_REPO=<path> to --export.

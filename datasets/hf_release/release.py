@@ -12,7 +12,7 @@
 
 VERSION is the tag, e.g. v2.0 (a major release) or v2.1 (the next minor one). See docs/source/versions.rst:
 "How versions work". Files, for every seismic UTDQuake network of the local network table ($UTDQUAKE_ROOT,
-default UTDQuake_v2): events, picks and stations tables, stats cache, travel-time model and bank zip, plus
+default UTDQuake): events, picks and stations tables, stats cache, travel-time model and bank zip, plus
 network/network.parquet and the notes of NOTES (e.g. notes/R11_catalog_description.txt). Only files whose
 content differs from main are sent; none is deleted. Zips are built once into
 <root>/.utdquake/release_<VERSION>/ and reused (same bytes for plan/open/verify). The PR is merged after
@@ -28,7 +28,7 @@ from pathlib import Path
 import pandas as pd
 
 REPO, TYPE = "ecastillot/UTDQuake", "dataset"
-ROOT = Path(os.environ.get("UTDQUAKE_ROOT", "/groups/igonin/ecastillo/UTDQuake_v2"))
+ROOT = Path(os.environ.get("UTDQUAKE_ROOT", "/groups/igonin/ecastillo/UTDQuake"))
 TAG = sys.argv[1] if len(sys.argv) > 1 else "v2.0"
 STAGE = ROOT / ".utdquake" / f"release_{TAG}"
 TITLE = f"Dataset {TAG}"
