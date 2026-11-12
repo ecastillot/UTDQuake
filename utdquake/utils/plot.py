@@ -56,6 +56,115 @@ from .utils import (compute_region,
                     phase_family
                     )
 
+# --- network map style (plot_overview) ------------------------------------------------------------------------
+EVENT_COLOR = "#ec7524"                       # UTDQuake orange
+STATION_COLOR, STATION_CALC_COLOR = "#1b7a3a", "#8a8a8a"
+MAP_LAND, MAP_OCEAN, MAP_COAST = "#f2f0e8", "#dfeaf3", "#7a7a7a"
+NO_DEPTH_COLOR = "#b5b5b5"
+#: Earthquake depth: light orange (shallow) -> UTDQuake orange -> dark brown (deep).
+DEPTH_CMAP = mcolors.LinearSegmentedColormap.from_list("utdq_depth", ["#f9b26b", EVENT_COLOR, "#b34a0b", "#5c2405"])
+#: A network whose map region spans at least this many degrees of longitude gets a world map (Robinson).
+GLOBAL_LON_SPAN = 250
+#: Above this many stations, stations are drawn smaller and under the earthquakes.
+MANY_STATIONS = 500
+#: Depth histograms stop here (km): no earthquake is deeper (the deepest known are ~750 km).
+MAX_PLOT_DEPTH_KM = 800.0
+
+
+#: A network map always shows at least this many of the stations closest to its earthquakes.
+NEAREST_STATIONS = 10
+
+
+def include_nearest_stations(region, events: pd.DataFrame, stations: pd.DataFrame, k: int = NEAREST_STATIONS,
+                             padding: float = 0.08):
+    """``region`` (lon_min, lon_max, lat_min, lat_max) grown to include the ``k`` stations closest to the median
+    earthquake location, with ``padding`` (fraction of the new span) on the sides that grew. Unchanged when they
+    are inside already. A compact cluster (e.g. an injection well) would otherwise show no station at all."""
+    st = stations[["longitude", "latitude"]].dropna()
+    ev = events[["longitude", "latitude"]].dropna()
+    if st.empty or ev.empty:
+        return region
+    lat0, lon0 = np.radians(ev["latitude"].median()), np.radians(ev["longitude"].median())
+    lat, lon = np.radians(st["latitude"].to_numpy(float)), np.radians(st["longitude"].to_numpy(float))
+    h = np.sin((lat - lat0) / 2) ** 2 + np.cos(lat0) * np.cos(lat) * np.sin((lon - lon0) / 2) ** 2
+    near = st.iloc[np.argsort(h)[:k]]
+    lons = near["longitude"].to_numpy(float)
+    if region[1] > 180:                       # region across the antimeridian, in [0, 360)
+        lons = lons % 360
+    lats = near["latitude"].to_numpy(float)
+    x0, x1, y0, y1 = region
+    nx0, nx1, ny0, ny1 = min(x0, lons.min()), max(x1, lons.max()), min(y0, lats.min()), max(y1, lats.max())
+    if (nx0, nx1, ny0, ny1) == (x0, x1, y0, y1):
+        return region
+    px, py = padding * (nx1 - nx0), padding * (ny1 - ny0)
+    nx0, nx1 = nx0 - (px if nx0 < x0 else 0), nx1 + (px if nx1 > x1 else 0)
+    ny0, ny1 = max(-90, ny0 - (py if ny0 < y0 else 0)), min(90, ny1 + (py if ny1 > y1 else 0))
+    return (nx0, nx1, ny0, ny1)
+
+
+def event_marker_sizes(magnitude: pd.Series, n_events: int) -> np.ndarray:
+    """Marker areas (pt^2) of earthquakes on a map: a base size from the number of events (~14 for a few
+    hundred, ~2.5 for 20,000) growing with magnitude (x1.8 per unit above the 10th percentile, at most x15);
+    events without a magnitude get the median magnitude."""
+    base = float(np.clip(350 / np.sqrt(max(n_events, 1)), 2.5, 14.0))
+    m = pd.to_numeric(magnitude, errors="coerce")
+    m = m.fillna(m.median() if m.notna().any() else 1.0).clip(-1, 9)
+    m0 = m.quantile(0.1)
+    return np.clip(base * 0.6 * 1.8 ** (m - m0).clip(lower=0), 1.0, 15 * base), base, m0
+
+
+def plot_events_by_depth(ax, events: pd.DataFrame, transform=None, zorder: int = 3):
+    """Earthquakes on a map: size by magnitude, colour by depth (``DEPTH_CMAP``); events without a depth in
+    grey. Small events are drawn first, deep ones under shallow ones. Returns the scatter (for a colour bar),
+    or None when no event has a depth."""
+    if events.empty:
+        return None
+    ev = events.copy()
+    ev["_size"], base, m0 = event_marker_sizes(ev.get("magnitude", pd.Series(index=ev.index, dtype=float)), len(ev))
+    ev["_depth_km"] = pd.to_numeric(ev.get("depth"), errors="coerce") / 1000.0
+    kw = dict(transform=transform, zorder=zorder, rasterized=True)
+    nodepth = ev[ev["_depth_km"].isna()].sort_values("_size")
+    if len(nodepth):
+        ax.scatter(nodepth["longitude"], nodepth["latitude"], s=nodepth["_size"], c=NO_DEPTH_COLOR, alpha=0.7,
+                   linewidths=0, **kw)
+    d = ev[ev["_depth_km"].notna()].sort_values(["_depth_km", "_size"], ascending=[False, True])
+    if d.empty:
+        return None
+    lo, hi = max(0.0, d["_depth_km"].quantile(0.01)), d["_depth_km"].quantile(0.99)
+    norm = mcolors.Normalize(vmin=lo, vmax=hi if hi > lo else lo + 1)
+    sc = ax.scatter(d["longitude"], d["latitude"], s=d["_size"], c=d["_depth_km"], cmap=DEPTH_CMAP, norm=norm,
+                    alpha=0.75, linewidths=0, **kw)
+    sc._utdq_sizes = (base, m0, len(nodepth))
+    return sc
+
+
+def add_depth_magnitude_keys(ax, events: pd.DataFrame, sc) -> None:
+    """Magnitude size legend (upper right) and depth colour bar (lower right, inside the map) of
+    :func:`plot_events_by_depth`."""
+    if sc is None:
+        return
+    base, m0, n_nodepth = sc._utdq_sizes
+    m = pd.to_numeric(events.get("magnitude"), errors="coerce").dropna()
+    mags = [x for x in (1, 3, 5, 7) if len(m) and m.min() - 0.5 <= x <= m.max() + 0.5][:3] or [round(m0)]
+    sizes = np.clip(base * 0.6 * 1.8 ** np.clip(np.array(mags, float) - m0, 0, None), 1.0, 15 * base)
+    handles = [Line2D([], [], marker="o", ls="", ms=np.sqrt(s), mfc=EVENT_COLOR, mec="none", alpha=0.85,
+                      label=f"M{x}") for x, s in zip(mags, sizes)]
+    if n_nodepth:
+        handles.append(Line2D([], [], marker="o", ls="", ms=6, mfc=NO_DEPTH_COLOR, mec="none", label="no depth"))
+    ax.legend(handles=handles, loc="upper right", fontsize=7, title="Magnitude", title_fontsize=7,
+              frameon=True, framealpha=0.85, edgecolor="#bbbbbb", borderpad=0.5, labelspacing=0.6)
+    # depth colour bar in a light box at the lower right, ticks and label above the bar
+    ax.add_patch(mpatches.FancyBboxPatch((0.585, 0.02), 0.395, 0.135, boxstyle="round,pad=0.005",
+                                         transform=ax.transAxes, facecolor="white", edgecolor="#bbbbbb",
+                                         linewidth=0.5, alpha=0.85, zorder=20, clip_on=False))
+    cax = ax.inset_axes([0.61, 0.04, 0.35, 0.028], zorder=21)
+    cb = ax.figure.colorbar(sc, cax=cax, orientation="horizontal", extend="max")
+    cax.xaxis.set_ticks_position("top")
+    cax.xaxis.set_label_position("top")
+    cb.set_label("Depth (km)", fontsize=7, labelpad=2)
+    cb.ax.tick_params(labelsize=6, length=2, pad=1)
+    cb.outline.set_linewidth(0.4)
+
 def set_dateline_ticks(gl, region) -> None:
     """
     Longitude ticks of a map across the antimeridian (``region[1] > 180``,
@@ -253,6 +362,7 @@ def plot_overview(
         region = compute_region(
                     events, all_stations, padding=0.2, 
                     rm_outliers=True)
+        region = include_nearest_stations(region, events, all_stations)
         
 
     fig = plt.figure(figsize=(12, 6))
@@ -329,7 +439,7 @@ def plot_overview(
                 linewidth=2) 
     else:
         stations_leg = Line2D([0], [0], marker='^', color='w', label='Confirmed\nStations',
-               markerfacecolor='green', markersize=8, markeredgecolor='green')
+               markerfacecolor='none', markersize=8, markeredgecolor=STATION_COLOR, markeredgewidth=1.2)
     
     legend_elements.append(stations_leg)
 
@@ -337,7 +447,7 @@ def plot_overview(
        'calculated_latitude' in stations.columns and \
        'calculated_longitude' in stations.columns:
         calc_label = Line2D([0], [0], marker='^', color='w', label='Calculated\nStations',
-               markerfacecolor='gray', markersize=8, markeredgecolor='gray')
+               markerfacecolor='none', markersize=8, markeredgecolor=STATION_CALC_COLOR, markeredgewidth=1.2)
 
         if not das:
             legend_elements.append(calc_label)
@@ -388,9 +498,7 @@ def plot_overview(
         ax1.scatter(
             stations.loc[calculated_mask, 'calculated_longitude'],
             stations.loc[calculated_mask, 'calculated_latitude'],
-            marker='^',
-            c='gray',
-            alpha=0.7,
+            marker='^', s=5, c=STATION_CALC_COLOR, alpha=0.7, linewidths=0,
             transform=ccrs.PlateCarree(),
             label='Calc. Stations'
         )
@@ -412,20 +520,19 @@ def plot_overview(
         ax1.scatter(
             stations.loc[confirmed_mask, 'confirmed_longitude'],
             stations.loc[confirmed_mask, 'confirmed_latitude'],
-            marker='^',
-            c='green',
-            alpha=0.7,
-            edgecolor='green',
+            marker='^', s=5, c=STATION_COLOR, alpha=0.7, linewidths=0,
             transform=ccrs.PlateCarree()
         )
 
     ax1.scatter(
         events['longitude'],
         events['latitude'],
-        color="#ec7524",
-        alpha=1,
-        edgecolor="#ec7524",
-        transform=ccrs.PlateCarree()
+        s=4,
+        color=EVENT_COLOR,
+        alpha=0.8,
+        linewidths=0,
+        transform=ccrs.PlateCarree(),
+        rasterized=True
     )
 
     ax1.set_axis_off()
@@ -585,7 +692,10 @@ def plot_overview(
 
     
 
-    # Region map
+    # Region map. Earthquakes: size by magnitude, colour by depth (small and shallow ones underneath).
+    # Stations: hollow triangles; under the earthquakes and smaller when there are many of them. A network
+    # spanning most of the world gets a Robinson world map.
+    is_global = (region[1] - region[0]) >= GLOBAL_LON_SPAN
     if is_alaska:
         proj = ccrs.AlbersEqualArea(
                             central_longitude=-154,
@@ -593,30 +703,34 @@ def plot_overview(
                             standard_parallels=(55, 65)
                         )
         region =(-180, -130, 50, 72)
+        is_global = False
+    elif is_global:
+        proj = ccrs.Robinson(central_longitude=0)
     else:
         proj = map_projection(region)
-
 
     ax2 = fig.add_subplot(gs[1, 0],
                         projection=proj
                     )
-    
-    ax2.set_extent(region, crs=ccrs.PlateCarree())
-    ax2.add_feature(cfeature.COASTLINE)
-    ax2.add_feature(cfeature.BORDERS, linestyle=':')
-    ax2.add_feature(cfeature.STATES, linestyle=':')
-    ax2.add_feature(cfeature.LAND)
-    ax2.add_feature(cfeature.OCEAN)
-    ax2.add_feature(cfeature.LAKES, alpha=0.5)
+    pc = ccrs.PlateCarree()
+    if is_global:
+        ax2.set_global()
+        ax2.add_feature(cfeature.LAND.with_scale("110m"), facecolor="#ececec", edgecolor="#9a9a9a", linewidth=0.4)
+        ax2.add_feature(cfeature.OCEAN.with_scale("110m"), facecolor="white")
+    else:
+        ax2.set_extent(region, crs=pc)
+        ax2.add_feature(cfeature.LAND, facecolor=MAP_LAND)
+        ax2.add_feature(cfeature.OCEAN, facecolor=MAP_OCEAN)
+        ax2.add_feature(cfeature.LAKES, facecolor=MAP_OCEAN, alpha=0.8)
+        ax2.add_feature(cfeature.COASTLINE, edgecolor=MAP_COAST, linewidth=0.6)
+        ax2.add_feature(cfeature.BORDERS, edgecolor=MAP_COAST, linewidth=0.5, linestyle=':')
+        ax2.add_feature(cfeature.STATES, edgecolor="#a8a8a8", linewidth=0.4, linestyle=':')
 
-    ax2.scatter(
-        events['longitude'],
-        events['latitude'],
-        color="#ec7524",
-        alpha=1,
-        edgecolor="#ec7524",
-        transform=ccrs.PlateCarree()
-    )
+    many_stations = (not das) and len(stations) > MANY_STATIONS
+    st_z, st_s, st_lw = (2, 7, 0.5) if many_stations else (5, 16, 0.8)
+    if is_global:
+        st_z, st_s, st_lw = 2, 4, 0.4
+    sc = plot_events_by_depth(ax2, events, transform=pc, zorder=3)
 
     if consider_calculated_stations and \
        'calculated_latitude' in stations.columns and \
@@ -625,11 +739,8 @@ def plot_overview(
         ax2.scatter(
             stations.loc[calculated_mask, 'calculated_longitude'],
             stations.loc[calculated_mask, 'calculated_latitude'],
-            marker='^',
-            c='gray',
-            alpha=1,
-            transform=ccrs.PlateCarree(),
-            label='Calc. Stations'
+            marker='^', s=st_s, facecolors='none', edgecolors=STATION_CALC_COLOR, linewidths=st_lw,
+            transform=pc, zorder=st_z, label='Calc. Stations'
         )
 
     if das:
@@ -647,31 +758,32 @@ def plot_overview(
                 color="green",
                 linewidth=2,
                 alpha=1,
-                transform=ccrs.PlateCarree(),
+                transform=pc,
+                zorder=5,
             )
     else:
         ax2.scatter(
             stations.loc[confirmed_mask, 'confirmed_longitude'],
             stations.loc[confirmed_mask, 'confirmed_latitude'],
-            marker='^',
-            c='green',
-            alpha=1,
-            edgecolor='green',
-            transform=ccrs.PlateCarree()
+            marker='^', s=st_s, facecolors='none', edgecolors=STATION_COLOR, linewidths=st_lw,
+            transform=pc, zorder=st_z
         )
 
+    add_depth_magnitude_keys(ax2, events, sc)
 
-    gl = ax2.gridlines(draw_labels=True, linewidth=0.5, color='gray',
-                       alpha=0.5, linestyle='--', crs=ccrs.PlateCarree())
-    gl.top_labels = False
-    gl.right_labels = False
-    if not is_alaska:
-        set_dateline_ticks(gl, region)
+    if is_global:
+        ax2.spines["geo"].set_linewidth(1.0)
+    else:
+        gl = ax2.gridlines(draw_labels=True, linewidth=0.5, color='gray',
+                           alpha=0.5, linestyle='--', crs=pc)
+        gl.top_labels = False
+        gl.right_labels = False
+        if not is_alaska:
+            set_dateline_ticks(gl, region)
+        add_scalebar(ax2, region, location='lower left')
 
     # ax2.set_title(f"Contributor: {analysis.get('Contributor', 'N/A')}",
     #               fontsize=14, weight='bold',loc='left')
-
-    add_scalebar(ax2, region, location='lower left')
 
 
     # plt.subplots_adjust(wspace=0.2, hspace=0.5)
@@ -1159,7 +1271,8 @@ def plot_stats(
 
 def plot_stats_from_stats(stats: dict,
                     savepath: Optional[str] = None,
-                    show: bool = True) -> Tuple[plt.Figure, Dict[str, plt.Axes]]:
+                    show: bool = True,
+                    axes: Optional[Dict[str, plt.Axes]] = None) -> Tuple[plt.Figure, Dict[str, plt.Axes]]:
     """
     Plot a 5-panel figure using precomputed network stats.
 
@@ -1221,13 +1334,22 @@ def plot_stats_from_stats(stats: dict,
     >>> plt.show()
     """
 
-    fig = plt.figure(figsize=(10, 8)) 
-    gs = gridspec.GridSpec(2, 4, figure=fig)
-    ax1 = fig.add_subplot(gs[0, 0:2])  # Depth 
-    ax2 = fig.add_subplot(gs[0, 2:4])  # Magnitude 
-    ax3 = fig.add_subplot(gs[1, 1:3])  # Epicentral distance (mirrored bars)
-    ax4 = fig.add_subplot(gs[1, 0], projection="polar")  # Azimuthal gap
-    ax5 = fig.add_subplot(gs[1, 3], projection="polar")  # Azimuth
+    # axes: draw into these axes of another figure ({'depth', 'magnitude', 'epicentral_distance',
+    # 'azimuthal_gap', 'azimuth'}; the last two polar) instead of making the 5-panel figure; the caller
+    # lays out, saves and closes that figure
+    own_figure = axes is None
+    if own_figure:
+        fig = plt.figure(figsize=(10, 8)) 
+        gs = gridspec.GridSpec(2, 4, figure=fig)
+        ax1 = fig.add_subplot(gs[0, 0:2])  # Depth 
+        ax2 = fig.add_subplot(gs[0, 2:4])  # Magnitude 
+        ax3 = fig.add_subplot(gs[1, 1:3])  # Epicentral distance (mirrored bars)
+        ax4 = fig.add_subplot(gs[1, 0], projection="polar")  # Azimuthal gap
+        ax5 = fig.add_subplot(gs[1, 3], projection="polar")  # Azimuth
+    else:
+        ax1, ax2, ax3 = axes["depth"], axes["magnitude"], axes["epicentral_distance"]
+        ax4, ax5 = axes["azimuthal_gap"], axes["azimuth"]
+        fig = ax1.figure
 
     axes = [ax1, ax2, ax4, ax3, ax5]
     labels = ['(a)', '(b)', '(c)', '(d)', '(e)']
@@ -1238,9 +1360,15 @@ def plot_stats_from_stats(stats: dict,
     # --- Depth ---
     depth_km = stats["depth_values"]
     # lower, upper = np.percentile(depth_km, [1, 97])
-    lower, upper = depth_km.min(), depth_km.max()
+    # 20 bins over the data, but never past MAX_PLOT_DEPTH_KM: no earthquake is deeper, so a deeper value
+    # is an error and would squeeze every real event into the first bins
+    lower, upper = depth_km.min(), min(depth_km.max(), MAX_PLOT_DEPTH_KM)
     depth_filtered = depth_km[(depth_km >= lower) & (depth_km <= upper)]
     ax1.hist(depth_filtered, bins=20, color='#006400', alpha=0.7)
+    n_deeper = int((depth_km > MAX_PLOT_DEPTH_KM).sum())
+    if n_deeper:
+        ax1.text(0.98, 0.95, f"{n_deeper} deeper than {MAX_PLOT_DEPTH_KM:.0f} km not shown",
+                 transform=ax1.transAxes, ha="right", va="top", fontsize=8, color="#7a2a00")
     ax1.set_yscale("log")
     ax1.set_xlabel('Depth [km]')
     ax1.set_ylabel('Log Frequency')
@@ -1346,7 +1474,7 @@ def plot_stats_from_stats(stats: dict,
     # Colorbar for azimuthal gap
     sm_gap = cm.ScalarMappable(cmap=cmap, norm=mcolors.Normalize(vmin=percentages.min(), vmax=percentages.max()))
     sm_gap.set_array([])
-    cax_gap = inset_axes(ax4, width="80%", height="10%", loc="lower center", borderpad=-3)
+    cax_gap = inset_axes(ax4, width="80%", height="10%", loc="lower center", borderpad=-3 if own_figure else -4.2)
     plt.colorbar(sm_gap, cax=cax_gap, orientation="horizontal", label="Percentage [%]")
 
     # --- Azimuth ---
@@ -1371,11 +1499,15 @@ def plot_stats_from_stats(stats: dict,
                                                     vmax=percentages.max())
                                 )
         sm.set_array([])
-        cax = inset_axes(ax5, width="80%", height="10%", loc="lower center", borderpad=-3)
+        cax = inset_axes(ax5, width="80%", height="10%", loc="lower center", borderpad=-3 if own_figure else -4.2)
         plt.colorbar(sm, cax=cax, orientation="horizontal", label="Percentage [%]")
     else:
         ax5.text(0.5, 0.5, "No picks available", ha='center', va='center', transform=ax5.transAxes)
         ax5.set_title("Azimuth")
+
+    if not own_figure:
+        return fig, {'depth': ax1, 'magnitude': ax2, 'epicentral_distance': ax3,
+                     'azimuthal_gap': ax4, 'azimuth': ax5}
 
     fig.tight_layout()
     pos = ax5.get_position()  # get current position: Bbox(x0, y0, x1, y1)
@@ -2296,7 +2428,9 @@ def plot_network_station_density(
     df: pd.DataFrame,
     savepath: str = None,
     show: bool = False,
-    dpi: int = 300
+    dpi: int = 300,
+    size_per_event: float = 0.1,
+    center_labels: bool = False,
 ):
     """
     Plot network station count vs geographic extent with event-based marker sizes.
@@ -2317,6 +2451,11 @@ def plot_network_station_density(
         If True, displays the figure.
     dpi : int, optional
         DPI for saving the figure. Default is 300.
+    size_per_event : float, optional
+        Marker area (pt^2) per event. Default 0.1 (a 5,000-event network is 500); smaller for
+        versions with more events per network (e.g. 0.025 for v2.0).
+    center_labels : bool, optional
+        If True, network codes are centred on their markers. Default False (at the upper right).
 
     Returns
     -------
@@ -2334,6 +2473,13 @@ def plot_network_station_density(
     # Approximate area in square degrees
     df["area_deg2"] = df["lon_range"] * df["lat_range"]
 
+    # a log axis cannot place a network without stations in its region or without an area: left out, reported
+    skip = (df["area_deg2"] <= 0) | (df["total_stations"] <= 0) | df["area_deg2"].isna() | df["total_stations"].isna()
+    if skip.any():
+        warnings.warn(f"plot_network_station_density: left out (no area or no stations in the region): "
+                      f"{df.loc[skip, 'utdq_net'].tolist()}")
+        df = df[~skip].reset_index(drop=True)
+
     # Station and event densities (optional, not used for plotting here)
     df["station_density"] = df["total_stations"] / df["area_deg2"]
     df["event_density"] = df["events"] / df["area_deg2"]
@@ -2342,19 +2488,28 @@ def plot_network_station_density(
     fig, ax = plt.subplots(figsize=(9, 7))
 
     # Scatter plot, colored by continent
-    continents = df["continent"].unique()
+    df["continent"] = df["continent"].astype("object").where(df["continent"].notna(), "Unknown")
+    # research catalogs (utdq_net R01, R02, ...): one group of their own, hollow circles
+    df.loc[df["utdq_net"].astype(str).str.fullmatch(r"R\d+"), "continent"] = "Research"
+    continents = [c for c in df["continent"].unique() if c != "Research"]
     colors = plt.cm.tab10.colors  # Up to 10 colors
     continent_color_map = {cont: colors[i % len(colors)] for i, cont in enumerate(continents)}
+    if (df["continent"] == "Research").any():
+        continents.append("Research")
+        continent_color_map["Research"] = "none"
 
     for cont in continents:
         subset = df[df["continent"] == cont]
+        research = cont == "Research"
         ax.scatter(
             subset["area_deg2"],
             subset["total_stations"],
-            s=subset["events"] / 10,
-            alpha=0.7,
+            s=subset["events"] * size_per_event,
+            alpha=0.9 if research else 0.7,
             label=cont,
-            color=continent_color_map[cont]
+            facecolors="none" if research else continent_color_map[cont],
+            edgecolors="#333333" if research else "none",
+            linewidths=1.0 if research else 0,
         )
 
     # Add network labels
@@ -2363,7 +2518,8 @@ def plot_network_station_density(
             df["area_deg2"][i],
             df["total_stations"][i],
             net,
-            fontsize=8
+            fontsize=8,
+            **({"ha": "center", "va": "center"} if center_labels else {})
         )
 
     # Log scales
@@ -2380,8 +2536,10 @@ def plot_network_station_density(
     ax.tick_params(axis='both', which='minor', width=1)
 
 
-    # Legend
-    ax.legend(loc="upper left")
+    # Legend (markers of one size: the marker sizes are the networks' event counts)
+    leg = ax.legend(loc="upper left")
+    for h in getattr(leg, "legend_handles", getattr(leg, "legendHandles", [])):
+        h.set_sizes([80])
 
     # Grid
     ax.grid(True, which="both")
@@ -3441,3 +3599,112 @@ def plot_travel_time_qc(df: pd.DataFrame,
     return fig, axes, axins, (legend_handles, legend_labels)
 
 
+
+
+def plot_global_overview(events: pd.DataFrame, stations: pd.DataFrame, totals: Dict[str, Any],
+                         layout: str = "vertical", stats: Optional[dict] = None, title: Optional[str] = None,
+                         savepath: Optional[str] = None, show: bool = False, dpi: int = 200):
+    """
+    World maps of a whole dataset: earthquakes and stations, each with its counts above the map.
+
+    Parameters
+    ----------
+    events : DataFrame
+        ``latitude, longitude`` of every earthquake (all networks).
+    stations : DataFrame
+        Stations tables of all networks (``network, station, confirmed, confirmed_latitude/longitude,
+        calculated_latitude/longitude``); a station of several networks is drawn once (its confirmed location
+        if any network has one).
+    totals : dict
+        ``networks, events, p_picks, s_picks, stations, located, confirmed`` (station counts: distinct
+        ``(network, station)``, see :func:`utdquake.utils.utils.get_network_summary`).
+    layout : {"vertical", "wide", "combined"}
+        "vertical": earthquakes above stations (README, paper); "wide": side by side; "combined": side by
+        side, and below them the 5 panels of :func:`plot_stats_from_stats` in one row (needs ``stats``).
+    stats : dict, optional
+        Merged statistics (``Dataset.compute_stats(merge=True)``), for ``layout="combined"``.
+    title : str, optional
+        Default: ``"UTDQuake: <n> networks"``.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+    """
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+
+    if layout == "combined" and stats is None:
+        raise ValueError("layout='combined' needs stats (Dataset.compute_stats(merge=True))")
+    st = stations.sort_values("confirmed", ascending=False, na_position="last").drop_duplicates(["network", "station"])
+    conf = st["confirmed"].fillna(False).astype(bool) & st["confirmed_latitude"].notna()
+    calc = ~conf & st["calculated_latitude"].notna()
+    conf_xy = st.loc[conf, ["confirmed_longitude", "confirmed_latitude"]].to_numpy(float)
+    calc_xy = st.loc[calc, ["calculated_longitude", "calculated_latitude"]].to_numpy(float)
+    ev = events[["latitude", "longitude"]].dropna()
+
+    proj = ccrs.Robinson(central_longitude=0)
+    if layout == "combined":
+        fig = plt.figure(figsize=(22, 12.0), dpi=dpi)
+        axes = [fig.add_axes([0.01, 0.40, 0.48, 0.45], projection=proj),
+                fig.add_axes([0.51, 0.40, 0.48, 0.45], projection=proj)]
+        y0, h = 0.07, 0.25                      # stats row: (a) depth (b) magnitude (c) gap (d) distance (e) azimuth
+        stat_axes = {"depth": fig.add_axes([0.045, y0, 0.17, h]),
+                     "magnitude": fig.add_axes([0.25, y0, 0.17, h]),
+                     "azimuthal_gap": fig.add_axes([0.455, y0 + 0.07, 0.09, h - 0.07], projection="polar"),
+                     "epicentral_distance": fig.add_axes([0.63, y0, 0.18, h]),
+                     "azimuth": fig.add_axes([0.86, y0 + 0.07, 0.09, h - 0.07], projection="polar")}
+    elif layout == "wide":
+        fig = plt.figure(figsize=(22, 7.0), dpi=dpi)
+        axes = [fig.add_axes([0.01, 0.02, 0.48, 0.76], projection=proj),
+                fig.add_axes([0.51, 0.02, 0.48, 0.76], projection=proj)]
+    elif layout == "vertical":
+        fig = plt.figure(figsize=(12, 13.2), dpi=dpi)
+        axes = [fig.add_axes([0.02, 0.47, 0.96, 0.40], projection=proj),
+                fig.add_axes([0.02, 0.01, 0.96, 0.40], projection=proj)]
+    else:
+        raise ValueError(f"layout must be 'vertical', 'wide' or 'combined', not {layout!r}")
+    for ax in axes:
+        ax.set_global()
+        ax.add_feature(cfeature.LAND.with_scale("110m"), facecolor="#ececec", edgecolor="#9a9a9a", linewidth=0.4)
+        ax.add_feature(cfeature.OCEAN.with_scale("110m"), facecolor="white")
+        ax.spines["geo"].set_linewidth(1.2)
+    pc = ccrs.PlateCarree()
+    axes[0].scatter(ev["longitude"], ev["latitude"], s=1.4, c=EVENT_COLOR, alpha=0.55, linewidths=0,
+                    transform=pc, rasterized=True)
+    if len(calc_xy):
+        axes[1].scatter(calc_xy[:, 0], calc_xy[:, 1], s=7, marker="^", c=STATION_CALC_COLOR, alpha=0.7,
+                        linewidths=0, transform=pc, rasterized=True)
+    axes[1].scatter(conf_xy[:, 0], conf_xy[:, 1], s=7, marker="^", c=STATION_COLOR, alpha=0.8,
+                    linewidths=0, transform=pc, rasterized=True)
+    fig.suptitle(title or f"UTDQuake: {totals['networks']} networks",
+                 fontsize=19 if layout == "vertical" else 21, y=0.985 if layout == "combined" else 0.975)
+
+    def human(x):
+        return f"{x / 1e6:.1f} M" if x >= 1e6 else f"{x / 1e3:.1f} K" if x >= 1e3 else str(x)
+
+    fs = 14
+    blank = Line2D([], [], ls="", marker="")
+    axes[0].legend(handles=[Line2D([], [], marker="o", ls="", color=EVENT_COLOR, ms=9), blank, blank],
+                   labels=[f"{human(totals['events'])} earthquakes", f"P picks: {human(totals['p_picks'])}",
+                           f"S picks: {human(totals['s_picks'])}"],
+                   title="Earthquakes", loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=3, frameon=False,
+                   fontsize=fs, title_fontproperties={"weight": "bold", "size": fs + 1}, columnspacing=2.5,
+                   handletextpad=0.4)
+    axes[1].legend(handles=[Line2D([], [], marker="^", ls="", color=STATION_COLOR, ms=10),
+                            Line2D([], [], marker="^", ls="", color=STATION_CALC_COLOR, ms=10)],
+                   labels=[f"confirmed location: {human(totals['confirmed'])}",
+                           f"calculated from picks: {human(totals['located'] - totals['confirmed'])}"],
+                   title=f"Stations: {human(totals['stations'])} ({human(totals['located'])} located)",
+                   loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False, fontsize=fs,
+                   title_fontproperties={"weight": "bold", "size": fs + 1}, columnspacing=2.5, handletextpad=0.4)
+    if layout == "combined":
+        plot_stats_from_stats(stats, show=False, axes=stat_axes)
+        for ax in stat_axes.values():
+            ax.title.set_fontsize(13)
+    if savepath:
+        fig.savefig(savepath, dpi=dpi, facecolor="white")
+        print(f"Saved plot to {savepath}")
+    if show:
+        plt.show()
+    plt.close(fig)
+    return fig

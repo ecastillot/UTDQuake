@@ -12,9 +12,17 @@ dataset at the same commit.
 import os
 from pathlib import Path
 
+#: Dataset version of the figures: PAPER_VERSION=v1 (default; UTDQuake 1.0 as published, a local copy of the Hub
+#: tag) or v2 (the working copy UTDQuake_v2: v2.0 and the corrections listed under v2.1 in versions.rst).
+#: Figures go to paper/<version>/.
+VERSION = os.environ.get("PAPER_VERSION", "v1")
 #: UTDQuake 1.0 on the Hub: tag v1.0 (moved 2026-11-02 for the JMA rename; see docs/source/versions.rst).
 REVISION = "c5370c8d"
-ROOT = "/groups/igonin/ecastillo/UTDQuake_paper_v1"
+ROOTS = {"v1": "/groups/igonin/ecastillo/UTDQuake_paper_v1", "v2": "/groups/igonin/ecastillo/UTDQuake_v2"}
+ROOT = ROOTS[VERSION]
+#: Folder of the figures of this version.
+OUT = Path(__file__).resolve().parents[1] / VERSION      # paper/<version>/ (scripts in paper/scripts/)
+OUT.mkdir(exist_ok=True)
 #: Figures made by the network figure pipeline (overview of UWF), from the working copy.
 FIGURES = "/groups/igonin/ecastillo/UTDQuake_v2/figures"
 os.environ["UTDQUAKE_ROOT"] = ROOT

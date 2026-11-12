@@ -2,7 +2,7 @@
 [![PyPI](https://img.shields.io/pypi/v/utdquake?color=orange&label=PyPI&style=flat)](https://pypi.org/project/utdquake/) ![GitHub stars](https://img.shields.io/github/stars/ecastillot/UTDQuake?style=social) ![GitHub forks](https://img.shields.io/github/forks/ecastillot/UTDQuake?style=social) ![GitHub followers](https://img.shields.io/github/followers/ecastillot?style=social) [![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow-blue?logo=linkedin)](https://www.linkedin.com/in/ecastillot/) 
 
 
-<img src="docs/source/_static/logo/utdquake_logo_ok.png" alt="seismonitor" width="150"> 
+<img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/main/docs/source/_static/logo/utdquake_logo_ok.png" alt="seismonitor" width="150"> 
 
 <!--
 # <span style="background:#E87500; color:white; padding:2px 6px; border-radius:6px;">UTD</span>Quake
@@ -14,7 +14,7 @@
 
 A global earthquake dataset constructed from high-quality source and receiver metadata, including associated seismic phase picks across diverse station geometries.
 
-![utdquake](figures/utdquake_overview.png)
+![utdquake](https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview_stats.png)
 
 # Documentation
 
@@ -151,7 +151,7 @@ We welcome feedback and contributions!
       </a>
     </td>
     <td width="100" align="center">
-      <img src="docs/source/_static/photos/emmanuel.jpg" alt="Emmanuel" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+      <img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/main/docs/source/_static/photos/emmanuel.jpg" alt="Emmanuel" width="80" height="80" style="border-radius:50%; object-fit:cover;">
     </td>
   </tr>
   <tr>
@@ -166,7 +166,7 @@ We welcome feedback and contributions!
       </a>
     </td>
     <td width="100" align="center">
-      <img src="docs/source/_static/photos/nadine.jpg" alt="Nadine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+      <img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/main/docs/source/_static/photos/nadine.jpg" alt="Nadine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
     </td>
   </tr>
   <tr>
@@ -181,7 +181,7 @@ We welcome feedback and contributions!
       </a>
     </td>
     <td width="100" align="center">
-      <img src="docs/source/_static/photos/marine.jpg" alt="Marine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
+      <img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/main/docs/source/_static/photos/marine.jpg" alt="Marine" width="80" height="80" style="border-radius:50%; object-fit:cover;">
     </td>
   </tr>
 </table>

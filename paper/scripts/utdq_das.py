@@ -22,7 +22,7 @@ import pyproj
 import numpy as np
 
 
-fig_path = Path(__file__).parent / "utdq_das.png"
+fig_path = _local.OUT / "utdq_das.png"
 # the same figure is the UWF overview of the docs (figures/networks_DAS/UWF)
 overview_path = Path(_local.FIGURES) / "networks_DAS" / "UWF" / "UWF_overview.png"
 dataset = utdq.Dataset(das=True)
@@ -150,7 +150,10 @@ ax_inset.add_artist(scalebar)
 
 
 fig.savefig(fig_path, dpi=300)
-shutil.copy2(fig_path, overview_path)
-print(f"Saved {fig_path} and copied it to {overview_path}")
+if _local.VERSION == "v1":          # the docs' UWF overview (same DAS data in every version)
+    shutil.copy2(fig_path, overview_path)
+    print(f"Saved {fig_path} and copied it to {overview_path}")
+else:
+    print(f"Saved {fig_path}")
 
 

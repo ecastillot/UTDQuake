@@ -68,6 +68,18 @@ v2.1 (in preparation)
 
 Networks and events added to ``main`` after ``v2.0`` are listed here until they are released.
 
+- **Corrections to v2.0 data.**
+
+  - 13 events with impossible depths are removed, with their 201 picks: a default "maximum depth" of
+    700.0 or 750.0 km, or a broken origin (9,330 km), in regions without deep earthquakes (``NOA`` 1,
+    ``TUN`` 2, ``PRE`` 1, ``NOU`` 1, ``MDD`` 1, ``JSN`` 4, ``TIR`` 3; 5 of them were ``v1`` events). Real
+    deep earthquakes (Fiji-Tonga, Sea of Okhotsk, down to 720 km) are kept.
+  - 2 ``uw`` events had the placeholder magnitude -5.0; their magnitude is now empty.
+  - ``R08`` (ComCat events deeper than 30 km, worldwide) gets the continent ``World``.
+
+- **Figures.** Network maps show earthquakes sized by magnitude and coloured by depth; networks spanning
+  the world get a world map. Depth histograms stop at 800 km.
+
 
 v2.0
 ----
@@ -76,8 +88,8 @@ Released on 2026-11-11 (Hugging Face commit ``785d4c97``). **At a glance:** 94 s
 earthquakes (four times ``v1.0``), 44.5 M picks, 28.4 K stations; up to 20,000 events per network, new
 networks ``ci`` and ``R09``-``R11`` (``R11`` synthetic), ``JMA`` with its S picks.
 
-.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview_v2.0.png
-   :width: 700px
+.. image:: ../../figures/utdquake_overview_stats_v2.0.png
+   :width: 100%
    :align: center
 
 **Contents**
@@ -197,8 +209,8 @@ v1.0
 The dataset of the UTDQuake paper. **At a glance:** 81 seismic networks and one DAS network, 341.6 K
 earthquakes, 9.7 M picks, 17.8 K stations.
 
-.. image:: https://raw.githubusercontent.com/ecastillot/UTDQuake/main/figures/utdquake_overview_v1.0.png
-   :width: 700px
+.. image:: ../../figures/utdquake_overview_stats_v1.0.png
+   :width: 100%
    :align: center
 
 **Contents**
