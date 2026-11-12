@@ -63,10 +63,19 @@ Adding data between releases
 Nothing already released changes in a minor release; a fix to released data is listed with the release
 that makes it.
 
-v2.1 (in preparation)
+v2.2 (in preparation)
 ---------------------
 
-Networks and events added to ``main`` after ``v2.0`` are listed here until they are released.
+Networks and events added to ``main`` after ``v2.1`` are listed here until they are released.
+
+Nothing yet.
+
+
+v2.1
+----
+
+Released on 2026-11-12 (Hugging Face commit ``066786e5``): corrections to ``v2.0``, no new networks. **At a
+glance:** 94 seismic networks, 1,368,025 earthquakes, 44.5 M picks, 28.4 K stations.
 
 - **Corrections to v2.0 data.**
 

@@ -50,7 +50,7 @@ into a UTDQuake network on the
   below the surface or a well reference, subtract that elevation first.
 - Each pick needs a ``waveform_id`` with network and station codes.
 - Name your network (``utdq_net``): the agency's code for an agency catalog (``CM``, ``tx``), or the next
-  free ``R`` code (``R10``, ...) for a research catalog.
+  free ``R`` code (``R12``, ...) for a research catalog.
 
 1. Event bank
 ^^^^^^^^^^^^^
