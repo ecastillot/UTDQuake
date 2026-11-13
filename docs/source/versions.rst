@@ -63,12 +63,77 @@ Adding data between releases
 Nothing already released changes in a minor release; a fix to released data is listed with the release
 that makes it.
 
-v2.2 (in preparation)
+v2.3 (in preparation)
 ---------------------
 
-Networks and events added to ``main`` after ``v2.1`` are listed here until they are released.
+Networks and events added to ``main`` after ``v2.2`` are listed here until they are released.
 
 Nothing yet.
+
+
+v2.2
+----
+
+Released on 2026-11-13 (Hugging Face commit ``9ef6fb1a``): two new research networks in Antarctica, the first
+in UTDQuake; no other network changes. **At a glance:** 96 seismic networks, 1,369,803 earthquakes, 44.5 M
+picks, 28.5 K stations.
+
+.. image:: ../../figures/utdquake_overview_stats_v2.2.png
+   :width: 100%
+   :align: center
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 22 68
+
+   * - ``utdq_net``
+     - ``catalog``
+     - Contents
+   * - ``R12``
+     - East Antarctica (Ho et al.)
+     - Victoria Land and the Transantarctic Mountains, 2001-2003 and 2012-2015: 776 earthquakes, crustal and
+       upper-mantle (100-150 km), ML 1.7-3.5; 11,620 picks (5,946 P, 5,674 S) on 50 stations of the TAMSEIS
+       (``XP``), TAMNNET (``ZJ``) and other arrays. NonLinLoc locations in the 3D AN1-S model with ice.
+       Ho et al. (2025), `10.5281/zenodo.17519077 <https://doi.org/10.5281/zenodo.17519077>`_.
+   * - ``R13``
+     - West Antarctica (Ho et al.)
+     - Pine Island Glacier, 2016: 1,002 earthquakes, mostly 0-10 km deep (some at 30-45 km), ML 1.0-2.3;
+       9,916 picks (4,909 P, 5,007 S) on 8 stations of the Pine Island Glacier array (``1D``) and POLENET
+       (``YT``). hypoDD locations. Ho et al. (2026),
+       `10.5281/zenodo.20128910 <https://doi.org/10.5281/zenodo.20128910>`_.
+
+Both catalogs are CC BY 4.0 (Zenodo); station metadata from EarthScope. Each event keeps its catalog id
+(``VL_...``, ``PIG_...``) and has its region as event description. 292 events of the East Antarctica catalog
+piled up at -4.9 to -5.0 km (above the ground surface, the top of the location grid) are left out. The two
+regions are about 2,500 km apart, so they are two networks.
+
+**Contents**
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 30 30
+
+   * -
+     - Seismic
+     - DAS
+   * - UTDQuake networks
+     - 96
+     - 1 (``UWF``)
+   * - Earthquakes (after QC)
+     - 1,369,803
+     - 450
+   * - Picks
+     - 44,498,614
+     - 7,816,115
+   * - P-type picks (P / Pg / Pn)
+     - 29,430,309 (23,255,691 / 2,631,929 / 3,542,689)
+     - 2,930,110
+   * - S-type picks (S / Sg / Sn)
+     - 15,068,305 (11,815,417 / 2,124,929 / 1,127,959)
+     - 4,886,005
+   * - Stations (distinct ``network``, ``station``)
+     - 28,486 (27,013 located, 24,910 confirmed)
+     - 3 cables, 22,500 channels
 
 
 v2.1

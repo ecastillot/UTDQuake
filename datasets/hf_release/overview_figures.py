@@ -3,7 +3,8 @@
 ``Dataset.plot_network_station_density``; the paper figures are made by paper/utdq_figures.sh (paper/v1, paper/v2).
 
     python overview_figures.py latest    # figures/utdquake_overview_stats.png (maps + 5 stats panels: README, home
-                                         #   page, index), from the current data (main)
+                                         #   page, index), from the current data (main), and its copy
+                                         #   utdquake_overview_stats_<LATEST>.png for the versions page
     python overview_figures.py versions  # figures/utdquake_overview_stats_<version>.png (versions page), from
                                          #   paper/<v>/utdq_overview_stats.png (run paper/utdq_figures.sh first)
     python overview_figures.py gif       # figures/all_networks_overview.gif (the networks' overview figures)
@@ -18,7 +19,9 @@ import numpy as np
 HERE = Path(__file__).resolve().parents[2]
 OUT = HERE / "figures"
 PAPER = HERE / "paper"
-CURRENT = Path("/groups/igonin/ecastillo/UTDQuake")        # main: v2.0 and the corrections of v2.1
+CURRENT = Path("/groups/igonin/ecastillo/UTDQuake")        # main = the latest release
+#: the release CURRENT holds: ``latest`` also writes the versions-page figure of it
+LATEST = "v2.2"
 #: versions page: dataset version -> folder of its paper figures
 VERSIONS = {"v1.0": "v1", "v2.0": "v2"}
 
@@ -45,6 +48,7 @@ def dataset(root: Path):
 def latest():
     ds = dataset(CURRENT)
     ds.plot_global_overview(layout="combined", savepath=OUT / "utdquake_overview_stats.png")
+    shutil.copy2(OUT / "utdquake_overview_stats.png", OUT / f"utdquake_overview_stats_{LATEST}.png")
 
 
 def versions():
@@ -61,7 +65,7 @@ def gif(fps: float = 0.7, max_frames: int = 50):
     folder = CURRENT / "figures" / "networks"
     first = ["av", "nc", "ci", "uu", "nm", "ok", "tx", "R03", "R11", "MEX", "hv", "CATAC", "pr", "RSNC", "FUNV",
              "VAO", "SJA", "PRE", "ISK", "INMG", "LDG", "AFAD", "NOA", "ATH", "BEO", "JMA", "DJA", "TAP", "R09",
-             "R10", "R01"]
+             "R10", "R12", "R13", "R01"]
     images = {p.parent.name: p for p in folder.glob("*/*_overview.png")}
     order = ([n for n in first if n in images] + sorted(n for n in images if n not in first))[:max_frames]
     size = max((Image.open(images[n]).size for n in order), key=lambda s: s[0] * s[1])

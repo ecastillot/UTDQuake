@@ -45,7 +45,12 @@ See docs/source/versions.rst.""",
                 "v2.1": """UTDQuake v2.1 (in preparation), corrections to v2.0 data: 13 events with impossible depths removed
 with their 201 picks (default 700/750 km depths, one 9,330 km origin: NOA, TUN, PRE, NOU, MDD, JSN, TIR), 2 uw
 placeholder magnitudes (-5.0) emptied, R08 continent World; updated R11 description (R03 reference).
-See docs/source/versions.rst, v2.1."""}
+See docs/source/versions.rst, v2.1.""",
+                "v2.2": """UTDQuake dataset v2.2: two new research networks in Antarctica, the first in UTDQuake (Ho et al.,
+Zenodo, CC BY 4.0): R12 East Antarctica (Victoria Land, Transantarctic Mountains; 776 events 2001-2015, crustal and
+upper-mantle earthquakes, 11,620 picks, 50 stations; doi 10.5281/zenodo.17519077) and R13 West Antarctica (Pine Island
+Glacier; 1,002 events in 2016, 9,916 picks, 8 stations; doi 10.5281/zenodo.20128910). No other network changes.
+See docs/source/versions.rst, v2.2."""}
 DESCRIPTION = DESCRIPTIONS.get(TAG, f"UTDQuake dataset {TAG}. See docs/source/versions.rst.")
 
 

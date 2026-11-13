@@ -1,0 +1,10 @@
+East Antarctica (Victoria Land region) with upper mantle earthquakes:
+https://zenodo.org/records/17519077
+
+West Antarctica (Pine Island Glacier region):
+https://zenodo.org/records/20128910
+
+
+The stations are publicly available in Earthscope.
+
+both datasets (if they are different zones) can be in only 1 dataset.

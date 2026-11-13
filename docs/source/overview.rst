@@ -500,6 +500,18 @@ Seismic Data
      <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R11" target="_blank">Open folder &rarr;</a>
    </div>
 
+   <div class="utdq-card" data-net="R12" data-search="r12 east antarctica (ho et al.) antarctica antarctica v2.2" data-continent="Antarctica" data-version="v2.2">
+     <div class="utdq-card-head"><span class="utdq-net">R12</span><span class="utdq-meta">East Antarctica (Ho et al.) &middot; Antarctica &middot; v2.2</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R12/R12_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R12/R12_overview.png" loading="lazy" alt="R12 overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R12" target="_blank">Open folder &rarr;</a>
+   </div>
+
+   <div class="utdq-card" data-net="R13" data-search="r13 west antarctica (ho et al.) antarctica antarctica v2.2" data-continent="Antarctica" data-version="v2.2">
+     <div class="utdq-card-head"><span class="utdq-net">R13</span><span class="utdq-meta">West Antarctica (Ho et al.) &middot; Antarctica &middot; v2.2</span></div>
+     <a href="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R13/R13_overview.png" target="_blank"><img src="https://raw.githubusercontent.com/ecastillot/UTDQuake/figures/figures/networks/R13/R13_overview.png" loading="lazy" alt="R13 overview"></a>
+     <a class="utdq-folder" href="https://github.com/ecastillot/UTDQuake/tree/figures/figures/networks/R13" target="_blank">Open folder &rarr;</a>
+   </div>
+
    <!-- utdq-seismic-end -->
    </div>
 
